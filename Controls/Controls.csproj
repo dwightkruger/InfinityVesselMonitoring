@@ -111,7 +111,24 @@
     </Compile>
     <Compile Include="BaseGauge.cs" />
     <Compile Include="IGauge.cs" />
+    <Compile Include="PolyLineControl.xaml.cs">
+      <DependentUpon>PolyLineControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RectangleControl.xaml.cs">
+      <DependentUpon>RectangleControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TankGaugeBase.cs" />
+    <Compile Include="TankGaugeLeft.xaml.cs">
+      <DependentUpon>TankGaugeLeft.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TankGaugeRight.xaml.cs">
+      <DependentUpon>TankGaugeRight.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextControl.xaml.cs">
+      <DependentUpon>TextControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities.cs" />
     <EmbeddedResource Include="Properties\Controls.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +144,26 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="ArcGaugeLeft.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PolyLineControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RectangleControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TankGaugeLeft.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TankGaugeRight.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TextControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
