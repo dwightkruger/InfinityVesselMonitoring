@@ -1,0 +1,41 @@
+﻿<UserControl
+    x:Class="InfinityGroup.VesselMonitoring.Gauges.TankGaugeLeft.TankGaugeLeftView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:InfinityGroup.VesselMonitoring.Gauges.TankGaugeLeft"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:InfinityGroup.VesselMonitoring.Controls"    
+    xmlns:converters="using:InfinityGroup.VesselMonitoring.Globals.Converters"  
+    xmlns:vm="using:InfinityGroup.VesselMonitoring.Gauges"    
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <UserControl.Resources>
+        <vm:TankGaugeLeftViewModel x:Key="VMKey" x:Name="VM"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <controls:TankGaugeLeft
+            x:Name="TankGaugeLeft"
+            GaugeHeight="{x:Bind Path=VM.GaugeItem.GaugeHeight}"
+            GaugeWidth="{x:Bind VM.GaugeItem.GaugeWidth}"
+            Top="{x:Bind VM.GaugeItem.GaugeTop}" 
+            Left="{x:Bind VM.GaugeItem.GaugeLeft}"
+            Divisions="{x:Bind VM.GaugeItem.Divisions}"
+            GaugeOutlineVisibility="{x:Bind VM.GaugeItem.GaugeOutlineVisibility}"
+            MinorTicsPerMajorTic="{x:Bind VM.GaugeItem.MinorTicsPerMajorTic}"
+            MediumTicsPerMajorTic="{x:Bind VM.GaugeItem.MediumTicsPerMajorTic}"
+            ValueFontSize="{x:Bind VM.GaugeItem.ValueFontSize}"
+            UnitsFontSize="{x:Bind VM.GaugeItem.UnitsFontSize}"
+            MajorTicLength="{x:Bind VM.GaugeItem.MajorTicLength}"
+            MediumTicLength="{x:Bind VM.GaugeItem.MediumTicLength}"
+            MinorTicLength="{x:Bind VM.GaugeItem.MinorTicLength}"
+            MiddleCircleDelta="{x:Bind VM.GaugeItem.MiddleCircleDelta}"
+            InnerCircleDelta="{x:Bind VM.GaugeItem.InnerCircleDelta}"
+            Resolution="{x:Bind VM.GaugeItem.Resolution}"
+            IsOnline="True"
+            />
+    </Grid>
+</UserControl>
