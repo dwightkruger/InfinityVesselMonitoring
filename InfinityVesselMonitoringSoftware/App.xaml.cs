@@ -1,8 +1,12 @@
-﻿using System;
+﻿using InfinityGroup.VesselMonitoring.Gauges;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using VesselMonitoring;
+using VesselMonitoringSuite.Devices;
+using VesselMonitoringSuite.Sensors;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -96,5 +100,10 @@ namespace InfinityVesselMonitoringSoftware
             //TODO: Save application state and stop any background activity
             deferral.Complete();
         }
+
+        public static SensorCollection SensorCollection = new SensorCollection();
+        public static DeviceCollection DeviceCollection = new DeviceCollection();
+        public static GaugePageCollection GaugePageCollection = new GaugePageCollection();
+        public static GaugeItemCollection GaugeItemCollection = new GaugeItemCollection();
     }
 }
