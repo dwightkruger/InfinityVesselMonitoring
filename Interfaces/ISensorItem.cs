@@ -291,6 +291,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         double HighAlarmValue { get; set; }
         double HighWarningValue { get; set; }
         bool IsCalibrated { get; set; }
+        bool IsDirty { get; }
         bool IsEnabled { get; set; }
         bool IsHighAlarmEnabled { get; set; }
         bool IsHighWarningEnabled { get; set; }
@@ -312,10 +313,9 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         int Priority { get; set; }
         int Resolution { get; set; }
         void Rollback();
-        ItemRow Row { get; }
         int SensorId { get; }
         SensorType SensorType { get; set; }
-        UnitType SensorUnits { get; set; }
+        UnitItem SensorUnits { get; set; }
         SensorUsage SensorUsage { get; set; }
         double SensorValue { get; }
         string SerialNumber { get; set; }

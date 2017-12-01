@@ -607,7 +607,6 @@ namespace InfinityGroup.VesselMonitoring.Utilities
                                                 toUnit.Type);
 
                 Telemetry.TrackException(new InvalidOperationException(message));
-
                 throw new InvalidOperationException(message);
             }
 
@@ -644,5 +643,4 @@ namespace InfinityGroup.VesselMonitoring.Utilities
             return result;
         }
     }
-
 }

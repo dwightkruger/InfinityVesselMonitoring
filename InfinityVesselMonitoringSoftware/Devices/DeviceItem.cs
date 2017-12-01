@@ -12,6 +12,7 @@ using InfinityVesselMonitoringSoftware;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 using VesselMonitoring;
 
@@ -37,6 +38,7 @@ namespace VesselMonitoringSuite.Devices
         {
             this.Row = row;
         }
+
         public DateTime ChangeDate
         {
             get
@@ -49,103 +51,38 @@ namespace VesselMonitoringSuite.Devices
 
         public string Description
         {
-            get
-            {
-                if (null == this.Row) return string.Empty;
-                return this.Row.Field<string>("Description");
-            }
-            set
-            {
-                if (value != this.Row.Field<string>("Description"))
-                {
-                    this.Row.SetField<string>("Description", value);
-                    RaisePropertyChanged(() => Description);
-                }
-            }
+            get { return GetRowPropertyValue<string>(() => Description); }
+            set { SetRowPropertyValue<string>(() => Description, value); }
         }
+
         public byte DeviceAddress
         {
-            get
-            {
-                if (null == this.Row) return 0;
-                return this.Row.Field<byte>("DeviceAddress");
-            }
-            set
-            {
-                if (value != this.Row.Field<byte>("DeviceAddress"))
-                {
-                    this.Row.SetField<byte>("DeviceAddress", value);
-                    RaisePropertyChanged(() => DeviceAddress);
-                }
-            }
+            get { return GetRowPropertyValue<byte>(() => DeviceAddress); }
+            set { SetRowPropertyValue<byte>(() => DeviceAddress, value); }
         }
+
         public int DeviceId
         {
-            get
-            {
-                if (null == this.Row) return -1;
-                return this.Row.Field<int>("DeviceId");
-            }
-            set
-            {
-
-                if (value != this.Row.Field<int>("DeviceId"))
-                {
-                    this.Row.SetField<int>("DeviceId", value);
-                    RaisePropertyChanged(() => DeviceId);
-                }
-            }
+            get { return GetRowPropertyValue<int>(() => DeviceId); }
+            set { SetRowPropertyValue<int>(() => DeviceId, value); }
         }
+
         public DeviceType DeviceType
         {
-            get
-            {
-                if (null == this.Row) return DeviceType.Unknown;
-                return this.Row.Field<DeviceType>("DeviceType");
-            }
-            set
-            {
-
-                if (value != this.Row.Field<DeviceType>("DeviceType"))
-                {
-                    this.Row.SetField<DeviceType>("DeviceType", value);
-                    RaisePropertyChanged(() => DeviceType);
-                }
-            }
+            get { return GetRowPropertyValue<DeviceType>(() => DeviceType); }
+            set { SetRowPropertyValue<DeviceType>(() => DeviceType, value); }
         }
+
         public string FirmwareVersion
         {
-            get
-            {
-                if (null == this.Row) return string.Empty;
-                return this.Row.Field<string>("FirmwareVersion");
-            }
-            set
-            {
-
-                if (value != this.Row.Field<string>("FirmwareVersion"))
-                {
-                    this.Row.SetField<string>("FirmwareVersion", value);
-                    RaisePropertyChanged(() => FirmwareVersion);
-                }
-            }
+            get { return GetRowPropertyValue<string>(() => FirmwareVersion); }
+            set { SetRowPropertyValue<string>(() => FirmwareVersion, value); }
         }
+
         public string HardwareVersion
         {
-            get
-            {
-                if (null == this.Row) return string.Empty;
-                return this.Row.Field<string>("HardwareVersion");
-            }
-            set
-            {
-
-                if (value != this.Row.Field<string>("HardwareVersion"))
-                {
-                    this.Row.SetField<string>("HardwareVersion", value);
-                    RaisePropertyChanged(() => HardwareVersion);
-                }
-            }
+            get { return GetRowPropertyValue<string>(() => HardwareVersion); }
+            set { SetRowPropertyValue<string>(() => HardwareVersion, value); }
         }
 
         public bool IsDirty
@@ -163,14 +100,7 @@ namespace VesselMonitoringSuite.Devices
         public bool IsOnline
         {
             get { return _isOnline; }
-            set
-            {
-                if (value != _isOnline)
-                {
-                    _isOnline = value;
-                    RaisePropertyChanged(() => IsOnline);
-                }
-            }
+            set { Set<bool>(() => IsOnline, ref _isOnline, value); }
         }
 
         public bool IsSwitchDevice
@@ -186,54 +116,16 @@ namespace VesselMonitoringSuite.Devices
 
         public bool IsVirtual
         {
-            get
-            {
-                bool value = false;
-
-                if ((null != this.PropertyBag) && 
-                    (!PropertyBag.Get<bool>("IsVirtual", out value)))
-                {
-                    value = false;
-                }
-
-                return false;
-            }
-            set
-            {
-                bool curValue;
-                if (!PropertyBag.Get<bool>("IsVirtual", out curValue) ||
-                    !curValue.Equals(value))
-                {
-                    PropertyBag.Set<bool>("IsVirtual", value);
-                    RaisePropertyChanged(() => IsVirtual);
-                }
-            }
+            get { return GetPropertyBagValue<bool>(() => IsVirtual); }
+            set { SetPropertyBagValue<bool>(() => IsVirtual, value); }
         }
+
         public string IPAddress
         {
-            get
-            {
-                string value = string.Empty;
-
-                if ((null != this.PropertyBag) &&
-                    (!PropertyBag.Get<string>("IPAddress", out value)))
-                {
-                    value = string.Empty;
-                }
-
-                return value;
-            }
-            set
-            {
-                string curValue;
-                if (!PropertyBag.Get<string>("IPAddress", out curValue) ||
-                    !curValue.Equals(value))
-                {
-                    PropertyBag.Set<string>("IPAddress", value);
-                    RaisePropertyChanged(() => IPAddress);
-                }
-            }
+            get { return GetPropertyBagValue<string>(() => IPAddress); }
+            set { SetPropertyBagValue<string>(() => IPAddress, value); }
         }
+
         public DateTime LastUpdate
         {
             get
@@ -241,83 +133,33 @@ namespace VesselMonitoringSuite.Devices
                 if (null == this.Row) return DateTime.Now.ToUniversalTime();
                 return this.Row.Field<DateTime>("LastUpdate");
             }
-            set
-            {
-                if (value != this.Row.Field<DateTime>("LastUpdate"))
-                {
-                    this.Row.SetField<DateTime>("LastUpdate", value);
-                    RaisePropertyChanged(() => LastUpdate);
-                }
-            }
+            set { SetRowPropertyValue<DateTime>(() => LastUpdate, value); }
         }
+
         public string Location
         {
-            get
-            {
-                if (null == this.Row) return string.Empty;
-                return this.Row.Field<string>("Location");
-            }
-            set
-            {
-
-                if (value != this.Row.Field<string>("Location"))
-                {
-                    this.Row.SetField<string>("Location", value);
-                    RaisePropertyChanged(() => Location);
-                }
-            }
+            get { return GetRowPropertyValue<string>(() => Location); }
+            set { SetRowPropertyValue<string>(() => Location, value); }
         }
+
         public string Model
         {
-            get
-            {
-                if (null == this.Row) return string.Empty;
-                return this.Row.Field<string>("Model");
-            }
-            set
-            {
-
-                if (value != this.Row.Field<string>("Model"))
-                {
-                    this.Row.SetField<string>("Model", value);
-                    RaisePropertyChanged(() => Model);
-                }
-            }
+            get { return GetRowPropertyValue<string>(() => Model); }
+            set { SetRowPropertyValue<string>(() => Model, value); }
         }
+
         public string Name
         {
-            get
-            {
-                if (null == this.Row) return string.Empty;
-                return this.Row.Field<string>("Name");
-            }
-            set
-            {
-
-                if (value != this.Row.Field<string>("Name"))
-                {
-                    this.Row.SetField<string>("Name", value);
-                    RaisePropertyChanged(() => Name);
-                }
-            }
+            get { return GetRowPropertyValue<string>(() => Name); }
+            set { SetRowPropertyValue<string>(() => Name, value); }
         }
+
         public string Manufacturer
         {
-            get
-            {
-                if (null == this.Row) return string.Empty;
-                return this.Row.Field<string>("Manufacturer");
-            }
-            set
-            {
-
-                if (value != this.Row.Field<string>("Manufacturer"))
-                {
-                    this.Row.SetField<string>("Manufacturer", value);
-                    RaisePropertyChanged(() => Manufacturer);
-                }
-            }
+            get { return GetRowPropertyValue<string>(() => Manufacturer); }
+            set { SetRowPropertyValue<string>(() => Manufacturer, value); }
         }
+
         public List<uint> ReceivePGNList
         {
             get
@@ -346,38 +188,16 @@ namespace VesselMonitoringSuite.Devices
 
         public string SerialNumber
         {
-            get
-            {
-                if (null == this.Row) return string.Empty;
-                return this.Row.Field<string>("SerialNumber");
-            }
-            set
-            {
-
-                if (value != this.Row.Field<string>("SerialNumber"))
-                {
-                    this.Row.SetField<string>("SerialNumber", value);
-                    RaisePropertyChanged(() => SerialNumber);
-                }
-            }
+            get { return GetRowPropertyValue<string>(() => SerialNumber); }
+            set { SetRowPropertyValue<string>(() => SerialNumber, value); }
         }
+
         public string SoftwareVersion
         {
-            get
-            {
-                if (null == this.Row) return string.Empty;
-                return this.Row.Field<string>("SoftwareVersion");
-            }
-            set
-            {
-
-                if (value != this.Row.Field<string>("SoftwareVersion"))
-                {
-                    this.Row.SetField<string>("SoftwareVersion", value);
-                    RaisePropertyChanged(() => SoftwareVersion);
-                }
-            }
+            get { return GetRowPropertyValue<string>(() => SoftwareVersion); }
+            set { SetRowPropertyValue<string>(() => SoftwareVersion, value); }
         }
+
         public List<uint> TransmitPGNList
         {
             get
@@ -425,7 +245,30 @@ namespace VesselMonitoringSuite.Devices
 
         #region privates
 
-        protected void LoadPropertyBag()
+        private T GetRowPropertyValue<T>(Expression<Func<T>> propertyExpression)
+        {
+            var propertyName = GetPropertyName(propertyExpression);
+
+            if (null != this.Row) return this.Row.Field<T>(propertyName);
+            return default(T);
+        }
+
+        private T GetPropertyBagValue<T>(Expression<Func<T>> propertyExpression)
+        {
+            T value = default(T);
+
+            var propertyName = GetPropertyName(propertyExpression);
+
+            if ((null != this.PropertyBag) &&
+                (!this.PropertyBag.Get<T>(propertyName, out value)))
+            {
+                value = default(T);
+            }
+
+            return value;
+        }
+
+        private void LoadPropertyBag()
         {
             byte[] blob = Row.Field<byte[]>("PropertyBag");
 
@@ -476,6 +319,41 @@ namespace VesselMonitoringSuite.Devices
         }
 
         private ItemRow Row { get; set; }
+
+
+        private bool SetRowPropertyValue<T>(Expression<Func<T>> propertyExpression, T value)
+        {
+            var propertyName = GetPropertyName(propertyExpression);
+
+            if (value.Equals(this.Row.Field<T>(propertyName)))
+            {
+                return false;
+            }
+            else
+            {
+                this.Row.SetField<T>(propertyName, (T)value);
+                RaisePropertyChanged(() => propertyExpression);
+            }
+
+            return true;
+        }
+
+        private bool SetPropertyBagValue<T>(Expression<Func<T>> propertyExpression, T value)
+        {
+            T curValue;
+
+            var propertyName = GetPropertyName(propertyExpression);
+
+            if (!PropertyBag.Get<T>(propertyName, out curValue) ||
+                !curValue.Equals(value))
+            {
+                PropertyBag.Set<T>(propertyName, value);
+                RaisePropertyChanged(propertyExpression);
+            }
+
+            return true;
+        }
+
         #endregion
     }
 }
