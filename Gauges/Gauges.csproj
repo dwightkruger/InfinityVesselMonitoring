@@ -158,6 +158,28 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Controls\Controls.csproj">
+      <Project>{be74c59b-6793-4427-9ea8-279f960b5093}</Project>
+      <Name>Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Globals\Globals.csproj">
+      <Project>{84f92aeb-0c3d-465d-a3a1-ecb91f9bf588}</Project>
+      <Name>Globals</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Interfaces\Interfaces.csproj">
+      <Project>{063eb013-e492-4ce7-b97a-09c3be5ec2b7}</Project>
+      <Name>Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SQLiteDB\SQLiteDB.csproj">
+      <Project>{3eab6225-c0ff-43f7-ad6a-87bd3bd5811c}</Project>
+      <Name>SQLiteDB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Types\Types.csproj">
+      <Project>{bf83b7be-6ccd-4b54-a1c3-4c2d7260e1c6}</Project>
+      <Name>Types</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
