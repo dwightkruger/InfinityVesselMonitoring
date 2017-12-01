@@ -133,6 +133,10 @@
       <Project>{bf83b7be-6ccd-4b54-a1c3-4c2d7260e1c6}</Project>
       <Name>Types</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{0877e64b-3586-4b64-bff4-3e98ed57f322}</Project>
+      <Name>Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

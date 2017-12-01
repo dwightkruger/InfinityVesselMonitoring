@@ -179,6 +179,10 @@
       <Project>{bf83b7be-6ccd-4b54-a1c3-4c2d7260e1c6}</Project>
       <Name>Types</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UndoRedoFramework\UndoRedoFramework.csproj">
+      <Project>{61de604c-6ec9-4ee7-85c2-624a1f11bdcd}</Project>
+      <Name>UndoRedoFramework</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
