@@ -1,0 +1,47 @@
+﻿<local:BaseGauge
+    x:Class="InfinityGroup.VesselMonitoring.Controls.ArcGaugeLeft"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:InfinityGroup.VesselMonitoring.Controls"
+    DataContext="{Binding RelativeSource={RelativeSource Self}}"    
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"    
+    mc:Ignorable="d"
+    Background="Transparent"    
+    x:Name="userControl">
+
+    <Canvas>
+        <Grid 
+            x:Name="MainGrid" 
+            Canvas.Left="{Binding Left}"
+            Canvas.Top="{Binding Top}"        
+            Height="{Binding GaugeHeight}" 
+            Width="{Binding GaugeWidth}" 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Center">
+
+            <canvas:CanvasControl 
+                x:Name="canvasControl" 
+                ClearColor="Transparent" 
+                Draw="canvasControl_Draw" 
+                Loaded="canvasControl_Loaded" 
+                SizeChanged="canvasControl_SizeChanged"
+                CreateResources="canvasControl_CreateResources"/>
+
+            <Grid 
+                x:Name="DesignGrid"
+                Width="{Binding GaugeWidth}"
+                Height="{Binding GaugeHeight}">
+
+                <Ellipse 
+                    x:Name="DesignEllipse"
+                    Stroke="Red" 
+                    StrokeThickness="14" 
+                    HorizontalAlignment="Stretch" 
+                    VerticalAlignment="Stretch" 
+                    Visibility="Visible"/>
+            </Grid>
+        </Grid>
+    </Canvas>
+</local:BaseGauge>
