@@ -33,7 +33,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                         string createDateTimeIndex = "CREATE INDEX IF NOT EXISTS EventsTableIndex_DateTime ON \n " +
                                     TableName + "\n" +
                                     " ( \n" +
-                                        " EventDate ASC \n" +
+                                        " EventDateTimeUTC ASC \n" +
                                     " )";
                         using (var statement = ((ISQLiteConnection)_vesselDB.Connection).Prepare(createDateTimeIndex))
                         {
@@ -44,7 +44,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                                 TableName + "\n" +
                                 " ( \n" +
                                     " SensorId ASC, \n" +
-                                    " EventDate ASC \n" +
+                                    " EventDateTimeUTC ASC \n" +
                                 " )";
                         using (var statement = ((ISQLiteConnection)_vesselDB.Connection).Prepare(createSensorIdIndex))
                         {

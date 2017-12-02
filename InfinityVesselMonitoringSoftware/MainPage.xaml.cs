@@ -10,6 +10,7 @@ using InfinityGroup.VesselMonitoring.Gauges;
 using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.SQLiteDB;
+using InfinityGroup.VesselMonitoring.Utilities;
 using Microsoft.Graphics.Canvas.Text;
 using System;
 using System.Collections.Generic;
@@ -42,6 +43,8 @@ namespace VesselMonitoring
         public MainPage()
         {
             this.InitializeComponent();
+            //Globals.MediaPlayer = this.MediaPlayer;
+
             DispatcherHelper.Initialize();
 
             // Track all unhandled exceptions
@@ -226,6 +229,8 @@ namespace VesselMonitoring
             //_valueTimer = new Timer(ValueTimerTic, 0, 5000, 2000);
 
             this.BuildGaugePages();
+
+            //AlarmAudio alarm = new AlarmAudio();
         }
 
         private void ValueTimerTic(object stateInfo)
@@ -267,7 +272,7 @@ namespace VesselMonitoring
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void ApplicationUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private static void ApplicationUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
             Telemetry.TrackException(e.Exception);
             Telemetry.Flush(); // only for desktop apps

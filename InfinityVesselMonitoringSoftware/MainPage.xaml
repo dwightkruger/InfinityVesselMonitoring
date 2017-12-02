@@ -263,6 +263,12 @@
                         </Canvas>
                     </PivotItem>-->
                 </Pivot>
+
+                <!--<MediaPlayerElement 
+                    x:Name="MediaPlayer"
+                    AreTransportControlsEnabled="False"
+                    AutoPlay="False"
+                    />-->
             </Grid>
         </Viewbox>
     </Grid>
