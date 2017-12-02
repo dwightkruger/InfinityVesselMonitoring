@@ -109,6 +109,7 @@
     <Compile Include="IAISTable.cs" />
     <Compile Include="IDeviceItem.cs" />
     <Compile Include="IDeviceTable.cs" />
+    <Compile Include="IEventItem.cs" />
     <Compile Include="IEventsTable.cs" />
     <Compile Include="IGaugeItem.cs" />
     <Compile Include="IGaugePageItem.cs" />

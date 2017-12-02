@@ -12,7 +12,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
 {
     public interface IVesselTable
     {
-        void CreateTable();
+        Task BeginCreateTable(Action sucessCallback, Action<Exception> failureCallback);
         Task BeginCommitRow(ItemRow row, Action sucessCallback, Action<Exception> failureCallback);
         Task BeginCommitAll(Action sucessCallback, Action<Exception> failureCallback);
         Task BeginCommitAllAndClear(Action sucessCallback, Action<Exception> failureCallback);

@@ -40,42 +40,42 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             builder.RegisterInstance<IVesselDB>(VesselDB).SingleInstance();
 
             AISTable = Container.Resolve<IAISTable>();
-            AISTable.CreateTable();
+            await AISTable.BeginCreateTable(() => { }, (ex) => { });
             AISTable.Load();
             builder.RegisterInstance<IAISTable>(AISTable).SingleInstance();
 
             DeviceTable = Container.Resolve<IDeviceTable>();
-            DeviceTable.CreateTable();
+            await DeviceTable.BeginCreateTable(() => { }, (ex) => { });
             DeviceTable.Load();
             builder.RegisterInstance<IDeviceTable>(DeviceTable).SingleInstance();
 
             EventsTable = Container.Resolve<IEventsTable>();
-            EventsTable.CreateTable();
+            await EventsTable.BeginCreateTable(()=> { },(ex)=> { });
             EventsTable.Load();
             builder.RegisterInstance<IEventsTable>(EventsTable).SingleInstance();
 
             GaugeTable = Container.Resolve<IGaugeTable>();
-            GaugeTable.CreateTable();
+            await GaugeTable.BeginCreateTable(() => { }, (ex) => { });
             GaugeTable.Load();
             builder.RegisterInstance<IGaugeTable>(GaugeTable).SingleInstance();
 
             GaugePageTable = Container.Resolve<IGaugePageTable>();
-            GaugePageTable.CreateTable();
+            await GaugePageTable.BeginCreateTable(() => { }, (ex) => { });
             GaugePageTable.Load();
             builder.RegisterInstance<IGaugePageTable>(GaugePageTable).SingleInstance();
 
             SensorTable = Container.Resolve<ISensorTable>();
-            SensorTable.CreateTable();
+            await SensorTable.BeginCreateTable(() => { }, (ex) => { });
             SensorTable.Load();
             builder.RegisterInstance<ISensorTable>(SensorTable).SingleInstance();
 
             SensorDataTable = Container.Resolve<ISensorDataTable>();
-            SensorDataTable.CreateTable();
+            await SensorDataTable.BeginCreateTable(() => { }, (ex) => { });
             SensorDataTable.Load();
             builder.RegisterInstance<ISensorDataTable>(SensorDataTable).SingleInstance();
 
             VesselSettingsTable = Container.Resolve<IVesselSettingsTable>();
-            VesselSettingsTable.CreateTable();
+            await VesselSettingsTable.BeginCreateTable(() => { }, (ex) => { });
             VesselSettingsTable.Load();
             builder.RegisterInstance<IVesselSettingsTable>(VesselSettingsTable).SingleInstance();
         }

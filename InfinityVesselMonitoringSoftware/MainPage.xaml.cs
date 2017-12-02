@@ -54,7 +54,7 @@ namespace VesselMonitoring
             BuildDBTables.Directory = ApplicationData.Current.TemporaryFolder.Path;
             BuildDBTables.DatabaseName = "InfinityGroupVesselMonitoring";
             var x = new BuildDBTables();
-            x.DoIt().Wait();
+            Task.Run(() => { x.DoIt().Wait(); }).Wait();
 
             //arcGauge00.Divisions = 7; arcGauge00.MinorTicsPerMajorTic = 5;  arcGauge00.MediumTicsPerMajorTic = 0;
             //arcGauge01.Divisions = 4; arcGauge01.MinorTicsPerMajorTic = 10; arcGauge01.MediumTicsPerMajorTic = 0;

@@ -21,39 +21,39 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             TableName = "SensorDataTable";
         }
 
-        override public void CreateTable()
+        async override public Task BeginCreateTable(Action successCallback, Action<Exception> failureCallback)
         {
-            if (IsReadOnly) return;
+            if (IsReadOnly) successCallback();
 
-            try
+            await base.BeginCreateTable(() =>
             {
-                base.CreateTable();
-            }
-            catch (Exception ex)
-            {
-                Telemetry.TrackException(ex);
-                throw;
-            }
-
-            // Create indexes
-            try
-            {
-                string createIndex = "CREATE INDEX IF NOT EXISTS SensorDataTableIndex_SensorIdTimeIndex ON \n " +
-                            TableName + "\n" +
-                            " ( \n" +
-                                " SensorId ASC, \n" +
-                                " Time ASC      \n" +
-                            " )";
-                using (var statement = ((ISQLiteConnection)_vesselDB.Connection).Prepare(createIndex))
+                // Create indexes
+                try
                 {
-                    statement.Step();
+                    string createIndex = "CREATE INDEX IF NOT EXISTS SensorDataTableIndex_SensorIdTimeIndex ON \n " +
+                                TableName + "\n" +
+                                " ( \n" +
+                                    " SensorId ASC, \n" +
+                                    " Time ASC      \n" +
+                                " )";
+                    using (var statement = ((ISQLiteConnection)_vesselDB.Connection).Prepare(createIndex))
+                    {
+                        statement.Step();
+                    }
                 }
-            }
-            catch (Exception ex)
+                catch (Exception ex)
+                {
+                    Telemetry.TrackException(ex);
+                    failureCallback(ex);
+                }
+            },
+            (ex) =>
             {
                 Telemetry.TrackException(ex);
-                throw;
-            }
+                failureCallback(ex);
+            });
+
+            successCallback();
         }
 
         protected override string GetCreateTableSql()

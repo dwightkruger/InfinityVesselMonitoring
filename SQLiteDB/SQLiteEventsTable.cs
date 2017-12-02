@@ -21,49 +21,48 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             TableName = "EventsTable";
         }
 
-        override public void CreateTable()
+        async override public Task BeginCreateTable(Action successCallback, Action<Exception> failureCallback)
         {
-            if (IsReadOnly) return;
+            if (IsReadOnly) successCallback();
 
-            try
-            {
-                base.CreateTable();
-            }
-            catch (Exception ex)
-            {
-                Telemetry.TrackException(ex);
-                throw;
-            }
-
-            // Create indexes
-            try
-            { 
-                string createDateTimeIndex = "CREATE INDEX IF NOT EXISTS EventsTableIndex_DateTime ON \n " +
-                            TableName + "\n" +
-                            " ( \n" +
-                                " EventDate ASC \n" +
-                            " )";
-                using (var statement = ((ISQLiteConnection)_vesselDB.Connection).Prepare(createDateTimeIndex))
+            await base.BeginCreateTable(() =>
                 {
-                    statement.Step();
-                }
+                    // Create indexes
+                    try
+                    {
+                        string createDateTimeIndex = "CREATE INDEX IF NOT EXISTS EventsTableIndex_DateTime ON \n " +
+                                    TableName + "\n" +
+                                    " ( \n" +
+                                        " EventDate ASC \n" +
+                                    " )";
+                        using (var statement = ((ISQLiteConnection)_vesselDB.Connection).Prepare(createDateTimeIndex))
+                        {
+                            statement.Step();
+                        }
 
-                string createSensorIdIndex = "CREATE INDEX IF NOT EXISTS EventsTableIndex_SensorIdDateTime ON \n " +
-                        TableName + "\n" +
-                        " ( \n" +
-                            " SensorId ASC, \n" +
-                            " EventDate ASC \n" +
-                        " )";
-                using (var statement = ((ISQLiteConnection)_vesselDB.Connection).Prepare(createSensorIdIndex))
+                        string createSensorIdIndex = "CREATE INDEX IF NOT EXISTS EventsTableIndex_SensorIdDateTime ON \n " +
+                                TableName + "\n" +
+                                " ( \n" +
+                                    " SensorId ASC, \n" +
+                                    " EventDate ASC \n" +
+                                " )";
+                        using (var statement = ((ISQLiteConnection)_vesselDB.Connection).Prepare(createSensorIdIndex))
+                        {
+                            statement.Step();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Telemetry.TrackException(ex);
+                        failureCallback(ex);
+                    }
+                },
+                (ex) =>
                 {
-                    statement.Step();
-                }
-            }
-            catch (Exception ex)
-            {
-                Telemetry.TrackException(ex);
-                throw;
-            }
+                    Telemetry.TrackException(ex);
+                });
+
+            successCallback();
         }
 
         protected override string GetCreateTableSql()
@@ -71,15 +70,15 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             return
                 "CREATE TABLE IF NOT EXISTS " + TableName + "\n" +
                 "(\n" +
-                    "EventId         INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT, \n " +
-                    "EventDate       DATETIME NOT NULL, \n " +
-                    "EventCode       INTEGER  NOT NULL, \n " +
-                    "EventPriority   INTEGER  NOT NULL, \n " +
-                    "Latitude        DOUBLE   NOT NULL, \n " +
-                    "Longitude       DOUBLE   NOT NULL, \n " +
-                    "PropertyBag     TEXT     NOT NULL, \n " +
-                    "SensorId        INTEGER  NOT NULL, \n " +
-                    "Value           DOUBLE   NOT NULL, \n " +
+                    "EventId           INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT, \n " +
+                    "EventDateTimeUTC  DATETIME NOT NULL, \n " +
+                    "EventCode         INTEGER  NOT NULL, \n " +
+                    "EventPriority     INTEGER  NOT NULL, \n " +
+                    "Latitude          DOUBLE   NOT NULL, \n " +
+                    "Longitude         DOUBLE   NOT NULL, \n " +
+                    "PropertyBag       TEXT     NOT NULL, \n " +
+                    "SensorId          INTEGER  NOT NULL, \n " +
+                    "Value             DOUBLE   NOT NULL, \n " +
                     "FOREIGN KEY(SensorId) REFERENCES SensorTable(SensorId) \n" +
                  ") ";
         }
@@ -89,7 +88,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             return
                 "SELECT " +
                     "EventId, " +
-                    "EventDate, " +
+                    "EventDateTimeUTC, " +
                     "EventCode, " +
                     "EventPriority, " +
                     "Latitude, " +
@@ -105,7 +104,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
         {
             itemRow.SetField<DateTime>("ChangeDate", DateTime.UtcNow);
 
-            statement.Bind("@EventDate", SQLiteDB.Utilities.DateTimeSQLite(itemRow.Field<DateTime>("EventDate")));
+            statement.Bind("@EventDateTimeUTC", SQLiteDB.Utilities.DateTimeSQLite(itemRow.Field<DateTime>("EventDateTimeUTC")));
             statement.Bind("@EventCode", itemRow.Field<Int32>("EventCode"));
             statement.Bind("@EventPriority", itemRow.Field<Int32>("EventPriority"));
             statement.Bind("@Latitude", itemRow.Field<double>("Latitude"));
@@ -125,7 +124,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemRow.SetField<DateTime>("ChangeDate", DateTime.UtcNow);
 
             statement.Bind("@" + PrimaryKeyName, itemRow.Field<Int64>(PrimaryKeyName));
-            statement.Bind("@EventDate", SQLiteDB.Utilities.DateTimeSQLite(itemRow.Field<DateTime>("EventDate")));
+            statement.Bind("@EventDateTimeUTC", SQLiteDB.Utilities.DateTimeSQLite(itemRow.Field<DateTime>("EventDateTimeUTC")));
             statement.Bind("@EventCode", itemRow.Field<Int32>("EventCode"));
             statement.Bind("@EventPriority", itemRow.Field<Int32>("EventPriority"));
             statement.Bind("@Latitude", itemRow.Field<double>("Latitude"));
@@ -140,7 +139,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             ItemRow itemRow = this.CreateRow();
 
             itemRow.SetField<Int64>(PrimaryKeyName, (Int64)Convert.ToInt64(statement[00]));
-            itemRow.SetField<DateTime>("EventDate", (DateTime)DateTime.Parse((string)statement[01]));
+            itemRow.SetField<DateTime>("EventDateTimeUTC", (DateTime)DateTime.Parse((string)statement[01]));
             itemRow.SetField<Int32>("EventCode", (Int32)Convert.ToInt32(statement[02]));
             itemRow.SetField<Int32>("EventPriority", (Int32)Convert.ToInt32(statement[03]));
             itemRow.SetField<double>("Latitude", (double)Convert.ToDouble(statement[04]));
@@ -156,7 +155,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
         protected override void CreateTableSchema(ItemTable itemTable)
         {
             itemTable.Columns.Add(PrimaryKeyName, typeof(Int64));
-            itemTable.Columns.Add("EventDate", typeof(DateTime));
+            itemTable.Columns.Add("EventDateTimeUTC", typeof(DateTime));
             itemTable.Columns.Add("EventCode", typeof(Int32));
             itemTable.Columns.Add("EventPriority", typeof(Int32));
             itemTable.Columns.Add("Latitude", typeof(double));
@@ -166,7 +165,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns.Add("Value", typeof(float));
 
             itemTable.Columns[PrimaryKeyName].DefaultValue = -1L;
-            itemTable.Columns["EventDate"].DefaultValue = DateTime.Now.ToUniversalTime();
+            itemTable.Columns["EventDateTimeUTC"].DefaultValue = DateTime.Now.ToUniversalTime();
             itemTable.Columns["EventCode"].DefaultValue = 0;
             itemTable.Columns["EventPriority"].DefaultValue = 0;
             itemTable.Columns["Latitude"].DefaultValue = 0D;
@@ -181,7 +180,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             return
                 "INSERT INTO " + TableName +
                           "( " +
-                                "EventDate, " +
+                                "EventDateTimeUTC, " +
                                 "EventCode, " +
                                 "EventPriority, " +
                                 "Latitude, " +
@@ -192,7 +191,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                           ") " +
                           "VALUES " +
                           "( " +
-                                "@EventDate, " +
+                                "@EventDateTimeUTC, " +
                                 "@EventCode, " +
                                 "@EventPriority, " +
                                 "@Latitude, " +
@@ -207,14 +206,14 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
         {
             return "UPDATE " + TableName + "\n" +
                    " SET \n" +
-                   "     EventDate     = @EventDate,      \n" +
-                   "     EventCode     = @EventCode,      \n" +
-                   "     EventPriority = @EventPriority,  \n" +
-                   "     Latitude      = @Latitude,       \n" +
-                   "     Longitude     = @Longitude,      \n" +
-                   "     PropertyBag   = @PropertyBag,    \n" +
-                   "     SensorId      = @SensorId,       \n" +
-                   "     Value         = @Value           \n" +
+                   "     EventDateTimeUTC = @EventDateTimeUTC, \n" +
+                   "     EventCode        = @EventCode,        \n" +
+                   "     EventPriority    = @EventPriority,    \n" +
+                   "     Latitude         = @Latitude,         \n" +
+                   "     Longitude        = @Longitude,        \n" +
+                   "     PropertyBag      = @PropertyBag,      \n" +
+                   "     SensorId         = @SensorId,         \n" +
+                   "     Value            = @Value             \n" +
                    "  WHERE " + PrimaryKeyName + " = @" + PrimaryKeyName;
         }
 

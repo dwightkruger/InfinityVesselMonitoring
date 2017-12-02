@@ -203,28 +203,33 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             });
         }
 
-        virtual public void CreateTable()
+        async virtual public Task BeginCreateTable(Action successCallback, Action<Exception> failureCallback)
         {
-            try
+            await Task.Run(() =>
             {
-                if (IsReadOnly) return;
-
-                using (var statement = ((ISQLiteConnection)_vesselDB.Connection).Prepare(GetCreateTableSql()))
+                try
                 {
-                    statement.Step();
+                    if (IsReadOnly) return;
+
+                    using (var statement = ((ISQLiteConnection)_vesselDB.Connection).Prepare(GetCreateTableSql()))
+                    {
+                        statement.Step();
+                    }
+
+                    const string enableForeighKeys = "PRAGMA foreign_keys = ON;";
+                    using (var statement = ((ISQLiteConnection)_vesselDB.Connection).Prepare(enableForeighKeys))
+                    {
+                        statement.Step();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Telemetry.TrackException(ex);
+                    failureCallback(ex);
                 }
 
-                const string enableForeighKeys = "PRAGMA foreign_keys = ON;";
-                using (var statement = ((ISQLiteConnection)_vesselDB.Connection).Prepare(enableForeighKeys))
-                {
-                    statement.Step();
-                }
-            }
-            catch (Exception ex)
-            {
-                Telemetry.TrackException(ex);
-                throw;
-            }
+                successCallback();
+            });
         }
 
         virtual public void Load()
