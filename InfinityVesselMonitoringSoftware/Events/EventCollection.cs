@@ -199,7 +199,7 @@ namespace InfinityVesselMonitoringSoftware.Events
             //    this.AlarmAudio.IsContinuousAlarmSounding = false;
 
             //    IEventItem ackAlarm = new EventItem(_locator);
-            //    ackAlarm.EventDateTime = DateTime.UtcNow;
+            //    ackAlarm.EventDateTimeUTC = DateTime.UtcNow;
             //    ackAlarm.EventCode = AlarmCode.AlarmAcknowledged;
             //    this.AddEvent(ackAlarm, true);
             //}
