@@ -10,6 +10,7 @@ using InfinityGroup.VesselMonitoring.Gauges;
 using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.SQLiteDB;
+using InfinityGroup.VesselMonitoring.Utilities;
 using InfinityVesselMonitoringSoftware;
 using Microsoft.Graphics.Canvas.Text;
 using System;
@@ -61,6 +62,14 @@ namespace VesselMonitoring
             App.VesselSettings = new VesselSettings();
 
             this.BuildGaugePages();
+
+            SendEmail.Send("dwightkruger@mvinfinity.com",
+                            "dwightkruger@mvinfinity.com",
+                            "MV Infinity",
+                            "Test Email",
+                            "This is a test",
+                            "");
+                
         }
 
     /// <summary>

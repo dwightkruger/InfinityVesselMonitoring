@@ -4,12 +4,20 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////   
 
+using System.Collections.Generic;
+using Windows.UI.Xaml.Controls;
+
 namespace InfinityGroup.VesselMonitoring.Types
 {
     public interface IVesselSettings
     {
-        string VesselName { get; set; }
         string FromEmailAddress { get; set; }
+        Image GetImage(string imageName);
+        List<string> GetImageNames();
+        void SetImage(Image image, string imageName);
         string ToEmailAddress { get; set; }
+        string VesselImageName { get; set; }
+        string VesselName { get; set; }
+
     }
 }

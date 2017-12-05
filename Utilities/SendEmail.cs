@@ -92,9 +92,11 @@ namespace InfinityGroup.VesselMonitoring.Utilities
                     oMail.AddAttachment(item.AttachmentName, content);
                 }
 
-                SmtpServer oServer = new SmtpServer("smtp.mvinfinity.com");
+                SmtpServer oServer = new SmtpServer("outlook.office365.com");
                 oServer.User = "dwightkruger@mvinfinity.com";
-                oServer.Password = "testpassword";
+                oServer.Password = "";
+                oServer.ConnectType = SmtpConnectType.ConnectDirectSSL;
+                oServer.Port = 993;
 
                 try
                 {
