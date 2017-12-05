@@ -112,7 +112,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
             OuterRectangle = new Rect(sender.Size.Width * (2f / 3f), 16f,
                                       sender.Size.Width * (1f / 3f) - 8, sender.Size.Height - 32);
-            args.TrackAsyncAction(CreateResourcesAsync(sender).AsAsyncAction());
+            //args.TrackAsyncAction(CreateResourcesAsync(sender).AsAsyncAction());
 
             CreateTankBrushes(sender);
 
@@ -120,9 +120,9 @@ namespace InfinityGroup.VesselMonitoring.Controls
             CanvasControl.Invalidate();
         }
 
-        virtual protected async Task CreateResourcesAsync(CanvasControl sender)
-        {
-        }
+        //virtual protected async Task CreateResourcesAsync(CanvasControl sender)
+        //{
+        //}
 
         virtual protected void DrawOuterBox(CanvasControl sender, CanvasDrawEventArgs args)
         {

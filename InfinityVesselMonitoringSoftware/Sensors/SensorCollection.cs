@@ -9,6 +9,7 @@ using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Types;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -19,6 +20,8 @@ namespace VesselMonitoringSuite.Sensors
 {
     public class SensorCollection : ObservableCollection<ISensorItem>, INotifyPropertyChanged
     {
+        private Hashtable _hashBySensorId = new Hashtable();
+
         public SensorCollection()
         {
             this.Lock = new object();
@@ -79,6 +82,7 @@ namespace VesselMonitoringSuite.Sensors
                     if (null != sensor)
                     {
                         this.Add(sensor);
+                        _hashBySensorId.Add(sensor.SensorId, sensor);
                     }
                 }
             }
@@ -107,6 +111,18 @@ namespace VesselMonitoringSuite.Sensors
             }
 
             return results;
+        }
+
+        public ISensorItem FindBySensorId(int sensorId)
+        {
+            ISensorItem result = null;
+
+            lock (Lock)
+            {
+                result = (ISensorItem)_hashBySensorId[sensorId];
+            }
+
+            return result;
         }
 
         private object Lock { get; set; }

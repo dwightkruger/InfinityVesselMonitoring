@@ -105,5 +105,6 @@ namespace InfinityVesselMonitoringSoftware
         public static DeviceCollection DeviceCollection = new DeviceCollection();
         public static GaugePageCollection GaugePageCollection = new GaugePageCollection();
         public static GaugeItemCollection GaugeItemCollection = new GaugeItemCollection();
+        public static VesselSettings VesselSettings { get; set; } 
     }
 }

@@ -10,16 +10,14 @@ using InfinityGroup.VesselMonitoring.Gauges;
 using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.SQLiteDB;
+using InfinityVesselMonitoringSoftware;
 using Microsoft.Graphics.Canvas.Text;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Threading.Tasks;
 using VesselMonitoringSuite.Sensors;
 using VesselMonitoringSuite.ViewModels;
 using VesselMonitoringSuite.Views;
-using Windows.Media.Core;
-using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -56,10 +54,11 @@ namespace VesselMonitoring
             Telemetry.Flush();
 
             BuildDBTables.Directory = ApplicationData.Current.TemporaryFolder.Path;
-            //BuildDBTables.Directory = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
             BuildDBTables.DatabaseName = "InfinityGroupVesselMonitoring";
             var x = new BuildDBTables();
             Task.Run(() => { x.DoIt().Wait(); }).Wait();
+
+            App.VesselSettings = new VesselSettings();
 
             this.BuildGaugePages();
         }

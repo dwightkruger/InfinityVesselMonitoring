@@ -4,139 +4,98 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
+using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
+using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Types;
 using InfinityGroup.VesselMonitoring.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace InfinityVesselMonitoringSoftware.Events
 {
     public class EventCollection : ObservableCollection<IEventItem>
     {
-        private bool _isLoaded = false;
-
-        private object _listLock = new object();
-        private ObservableCollection<IEventItem> _AlarmOnList = new ObservableCollection<IEventItem>();
-
-        private System.Threading.Timer _timerSentEmail;
-        private int _sixtyMinutes = 60 * 60 * 1000;
-        private bool _SentEmailDelay = false;
-
+        private object _lock = new object();
+        private ObservableCollection<IEventItem> _alarmOnList = new ObservableCollection<IEventItem>();
 
         public EventCollection()
         {
-            this.AlarmAudio = new AlarmAudio();
-            Lock = new Object();
-
             // Load some of the existing events for this vessel
             Load();
-
-            _timerSentEmail = new System.Threading.Timer(_timerSentEmail_Tick, null, 0, System.Threading.Timeout.Infinite);
         }
-
-        public AlarmAudio AlarmAudio { get; set; }
 
         /// <summary>
         /// Add an event, and send email if appropriate
         /// </summary>
         /// <param name="myEventItem"></param>
         /// <param name="bRaiseEvent"></param>
-        public void AddEvent(IEventItem myEventItem, bool bRaiseEvent)
+        async public Task AddEvent(IEventItem myEventItem, bool bRaiseEvent)
         {
             bool sendEventEmail = false;
             myEventItem.Commit();
+            Debug.Assert(myEventItem.EventId > 0);
 
-            lock (_listLock)
+            // If the alarm is turned on, then add it to the list. If the alarm was turned off,
+            // the delete it from the list.
+
+            if (myEventItem.IsAlarmOn)
             {
-                // If the alarm is ON/OFF, then add/delete it to the ON list.
-                IEnumerable<IEventItem> query = null;
-                query = from item in _AlarmOnList
-                        where item.SensorId == myEventItem.SensorId
-                        select item;
-
-                if (myEventItem.IsAlarmOn && (query.Count() == 0))          // An alasm has started, sound a repeating audible alarm
+                lock (_lock)
                 {
-                    _AlarmOnList.Add(myEventItem);
-                    this.AlarmAudio.IsContinuousAlarmSounding = true;
-                    sendEventEmail = true;
+                    _alarmOnList.Add(myEventItem);
                 }
-                else if (myEventItem.IsWarningOn && (query.Count() == 0))    // A warning has started, sound an audible alarm once
-                {
-                    this.AlarmAudio.IsOnceAlarmSounding = true;
-                }
-                else if (!myEventItem.IsAlarmOn && (query.Count() > 0))     // An alasm is over/cancelled. 
-                {
-                    IEventItem myOffAlarmItem = query.First();
-                    _AlarmOnList.Remove(myOffAlarmItem);
-                }
-
-                if (_AlarmOnList.Count == 0)                                // If the list of alarms is empty, stop the audible signal
-                {
-                    this.AlarmAudio.IsContinuousAlarmSounding = false;
-                }
-
+                await AlarmAudio.PlayAlarm(false, myEventItem.EventId);
             }
 
-            lock (Lock)
+            lock (_lock)
             {
                 base.Add(myEventItem);
             }
 
-            // Raise the event outside of the lock.
-            if (bRaiseEvent)
-            {
-                //RaiseAnEvent(Krill_Library.ValueChangeTypeEnum.Added, myEventItem, null);
-            }
 
             if (sendEventEmail)
             {
-                if (!_SentEmailDelay)
-                {
-                    this.SendEventEmail(myEventItem);
-                    _SentEmailDelay = true;
-                    _timerSentEmail.Change(_sixtyMinutes, System.Threading.Timeout.Infinite);
-                }
+                this.SendEventEmail(myEventItem);
             }
         }
-
-
-        public void _timerSentEmail_Tick(object stateInfo)
-        {
-            _SentEmailDelay = false;
-        }
-
 
         /// <summary>
         /// Calling this routine acknowledges an individual alarm
         /// </summary>
         /// <param name="myEventID"></param>
         /// <returns></returns>
-        public void AlarmAcknowledge(int myEventID)
+        async public Task AlarmAcknowledge(int myEventId)
         {
-            //IEventItem acknowledgedAlarmItem = new EventItem(_locator);
-            //acknowledgedAlarmItem.SensorID = 0;
-            //acknowledgedAlarmItem.EventPriority = 0;
-            //acknowledgedAlarmItem.EventCode = AlarmCode.AlarmAcknowledged;
-            //acknowledgedAlarmItem.Value = 0;
+            // Find the event we are acknowledging.
+            IEnumerable<IEventItem> query = null;
+            lock (_lock)
+            {
+                query = from item in this
+                        where item.EventId == myEventId
+                        select item;
+            }
 
-            //lock (Lock)
-            //{
-            //    IEnumerable<IEventItem> query =
-            //        from item in this
-            //        where item.EventId == myEventID
-            //        select item;
+            // If we have found the trigger event, then build the acknowledge event
+            if (query.Count<IEventItem>() > 0)
+            {
+                IEventItem triggerEvent = query.First<IEventItem>();
 
-            //    if (query.Count<IEventItem>() != 0)
-            //    {
-            //        IEventItem sourceEvent = query.First<IEventItem>();
-            //        acknowledgedAlarmItem.SensorId = sourceEvent.SensorId;
-            //    }
-            //}
+                IEventItem acknowledgedEvent = new EventItem();
+                acknowledgedEvent.SensorId = triggerEvent.SensorId;
+                acknowledgedEvent.EventPriority = 0;
+                acknowledgedEvent.EventCode = EventCode.AlarmAcknowledged;
+                acknowledgedEvent.Value = 0;
 
-            //this.AddEvent(acknowledgedAlarmItem, true);
+                await this.AddEvent(acknowledgedEvent, true);
+
+                // if this event has triggered an alarm, cancel that alarm.
+                AlarmAudio.CancelAlarm(triggerEvent.EventId);
+            }
         }
 
         /// <summary>
@@ -150,7 +109,7 @@ namespace InfinityVesselMonitoringSoftware.Events
             IEventItem result = null;
             IEnumerable<IEventItem> query = null;
 
-            lock (Lock)
+            lock (_lock)
             {
                 query = from item in this
                         where item.EventId == myEventId
@@ -165,46 +124,6 @@ namespace InfinityVesselMonitoringSoftware.Events
             return result;
         }
 
-        /// <summary>
-        /// Calling this routine acknowledges all alarms and raises the AcKAlarm event
-        /// </summary>
-        /// <remarks></remarks>
-        public void AlarmAcknowledge()
-        {
-            //bool bSendAck = false;              // Assume we are not acknowledging an alarm
-
-            //lock (_listLock)
-            //{
-            //    AlertOnCount myAlerts = GetAlertCount();
-
-            //    if (myAlerts.AllAlerts > 0)
-            //    {
-            //        // Mark each alarm item in the On list as being acknowledged. That way the 
-            //        // Audio Gauge will know if there are any new alarms that need to be 
-            //        // sounded.
-            //        foreach (IEventItem myAlarmItem in _AlarmOnList)
-            //        {
-            //            if (!myAlarmItem.AlarmAcknowledged)
-            //            {
-            //                bSendAck = true;
-            //                myAlarmItem.AlarmAcknowledged = true;
-            //            }
-            //        }
-            //    }
-            //}
-
-            //// Signal the event outside of the lock
-            //if (bSendAck)
-            //{
-            //    this.AlarmAudio.IsContinuousAlarmSounding = false;
-
-            //    IEventItem ackAlarm = new EventItem(_locator);
-            //    ackAlarm.EventDateTimeUTC = DateTime.UtcNow;
-            //    ackAlarm.EventCode = AlarmCode.AlarmAcknowledged;
-            //    this.AddEvent(ackAlarm, true);
-            //}
-        }
-
 
         /// <summary>
         /// Delete an event object from this collection based on the event item
@@ -215,34 +134,29 @@ namespace InfinityVesselMonitoringSoftware.Events
         {
             IEnumerable<IEventItem> query = null;
 
-            lock (Lock)
+            lock (_lock)
             {
-                lock (_listLock)
-                {
-                    // Delete the item from the AlarmON list
-                    query = from item in _AlarmOnList
-                            where item.EventId == myEventItem.EventId
-                            select item;
-
-                    if (query.Count() != 0)
-                    {
-                        IEventItem myDeletedAlarmItem = query.First();
-                        _AlarmOnList.Remove(myDeletedAlarmItem);
-                    }
-                }
-
-                // If the item is still in this collection, delete it.
-                query = from item in this
+                // Delete the item from the AlarmON list
+                query = from item in _alarmOnList
                         where item.EventId == myEventItem.EventId
                         select item;
 
                 if (query.Count() != 0)
                 {
-                    base.Remove(query.First<IEventItem>());
+                    IEventItem myDeletedAlarmItem = query.First();
+                    _alarmOnList.Remove(myDeletedAlarmItem);
                 }
             }
 
-            //RaiseAnEvent(Krill_Library.ValueChangeTypeEnum.Removed, myEventItem, null);
+            // If the item is still in this collection, delete it.
+            query = from item in this
+                    where item.EventId == myEventItem.EventId
+                    select item;
+
+            if (query.Count() != 0)
+            {
+                base.Remove(query.First<IEventItem>());
+            }
         }
 
         /// <summary>
@@ -252,7 +166,7 @@ namespace InfinityVesselMonitoringSoftware.Events
         /// <remarks></remarks>
         public void RemoveEvent(int myEventId)
         {
-            lock (Lock)
+            lock (_lock)
             {
                 // Delete the event if it is still in this collection
                 IEnumerable<IEventItem> query = null;
@@ -264,16 +178,16 @@ namespace InfinityVesselMonitoringSoftware.Events
                     base.Remove(query.First<IEventItem>());
                 }
 
-                lock (_listLock)
+                lock (_lock)
                 {
                     // Delete the item from the AlarmON list
-                    query = from item in _AlarmOnList
+                    query = from item in _alarmOnList
                             where item.EventId == myEventId
                             select item;
 
                     if (query.Count() != 0)
                     {
-                        _AlarmOnList.Remove(query.First<IEventItem>());
+                        _alarmOnList.Remove(query.First<IEventItem>());
                     }
                 }
             }
@@ -287,7 +201,7 @@ namespace InfinityVesselMonitoringSoftware.Events
         {
             List<IEventItem> myEventList = null;
 
-            lock (Lock)
+            lock (_lock)
             {
                 // Get the list of events corresponding to this sensor
                 IEnumerable<IEventItem> query = null;
@@ -322,7 +236,7 @@ namespace InfinityVesselMonitoringSoftware.Events
             // Get the list of alarm rows corresponding to this sensor
             IEnumerable<IEventItem> query = null;
 
-            lock (Lock)
+            lock (_lock)
             {
                 query = from item in this.AsEnumerable()
                         orderby item.EventDateTimeUTC descending
@@ -341,10 +255,10 @@ namespace InfinityVesselMonitoringSoftware.Events
         /// <returns></returns>
         public ObservableCollection<IEventItem> GetAllOnAlarmsCollection()
         {
-            lock (_listLock)
+            lock (_lock)
             {
                 //_AlarmOnList.Sort(_Comparer);
-                return _AlarmOnList;
+                return _alarmOnList;
             }
         }
 
@@ -355,42 +269,12 @@ namespace InfinityVesselMonitoringSoftware.Events
         /// <returns></returns>
         public List<IEventItem> GetAllOnAlarmsList()
         {
-            lock (_listLock)
+            lock (_lock)
             {
                 //_AlarmOnList.Sort(_Comparer);
-                return _AlarmOnList.ToList<IEventItem>();
+                return _alarmOnList.ToList<IEventItem>();
             }
         }
-
-
-        /// <summary>
-        /// Returns only those Alerts which have not been acknowledged
-        /// </summary>
-        /// <returns></returns>
-        //public AlertOnCount GetAlertCount()
-        //{
-        //    AlertOnCount myAlertCount = new AlertOnCount();
-
-        //    lock (_listLock)
-        //    {
-        //        foreach (IEventItem myAlarmItem in _AlarmOnList)
-        //        {
-        //            if (!myAlarmItem.AlarmAcknowledged)
-        //            {
-        //                if (myAlarmItem.EventPriority < 50)
-        //                {
-        //                    myAlertCount.Warning += 1;
-        //                }
-        //                else
-        //                {
-        //                    myAlertCount.Alarm += 1;
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    return myAlertCount;
-        //}
 
 
         /// <summary>
@@ -398,66 +282,50 @@ namespace InfinityVesselMonitoringSoftware.Events
         /// </summary>
         private void Load()
         {
-            //lock (Lock)
-            //{
-            //    if (!_isLoaded)
-            //    {
-            //        this.Clear();
-            //        _AlarmOnList.Clear();
+            lock (_lock)
+            {
+                this.Clear();
+                _alarmOnList.Clear();
 
-            //        foreach (ItemRow row in _locator.EventsTable.Rows)
-            //        {
-            //            IEventItem newEvent = new EventItem(row.Field<Guid>("EventId"), _locator);
-            //            base.Add(newEvent);
-            //        }
-
-            //        _isLoaded = true;
-            //    }
-            //}
+                foreach (ItemRow row in BuildDBTables.EventsTable.Rows)
+                {
+                    IEventItem newEvent = new EventItem(row);
+                    base.Add(newEvent);
+                }
+            }
         }
-
-        public object Lock { get; set; }
-
-        //private void RaiseAnEvent(Krill_Library.ValueChangeTypeEnum myChangeType,
-        //                          IEventItem myAlarmItem,
-        //                          IEventItem myReplacementItem)
-        //{
-
-        //    if (Changed != null)
-        //        Changed(this, new EventCollectionChangedEventArgs(myChangeType, myAlarmItem, myReplacementItem));
-        //}
 
         private void SendEventEmail(IEventItem myEvent)
         {
             //if (_locator.VesselAdminParameters.SendAlarmEmail)
             //{
-            //    ISensorItem mySensor = _locator.SensorCollection.FindBySensorID(myEvent.SensorID);
+            ISensorItem mySensor = App.SensorCollection.FindBySensorId(myEvent.SensorId);
 
-            //    if (mySensor != null)
-            //    {
-            //        string strTextSubject = string.Empty;
-            //        if (_locator.VesselAdminParameters.VesselName.Length > 0)
-            //        {
-            //            strTextSubject = "** Alarm Message from " + _locator.VesselAdminParameters.VesselName + " ** ";
-            //        }
-            //        else
-            //        {
-            //            strTextSubject = "** Alarm Message ** ";
-            //        }
+            if (mySensor != null)
+            {
+                string subject = string.Empty;
+                if (App.VesselSettings.VesselName.Length > 0)
+                {
+                    subject = "** Alarm Message from " + App.VesselSettings.VesselName + " ** ";
+                }
+                else
+                {
+                    subject = "** Alarm Message ** ";
+                }
 
-                    //Krill_Library.Globals.Email.QueueEmail(
-                    //    _locator.VesselAdminParameters.EMail.OurEmailAddr,
-                    //    _locator.VesselAdminParameters.ToEmailAddress,
-                    //    _locator.VesselAdminParameters.VesselName,
-                    //    strTextSubject,
-                    //    "A new alarm condition has been detected." +
-                    //        Environment.NewLine +
-                    //        Environment.NewLine +
-                    //        mySensor.Description +
-                    //        Environment.NewLine +
-                    //        mySensor.AlarmMessage(myEvent.Value, myEvent.EventCode), "");
-            //    }
-            //}
+                SendEmail.Send(App.VesselSettings.FromEmailAddress,
+                               App.VesselSettings.ToEmailAddress,
+                               App.VesselSettings.VesselName,
+                               subject,
+                               "A new alarm condition has been detected." +
+                                    Environment.NewLine +
+                                    Environment.NewLine +
+                                    mySensor.Description +
+                                    Environment.NewLine +
+                                    //mySensor.AlarmMessage(myEvent.Value, myEvent.EventCode),
+                                    "",
+                            string.Empty);
+            }
         }
     }
 }

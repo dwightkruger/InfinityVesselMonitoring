@@ -114,6 +114,7 @@
     <Compile Include="ItemSet.cs" />
     <Compile Include="ItemTable.cs" />
     <Compile Include="ItemTableCollection.cs" />
+    <Compile Include="IVesselSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyBag.cs" />
     <EmbeddedResource Include="Properties\Types.rd.xml" />

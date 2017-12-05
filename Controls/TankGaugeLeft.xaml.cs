@@ -81,7 +81,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
                                           sender.Size.Width * (1f / 3f) - 8, sender.Size.Height - 32);
             }
 
-            args.TrackAsyncAction(CreateResourcesAsync(sender).AsAsyncAction());
+            //args.TrackAsyncAction(CreateResourcesAsync(sender).AsAsyncAction());
 
             CreateTankBrushes(sender);
 
@@ -89,9 +89,9 @@ namespace InfinityGroup.VesselMonitoring.Controls
             CanvasControl.Invalidate();
         }
 
-        override protected async Task CreateResourcesAsync(CanvasControl sender)
-        {
-        }
+        //override protected async Task CreateResourcesAsync(CanvasControl sender)
+        //{
+        //}
 
         override protected void DrawTics(CanvasDrawEventArgs args, int totalTics, float ticLength)
         {

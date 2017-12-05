@@ -27,12 +27,12 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     "KeyId      INTEGER       NOT NULL PRIMARY KEY AUTOINCREMENT, \n " +
                     "Property   TEXT          NOT NULL CONSTRAINT CeProp_Unique UNIQUE, \n" +
                     "ChangeDate DATETIME      NOT NULL, \n" +
-                    Constants.c_SystemInt64 + " INTEGER NULL,  \n" +
-                    Constants.c_SystemDouble + " FLOAT NULL,    \n" +
-                    Constants.c_SystemString + " NTEXT NULL,    \n" +
+                    Constants.c_SystemInt64     + " INTEGER NULL,  \n" +
+                    Constants.c_SystemDouble    + " FLOAT NULL,    \n" +
+                    Constants.c_SystemString    + " NTEXT NULL,    \n" +
                     Constants.c_SystemByteArray + " BLOB NULL,     \n" +
-                    Constants.c_SystemDateTime + " DATETIME NULL, \n" +
-                    Constants.c_SystemBoolean + " BOOLEAN NULL   \n" +
+                    Constants.c_SystemDateTime  + " DATETIME NULL, \n" +
+                    Constants.c_SystemBoolean   + " BOOLEAN NULL   \n" +
                 ") ";
         }
 
@@ -43,12 +43,12 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     "KeyId, " +
                     "Property, " +
                     "ChangeDate, " +
-                     Constants.c_SystemInt64 + ", " +
-                     Constants.c_SystemDouble + ", " +
-                     Constants.c_SystemString + ", " +
+                     Constants.c_SystemInt64     + ", " +
+                     Constants.c_SystemDouble    + ", " +
+                     Constants.c_SystemString    + ", " +
                      Constants.c_SystemByteArray + ", " +
-                     Constants.c_SystemDateTime + ", " +
-                     Constants.c_SystemBoolean + "  " +
+                     Constants.c_SystemDateTime  + ", " +
+                     Constants.c_SystemBoolean   + "  " +
                 "FROM " + TableName;
         }
 
@@ -135,23 +135,23 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                 "( " +
                     "Property, " +
                     "ChangeDate, " +
-                    Constants.c_SystemInt64 + ", " +
-                    Constants.c_SystemDouble + ", " +
-                    Constants.c_SystemString + ", " +
+                    Constants.c_SystemInt64     + ", " +
+                    Constants.c_SystemDouble    + ", " +
+                    Constants.c_SystemString    + ", " +
                     Constants.c_SystemByteArray + ", " +
-                    Constants.c_SystemDateTime + ", " +
-                    Constants.c_SystemBoolean + "  " +
+                    Constants.c_SystemDateTime  + ", " +
+                    Constants.c_SystemBoolean   + "  " +
                 ") " +
                 "VALUES " +
                 "( " +
                     "@Property,   \n" +
                     "@ChangeDate, \n" +
-                    "@" + Constants.c_SystemInt64 + ", \n" +
-                    "@" + Constants.c_SystemDouble + ", \n" +
-                    "@" + Constants.c_SystemString + ", \n" +
+                    "@" + Constants.c_SystemInt64     + ", \n" +
+                    "@" + Constants.c_SystemDouble    + ", \n" +
+                    "@" + Constants.c_SystemString    + ", \n" +
                     "@" + Constants.c_SystemByteArray + ", \n" +
-                    "@" + Constants.c_SystemDateTime + ", \n" +
-                    "@" + Constants.c_SystemBoolean + "  \n" +
+                    "@" + Constants.c_SystemDateTime  + ", \n" +
+                    "@" + Constants.c_SystemBoolean   + "  \n" +
                 ") ";
         }
 

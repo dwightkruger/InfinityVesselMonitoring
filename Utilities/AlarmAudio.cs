@@ -4,84 +4,81 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
-using GalaSoft.MvvmLight.Threading;
 using InfinityGroup.VesselMonitoring.Globals;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Storage;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
 namespace InfinityGroup.VesselMonitoring.Utilities
 {
-    public class AlarmAudio
+    public static class AlarmAudio
     {
-        private object _lock = new object();
-        private System.Threading.Timer _timerRecurringAlarm;
-        private bool _isOnceAlarmSounding;
-        private bool _isContinuousAlarmSounding;
-        private StorageFile _alarmFile = null;
-        private MediaPlayer _mediaPlayer;
-        public AlarmAudio()
-        {
-            _mediaPlayer = new MediaPlayer();
-        }
+        private static object _lock = new object();
+        private static System.Threading.Timer _timerRecurringAlarm = new System.Threading.Timer(timerRecurringAlarm_Tick, null, System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+        private static StorageFile _alarmFile = null;
+        private static MediaPlayer _mediaPlayer = new MediaPlayer();
+        private static List<PlayAlarmItem> _playList = new List<PlayAlarmItem>();
 
-        async Task Play()
+        /// <summary>
+        /// Starts playing an alarm sound after 3 seconds. If isCOntinuous is true, it will play the alarm sound every 
+        /// three seconds until it is dismissed.
+        /// </summary>
+        /// <param name="isContinuousAlarm"></param>
+        /// <param name="alarmId"></param>
+        /// <returns></returns>
+        static public async Task PlayAlarm(bool isContinuousAlarm, int alarmId)
         {
             _alarmFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///InfinityGroup.VesselMonitoring.Utilities/Properties/Alert.wav"));
-            _mediaPlayer.Source = MediaSource.CreateFromStorageFile(_alarmFile);
-            _mediaPlayer.Play();
+            PlayAlarmItem item = new PlayAlarmItem(_alarmFile, isContinuousAlarm, alarmId);
+            _playList.Add(item);
 
-            // Start a background timer job to signal the alarm. Start this timer job 3 seconds later, so that the system as a few seconds to start up.
-            _timerRecurringAlarm = new System.Threading.Timer(timerRecurringAlarm_Tick, null, 3000, 3000);
+            // Start a background timer job to signal the alarm. 
+            // Start this timer job 3 seconds later, so that the system as a few seconds to start up.
+            _timerRecurringAlarm.Change(3000, 3000);
         }
 
-        public bool IsOnceAlarmSounding
+        static public void PlayAnnouncement(IStorageFile myAnnouncement, bool isContinuousAlarm, int announcementId)
         {
-            get
+            PlayAlarmItem item = new PlayAlarmItem(myAnnouncement, isContinuousAlarm, announcementId);
+            _playList.Add(item);
+
+            // Start a background timer job to signal the alarm. 
+            // Start this timer job 3 seconds later, so that the system as a few seconds to start up.
+            _timerRecurringAlarm.Change(3000, 3000);
+        }
+
+        /// <summary>
+        /// Cancel the alarm by the id provided. 
+        /// </summary>
+        /// <param name="alarmId"></param>
+        static public void CancelAlarm(int alarmId)
+        {
+            lock (_lock)
             {
-                return _isOnceAlarmSounding;
-            }
-            set
-            {
-                lock (_lock)
+                PlayAlarmItem item = _playList.Find((entry) => entry.AlarmId == alarmId);
+                if (null != item)
                 {
-                    _isOnceAlarmSounding = value;
+                    _playList.Remove(item);
                 }
             }
         }
 
-        public bool IsContinuousAlarmSounding
-        {
-            get
-            {
-                return _isContinuousAlarmSounding;
-            }
-            set
-            {
-                lock (_lock)
-                {
-                    _isContinuousAlarmSounding = value;
-                }
-            }
-        }
-
-        private void timerRecurringAlarm_Tick(object stateInfo)
+        static private void timerRecurringAlarm_Tick(object stateInfo)
         {
             lock (_lock)
             {
                 try
                 {
-                    if (this.IsOnceAlarmSounding || this.IsContinuousAlarmSounding)
+                    Play();
+
+                    // If there are zero items on the queue to play, then disasble the timer.
+                    if (_playList.Count == 0)
                     {
-                        this.IsOnceAlarmSounding = false;
-                        Globals.Globals.MediaPlayer.Play();
-                    }
-                    else
-                    {
+                        _timerRecurringAlarm.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
                     }
                 }
                 catch (Exception ex)
@@ -90,5 +87,36 @@ namespace InfinityGroup.VesselMonitoring.Utilities
                 }
             }
         }
+
+        static private void Play()
+        {
+            if (_playList.Count > 0)
+            {
+                int index = _playList.Count - 1;
+                PlayAlarmItem item = (PlayAlarmItem)_playList[index];
+                _playList.Remove(item);
+                _mediaPlayer.Source = MediaSource.CreateFromStorageFile(item.AlarmFile);
+                _mediaPlayer.Play();
+
+                // If the item needs to be played continuously, then add it back to the list.
+                if (item.IsContinuousAlarm)
+                {
+                    _playList.Add(item);
+                }
+            }
+        }
+    }
+
+    public class PlayAlarmItem
+    {
+        public PlayAlarmItem(IStorageFile myAlarmFile, bool myIsContinuous, int myAlarmId)
+        {
+            this.AlarmFile = myAlarmFile;
+            this.IsContinuousAlarm = myIsContinuous;
+            this.AlarmId = myAlarmId;
+        }
+        public IStorageFile AlarmFile { get; set; }
+        public bool IsContinuousAlarm { get; set; }
+        public int AlarmId { get; set; }
     }
 }
