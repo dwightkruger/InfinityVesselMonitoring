@@ -10,15 +10,15 @@ using InfinityGroup.VesselMonitoring.Gauges;
 using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.SQLiteDB;
-using InfinityGroup.VesselMonitoring.Utilities;
 using Microsoft.Graphics.Canvas.Text;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using VesselMonitoringSuite.Sensors;
 using VesselMonitoringSuite.ViewModels;
 using VesselMonitoringSuite.Views;
+using Windows.Media.Core;
+using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -230,7 +230,24 @@ namespace VesselMonitoring
 
             this.BuildGaugePages();
 
-            //AlarmAudio alarm = new AlarmAudio();
+            Windows.Storage.StorageFile sampleFile = null;
+            //Task.Run(async () =>
+            //{
+            //    sampleFile = await
+            //    StorageFile.GetFileFromPathAsync(@"E:\Visual Studio Projects\InfinityVesselMonitoringSoftware\InfinityVesselMonitoringSoftware\bin\x86\Debug\Alert.wav");
+            //}).Wait();
+
+            Task.Run(async () =>
+            {
+                Uri uri = new Uri("ms-appx:///Alert.wav");
+                sampleFile = await
+                StorageFile.GetFileFromApplicationUriAsync(uri);
+            }).Wait();
+
+
+            MediaPlayer mediaPlayer = new MediaPlayer();
+            mediaPlayer.Source = MediaSource.CreateFromStorageFile(sampleFile);
+            mediaPlayer.Play();
         }
 
         private void ValueTimerTic(object stateInfo)

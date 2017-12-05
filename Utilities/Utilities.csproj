@@ -122,11 +122,13 @@
       <Name>Globals</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Content Include="Sounds\Alert.wav">
+    <Content Include="Properties\Alert.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Sounds\Alert.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
