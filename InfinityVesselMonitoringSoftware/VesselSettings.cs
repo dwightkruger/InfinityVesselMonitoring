@@ -52,12 +52,17 @@ namespace InfinityVesselMonitoringSoftware
             get
             {
                 byte[] rawImage = GetPropertyRowValue<byte[]>(() => VesselImage);
-                return new Image();
-            }
+                IRandomAccessStream stream = new InMemoryRandomAccessStream();
+                //stream.ReadAsync(rawImage, rawImage.Length, InputStreamOptions.None);
+
+                    return new Image();
+             }
             set
             {
                 BitmapSource myBitmap = (BitmapSource)value.Source;
                 BitmapImage myImage = (BitmapImage)value.Source;
+                IRandomAccessStream stream = new InMemoryRandomAccessStream();
+                //stream.ReadAsync()
 
                 byte[] rawImage = null;
                 SetPropertyRowValue<byte[]>(() => VesselImage, rawImage);
