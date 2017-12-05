@@ -124,8 +124,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\Alert.wav" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Sounds\Alert.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>

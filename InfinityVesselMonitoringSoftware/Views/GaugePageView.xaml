@@ -14,7 +14,7 @@
         <vm:GaugePageViewModel x:Key="VMKey" x:Name="VM"/>
     </UserControl.Resources>
 
-    <Canvas x:Name="MainCanvas">
+    <Canvas x:Name="MainCanvas" AllowDrop="True">
     </Canvas>
 
 </UserControl>
