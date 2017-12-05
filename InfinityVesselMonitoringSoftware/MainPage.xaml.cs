@@ -62,43 +62,6 @@ namespace VesselMonitoring
             Task.Run(() => { x.DoIt().Wait(); }).Wait();
 
             this.BuildGaugePages();
-
-            StorageFile alarmFile = null;
-
-            Task.Run(async () =>
-            {
-                alarmFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///InfinityGroup.VesselMonitoring.Utilities/Properties/Alert.wav"));
-            }).Wait();
-
-
-            //Task.Run(async () =>
-            //{
-            //    sampleFile = await
-            //    StorageFile.GetFileFromPathAsync(@"C:\Users\dkruger\AppData\Local\Packages\d6dc9001-11f3-4bb1-9565-9bff2a7d72df_p5w9zbzfcjb5e\TempState\Alert.wav");
-            //}).Wait();
-
-            //Task.Run(async () =>
-            //{
-            //    sampleFile = await readSampleFile();
-            //});
-
-
-            MediaPlayer mediaPlayer = new MediaPlayer();
-            mediaPlayer.Source = MediaSource.CreateFromStorageFile(alarmFile);
-            mediaPlayer.Play();
-        }
-
-        async Task<string> readSampleFile2()
-        {
-            var packageFolder = Windows.ApplicationModel.Package.Current.InstalledLocation;
-            var sampleFile = await packageFolder.GetFileAsync("Alert.wav");
-            return await Windows.Storage.FileIO.ReadTextAsync(sampleFile);
-        }
-
-        async Task<StorageFile> readSampleFile()
-        {
-            return await
-            StorageFile.GetFileFromPathAsync(@"C:\Users\dkruger\AppData\Local\Packages\d6dc9001-11f3-4bb1-9565-9bff2a7d72df_p5w9zbzfcjb5e\TempState\Alert.wav");
         }
 
     /// <summary>

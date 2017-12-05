@@ -7,8 +7,10 @@
 using GalaSoft.MvvmLight.Threading;
 using InfinityGroup.VesselMonitoring.Globals;
 using System;
+using System.Threading.Tasks;
 using Windows.Media.Core;
 using Windows.Media.Playback;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -20,21 +22,18 @@ namespace InfinityGroup.VesselMonitoring.Utilities
         private System.Threading.Timer _timerRecurringAlarm;
         private bool _isOnceAlarmSounding;
         private bool _isContinuousAlarmSounding;
-
+        private StorageFile _alarmFile = null;
+        private MediaPlayer _mediaPlayer;
         public AlarmAudio()
         {
-            try
-            {
-                Uri pathUri = new Uri("ms-appx:///Sounds/Alert.wav");
+            _mediaPlayer = new MediaPlayer();
+        }
 
-                Globals.Globals.MediaPlayer.Source = MediaSource.CreateFromUri(pathUri);
-                Globals.Globals.MediaPlayer.AutoPlay = false;
-                Globals.Globals.MediaPlayer.MediaPlayer.Play();
-            }
-            catch (Exception ex)
-            {
-                Telemetry.TrackException(ex);
-            }
+        async Task Play()
+        {
+            _alarmFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///InfinityGroup.VesselMonitoring.Utilities/Properties/Alert.wav"));
+            _mediaPlayer.Source = MediaSource.CreateFromStorageFile(_alarmFile);
+            _mediaPlayer.Play();
 
             // Start a background timer job to signal the alarm. Start this timer job 3 seconds later, so that the system as a few seconds to start up.
             _timerRecurringAlarm = new System.Threading.Timer(timerRecurringAlarm_Tick, null, 3000, 3000);
@@ -79,7 +78,7 @@ namespace InfinityGroup.VesselMonitoring.Utilities
                     if (this.IsOnceAlarmSounding || this.IsContinuousAlarmSounding)
                     {
                         this.IsOnceAlarmSounding = false;
-                        Globals.Globals.MediaPlayer.MediaPlayer.Play();
+                        Globals.Globals.MediaPlayer.Play();
                     }
                     else
                     {
