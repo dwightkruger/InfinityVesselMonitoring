@@ -23,9 +23,14 @@ namespace InfinityGroup.VesselMonitoring.Utilities
                 System.Threading.Timeout.Infinite, 
                 System.Threading.Timeout.Infinite);
 
-        static public void Send(string from, string to, string vesselName, string subject, string body, string attachmentFileName)
+        static public string FromEmailAddress { get; set; }
+        static public string FromEmailPassword { get; set; }
+        static public int SMTPEncryptionMethod { get; set; }
+        static public int SMTPPort { get; set; }
+        static public string SMTPServerName { get; set; }
+        static public void Send(string to, string vesselName, string subject, string body, string attachmentFileName)
         {
-            EmailItem item = new EmailItem(from, to, vesselName, subject, body, attachmentFileName);
+            EmailItem item = new EmailItem(FromEmailAddress, to, vesselName, subject, body, attachmentFileName);
 
             lock (_lock)
             {
@@ -92,12 +97,11 @@ namespace InfinityGroup.VesselMonitoring.Utilities
                     oMail.AddAttachment(item.AttachmentName, content);
                 }
 
-                SmtpServer oServer = new SmtpServer("outlook.office365.com");
-                oServer.User = "dwightkruger@mvinfinity.com";
-                oServer.Password = ""; 
-                oServer.ConnectType = SmtpConnectType.ConnectDirectSSL;
-                oServer.Port = 993;
-                oServer.AuthType = SmtpAuthType.XOAUTH2;
+                SmtpServer oServer = new SmtpServer(SMTPServerName);
+                oServer.User = FromEmailAddress;
+                oServer.Password = FromEmailPassword;
+                oServer.ConnectType = (SmtpConnectType) SMTPEncryptionMethod;
+                oServer.Port = SMTPPort;
 
                 try
                 {

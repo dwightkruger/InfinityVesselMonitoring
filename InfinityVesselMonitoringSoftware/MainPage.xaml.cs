@@ -57,18 +57,32 @@ namespace VesselMonitoring
             BuildDBTables.Directory = ApplicationData.Current.TemporaryFolder.Path;
             BuildDBTables.DatabaseName = "InfinityGroupVesselMonitoring";
             var x = new BuildDBTables();
-            Task.Run(() => { x.DoIt().Wait(); }).Wait();
-
-            App.VesselSettings = new VesselSettings();
+            Task.Run(async () => { await x.DoIt(); }).Wait();
 
             this.BuildGaugePages();
 
-            SendEmail.Send("dwightkruger@mvinfinity.com",
-                            "dwightkruger@mvinfinity.com",
-                            "MV Infinity",
-                            "Test Email",
-                            "This is a test",
-                            "");
+            Task.Run(async () => { await BuildDBTables.VesselSettingsTable.BeginEmpty(); }).Wait();
+
+            App.VesselSettings = new VesselSettings();            
+            App.VesselSettings.VesselName = "MV Infinity";
+            App.VesselSettings.FromEmailAddress = "";
+            App.VesselSettings.FromEmailPassword = "";
+            App.VesselSettings.ToEmailAddress = "dwightkruger@mvinfinity.com";
+            App.VesselSettings.SMTPServerName = "smtp-mail.outlook.com";
+            App.VesselSettings.SMTPPort = 587;
+            App.VesselSettings.SMTPEncryptionMethod = 2; // SmtpConnectType.ConnectSTARTTLS
+
+            SendEmail.FromEmailAddress     = App.VesselSettings.FromEmailAddress;
+            SendEmail.FromEmailPassword    = App.VesselSettings.FromEmailPassword;
+            SendEmail.SMTPEncryptionMethod = App.VesselSettings.SMTPEncryptionMethod;
+            SendEmail.SMTPPort             = App.VesselSettings.SMTPPort;
+            SendEmail.SMTPServerName       = App.VesselSettings.SMTPServerName;
+
+            SendEmail.Send(App.VesselSettings.ToEmailAddress,
+                           App.VesselSettings.VesselName,
+                           "Test Email",
+                           "This is a test",
+                           "");
                 
         }
 

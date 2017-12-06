@@ -313,8 +313,7 @@ namespace InfinityVesselMonitoringSoftware.Events
                     subject = "** Alarm Message ** ";
                 }
 
-                SendEmail.Send(App.VesselSettings.FromEmailAddress,
-                               App.VesselSettings.ToEmailAddress,
+                SendEmail.Send(App.VesselSettings.ToEmailAddress,
                                App.VesselSettings.VesselName,
                                subject,
                                "A new alarm condition has been detected." +

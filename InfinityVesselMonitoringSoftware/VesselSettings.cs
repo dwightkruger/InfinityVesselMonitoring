@@ -32,6 +32,29 @@ namespace InfinityVesselMonitoringSoftware
             get { return GetPropertyRowValue<string>(() => FromEmailAddress); }
             set { SetPropertyRowValue<string>(() => FromEmailAddress, value); }
         }
+        public string FromEmailPassword
+        {
+            get { return GetPropertyRowValue<string>(() => FromEmailPassword); }
+            set { SetPropertyRowValue<string>(() => FromEmailPassword, value); }
+        }
+
+        public int SMTPEncryptionMethod
+        {
+            get { return GetPropertyRowValue<int>(() => SMTPEncryptionMethod); }
+            set { SetPropertyRowValue<int>(() => SMTPEncryptionMethod, value); }
+        }
+
+        public int SMTPPort
+        {
+            get { return GetPropertyRowValue<int>(() => SMTPPort); }
+            set { SetPropertyRowValue<int>(() => SMTPPort, value); }
+        }
+
+        public string SMTPServerName
+        {
+            get { return GetPropertyRowValue<string>(() => SMTPServerName); }
+            set { SetPropertyRowValue<string>(() => SMTPServerName, value); }
+        }
 
         public string ToEmailAddress
         {
@@ -113,11 +136,13 @@ namespace InfinityVesselMonitoringSoftware
             // Iterate through each of the rows looking for the property name
             foreach (ItemRow row in BuildDBTables.VesselSettingsTable.Rows)
             {
-                if (row.Field<string>("Property").ToLowerInvariant() == propertyName)
+                if (row.Field<string>("Property") == propertyName)
                 {
                     var @switch = new Dictionary<Type, Action> {
                                     { typeof(Int64),    () => { value = row.Field<T>(Constants.c_SystemInt64);     } },
+                                    { typeof(int),      () => { value = row.Field<T>(Constants.c_SystemInt64);     } },
                                     { typeof(float),    () => { value = row.Field<T>(Constants.c_SystemDouble);    } },
+                                    { typeof(double),   () => { value = row.Field<T>(Constants.c_SystemDouble);    } },
                                     { typeof(string),   () => { value = row.Field<T>(Constants.c_SystemString);    } },
                                     { typeof(byte[]),   () => { value = row.Field<T>(Constants.c_SystemByteArray); } },
                                     { typeof(DateTime), () => { value = row.Field<T>(Constants.c_SystemDateTime);  } },
@@ -142,7 +167,7 @@ namespace InfinityVesselMonitoringSoftware
         /// <returns></returns>
         private T GetPropertyRowValue<T>(Expression<Func<T>> propertyExpression)
         {
-            var propertyName = GetPropertyName(propertyExpression).ToLowerInvariant();
+            var propertyName = GetPropertyName(propertyExpression);
 
             return GetPropertyRowValue<T>(propertyName); 
         }
@@ -175,12 +200,13 @@ namespace InfinityVesselMonitoringSoftware
                     if (row.Field<string>("Property").ToLowerInvariant() == propertyName)
                     {
                         this.SetPropertyValue<T>(row, value);
-                        break;
+                        return true;
                     }
                 }
 
                 // If we get this far, the row does not exist. We'll create it and set the value.
                 ItemRow newRow = BuildDBTables.VesselSettingsTable.CreateRow();
+                newRow.SetField<string>("Property", propertyName);
                 this.SetPropertyValue<T>(newRow, value);
 
                 BuildDBTables.VesselSettingsTable.AddRow(newRow);
@@ -197,7 +223,6 @@ namespace InfinityVesselMonitoringSoftware
             }
 
             return true;
-
         }
         private bool SetPropertyRowValue<T>(Expression<Func<T>> propertyExpression, T value)
         {
@@ -209,8 +234,10 @@ namespace InfinityVesselMonitoringSoftware
         private void SetPropertyValue<T>(ItemRow row, T value)
         {
             var @switch = new Dictionary<Type, Action> {
+                                    { typeof(int),      () => { row.SetField<T>(Constants.c_SystemInt64, value);     } },
                                     { typeof(Int64),    () => { row.SetField<T>(Constants.c_SystemInt64, value);     } },
                                     { typeof(float),    () => { row.SetField<T>(Constants.c_SystemDouble, value);    } },
+                                    { typeof(double),   () => { row.SetField<T>(Constants.c_SystemDouble, value);    } },
                                     { typeof(string),   () => { row.SetField<T>(Constants.c_SystemString, value);    } },
                                     { typeof(byte[]),   () => { row.SetField<T>(Constants.c_SystemByteArray, value); } },
                                     { typeof(DateTime), () => { row.SetField<T>(Constants.c_SystemDateTime, value);  } },
