@@ -94,9 +94,10 @@ namespace InfinityGroup.VesselMonitoring.Utilities
 
                 SmtpServer oServer = new SmtpServer("outlook.office365.com");
                 oServer.User = "dwightkruger@mvinfinity.com";
-                oServer.Password = "";
+                oServer.Password = ""; 
                 oServer.ConnectType = SmtpConnectType.ConnectDirectSSL;
                 oServer.Port = 993;
+                oServer.AuthType = SmtpAuthType.XOAUTH2;
 
                 try
                 {
