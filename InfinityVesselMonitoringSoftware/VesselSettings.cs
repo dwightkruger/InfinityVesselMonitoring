@@ -10,9 +10,11 @@ using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Types;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Controls;
@@ -36,6 +38,73 @@ namespace InfinityVesselMonitoringSoftware
         {
             get { return GetPropertyRowValue<string>(() => FromEmailPassword); }
             set { SetPropertyRowValue<string>(() => FromEmailPassword, value); }
+        }
+
+        /// <summary>
+        /// Get the BitmapImage from the database given the iamgeName provided.
+        /// </summary>
+        /// <param name="imageName"></param>
+        /// <returns></returns>
+        public BitmapImage GetBitmapImage(string imageName)
+        {
+            BitmapImage bitmapImage = new BitmapImage();
+            byte[] buffer = GetPropertyRowValue<byte[]>(c_imagePrefix + imageName);
+
+            // Convert the byte array into a stream, then load it into the BitmapImage.
+            IRandomAccessStream stream = new InMemoryRandomAccessStream();
+            stream.Seek(0);
+
+            Task.Run(async () =>
+            {
+                await stream.WriteAsync(buffer.AsBuffer());
+            }).Wait();
+
+            stream.Seek(0);
+            bitmapImage.SetSource(stream);
+            return bitmapImage;
+        }
+
+        /// <summary>
+        /// Get a list of bitmap images saved in the database.
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetImageNames()
+        {
+            List<string> imageNames = new List<string>();
+            foreach (ItemRow row in BuildDBTables.VesselSettingsTable.Rows)
+            {
+                if (row.Field<string>("Property").ToLowerInvariant().StartsWith(c_imagePrefix))
+                {
+                    imageNames.Add(row.Field<string>("Property").Substring(c_imagePrefix.Length));
+                }
+            }
+
+            return imageNames;
+        }
+
+        /// <summary>
+        /// Save the BitmapImage image provided with the image name provided.
+        /// </summary>
+        /// <param name="bitmapImage"></param>
+        /// <param name="imageName"></param>
+        public void SetBitmapImage(BitmapImage bitmapImage, string imageName)
+        {
+            // Get the bitmap in the image and then serialize the bitmap into a byte array.
+            byte[] buffer = null;
+
+            Uri uri = bitmapImage.UriSource;
+
+            Task.Run(async () =>
+            {
+                var file = await StorageFile.GetFileFromApplicationUriAsync(uri);
+                var inputStream = await file.OpenSequentialReadAsync();
+                var readStream = inputStream.AsStreamForRead();
+                buffer = new byte[readStream.Length];
+                await readStream.ReadAsync(buffer, 0, buffer.Length);
+            }).Wait();
+
+            // Save the value in the DB.
+            SetPropertyRowValue<byte[]>(c_imagePrefix + imageName, buffer);
         }
 
         public int SMTPEncryptionMethod
@@ -74,58 +143,9 @@ namespace InfinityVesselMonitoringSoftware
             set { SetPropertyRowValue<string>(() => VesselName, value); }
         }
 
-        public Image GetImage(string imageName)
-        {
-            // Convert the byte array into a stream, then load it into the Image.
-            IRandomAccessStream stream = new InMemoryRandomAccessStream();
-            Task.Run(async () =>
-            {
-                byte[] rawImage = GetPropertyRowValue<byte[]>(c_imagePrefix + imageName);
-                await stream.ReadAsync(rawImage.AsBuffer(), (uint)rawImage.Length, InputStreamOptions.None);
-            }).Wait();
 
-            BitmapImage bitmapImage = new BitmapImage();
-            bitmapImage.SetSource(stream);
 
-            Image result = new Image();
-            result.Source = bitmapImage;
 
-            return result;
-        }
-
-        public void SetImage(Image image, string imageName)
-        {
-            // Get the bitmap in the image and then serialize the bitmap into a byte array.
-            byte[] rawImage = null;
-
-            Task.Run(async () =>
-            {
-                BitmapImage bitmapImage = new BitmapImage();
-                bitmapImage = (BitmapImage)image.Source;
-                Uri uri = bitmapImage.UriSource;
-
-                StorageFile sourceFile = await StorageFile.GetFileFromApplicationUriAsync(uri);
-                IRandomAccessStream stream = await sourceFile.OpenAsync(FileAccessMode.Read);
-                rawImage = new byte[stream.Size];
-                uint length = await stream.WriteAsync(rawImage.AsBuffer());
-            }).Wait();
-            
-            SetPropertyRowValue<byte[]>(c_imagePrefix + imageName, rawImage);
-        }
-
-        public List<string> GetImageNames()
-        {
-            List<string> imageNames = new List<string>();
-            foreach (ItemRow row in BuildDBTables.VesselSettingsTable.Rows)
-            {
-                if (row.Field<string>("Property").ToLowerInvariant().StartsWith(c_imagePrefix))
-                {
-                    imageNames.Add(row.Field<string>("Property").Substring(c_imagePrefix.Length));
-                }
-            }
-
-            return imageNames;
-        }
 
         #region privates
 

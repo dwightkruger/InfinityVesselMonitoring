@@ -6,18 +6,22 @@
 
 using System.Collections.Generic;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace InfinityGroup.VesselMonitoring.Types
 {
     public interface IVesselSettings
     {
         string FromEmailAddress { get; set; }
-        Image GetImage(string imageName);
+        string FromEmailPassword { get; set; }
+        BitmapImage GetBitmapImage(string bitMapImageName);
         List<string> GetImageNames();
-        void SetImage(Image image, string imageName);
+        void SetBitmapImage(BitmapImage bitmapImage, string imageName);
+        int SMTPEncryptionMethod { get; set; }
+        int SMTPPort { get; set; }
+        string SMTPServerName { get; set; }
         string ToEmailAddress { get; set; }
         string VesselImageName { get; set; }
         string VesselName { get; set; }
-
     }
 }

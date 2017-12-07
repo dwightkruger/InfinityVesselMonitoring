@@ -4,7 +4,6 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
-using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Types;
@@ -26,7 +25,7 @@ namespace InfinityVesselMonitoringSoftware.Events
         public EventCollection()
         {
             // Load some of the existing events for this vessel
-            Load();
+            this.Load();
         }
 
         /// <summary>

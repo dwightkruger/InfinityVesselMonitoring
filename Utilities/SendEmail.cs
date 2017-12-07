@@ -4,25 +4,31 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
-
 using EASendMailRT;
 using InfinityGroup.VesselMonitoring.Globals;
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace InfinityGroup.VesselMonitoring.Utilities
 {
     public static class SendEmail
     {
-        static private object _lock = new object();
-        static private List<EmailItem> _emailQueue = new List<EmailItem>();
-        static private System.Threading.Timer _timer = new System.Threading.Timer(
+        static private object _lock;
+        static private System.Threading.Timer _timer;
+
+        static SendEmail()
+        {
+            EmailQueue = new ObservableCollection<EmailItem>();
+            _lock = new object();
+            _timer = new System.Threading.Timer(
                 ProcessEmailQueue,
-                null, 
-                System.Threading.Timeout.Infinite, 
+                null,
+                System.Threading.Timeout.Infinite,
                 System.Threading.Timeout.Infinite);
 
+        }
+        static public ObservableCollection<EmailItem> EmailQueue { get; set; }
         static public string FromEmailAddress { get; set; }
         static public string FromEmailPassword { get; set; }
         static public int SMTPEncryptionMethod { get; set; }
@@ -34,7 +40,7 @@ namespace InfinityGroup.VesselMonitoring.Utilities
 
             lock (_lock)
             {
-                _emailQueue.Add(item);
+                EmailQueue.Add(item);
             }
 
             // Try sending email 3 seconds from now.
@@ -43,17 +49,17 @@ namespace InfinityGroup.VesselMonitoring.Utilities
 
         async static private void ProcessEmailQueue(object myObject)
         {
-            if (_emailQueue.Count > 0)
+            if (EmailQueue.Count > 0)
             {
                 EmailItem item = null;
 
                 // Get the next item of the list.
                 lock (_lock)
                 {
-                    if (_emailQueue.Count > 0)
+                    if (EmailQueue.Count > 0)
                     {
-                        item = _emailQueue[0];
-                        _emailQueue.Remove(item);
+                        item = EmailQueue[0];
+                        EmailQueue.Remove(item);
                     }
                     else
                     {
@@ -70,7 +76,7 @@ namespace InfinityGroup.VesselMonitoring.Utilities
                     // We failed to send the email. Put it back on the end of the list and try again.
                     lock (_lock)
                     {
-                        _emailQueue.Add(item);
+                        EmailQueue.Add(item);
                     }
 
                     Telemetry.TrackException(ex);
@@ -110,6 +116,7 @@ namespace InfinityGroup.VesselMonitoring.Utilities
                 }
                 catch (Exception ex)
                 {
+                    Telemetry.TrackException(ex);
                     failureCallback(ex);
                 }
             }
@@ -141,7 +148,5 @@ namespace InfinityGroup.VesselMonitoring.Utilities
         public string Subject { get; set; }
         public string Body { get; set; }
         public string AttachmentName { get; set; }
-
     }
-
 }

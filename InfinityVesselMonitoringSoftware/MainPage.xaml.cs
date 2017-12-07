@@ -24,6 +24,7 @@ using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media.Imaging;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -43,7 +44,6 @@ namespace VesselMonitoring
         public MainPage()
         {
             this.InitializeComponent();
-            //Globals.MediaPlayer = this.MediaPlayer;
 
             DispatcherHelper.Initialize();
 
@@ -78,12 +78,11 @@ namespace VesselMonitoring
             SendEmail.SMTPPort             = App.VesselSettings.SMTPPort;
             SendEmail.SMTPServerName       = App.VesselSettings.SMTPServerName;
 
-            SendEmail.Send(App.VesselSettings.ToEmailAddress,
-                           App.VesselSettings.VesselName,
-                           "Test Email",
-                           "This is a test",
-                           "");
-                
+            //SendEmail.Send(App.VesselSettings.ToEmailAddress,
+            //               App.VesselSettings.VesselName,
+            //               "Test Email",
+            //               "This is a test",
+            //               "");
         }
 
     /// <summary>
@@ -121,66 +120,6 @@ namespace VesselMonitoring
 
             // Allow time for flushing:
             //System.Threading.Thread.Sleep(1000);
-        }
-
-        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            //this.MainGrid.Height = e.NewSize.Height;
-            //this.MainGrid.Width = e.NewSize.Width;
-        }
-
-        bool _isSwiped = false;
-
-        /// <summary>
-        /// Process swipe actions left, right, up & down.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void SwipeableGrid_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
-        {
-            const float minDistance = 20;
-
-            if (e.IsInertial && !_isSwiped)
-            {
-                var swipedDistanceX = e.Cumulative.Translation.X;
-                var swipedDistanceY = e.Cumulative.Translation.Y;
-
-                // Pick the larger of the X/Y swipe distance
-                if (Math.Abs(swipedDistanceX) > Math.Abs(swipedDistanceY))
-                {
-                    swipedDistanceY = 0;
-                }
-                else
-                {
-                    swipedDistanceX = 0;
-                }
-
-                if (Math.Abs(swipedDistanceX) <= minDistance && Math.Abs(swipedDistanceY) <= minDistance) return;
-
-                if (swipedDistanceX > minDistance)
-                {
-                    //SwipeableTextBlock.Text = "Right Swiped (" + swipedDistanceX.ToString("F0") + "," + swipedDistanceY.ToString("F0") + ")";
-                }
-                else if (swipedDistanceX < -minDistance)
-                {
-                    //SwipeableTextBlock.Text = "Left Swiped (" + swipedDistanceX.ToString("F0") + "," + swipedDistanceY.ToString("F0") + ")";
-                }
-                else if (swipedDistanceY < minDistance)
-                {
-                    //SwipeableTextBlock.Text = "Up Swiped (" + swipedDistanceX.ToString("F0") + "," + swipedDistanceY.ToString("F0") + ")";
-                }
-                else if (swipedDistanceY > -minDistance)
-                {
-                    //SwipeableTextBlock.Text = "Down Swiped (" + swipedDistanceX.ToString("F0") + "," + swipedDistanceY.ToString("F0") + ")";
-                }
-
-                _isSwiped = true;
-            }
-        }
-
-        private void SwipeableGrid_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
-        {
-            _isSwiped = false;
         }
 
         async Task PopulateGaugePageCollection()
