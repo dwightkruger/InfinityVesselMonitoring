@@ -29,6 +29,7 @@ namespace InfinityVesselMonitoringSoftware
         public VesselSettings()
         {
         }
+
         public string FromEmailAddress
         {
             get { return GetPropertyRowValue<string>(() => FromEmailAddress); }
