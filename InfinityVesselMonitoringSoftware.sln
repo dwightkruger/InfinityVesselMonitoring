@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
+VisualStudioVersion = 15.0.27130.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfinityVesselMonitoringSoftware", "InfinityVesselMonitoringSoftware\InfinityVesselMonitoringSoftware.csproj", "{629077DA-426C-40A4-9073-378DD0D0DD6F}"
 EndProject
@@ -20,6 +20,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UndoRedoFramework", "UndoRedoFramework\UndoRedoFramework.csproj", "{61DE604C-6EC9-4EE7-85C2-624A1F11BDCD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{0877E64B-3586-4B64-BFF4-3E98ED57F322}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{09666412-FE74-46AC-8212-1C30C53328F7}"
+	ProjectSection(SolutionItems) = preProject
+		Documents\Axis Video Camea VAPIX PTZ.pdf = Documents\Axis Video Camea VAPIX PTZ.pdf
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
