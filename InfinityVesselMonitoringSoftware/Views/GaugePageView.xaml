@@ -6,15 +6,23 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:VesselMonitoringSuite.ViewModels"
+    xmlns:controls="using:InfinityGroup.VesselMonitoring.Controls"
+    x:Name="UserControl"
+    AllowDrop="True"
     mc:Ignorable="d"
-    d:DesignHeight="300"
-    d:DesignWidth="400">
+    d:DesignHeight="800"
+    d:DesignWidth="1000">
 
     <UserControl.Resources>
         <vm:GaugePageViewModel x:Key="VMKey" x:Name="VM"/>
     </UserControl.Resources>
-
-    <Canvas x:Name="MainCanvas" AllowDrop="True">
-    </Canvas>
+    
+    <controls:CanvasGrid 
+        x:Name="MainCanvas"
+        Rows="{Binding Rows, ElementName=UserControl}"
+        Columns="{Binding Columns, ElementName=UserControl}"
+        Width="{Binding Width, ElementName=UserControl}" 
+        Height="{Binding Height, ElementName=UserControl}">
+    </controls:CanvasGrid>
 
 </UserControl>

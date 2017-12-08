@@ -42,6 +42,9 @@ namespace InfinityGroup.VesselMonitoring.Controls
             this.InitializeComponent();
             this.GaugeHeight = 400;
             this.GaugeWidth = 400;
+            this.ValueFontSize = 14;
+            this.UnitsFontSize = 14;
+
             Divisions = 7;
             outerCircleThickness = 2;
 

@@ -13,7 +13,6 @@ using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Utilities;
 using InfinityVesselMonitoringSoftware;
 using Microsoft.Graphics.Canvas.Text;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using VesselMonitoringSuite.Sensors;
@@ -23,8 +22,7 @@ using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media.Imaging;
+using Windows.UI.Xaml.Data;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -396,7 +394,19 @@ namespace VesselMonitoring
                 viewModel.GaugePageItem = item;
 
                 GaugePageView view = new GaugePageView();
+                view.Rows = 3;
+                view.Columns = 3;
                 view.ViewModel = viewModel;
+
+                Binding widthBinding = new Binding();
+                widthBinding.Source = this.MainPivot;
+                widthBinding.Path = new PropertyPath("ActualWidth");
+                view.SetBinding(GaugePageView.WidthProperty, widthBinding);
+
+                Binding heightBinding = new Binding();
+                heightBinding.Source = this.MainPivot;
+                heightBinding.Path = new PropertyPath("ActualHeight");
+                view.SetBinding(GaugePageView.HeightProperty, heightBinding);
 
                 PivotItem pivotItem = new PivotItem();
                 pivotItem.Header = item.PageName;

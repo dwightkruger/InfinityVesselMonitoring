@@ -17,8 +17,7 @@
 
         <Viewbox Stretch="Uniform">
             <Grid Height="1000" Width="1600">
-                <Pivot x:Name="MainPivot">
-                </Pivot>
+                <Pivot x:Name="MainPivot"/>
             </Grid>
         </Viewbox>
     </Grid>
