@@ -7,6 +7,7 @@
 using InfinityGroup.VesselMonitoring.Types;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace InfinityGroup.VesselMonitoring.Interfaces
 {
@@ -20,10 +21,11 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
 
     public interface IDeviceItem
     {
+        Task BeginCommit();
         DateTime ChangeDate { get; }
         string Description { get; set; }
         byte DeviceAddress { get; set; }
-        int DeviceId { get; set; }
+        long DeviceId { get; set; }
         DeviceType DeviceType { get; set; }
         string FirmwareVersion { get; set; }
         string HardwareVersion { get; set; }

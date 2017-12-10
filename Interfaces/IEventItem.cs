@@ -5,16 +5,17 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
 using System;
+using System.Threading.Tasks;
 
 namespace InfinityGroup.VesselMonitoring.Interfaces
 {
     public interface IEventItem
     {
         bool AlarmAcknowledged { get; set; }
-        void Commit();
+        Task BeginCommit();
         EventCode EventCode { get; set; }
         DateTime EventDateTimeUTC { get; set; }
-        int EventId { get; }
+        long EventId { get; }
         int EventPriority { get; set; }
         bool IsAlarmOn { get; }
         bool IsWarningOn { get; }

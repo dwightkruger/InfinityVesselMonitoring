@@ -15,17 +15,69 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace VesselMonitoringSuite.Sensors
 {
     public class SensorCollection : ObservableCollection<ISensorItem>, INotifyPropertyChanged
     {
+        private object _lock = new object();
         private Hashtable _hashBySensorId = new Hashtable();
+        private Hashtable _hashBySerialNumber = new Hashtable();
 
         public SensorCollection()
         {
-            this.Lock = new object();
         }
+
+        new public ISensorItem Add(ISensorItem sensorItem)
+        {
+            ISensorItem item = null;
+
+            lock (_lock)
+            {
+                item = this.FindBySerialNumber(sensorItem.SerialNumber);
+
+                // If the item was not found, then we have a new sensor. Add it.
+                if (null == item)
+                {
+                    Task.Run(async () => { await sensorItem.BeginCommit(); }).Wait();
+
+                    _hashBySerialNumber.Add(sensorItem.SerialNumber, sensorItem);
+                    _hashBySensorId.Add(sensorItem.SensorId, sensorItem);
+                    base.Add(sensorItem);
+                }
+                else
+                {
+                    sensorItem = item;
+                }
+            }
+
+            return sensorItem;
+        }
+
+        new public void Clear()
+        {
+            lock (_lock)
+            {
+                _hashBySensorId.Clear();
+                _hashBySerialNumber.Clear();
+                base.Clear();
+            }
+        }
+
+        public ISensorItem FindBySerialNumber(string serialNumber)
+        {
+            ISensorItem result = null;
+
+            lock (_lock)
+            {
+                result = (ISensorItem)_hashBySerialNumber[serialNumber];
+            }
+
+            return result;
+
+        }
+
         /// <summary>
         /// Load all of the sensors from the SQL Db table
         /// </summary>
@@ -69,7 +121,12 @@ namespace VesselMonitoringSuite.Sensors
                         case SensorType.Temperature: break;
                         case SensorType.Text: break;
                         case SensorType.Time: break;
-                        case SensorType.Unknown: break;
+                        case SensorType.Unknown:
+                        {
+                            sensor = new SensorItem(row);
+                        }
+                        break;
+
                         case SensorType.VideoCamera: break;
                         case SensorType.Volts: break;
                         case SensorType.Volume: break;
@@ -77,12 +134,16 @@ namespace VesselMonitoringSuite.Sensors
                         case SensorType.VolumeTotal: break;
                         case SensorType.VolumeTotalResettable: break;
                         case SensorType.Wind: break;
+                        default:
+                        {
+                            sensor = new SensorItem(row);
+                        }
+                        break;
                     }
 
                     if (null != sensor)
                     {
                         this.Add(sensor);
-                        _hashBySensorId.Add(sensor.SensorId, sensor);
                     }
                 }
             }
@@ -97,11 +158,11 @@ namespace VesselMonitoringSuite.Sensors
         /// </summary>
         /// <param name="deviceId"></param>
         /// <returns></returns>
-        public List<ISensorItem> GetSensorsForDeviceId(int deviceId)
+        public List<ISensorItem> GetSensorsForDeviceId(long deviceId)
         {
             List<ISensorItem> results = null;
 
-            lock (Lock)
+            lock (_lock)
             {
                 IEnumerable<ISensorItem> query = this.Where((sensor) => sensor.DeviceId == deviceId);
                 if (query.Count<ISensorItem>() > 0)
@@ -113,11 +174,11 @@ namespace VesselMonitoringSuite.Sensors
             return results;
         }
 
-        public ISensorItem FindBySensorId(int sensorId)
+        public ISensorItem FindBySensorId(long sensorId)
         {
             ISensorItem result = null;
 
-            lock (Lock)
+            lock (_lock)
             {
                 result = (ISensorItem)_hashBySensorId[sensorId];
             }
@@ -125,7 +186,6 @@ namespace VesselMonitoringSuite.Sensors
             return result;
         }
 
-        private object Lock { get; set; }
 
         #region INotifyPropertyChanged
 

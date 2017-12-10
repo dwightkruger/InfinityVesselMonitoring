@@ -13,28 +13,75 @@ using System.Linq.Expressions;
 using System.Reflection;
 using InfinityVesselMonitoringSoftware;
 using InfinityGroup.VesselMonitoring.SQLiteDB;
+using InfinityGroup.VesselMonitoring.Globals;
+using System.Threading.Tasks;
 
 namespace VesselMonitoringSuite.Sensors
 {
     public class SensorItem : ObservableObject, ISensorItem
     {
         private bool _isOnline = false;
+        private long _sensorId = -1;
         private double _sensorValue = 0;
         private PropertyBag _propertyBag = null;
         private object _lock = new object();
         private UnitItem _sensorUnits = UnitsConverter.Find(Units.Other);
         private static UnitItem OtherUnit = UnitsConverter.Find(Units.Other);
 
+        /// <summary>
+        /// Call this constructor if your building a sensor from scratch.
+        /// </summary>
         public SensorItem()
         {
-
+            this.Row = BuildDBTables.SensorTable.CreateRow();
         }
+
+        /// <summary>
+        /// Call this constructor if you are restoring a sensor from the database.
+        /// </summary>
+        /// <param name="row"></param>
         public SensorItem(ItemRow row)
         {
             this.Row = row;
+            _sensorId = this.Row.Field <long>("SensorId");
         }
 
-        public DateTime ChangeDate => throw new NotImplementedException();
+        async public Task BeginCommit()
+        {
+            if (this.IsDirty)
+            {
+                lock (_lock)
+                {
+                    Row.SetField<string>("PropertyBag", PropertyBag.JsonSerialize());
+
+                    if (_sensorId <= 0)
+                    {
+                        BuildDBTables.SensorTable.AddRow(Row);
+                    }
+                }
+
+                // Persist the row into the database
+                await BuildDBTables.SensorTable.BeginCommitRow(this.Row,
+                    () =>
+                    {
+                        _sensorId = Row.Field<int>("SensorId");
+                    },
+                    (ex) =>
+                    {
+                        Telemetry.TrackException(ex);
+                    });
+            }
+        }
+
+        public DateTime ChangeDate
+        {
+            get
+            {
+                DateTime? value = Row.Field<DateTime?>("ChangeDate");
+                value = (value == null) ? DateTime.Now.ToUniversalTime() : value;
+                return ((DateTime)value);
+            }
+        }
 
         public string Description
         {
@@ -42,10 +89,10 @@ namespace VesselMonitoringSuite.Sensors
             set { SetRowPropertyValue<string>(() => Description, value); }
         }
 
-        public int DeviceId
+        public long DeviceId
         {
-            get { return GetRowPropertyValue<int>(() => DeviceId); }
-            set { SetRowPropertyValue<int>(() => DeviceId, value); }
+            get { return GetRowPropertyValue<long>(() => DeviceId); }
+            set { SetRowPropertyValue<long>(() => DeviceId, value); }
         }
 
         public string FriendlyName => throw new NotImplementedException();
@@ -203,10 +250,10 @@ namespace VesselMonitoringSuite.Sensors
             set { SetRowPropertyValue<int>(() => Resolution, value); }
         }
 
-        public int SensorId
+        public long SensorId
         {
-            get { return GetRowPropertyValue<int>(() => SensorId); }
-            set { SetRowPropertyValue<int>(() => SensorId, value); }
+            get { return GetRowPropertyValue<long>(() => SensorId); }
+            set { SetRowPropertyValue<long>(() => SensorId, value); }
         }
 
         public SensorType SensorType

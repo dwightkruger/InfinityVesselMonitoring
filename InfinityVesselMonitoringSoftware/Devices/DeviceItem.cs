@@ -5,6 +5,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
 using GalaSoft.MvvmLight;
+using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Types;
@@ -14,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 using VesselMonitoring;
 
 namespace VesselMonitoringSuite.Devices
@@ -22,21 +24,51 @@ namespace VesselMonitoringSuite.Devices
     {
         private PropertyBag _propertyBag;
         private bool _isOnline;
-
+        private object _lock = new object();
+        private long _deviceId = -1;
         /// <summary>
         /// Call this constructor if you are building a new device item from scratch
         /// </summary>
         public DeviceItem()
         {
+            this.Row = BuildDBTables.DeviceTable.CreateRow();
         }
 
         /// <summary>
-        /// Call this constructor is your are restoring a device item from them DB
+        /// Call this constructor is your are restoring a device item from the database 
         /// </summary>
         /// <param name="row"></param>
         public DeviceItem(ItemRow row)
         {
             this.Row = row;
+            _deviceId = this.Row.Field<long>("DeviceId");
+        }
+
+        async public Task BeginCommit()
+        {
+            if (this.IsDirty)
+            {
+                lock (_lock)
+                {
+                    Row.SetField<string>("PropertyBag", PropertyBag.JsonSerialize());
+
+                    if (_deviceId <= 0)
+                    {
+                        BuildDBTables.DeviceTable.AddRow(Row);
+                    }
+                }
+
+                // Persist the row into the database
+                await BuildDBTables.DeviceTable.BeginCommitRow(this.Row,
+                    () =>
+                    {
+                        _deviceId = Row.Field<int>("DeviceId");
+                    },
+                    (ex) =>
+                    {
+                        Telemetry.TrackException(ex);
+                    });
+            }
         }
 
         public DateTime ChangeDate
@@ -61,10 +93,10 @@ namespace VesselMonitoringSuite.Devices
             set { SetRowPropertyValue<byte>(() => DeviceAddress, value); }
         }
 
-        public int DeviceId
+        public long DeviceId
         {
-            get { return GetRowPropertyValue<int>(() => DeviceId); }
-            set { SetRowPropertyValue<int>(() => DeviceId, value); }
+            get { return GetRowPropertyValue<long>(() => DeviceId); }
+            set { SetRowPropertyValue<long>(() => DeviceId, value); }
         }
 
         public DeviceType DeviceType

@@ -51,8 +51,8 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         CanvasVerticalAlignment TextVerticalAlignment { get; set; }
         double ValueFontSize { get; set; }
         double UnitsFontSize { get; set; }
-        Task Commit();
-        Task Delete();
+        Task BeginCommit();
+        Task BeginDelete();
         void Rollback();
     }
 }

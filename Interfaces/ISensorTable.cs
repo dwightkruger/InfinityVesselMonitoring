@@ -4,6 +4,7 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////    
 
+
 namespace InfinityGroup.VesselMonitoring.Interfaces
 {
     public interface ISensorTable : IVesselTable

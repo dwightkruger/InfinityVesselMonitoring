@@ -6,18 +6,14 @@
 
 using GalaSoft.MvvmLight.Messaging;
 using InfinityGroup.VesselMonitoring.Controls;
-using InfinityGroup.VesselMonitoring.Gauges;
 using InfinityGroup.VesselMonitoring.Interfaces;
-using InfinityGroup.VesselMonitoring.Types;
+using InfinityVesselMonitoringSoftware;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using VesselMonitoringSuite.ViewModels;
-using Windows.Foundation;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -37,87 +33,82 @@ namespace VesselMonitoringSuite.Views
         {
             this.InitializeComponent();
 
-            for (int row = 0; row < 3; row++)
-            {
-                for (int col = 0; col < 3; col++)
-                {
-                    GaugeItem gaugeItem = new GaugeItem();
-                    gaugeItem.GaugeHeight = gaugeItem.GaugeWidth = 300;
-
-                    ArcGaugeLeft arcGaugeLeft = new ArcGaugeLeft();
-                    arcGaugeLeft.GaugeItem = gaugeItem;
-                    arcGaugeLeft.IsOnline = true;
-                    this.MainCanvas.AddChildBaseGauge(arcGaugeLeft, row, col);
-                }
-            }
-
-            //Messenger.Default.Register<List<IGaugeItem>>(this, "BuildGaugeItemList", (gaugeItemList) =>
+            //for (int row = 0; row < 3; row++)
             //{
-            //    if (null == gaugeItemList) return;
-            //    if (gaugeItemList[0].PageId != this.ViewModel.GaugePageItem.PageId) return;
-
-            //    this.MainCanvas.Children.Clear();
-            //    foreach (IGaugeItem item in gaugeItemList)
+            //    for (int col = 0; col < 3; col++)
             //    {
-            //        var sensorId = item.SensorId;
+            //        GaugeItem gaugeItem = new GaugeItem();
+            //        gaugeItem.GaugeHeight = gaugeItem.GaugeWidth = 300;
 
-            //        switch (item.GaugeType)
-            //        {
-            //            case GaugeTypeEnum.LeftArcGauge:
-            //                // Build the gauge
-            //                ArcGaugeLeftViewModel arcGaugeLeftViewModel = new ArcGaugeLeftViewModel();
-            //                arcGaugeLeftViewModel.GaugeItem = item;
-            //                ArcGaugeLeftView arcGaugeLeft = new ArcGaugeLeftView();
-            //                arcGaugeLeft.ViewModel = arcGaugeLeftViewModel;
-
-            //                // Add it to the page
-            //                this.MainCanvas.Children.Add(arcGaugeLeft);
-            //                break;
-
-            //            case GaugeTypeEnum.LeftTankGauge:
-            //                // Build the gauge
-            //                TankGaugeLeftViewModel tankGaugeLeftViewModel = new TankGaugeLeftViewModel();
-            //                tankGaugeLeftViewModel.GaugeItem = item;
-            //                TankGaugeLeftView tankGaugeLeft = new TankGaugeLeftView();
-            //                tankGaugeLeft.ViewModel = tankGaugeLeftViewModel;
-
-            //                // Add it to the page
-            //                this.MainCanvas.Children.Add(tankGaugeLeft);
-
-            //                break;
-
-            //            case GaugeTypeEnum.RightArcGauge: break;
-
-            //            case GaugeTypeEnum.RightTankGauge:
-            //                {
-            //                    // Build the gauge
-            //                    TankGaugeRightViewModel tankGaugeRightViewModel = new TankGaugeRightViewModel();
-            //                    tankGaugeRightViewModel.GaugeItem = item;
-            //                    TankGaugeRightView tankGaugeRight = new TankGaugeRightView();
-            //                    tankGaugeRight.ViewModel = tankGaugeRightViewModel;
-
-            //                    // Add it to the page
-            //                    this.MainCanvas.Children.Add(tankGaugeRight);
-            //                }
-            //                break;
-
-            //            case GaugeTypeEnum.TextControl:
-            //                {
-            //                    // Build the gauge
-            //                    TextControlViewModel textControlViewModel = new TextControlViewModel();
-            //                    textControlViewModel.GaugeItem = item;
-            //                    TextControlView textControl = new TextControlView();
-            //                    textControl.ViewModel = textControlViewModel;
-
-            //                    // Add it to the page
-            //                    this.MainCanvas.Children.Add(textControl);
-            //                }
-            //                break;
-
-            //            case GaugeTypeEnum.TextGauge: break;
-            //        }
+            //        ArcGaugeLeft arcGaugeLeft = new ArcGaugeLeft();
+            //        arcGaugeLeft.GaugeItem = gaugeItem;
+            //        arcGaugeLeft.IsOnline = true;
+            //        this.MainCanvas.AddChildBaseGauge(arcGaugeLeft, row, col);
             //    }
-            //});
+            //}
+
+            Messenger.Default.Register<List<IGaugeItem>>(this, "BuildGaugeItemList", (gaugeItemList) =>
+            {
+                if (null == gaugeItemList) return;
+                if (gaugeItemList[0].PageId != this.ViewModel.GaugePageItem.PageId) return;
+
+                this.MainCanvas.Children.Clear();
+                foreach (IGaugeItem item in gaugeItemList)
+                {
+                    ISensorItem sensor = App.SensorCollection.FindBySensorId(item.SensorId);
+
+                    if (null != sensor)
+                    {
+                        switch (item.GaugeType)
+                        {
+                            case GaugeTypeEnum.LeftArcGauge:
+                                // Build the gauge
+                                ArcGaugeLeft arcGaugeLeft = new ArcGaugeLeft();
+                                arcGaugeLeft.GaugeItem = item;
+
+                                // Add it to the page
+                                this.MainCanvas.Children.Add(arcGaugeLeft);
+                                break;
+
+                            case GaugeTypeEnum.LeftTankGauge:
+                                // Build the gauge
+                                TankGaugeLeft tankGaugeLeft = new TankGaugeLeft();
+                                tankGaugeLeft.GaugeItem = item;
+
+                                // Add it to the page
+                                this.MainCanvas.Children.Add(tankGaugeLeft);
+
+                                break;
+
+                            case GaugeTypeEnum.RightArcGauge: break;
+
+                            case GaugeTypeEnum.RightTankGauge:
+                                {
+                                    // Build the gauge
+                                    TankGaugeRight tankGaugeRight = new TankGaugeRight();
+                                    tankGaugeRight.GaugeItem = item;
+
+                                    // Add it to the page
+                                    this.MainCanvas.Children.Add(tankGaugeRight);
+                                }
+                                break;
+
+                            case GaugeTypeEnum.TextControl:
+                                {
+                                    // Build the gauge
+                                    TextControl textControl = new TextControl();
+                                    textControl.GaugeItem = item;
+
+                                    // Add it to the page
+                                    this.MainCanvas.Children.Add(textControl);
+                                }
+                                break;
+
+                            case GaugeTypeEnum.TextGauge: break;
+                        }
+                    }
+                }
+            });
         }
 
         public GaugePageViewModel ViewModel

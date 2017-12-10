@@ -7,6 +7,7 @@
 using InfinityGroup.VesselMonitoring.Types;
 using InfinityGroup.VesselMonitoring.Utilities;
 using System;
+using System.Threading.Tasks;
 
 namespace InfinityGroup.VesselMonitoring.Interfaces
 {
@@ -281,9 +282,10 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
 
     public interface ISensorItem
     {
+        Task BeginCommit();
         DateTime ChangeDate { get; }
         string Description { get; set; }
-        Int32 DeviceId { get; set; }
+        long DeviceId { get; set; }
         void DisableSensorDataCache();
         void EmptySensorDataCache();
         void EnableSensorDataCache();
@@ -313,7 +315,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         int Priority { get; set; }
         int Resolution { get; set; }
         void Rollback();
-        int SensorId { get; }
+        long SensorId { get; }
         SensorType SensorType { get; set; }
         UnitItem SensorUnits { get; set; }
         SensorUsage SensorUsage { get; set; }

@@ -39,7 +39,7 @@ namespace InfinityGroup.VesselMonitoring.Gauges
                     base.Add(newGaugeItem);
                 }
 
-                await newGaugeItem.Commit();
+                await newGaugeItem.BeginCommit();
             }
 
             return newGaugeItem;
@@ -51,7 +51,7 @@ namespace InfinityGroup.VesselMonitoring.Gauges
             {
                 foreach (IGaugeItem item in this)
                 {
-                    await item.Commit();
+                    await item.BeginCommit();
                 }
             }
         }
@@ -115,7 +115,7 @@ namespace InfinityGroup.VesselMonitoring.Gauges
                     base.Remove(myGaugeItem);
                 }
 
-                await myGaugeItem.Delete();
+                await myGaugeItem.BeginDelete();
             }
         }
     }

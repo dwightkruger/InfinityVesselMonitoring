@@ -12,7 +12,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
     public interface IGaugePageItem
     {
         DateTime ChangeDate { get; }
-        Task Delete();
+        Task BeginDelete();
         bool IsDirty { get; }
         bool IsVisible { get; set; }
         void Load();
@@ -20,7 +20,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         long PageId { get; }
         int Position { get; set; }
 
-        Task Commit();
+        Task BeginCommit();
         void Rollback();
     }
 }

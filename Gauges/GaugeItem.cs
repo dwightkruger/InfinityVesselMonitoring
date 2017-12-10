@@ -472,7 +472,7 @@ namespace InfinityGroup.VesselMonitoring.Gauges
         }
 
 
-        async public Task Commit()
+        async public Task BeginCommit()
         {
             if (this.PropertyBag.IsDirty) Row.SetField<string>("PropertyBag", this.PropertyBag.JsonSerialize());
 
@@ -504,7 +504,7 @@ namespace InfinityGroup.VesselMonitoring.Gauges
             }
 
         }
-        async public Task Delete()
+        async public Task BeginDelete()
         {
             await BuildDBTables.GaugeTable.BeginRemove(this.Row);
         }

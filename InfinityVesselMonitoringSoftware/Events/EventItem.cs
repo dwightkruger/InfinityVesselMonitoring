@@ -12,6 +12,7 @@ using InfinityGroup.VesselMonitoring.Types;
 using InfinityGroup.VesselMonitoring.SQLiteDB;
 using System.Reflection;
 using InfinityGroup.VesselMonitoring.Globals;
+using System.Threading.Tasks;
 
 namespace InfinityVesselMonitoringSoftware.Events
 {
@@ -32,7 +33,7 @@ namespace InfinityVesselMonitoringSoftware.Events
 
         public bool AlarmAcknowledged { get; set; }
 
-        async public void Commit()
+        async public Task BeginCommit()
         {
             lock (_lock)
             {
@@ -68,9 +69,9 @@ namespace InfinityVesselMonitoringSoftware.Events
             set { SetRowPropertyValue<DateTime>(() => EventDateTimeUTC, value); }
         }
 
-        public int EventId
+        public long EventId
         {
-            get { return GetRowPropertyValue<int>(() => EventId); }
+            get { return GetRowPropertyValue<long>(() => EventId); }
         }
 
         public int EventPriority

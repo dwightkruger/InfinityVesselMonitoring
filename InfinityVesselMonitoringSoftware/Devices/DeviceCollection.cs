@@ -9,17 +9,65 @@ using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Types;
 using System;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace VesselMonitoringSuite.Devices
 {
     public class DeviceCollection : ObservableCollection<IDeviceItem>, INotifyPropertyChanged
     {
+        private object _lock = new object();
+        private Hashtable _hashBySerialNumber = new Hashtable();
+
         public DeviceCollection()
         {
-            this.Lock = new object();
+        }
+
+        new public IDeviceItem Add(IDeviceItem deviceItem) 
+        {
+            lock (_lock)
+            {
+                IDeviceItem item = this.FindBySerialNumber(deviceItem.SerialNumber);
+
+                // If the item was not found, then we have a new device. Add it.
+                if  (null == item)
+                {
+                    Task.Run(async () => { await deviceItem.BeginCommit(); }).Wait();
+                    _hashBySerialNumber.Add(deviceItem.SerialNumber, deviceItem);
+                    base.Add(deviceItem);
+                }
+                else
+                {
+                    deviceItem = item;
+                }
+            }
+
+            return deviceItem;
+        }
+
+        new public void Clear()
+        {
+            lock (_lock)
+            {
+                _hashBySerialNumber.Clear();
+                base.Clear();
+            }
+        }
+
+
+        public IDeviceItem FindBySerialNumber(string serialNumber)
+        {
+            IDeviceItem deviceItem = null;
+
+            lock (_lock)
+            {
+                deviceItem = (IDeviceItem)_hashBySerialNumber[serialNumber];
+            }
+
+            return deviceItem;
         }
 
         /// <summary>
@@ -39,6 +87,11 @@ namespace VesselMonitoringSuite.Devices
 
                         case DeviceType.NMEA2000:
                             break;
+
+                        default:
+                            device = new DeviceItem(row);
+                            this.Add(device);
+                        break;
                     }
                 }
             }

@@ -36,7 +36,7 @@ namespace InfinityVesselMonitoringSoftware.Events
         async public Task AddEvent(IEventItem myEventItem, bool bRaiseEvent)
         {
             bool sendEventEmail = false;
-            myEventItem.Commit();
+            await myEventItem.BeginCommit();
             Debug.Assert(myEventItem.EventId > 0);
 
             // If the alarm is turned on, then add it to the list. If the alarm was turned off,
