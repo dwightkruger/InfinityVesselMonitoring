@@ -7,10 +7,6 @@
 using GalaSoft.MvvmLight.Messaging;
 using InfinityGroup.VesselMonitoring.Controls;
 using InfinityGroup.VesselMonitoring.Gauges;
-using InfinityGroup.VesselMonitoring.Gauges.ArcGaugeLeft;
-using InfinityGroup.VesselMonitoring.Gauges.TankGaugeLeft;
-using InfinityGroup.VesselMonitoring.Gauges.TankGaugeRight;
-using InfinityGroup.VesselMonitoring.Gauges.TextControl;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.Types;
 using System;

@@ -106,30 +106,12 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ArcGaugeLeft\ArcGaugeLeftView.xaml.cs">
-      <DependentUpon>ArcGaugeLeftView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ArcGaugeLeft\ArcGaugeLeftViewModel.cs" />
-    <Compile Include="BaseGaugeView.cs" />
-    <Compile Include="BaseGaugeViewModel.cs" />
     <Compile Include="CanvasGrid.cs" />
     <Compile Include="GaugeItem.cs" />
     <Compile Include="GaugeItemCollection.cs" />
     <Compile Include="GaugePageCollection.cs" />
     <Compile Include="GaugePageItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TankGaugeLeft\TankGaugeLeftView.xaml.cs">
-      <DependentUpon>TankGaugeLeftView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TankGaugeLeft\TankGaugeLeftViewModel.cs" />
-    <Compile Include="TankGaugeRight\TankGaugeRightView.xaml.cs">
-      <DependentUpon>TankGaugeRightView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TankGaugeRight\TankGaugeRightViewModel.cs" />
-    <Compile Include="TextControl\TextControlView.xaml.cs">
-      <DependentUpon>TextControlView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TextControl\TextControlViewModel.cs" />
     <EmbeddedResource Include="Properties\Gauges.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -141,26 +123,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ArcGaugeRight\" />
     <Folder Include="GaugePageEditor\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="ArcGaugeLeft\ArcGaugeLeftView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="TankGaugeLeft\TankGaugeLeftView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="TankGaugeRight\TankGaugeRightView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="TextControl\TextControlView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Controls\Controls.csproj">
