@@ -17,6 +17,7 @@ using InfinityGroup.VesselMonitoring.Globals;
 using System.Threading.Tasks;
 using System.Threading;
 using GalaSoft.MvvmLight.Threading;
+using System.Diagnostics;
 
 namespace VesselMonitoringSuite.Sensors
 {
@@ -32,6 +33,9 @@ namespace VesselMonitoringSuite.Sensors
         private bool _demoMode = false;
         private Timer _valueTimer;
         private Random randu = new Random();
+        private ItemRow _sensorValueRow;
+        private DateTime _lastDBWriteTime = DateTime.MinValue;
+        private SensorValueBucket _sensorValueBucket = new SensorValueBucket();
 
         /// <summary>
         /// Call this constructor if your building a sensor from scratch.
@@ -39,16 +43,85 @@ namespace VesselMonitoringSuite.Sensors
         public SensorItem()
         {
             this.Row = BuildDBTables.SensorTable.CreateRow();
+            _sensorValueRow = BuildDBTables.SensorDataTable.CreateRow();
         }
 
         /// <summary>
         /// Call this constructor if you are restoring a sensor from the database.
         /// </summary>
         /// <param name="row"></param>
-        public SensorItem(ItemRow row)
+        public SensorItem(ItemRow row, ItemRow lastSensorValue)
         {
             this.Row = row;
             _sensorId = this.Row.Field <long>("SensorId");
+            _sensorValueRow = lastSensorValue;
+        }
+
+        /// <summary>
+        /// Update the sensor value with the value provided. 
+        /// </summary>
+        /// <param name="sensorValue"></param>
+        /// <param name="isOnline"></param>
+        /// <param name="forceFlush"></param>
+        /// <returns></returns>
+        async public Task BeginAddSensorValue(double sensorValue, bool isOnline, bool forceFlush)
+        {
+            // If for some reason this sensor has not been commited, do it now.
+            if (_sensorId <= 0)
+            {
+                await this.BeginCommit();
+            }
+
+            Debug.Assert(_sensorId > 0);
+
+            // Round off the sensor value to the appropriate number of significant digits and limit it between
+            // minValue and MaxValue.
+            double value = _sensorValue;
+            value = Math.Max(this.MinValue, value);
+            value = Math.Min(this.MaxValue, value);
+            value = Math.Round(value * Math.Pow(10, this.Resolution));
+            value = value / Math.Pow(10, this.Resolution);
+
+            // Has enough time elapsed since we last wrote a value to the datahase that we want to do it again.
+            DateTime nowUTC = DateTime.Now.ToUniversalTime();
+            bool forceByTime = ((nowUTC - _lastDBWriteTime) >= this.Throttle);
+
+            if (forceFlush)
+            {
+                // Build a new row and flush it out
+                _sensorValueRow = BuildDBTables.SensorDataTable.CreateRow();
+                _sensorValueRow.SetField<DateTime>("TimeUTC", nowUTC);
+                _sensorValueRow.SetField<long>("SensorId", this.SensorId);
+                _sensorValueRow.SetField<double>("SensorValue", value);
+                _sensorValueRow.SetField<bool>("IsOnline", isOnline);
+                _sensorValueRow.SetField<byte>("Bucket", _sensorValueBucket.CalculateBucket(nowUTC, isOnline));
+
+                await BuildDBTables.SensorDataTable.BeginCommitRow(_sensorValueRow, () =>
+                {
+                    _lastDBWriteTime = nowUTC;
+                    _isOnline = isOnline;
+                },
+                (ex) =>
+                {
+                    Telemetry.TrackException(ex);
+                });
+            }
+            else if ((_sensorValue == value) && (this.IsOnline == isOnline) && forceByTime) 
+            {
+                // If the sensorValue and isOnline not changed, them simply update the DateTime and the bucket
+                _sensorValueRow.SetField<DateTime>("TimeUTC", nowUTC);
+                _sensorValueRow.SetField<byte>("Bucket", _sensorValueBucket.CalculateBucket(nowUTC, isOnline));
+
+                await BuildDBTables.SensorDataTable.BeginCommitRow(_sensorValueRow, () =>
+                {
+                    _lastDBWriteTime = nowUTC;
+                    _isOnline = isOnline;
+                },
+                (ex) =>
+                {
+                    Telemetry.TrackException(ex);
+                });
+            }
         }
 
         async public Task BeginCommit()
@@ -506,5 +579,121 @@ namespace VesselMonitoringSuite.Sensors
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// This class places each datapoint into 1 or more buckets. Each bucket contains upto 100 data points for a 
+    /// given interval of time. For example, if a value is in the 1 hour bucket, it will be returned for queries
+    /// that request data for a given hour. This is an optimization to limit the amount of data being returned
+    /// for plotting and analysis
+    /// </summary>
+    public class SensorValueBucket
+    {
+        public const int TotalBuckets = 21;                                         // 21 total buckets
+        private const int c_ObservationsPerBucket = 1000;                           // 10-0 observations per bucket
+        private static TimeSpan[] _bucketTimeSpanList = new TimeSpan[TotalBuckets]; // The timespan for each of the buckets
+        private DateTime[] _lastObservationTimePerBucket = new DateTime[TotalBuckets];
+        private bool _isOnline = false;                                             // Is the sensor online?
+
+        /// <summary>
+        /// Calculate the timespan for each of the buckets
+        /// </summary>
+        static SensorValueBucket()
+        {
+            _bucketTimeSpanList[00] = new TimeSpan( 0,  0, 10, 0);      // 10 minutes
+            _bucketTimeSpanList[01] = new TimeSpan( 0,  0, 30, 0);      // 30 minutes
+            _bucketTimeSpanList[02] = new TimeSpan( 0,  1, 00, 0);      //  1 hour 
+            _bucketTimeSpanList[03] = new TimeSpan( 0,  2, 00, 0);      //  2 hours 
+            _bucketTimeSpanList[04] = new TimeSpan( 0,  3, 00, 0);      //  3 hours 
+            _bucketTimeSpanList[05] = new TimeSpan( 0,  4, 00, 0);      //  4 hours 
+            _bucketTimeSpanList[06] = new TimeSpan( 0,  6, 00, 0);      //  6 hours 
+            _bucketTimeSpanList[07] = new TimeSpan( 0,  8, 00, 0);      //  8 hours 
+            _bucketTimeSpanList[08] = new TimeSpan( 0, 12, 00, 0);      // 12 hours 
+            _bucketTimeSpanList[09] = new TimeSpan( 1,  0, 00, 0);      //  1 day
+            _bucketTimeSpanList[10] = new TimeSpan( 2,  0, 00, 0);      //  2 days
+            _bucketTimeSpanList[11] = new TimeSpan( 3,  0, 00, 0);      //  3 days
+            _bucketTimeSpanList[12] = new TimeSpan( 5,  0, 00, 0);      //  5 days
+            _bucketTimeSpanList[13] = new TimeSpan( 7,  0, 00, 0);      //  7 days
+            _bucketTimeSpanList[14] = new TimeSpan(14,  0, 00, 0);      // 14 days
+            _bucketTimeSpanList[15] = new TimeSpan(28,  0, 00, 0);      // 28 days
+            _bucketTimeSpanList[16] = new TimeSpan(60,  0, 00, 0);      // 60 days
+            _bucketTimeSpanList[17] = new TimeSpan(90,  0, 00, 0);      // 90 days
+            _bucketTimeSpanList[18] = new TimeSpan(120, 0, 00, 0);      // 120 days
+            _bucketTimeSpanList[19] = new TimeSpan(180, 0, 00, 0);      // 180 days
+            _bucketTimeSpanList[20] = new TimeSpan(360, 0, 00, 0);      // 360 days
+        }
+
+        /// <summary>
+        /// Initialize all of the buckets so that on the first call we can fill all of them. The first
+        /// datapoint needs to be written into all of the buckets
+        /// </summary>
+        public SensorValueBucket()
+        {
+            for (int i=0; i<TotalBuckets; i++)
+            {
+                _lastObservationTimePerBucket[i] = NormalizeDateTime(DateTime.MinValue);
+            }
+        }
+
+        public byte CalculateBucket(DateTime timeUTC, bool isOnline)
+        {
+            // If the onLine status is changing, then write the value to ALL of the buckets
+            if (isOnline != _isOnline)
+            {
+                _isOnline = isOnline;
+                for (int i = 0; i < TotalBuckets; i++) _lastObservationTimePerBucket[i] = timeUTC;
+                return 0xFF;
+            }
+
+            // Calculate which buckets will contain this entry. We will put the entry to all of the buckets
+            // upto the bucket with the largest timespan covering the interval between the last entry for
+            // the bucket and the timeUTC.
+            byte lastBucket = 0;
+            do
+            {
+                _lastObservationTimePerBucket[lastBucket] = timeUTC;
+                lastBucket++;
+            }
+            while ((lastBucket < TotalBuckets) &&
+                   (timeUTC - _lastObservationTimePerBucket[lastBucket]) > _bucketTimeSpanList[lastBucket]);
+
+            return lastBucket;
+        }
+
+        /// <summary>
+        /// Round the DateTime value to the nearest 100 milliseconds
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        static DateTime NormalizeDateTime(DateTime value)
+        {
+            Int64 tics = value.Ticks;
+            tics /= 1000000;
+            tics *= 1000000;
+            tics = value.Ticks - tics;
+            return value.AddTicks(-tics);
+        }
+
+        /// <summary>
+        /// GIven a timespan, which of the buckets should we be usig to get the data?
+        /// </summary>
+        /// <param name="timeSpan"></param>
+        /// <returns></returns>
+        static byte CalculateBucketFromTimeSpan(TimeSpan timeSpan)
+        {
+            byte lastBucket = 0;
+
+            while ((lastBucket < TotalBuckets) &&
+                   (_bucketTimeSpanList[lastBucket] < timeSpan))
+            {
+                lastBucket++;
+            }
+
+            // Don't run off the end of the buckets. The timespan may be longer than the timespan covered by
+            // the last bucket. In this case, just return the last bucket.
+            lastBucket = Math.Min(lastBucket, Convert.ToByte(TotalBuckets - 1));
+
+            return lastBucket;
+        }
     }
 }

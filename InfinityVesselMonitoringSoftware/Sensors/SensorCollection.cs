@@ -79,72 +79,83 @@ namespace VesselMonitoringSuite.Sensors
         }
 
         /// <summary>
-        /// Load all of the sensors from the SQL Db table
+        /// Loads the sensors from the SQL database table
         /// </summary>
-        public void Load()
+        async public Task BeginLoad()
         {
             try
             {
                 foreach (ItemRow row in BuildDBTables.SensorTable.Rows)
                 {
                     ISensorItem sensor = null;
-                    switch (row.Field<SensorType>("SensorType"))
-                    {
-                        case SensorType.AC: break;
-                        case SensorType.Amps: break;
-                        case SensorType.Angle: break;
-                        case SensorType.Battery: break;
-                        case SensorType.Charge: break;
-                        case SensorType.CourseSpeed: break;
-                        case SensorType.CurrentDirection: break;
-                        case SensorType.CurrentSpeed: break;
-                        case SensorType.DC_Amps: break;
-                        case SensorType.Depth: break;
-                        case SensorType.Distance: break;
-                        case SensorType.Flow: break;
-                        case SensorType.FlowTotal: break;
-                        case SensorType.Frequency: break;
-                        case SensorType.FuelEfficiency: break;
-                        case SensorType.Heading: break;
-                        case SensorType.MagneticVariation: break;
-                        case SensorType.Percent: break;
-                        case SensorType.Position: break;
-                        case SensorType.Power: break;
-                        case SensorType.PowerTotal: break;
-                        case SensorType.Pressure: break;
-                        case SensorType.Rotation: break;
-                        case SensorType.Speed: break;
-                        case SensorType.String: break;
-                        case SensorType.Switch: break;
-                        case SensorType.Tank: break;
-                        case SensorType.TankTotal: break;
-                        case SensorType.Temperature: break;
-                        case SensorType.Text: break;
-                        case SensorType.Time: break;
-                        case SensorType.Unknown:
-                        {
-                            sensor = new SensorItem(row);
-                        }
-                        break;
 
-                        case SensorType.VideoCamera: break;
-                        case SensorType.Volts: break;
-                        case SensorType.Volume: break;
-                        case SensorType.VolumeResettable: break;
-                        case SensorType.VolumeTotal: break;
-                        case SensorType.VolumeTotalResettable: break;
-                        case SensorType.Wind: break;
-                        default:
-                        {
-                            sensor = new SensorItem(row);
-                        }
-                        break;
-                    }
-
-                    if (null != sensor)
+                    // Get the last observation for this sensor.
+                    await BuildDBTables.SensorDataTable.BeginGetLastDataPoint(row.Field<long>("SensorId"), (lastUpdate, lastValue, lastOnline, bucket) => 
                     {
-                        this.Add(sensor);
-                    }
+                        ItemRow sensorValueRow = BuildDBTables.SensorDataTable.CreateRow();
+                        sensorValueRow.SetField<DateTime>("Time", lastUpdate);
+                        sensorValueRow.SetField<double>("Value", lastValue);
+                        sensorValueRow.SetField<bool>("IsOnline", lastOnline);
+                        sensorValueRow.SetField<byte>("Bucket", bucket);
+
+                        switch (row.Field<SensorType>("SensorType"))
+                        {
+                            case SensorType.AC: break;
+                            case SensorType.Amps: break;
+                            case SensorType.Angle: break;
+                            case SensorType.Battery: break;
+                            case SensorType.Charge: break;
+                            case SensorType.CourseSpeed: break;
+                            case SensorType.CurrentDirection: break;
+                            case SensorType.CurrentSpeed: break;
+                            case SensorType.DC_Amps: break;
+                            case SensorType.Depth: break;
+                            case SensorType.Distance: break;
+                            case SensorType.Flow: break;
+                            case SensorType.FlowTotal: break;
+                            case SensorType.Frequency: break;
+                            case SensorType.FuelEfficiency: break;
+                            case SensorType.Heading: break;
+                            case SensorType.MagneticVariation: break;
+                            case SensorType.Percent: break;
+                            case SensorType.Position: break;
+                            case SensorType.Power: break;
+                            case SensorType.PowerTotal: break;
+                            case SensorType.Pressure: break;
+                            case SensorType.Rotation: break;
+                            case SensorType.Speed: break;
+                            case SensorType.String: break;
+                            case SensorType.Switch: break;
+                            case SensorType.Tank: break;
+                            case SensorType.TankTotal: break;
+                            case SensorType.Temperature: break;
+                            case SensorType.Text: break;
+                            case SensorType.Time: break;
+                            case SensorType.Unknown:
+                            {
+                                sensor = new SensorItem(row, sensorValueRow);
+                            }
+                            break;
+
+                            case SensorType.VideoCamera: break;
+                            case SensorType.Volts: break;
+                            case SensorType.Volume: break;
+                            case SensorType.VolumeResettable: break;
+                            case SensorType.VolumeTotal: break;
+                            case SensorType.VolumeTotalResettable: break;
+                            case SensorType.Wind: break;
+                            default:
+                            {
+                                sensor = new SensorItem(row, sensorValueRow);
+                            }
+                            break;
+                        }
+
+                        if (null != sensor)
+                        {
+                            this.Add(sensor);
+                        }
+                    });
                 }
             }
             catch (Exception ex)

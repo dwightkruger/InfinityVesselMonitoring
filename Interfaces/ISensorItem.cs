@@ -11,6 +11,54 @@ using System.Threading.Tasks;
 
 namespace InfinityGroup.VesselMonitoring.Interfaces
 {
+    public interface ISensorItem
+    {
+        Task BeginAddSensorValue(double value, bool isOnline, bool forceFlush);
+        Task BeginCommit();
+        DateTime ChangeDate { get; }
+        bool DemoMode { get; set; }
+        string Description { get; set; }
+        long DeviceId { get; set; }
+        void DisableSensorDataCache();
+        void EmptySensorDataCache();
+        void EnableSensorDataCache();
+        string FriendlyName { get; }
+        double HighAlarmValue { get; set; }
+        double HighWarningValue { get; set; }
+        bool IsCalibrated { get; set; }
+        bool IsDirty { get; }
+        bool IsEnabled { get; set; }
+        bool IsHighAlarmEnabled { get; set; }
+        bool IsHighWarningEnabled { get; set; }
+        bool IsLowAlarmEnabled { get; set; }
+        bool IsLowWarningEnabled { get; set; }
+        bool IsOnline { get; set; }
+        bool IsPersisted { get; set; }
+        bool IsVirtual { get; }
+        string Location { get; set; }
+        double LowAlarmValue { get; set; }
+        double LowWarningValue { get; set; }
+        double MaxValue { get; set; }
+        double MinValue { get; set; }
+        string Name { get; set; }
+        double NominalValue { get; set; }
+        bool PersistDataPoints { get; set; }
+        uint PGN { get; set; }
+        int PortNumber { get; set; }
+        int Priority { get; set; }
+        int Resolution { get; set; }
+        void Rollback();
+        long SensorId { get; }
+        SensorType SensorType { get; set; }
+        UnitItem SensorUnits { get; set; }
+        SensorUsage SensorUsage { get; set; }
+        double SensorValue { get; }
+        string SerialNumber { get; set; }
+        bool ShowNominalValue { get; set; }
+        TimeSpan Throttle { get; set; }
+        DateTime Time { get; }
+    }
+
     public enum SensorType : int
     {
         Unknown = 00,
@@ -278,53 +326,6 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         WattsACInverter = 443,      // AC Inverter Watts
         WattsACBuss = 444,      // AC Buss
         WattsACSentinel = 445,      // Must be last AC watts
-    }
-
-    public interface ISensorItem
-    {
-        Task BeginCommit();
-        DateTime ChangeDate { get; }
-        bool DemoMode { get; set; }
-        string Description { get; set; }
-        long DeviceId { get; set; }
-        void DisableSensorDataCache();
-        void EmptySensorDataCache();
-        void EnableSensorDataCache();
-        string FriendlyName { get; }
-        double HighAlarmValue { get; set; }
-        double HighWarningValue { get; set; }
-        bool IsCalibrated { get; set; }
-        bool IsDirty { get; }
-        bool IsEnabled { get; set; }
-        bool IsHighAlarmEnabled { get; set; }
-        bool IsHighWarningEnabled { get; set; }
-        bool IsLowAlarmEnabled { get; set; }
-        bool IsLowWarningEnabled { get; set; }
-        bool IsOnline { get; set; }
-        bool IsPersisted { get; set; }
-        bool IsVirtual { get; }
-        string Location { get; set; }
-        double LowAlarmValue { get; set; }
-        double LowWarningValue { get; set; }
-        double MaxValue { get; set; }
-        double MinValue { get; set; }
-        string Name { get; set; }
-        double NominalValue { get; set; }
-        bool PersistDataPoints { get; set; }
-        uint PGN { get; set; }
-        int PortNumber { get; set; }
-        int Priority { get; set; }
-        int Resolution { get; set; }
-        void Rollback();
-        long SensorId { get; }
-        SensorType SensorType { get; set; }
-        UnitItem SensorUnits { get; set; }
-        SensorUsage SensorUsage { get; set; }
-        double SensorValue { get; }
-        string SerialNumber { get; set; }
-        bool ShowNominalValue { get; set; }
-        TimeSpan Throttle { get; set; }
-        DateTime Time { get; }
     }
 
 }

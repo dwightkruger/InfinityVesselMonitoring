@@ -63,9 +63,10 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                 "(\n" +
                     "Id              INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT, \n " +
                     "SensorId        INTEGER  NOT NULL, \n " +
-                    "Time            DATETIME NOT NULL, \n " +
+                    "TimeUTC         DATETIME NOT NULL, \n " +
                     "Value           DOUBLE   NOT NULL, \n " +
-                    "Online          BIT      NOT NULL, \n " +
+                    "IsOnline        BIT      NOT NULL, \n " +
+                    "Bucket          INTEGER  NOT NULL, \n " +
                     "FOREIGN KEY(SensorId) REFERENCES SensorTable(SensorId) \n" +
                  ") ";
         }
@@ -73,12 +74,13 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
         protected override string GetSelectAllSql()
         {
             return
-                "SELECT " +
-                    "Id, " +
+                "SELECT "        +
+                    "Id, "       +
                     "SensorId, " +
-                    "Time, " +
-                    "Value, " +
-                    "Online  " +
+                    "TimeUTC, "  +
+                    "Value, "    +
+                    "IsOnline, " +
+                    "Bucket "    +
                 "FROM " + TableName;
         }
 
@@ -86,9 +88,10 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
         protected override void FillInsertItemStatement(ISQLiteStatement statement, ItemRow itemRow)
         {
             statement.Bind("@SensorId", itemRow.Field<Int64>("SensorId"));
-            statement.Bind("@Time", SQLiteDB.Utilities.DateTimeSQLite(itemRow.Field<DateTime>("Time")));
+            statement.Bind("@TimeUTC", SQLiteDB.Utilities.DateTimeSQLite(itemRow.Field<DateTime>("TimeUTC")));
             statement.Bind("@Value", itemRow.Field<double>("Value"));
-            statement.Bind("@Online", SQLiteDB.Utilities.BooleanSQLite(itemRow.Field<bool>("Online")));
+            statement.Bind("@IsOnline", SQLiteDB.Utilities.BooleanSQLite(itemRow.Field<bool>("IsOnline")));
+            statement.Bind("@Bucket", itemRow.Field<byte>("Bucket"));
         }
 
         protected override void FillDeleteItemStatement(ISQLiteStatement statement, Int64 key)
@@ -100,9 +103,10 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
         {
             statement.Bind("@" + PrimaryKeyName, itemRow.Field<Int64>(PrimaryKeyName));
             statement.Bind("@SensorId", itemRow.Field<Int64>("SensorId"));
-            statement.Bind("@Time", SQLiteDB.Utilities.DateTimeSQLite(itemRow.Field<DateTime>("Time")));
+            statement.Bind("@TimeUTC", SQLiteDB.Utilities.DateTimeSQLite(itemRow.Field<DateTime>("TimeUTC")));
             statement.Bind("@Value", itemRow.Field<double>("Value"));
-            statement.Bind("@Online", SQLiteDB.Utilities.BooleanSQLite(itemRow.Field<bool>("Online")));
+            statement.Bind("@IsOnline", SQLiteDB.Utilities.BooleanSQLite(itemRow.Field<bool>("IsOnline")));
+            statement.Bind("@Bucket", itemRow.Field<byte>("Bucket"));
         }
 
         protected override void LoadTableRow(ISQLiteStatement statement)
@@ -111,9 +115,10 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
 
             itemRow.SetField<Int64>(PrimaryKeyName, (Int64)Convert.ToInt64(statement[00]));
             itemRow.SetField<Int64>("SensorId", (Int64)Convert.ToInt64(statement[01]));
-            itemRow.SetField<DateTime>("Time", (DateTime)DateTime.Parse((string)statement[02]));
+            itemRow.SetField<DateTime>("TimeUTC", (DateTime)DateTime.Parse((string)statement[02]));
             itemRow.SetField<double>("Value", (double)Convert.ToDouble(statement[03]));
-            itemRow.SetField<bool>("Online", (bool)((Int64)statement[04] != 0));
+            itemRow.SetField<bool>("IsOnline", (bool)((Int64)statement[04] != 0));
+            itemRow.SetField<byte>("Bucket", (byte)Convert.ToByte(statement[05]));
 
             this.ItemTable.Rows.Add(itemRow);
             itemRow.AcceptChanges();
@@ -123,15 +128,17 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
         {
             itemTable.Columns.Add(PrimaryKeyName, typeof(Int64));
             itemTable.Columns.Add("SensorId", typeof(Int64));
-            itemTable.Columns.Add("Time", typeof(DateTime));
+            itemTable.Columns.Add("TimeUTC", typeof(DateTime));
             itemTable.Columns.Add("Value", typeof(double));
-            itemTable.Columns.Add("Online", typeof(bool));
+            itemTable.Columns.Add("IsOnline", typeof(bool));
+            itemTable.Columns.Add("Bucket", typeof(byte));
 
             itemTable.Columns[PrimaryKeyName].DefaultValue = -1L;
             itemTable.Columns["SensorId"].DefaultValue = -1L;
-            itemTable.Columns["Time"].DefaultValue = DateTime.Now.ToUniversalTime();
+            itemTable.Columns["TimeUTC"].DefaultValue = DateTime.Now.ToUniversalTime();
             itemTable.Columns["Value"].DefaultValue = 0D;
-            itemTable.Columns["Online"].DefaultValue = false;
+            itemTable.Columns["IsOnline"].DefaultValue = false;
+            itemTable.Columns["Bucket"].DefaultValue = 0xFF;
         }
 
         override protected string GetInsertItemSql()
@@ -140,16 +147,18 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                 "INSERT INTO " + TableName +
                           "( " +
                                 "SensorId, " +
-                                "Time, " +
-                                "Value, " +
-                                "Online " +
+                                "TimeUTC, "  +
+                                "Value, "    +
+                                "IsOnline, " +
+                                "Bucket "    +
                           ") " +
                           "VALUES " +
                           "( " +
                                 "@SensorId, " +
-                                "@Time, " +
-                                "@Value, " +
-                                "@Online " +
+                                "@TimeUTC, "  +
+                                "@Value, "    +
+                                "@IsOnline, " +
+                                "@Bucket "    +
                           ") ";
         }
 
@@ -158,9 +167,10 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             return "UPDATE " + TableName + "\n" +
                    " SET \n" +
                    "     SensorId = @SensorId,  \n" +
-                   "     Time     = @Time,      \n" +
+                   "     TimeUTC  = @TimeUTC,   \n" +
                    "     Value    = @Value,     \n" +
-                   "     Online   = @Online     \n" +
+                   "     IsOnline = @Online,    \n" +
+                   "     Bucket   = @Bucket     \n" +
                    "  WHERE " + PrimaryKeyName + " = @" + PrimaryKeyName;
         }
 
@@ -171,16 +181,18 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     "  WHERE " + PrimaryKeyName + " = @" + PrimaryKeyName;
         }
 
-        async public void Add(long mySensorID, DateTime myTimeUtc, double myValue, bool myIsOnline)
+        async public Task BeginAdd(long mySensorID, DateTime myTimeUtc, double myValue, bool myIsOnline, byte myBucket)
         {
             ItemRow row = null;
 
             lock (Lock)
             {
                 row = this.ItemTable.NewRow();
-                row.SetField<DateTime>("Time", myTimeUtc);
+                row.SetField<DateTime>("TimeUTC", myTimeUtc);
                 row.SetField<double>("Value", myValue);
                 row.SetField<bool>("IsOnline", myIsOnline);
+                row.SetField<byte>("Bucket", myBucket);
+
                 this.ItemTable.Rows.Add(row);
             }
 
@@ -194,15 +206,15 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                 });
         }
 
-        async public void GetHistoryDataTableByDateRange(int sensorId, DateTime startTimeUtc, DateTime endTimeUtc, Action<ItemTable> callback)
+        async public Task BeginGetHistoryDataTableByDateRange(int sensorId, DateTime startTimeUtc, DateTime endTimeUtc, Action<ItemTable> callback)
         {
             string query =
                 "SELECT * " +
                 " FROM " + TableName +
                 " WHERE " +
                     " SensorId = @SensorId AND " +
-                    " Time >= @StartTimeUtc AND " +
-                    " Time <= @EndTimeUtc" +
+                    " TimeUTC >= @StartTimeUtc AND " +
+                    " TimeUTC <= @EndTimeUtc" +
                 " ORDER BY TIME ASC";
 
             ItemTable results = null;
@@ -212,9 +224,10 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                 results = new ItemTable();
                 results.Columns.Add(PrimaryKeyName, typeof(Int64));
                 results.Columns.Add("SensorId", typeof(Int64));
-                results.Columns.Add("Time", typeof(DateTime));
+                results.Columns.Add("TimeUTC", typeof(DateTime));
                 results.Columns.Add("Value", typeof(double));
-                results.Columns.Add("Online", typeof(bool));
+                results.Columns.Add("IsOnline", typeof(bool));
+                results.Columns.Add("Bucket", typeof(byte));
 
                 using (var statement = sqlConnection.Prepare(query))
                 {
@@ -228,9 +241,10 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
 
                         row.SetField<Int64>(PrimaryKeyName, (Int64)statement[00]);
                         row.SetField<Int64>("SensorId", (Int64)statement[01]);
-                        row.SetField<DateTime>("Time", (DateTime)DateTime.Parse((string)statement[02]));
+                        row.SetField<DateTime>("TimeUTC", (DateTime)DateTime.Parse((string)statement[02]));
                         row.SetField<double>("Value", (double)statement[03]);
-                        row.SetField<bool>("Online", (bool)statement[04]);
+                        row.SetField<bool>("IsOnline", (bool)statement[04]);
+                        row.SetField<byte>("Bucket", (byte)statement[05]);
 
                         results.Rows.Add(row);
                         row.AcceptChanges();
@@ -241,18 +255,27 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             callback(results);
         }
 
-        async public void GetLastDataPoint(long sensorId, Action<DateTime, double, bool> callback)
+        /// <summary>
+        /// Return the last observation written for the sensorId specified.
+        /// </summary>
+        /// <param name="sensorId"></param>
+        /// <param name="callback"></param>
+        /// <returns></returns>
+        async public Task BeginGetLastDataPoint(long sensorId, Action<DateTime, double, bool, byte> callback)
         {
             string query =
-                "SELECT TOP 1 Time, Value, IsOnline " +
+                "SELECT TimeUTC, Value, IsOnline, Bucket " +
                 " FROM " + TableName +
                 " WHERE " +
                     " SensorId = @SensorId " +
-                " ORDER BY Time DESC";
+                " ORDER BY TimeUTC DESC " +
+                " LIMIT 1";
 
-            DateTime timeUtc = DateTime.UtcNow;
-            double value = 0;
+            // Set the default values.
+            DateTime timeUtc = DateTime.Now.ToUniversalTime();
+            double value = 0.0;
             bool isOnline = false;
+            byte bucket = 0xFF;
 
             await Task.Run((Action)(() =>
             {
@@ -262,16 +285,21 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
 
                     statement.Step();
 
-                    timeUtc = DateTime.Parse((string)statement[00]);
-                    value = (double)statement[01];
-                    isOnline = (bool)statement[02];
+                    // If data was returned copy it into the return parameters.
+                    if (statement.DataCount >= 4)
+                    {
+                        timeUtc = DateTime.Parse((string)statement[0]);
+                        value = (double)statement[1];
+                        isOnline = (bool)statement[2];
+                        bucket = (byte)statement[3];
+                    }
                 }
             }));
 
-            callback(timeUtc, value, isOnline);
+            callback(timeUtc, value, isOnline, bucket);
         }
 
-        async public void Truncate(double maxSize)
+        async public Task BeginTruncate(double maxSize)
         {
             if (IsReadOnly) return;
 
@@ -279,9 +307,10 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                 "DELETE " +
                     " FROM " + TableName +
                     " WHERE Id In " +
-                        " ( SELECT TOP 20000 Id " +
+                        " ( SELECT Id " +
                         "   FROM " + TableName +
-                        "   ORDER BY [Id] ASC) ";
+                        "   ORDER BY [Id] ASC) " +
+                        "   LIMIT 20000";
 
             await Task.Run((Action)(() =>
             {
@@ -300,6 +329,5 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                 // Vacuum the database
             }));
         }
-
     }
 }

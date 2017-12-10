@@ -173,7 +173,6 @@ namespace VesselMonitoring
 
             App.DeviceCollection.Clear();
             App.DeviceCollection.Load();
-
         }
 
         async Task PopulateSensorCollection()
@@ -249,7 +248,7 @@ namespace VesselMonitoring
             sensor = App.SensorCollection.Add(sensor);
 
             App.SensorCollection.Clear();
-            App.SensorCollection.Load();
+            await App.SensorCollection.BeginLoad();
         }
 
         async Task PopulateGaugeCollection()

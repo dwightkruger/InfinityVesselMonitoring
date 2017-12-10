@@ -6,18 +6,18 @@
 
 using InfinityGroup.VesselMonitoring.Types;
 using System;
+using System.Threading.Tasks;
 
 namespace InfinityGroup.VesselMonitoring.Interfaces
 {
     public interface ISensorDataTable : IVesselTable
     {
-        void Add(Int64 mySensorID, DateTime myTimeUtc, double myValue, bool myIsOnline);
+        Task BeginAdd(Int64 mySensorID, DateTime myTimeUtc, double myValue, bool myIsOnline, byte myBucket);
 
-        void GetHistoryDataTableByDateRange(int sensorID, DateTime startTimeUtc, DateTime endTimeUtc, Action<ItemTable> callback);
+        Task BeginGetHistoryDataTableByDateRange(int sensorID, DateTime startTimeUtc, DateTime endTimeUtc, Action<ItemTable> callback);
 
-        void GetLastDataPoint(Int64 sensorID, Action<DateTime, double, bool> callback);
+        Task BeginGetLastDataPoint(Int64 sensorID, Action<DateTime, double, bool, byte> callback);
 
-        void Truncate(double maxSize);
-
+        Task BeginTruncate(double maxSize);
     }
 }
