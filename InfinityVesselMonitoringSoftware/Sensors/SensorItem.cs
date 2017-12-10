@@ -15,6 +15,8 @@ using InfinityVesselMonitoringSoftware;
 using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Globals;
 using System.Threading.Tasks;
+using System.Threading;
+using GalaSoft.MvvmLight.Threading;
 
 namespace VesselMonitoringSuite.Sensors
 {
@@ -27,6 +29,9 @@ namespace VesselMonitoringSuite.Sensors
         private object _lock = new object();
         private UnitItem _sensorUnits = UnitsConverter.Find(Units.Other);
         private static UnitItem OtherUnit = UnitsConverter.Find(Units.Other);
+        private bool _demoMode = false;
+        private Timer _valueTimer;
+        private Random randu = new Random();
 
         /// <summary>
         /// Call this constructor if your building a sensor from scratch.
@@ -80,6 +85,34 @@ namespace VesselMonitoringSuite.Sensors
                 DateTime? value = Row.Field<DateTime?>("ChangeDate");
                 value = (value == null) ? DateTime.Now.ToUniversalTime() : value;
                 return ((DateTime)value);
+            }
+        }
+
+        public bool DemoMode
+        {
+            get { return _demoMode; }
+            set
+            {
+                if (value)
+                {
+                    if (null == _valueTimer)
+                    {
+                        _valueTimer = new Timer(ValueTimerTic, 0, 5000, 2000);
+                    }
+                    else
+                    {
+                        _valueTimer.Change(5000, 2000);
+                    }
+                }
+                else
+                {
+                    if (null != _valueTimer)
+                    {
+                        _valueTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                    }
+                }
+
+                _demoMode = value;
             }
         }
 
@@ -462,6 +495,14 @@ namespace VesselMonitoringSuite.Sensors
         private void ValidateUnits(UnitItem myUnit)
         {
             // BUGBUG write this code
+        }
+
+        private void ValueTimerTic(object stateInfo)
+        {
+            DispatcherHelper.CheckBeginInvokeOnUI(() =>
+            {
+                this.SensorValue = randu.Next((int)this.MinValue, (int)this.MaxValue);
+            });
         }
 
         #endregion

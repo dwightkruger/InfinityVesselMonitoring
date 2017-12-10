@@ -284,6 +284,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
     {
         Task BeginCommit();
         DateTime ChangeDate { get; }
+        bool DemoMode { get; set; }
         string Description { get; set; }
         long DeviceId { get; set; }
         void DisableSensorDataCache();
@@ -299,7 +300,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         bool IsHighWarningEnabled { get; set; }
         bool IsLowAlarmEnabled { get; set; }
         bool IsLowWarningEnabled { get; set; }
-        bool IsOnline { get; }
+        bool IsOnline { get; set; }
         bool IsPersisted { get; set; }
         bool IsVirtual { get; }
         string Location { get; set; }

@@ -59,12 +59,16 @@ namespace VesselMonitoringSuite.Views
 
                     if (null != sensor)
                     {
+                        sensor.IsOnline = true;
+                        sensor.DemoMode = true;
+
                         switch (item.GaugeType)
                         {
                             case GaugeTypeEnum.LeftArcGauge:
                                 // Build the gauge
                                 ArcGaugeLeft arcGaugeLeft = new ArcGaugeLeft();
                                 arcGaugeLeft.GaugeItem = item;
+                                arcGaugeLeft.SensorItem = sensor;
 
                                 // Add it to the page
                                 this.MainCanvas.Children.Add(arcGaugeLeft);
@@ -74,6 +78,7 @@ namespace VesselMonitoringSuite.Views
                                 // Build the gauge
                                 TankGaugeLeft tankGaugeLeft = new TankGaugeLeft();
                                 tankGaugeLeft.GaugeItem = item;
+                                tankGaugeLeft.SensorItem = sensor;
 
                                 // Add it to the page
                                 this.MainCanvas.Children.Add(tankGaugeLeft);
@@ -87,6 +92,7 @@ namespace VesselMonitoringSuite.Views
                                     // Build the gauge
                                     TankGaugeRight tankGaugeRight = new TankGaugeRight();
                                     tankGaugeRight.GaugeItem = item;
+                                    tankGaugeRight.SensorItem = sensor;
 
                                     // Add it to the page
                                     this.MainCanvas.Children.Add(tankGaugeRight);
@@ -98,6 +104,7 @@ namespace VesselMonitoringSuite.Views
                                     // Build the gauge
                                     TextControl textControl = new TextControl();
                                     textControl.GaugeItem = item;
+                                    textControl.SensorItem = sensor;
 
                                     // Add it to the page
                                     this.MainCanvas.Children.Add(textControl);

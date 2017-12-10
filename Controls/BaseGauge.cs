@@ -4,12 +4,10 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////    
 
-using GalaSoft.MvvmLight.Threading;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using Microsoft.Graphics.Canvas.Text;
 using System;
 using System.Collections.ObjectModel;
-using System.Threading;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -21,20 +19,8 @@ namespace InfinityGroup.VesselMonitoring.Controls
 {
     public class BaseGauge : UserControl, IGauge
     {
-        private Timer _valueTimer;
-        private Random randu = new Random();
-
         public BaseGauge()
         {
-            _valueTimer = new Timer(ValueTimerTic, 0, 5000, 2000);
-        }
-
-        private void ValueTimerTic(object stateInfo)
-        {
-            DispatcherHelper.CheckBeginInvokeOnUI(() =>
-            {
-                this.Value = randu.Next((int)this.MinValue, (int)this.MaxValue);
-            });
         }
 
         #region Divisions
@@ -804,6 +790,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
         }
         #endregion
 
+        #region GaugeItem
         public IGaugeItem GaugeItem
         {
             set
@@ -894,6 +881,40 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 this.SetBinding(ValueFontSizeProperty, valueFontSizeBinding);
             }
         }
+        #endregion GaugeItem
+
+        #region SensorItem
+        public ISensorItem SensorItem
+        {
+            set
+            {
+                Binding isOnlineBinding = new Binding();
+                isOnlineBinding.Source = value;
+                isOnlineBinding.Path = new PropertyPath("IsOnline");
+                this.SetBinding(IsOnlineProperty, isOnlineBinding);
+
+                Binding maxValueBinding = new Binding();
+                maxValueBinding.Source = value;
+                maxValueBinding.Path = new PropertyPath("MaxValue");
+                this.SetBinding(MaxValueProperty, maxValueBinding);
+
+                Binding minValueBinding = new Binding();
+                minValueBinding.Source = value;
+                minValueBinding.Path = new PropertyPath("MinValue");
+                this.SetBinding(MinValueProperty, minValueBinding);
+
+                Binding nominalValueBinding = new Binding();
+                nominalValueBinding.Source = value;
+                nominalValueBinding.Path = new PropertyPath("NominalValue");
+                this.SetBinding(NominalValueProperty, nominalValueBinding);
+
+                Binding sensorValueBinding = new Binding();
+                sensorValueBinding.Source = value;
+                sensorValueBinding.Path = new PropertyPath("SensorValue");
+                this.SetBinding(ValueProperty, sensorValueBinding);
+            }
+        }
+        #endregion SensorItem
 
         #region SwitchCounter
         public static readonly DependencyProperty SwitchCounterProperty = DependencyProperty.Register(
@@ -1229,7 +1250,6 @@ namespace InfinityGroup.VesselMonitoring.Controls
             g.RefreshUnitsFontSize(e.OldValue, e.NewValue);
         }
         #endregion
-
 
         #region Left
         public static readonly DependencyProperty LeftProperty = DependencyProperty.Register(
