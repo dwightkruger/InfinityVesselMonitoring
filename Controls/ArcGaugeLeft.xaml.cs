@@ -14,7 +14,6 @@ using Microsoft.Graphics.Canvas.UI;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using System;
 using System.Numerics;
-using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -117,7 +116,6 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             var ds = args.DrawingSession;
 
-            // # FF144960
             Color edgeColor = Colors.CornflowerBlue;
 
             if (IsLowAlarmEnabled && (Value <= LowAlarmValue) && IsOnline)

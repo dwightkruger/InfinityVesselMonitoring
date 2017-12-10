@@ -4,24 +4,25 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////    
 
-using Windows.UI.Xaml.Controls;
+using GalaSoft.MvvmLight;
+using InfinityGroup.VesselMonitoring.Interfaces;
 
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
-
-namespace InfinityGroup.VesselMonitoring.Gauges.ArcGaugeLeft
+namespace InfinityGroup.VesselMonitoring.Gauges
 {
-    public sealed partial class ArcGaugeLeftView : BaseGaugeView
+    public class BaseGaugeViewModel : ObservableObject
     {
-        public ArcGaugeLeftView()
+        private IGaugeItem _gaugeItem;
+
+        public const string GaugeItemPropertyName = "GaugeItem";
+
+        public IGaugeItem GaugeItem
         {
-            this.InitializeComponent();
+            get { return _gaugeItem; }
+            set
+            {
+                Set(GaugeItemPropertyName, ref _gaugeItem, value);
+            }
         }
 
-        public InfinityGroup.VesselMonitoring.Controls.ArcGaugeLeft ArcGaugeLeft { get { return ArcGaugeLeftControl; } }
-
-        public override BaseGaugeViewModel ViewModel
-        {
-            get { return this.VM; }
-        }
     }
 }

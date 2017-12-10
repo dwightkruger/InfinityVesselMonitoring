@@ -110,6 +110,9 @@
       <DependentUpon>ArcGaugeLeftView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ArcGaugeLeft\ArcGaugeLeftViewModel.cs" />
+    <Compile Include="BaseGaugeView.cs" />
+    <Compile Include="BaseGaugeViewModel.cs" />
+    <Compile Include="CanvasGrid.cs" />
     <Compile Include="GaugeItem.cs" />
     <Compile Include="GaugeItemCollection.cs" />
     <Compile Include="GaugePageCollection.cs" />

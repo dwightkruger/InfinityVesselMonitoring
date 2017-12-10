@@ -6,7 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:VesselMonitoringSuite.ViewModels"
-    xmlns:controls="using:InfinityGroup.VesselMonitoring.Controls"
+    xmlns:converters="using:InfinityGroup.VesselMonitoring.Globals.Converters"
+    xmlns:gauges="using:InfinityGroup.VesselMonitoring.Gauges"
     x:Name="UserControl"
     AllowDrop="True"
     mc:Ignorable="d"
@@ -14,15 +15,16 @@
     d:DesignWidth="1000">
 
     <UserControl.Resources>
+        <converters:DebugConverter x:Name="DebugConverter"/>
         <vm:GaugePageViewModel x:Key="VMKey" x:Name="VM"/>
     </UserControl.Resources>
     
-    <controls:CanvasGrid 
+    <gauges:CanvasGrid 
         x:Name="MainCanvas"
         Rows="{Binding Rows, ElementName=UserControl}"
         Columns="{Binding Columns, ElementName=UserControl}"
         Width="{Binding Width, ElementName=UserControl}" 
         Height="{Binding Height, ElementName=UserControl}">
-    </controls:CanvasGrid>
+    </gauges:CanvasGrid>
 
 </UserControl>

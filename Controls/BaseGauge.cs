@@ -5,6 +5,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////    
 
 using GalaSoft.MvvmLight.Threading;
+using InfinityGroup.VesselMonitoring.Interfaces;
 using Microsoft.Graphics.Canvas.Text;
 using System;
 using System.Collections.ObjectModel;
@@ -13,6 +14,7 @@ using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 
 namespace InfinityGroup.VesselMonitoring.Controls
@@ -241,7 +243,6 @@ namespace InfinityGroup.VesselMonitoring.Controls
             BaseGauge g = d as BaseGauge;
         }
         #endregion
-
 
         #region IsAlarmSounding
         public static readonly DependencyProperty IsAlarmSoundingProperty = DependencyProperty.Register(
@@ -802,6 +803,87 @@ namespace InfinityGroup.VesselMonitoring.Controls
             g.RefreshValue(g.Value, g.Value);
         }
         #endregion
+
+        public IGaugeItem GaugeItem
+        {
+            set
+            {
+                Binding divisionsBinding = new Binding();
+                divisionsBinding.Source = value;
+                divisionsBinding.Path = new PropertyPath("Divisions");
+                this.SetBinding(DivisionsProperty, divisionsBinding);
+
+                Binding gaugeHeightBinding = new Binding();
+                gaugeHeightBinding.Source = value;
+                gaugeHeightBinding.Path = new PropertyPath("GaugeHeight");
+                this.SetBinding(GaugeHeightProperty, gaugeHeightBinding);
+
+                Binding gaugeLeftBinding = new Binding();
+                gaugeLeftBinding.Source = value;
+                gaugeLeftBinding.Path = new PropertyPath("GaugeLeft");
+                this.SetBinding(LeftProperty, gaugeLeftBinding);
+
+                Binding gaugeTopBinding = new Binding();
+                gaugeTopBinding.Source = value;
+                gaugeTopBinding.Path = new PropertyPath("GaugeTop");
+                this.SetBinding(TopProperty, gaugeTopBinding);
+
+                Binding gaugeWidthBinding = new Binding();
+                gaugeWidthBinding.Source = value;
+                gaugeWidthBinding.Path = new PropertyPath("GaugeWidth");
+                this.SetBinding(GaugeWidthProperty, gaugeWidthBinding);
+
+                Binding innerCircleDeltaBinding = new Binding();
+                innerCircleDeltaBinding.Source = value;
+                innerCircleDeltaBinding.Path = new PropertyPath("InnerCircleDelta");
+                this.SetBinding(InnerCircleDeltaProperty, innerCircleDeltaBinding);
+
+                Binding majorTicLengthBinding = new Binding();
+                majorTicLengthBinding.Source = value;
+                majorTicLengthBinding.Path = new PropertyPath("MajorTicLength");
+                this.SetBinding(MajorTicLengthProperty, majorTicLengthBinding);
+
+                Binding mediumTicLengthBinding = new Binding();
+                mediumTicLengthBinding.Source = value;
+                mediumTicLengthBinding.Path = new PropertyPath("MediumTicLength");
+                this.SetBinding(MediumTicLengthProperty, mediumTicLengthBinding);
+
+                Binding minorTicLengthBinding = new Binding();
+                minorTicLengthBinding.Source = value;
+                minorTicLengthBinding.Path = new PropertyPath("MinorTicLength");
+                this.SetBinding(MinorTicLengthProperty, minorTicLengthBinding);
+
+                Binding minorTicsPerMajorTicBinding = new Binding();
+                minorTicsPerMajorTicBinding.Source = value;
+                minorTicsPerMajorTicBinding.Path = new PropertyPath("MinorTicsPerMajorTic");
+                this.SetBinding(MinorTicsPerMajorTicProperty, minorTicsPerMajorTicBinding);
+
+                Binding mediumTicsPerMajorTicBinding = new Binding();
+                mediumTicsPerMajorTicBinding.Source = value;
+                mediumTicsPerMajorTicBinding.Path = new PropertyPath("MediumTicsPerMajorTic");
+                this.SetBinding(MediumTicsPerMajorTicProperty, mediumTicsPerMajorTicBinding);
+
+                Binding middleCircleDeltaBinding = new Binding();
+                middleCircleDeltaBinding.Source = value;
+                middleCircleDeltaBinding.Path = new PropertyPath("MiddleCircleDelta");
+                this.SetBinding(MiddleCircleDeltaProperty, middleCircleDeltaBinding);
+
+                Binding resolutionBinding = new Binding();
+                resolutionBinding.Source = value;
+                resolutionBinding.Path = new PropertyPath("Resolution");
+                this.SetBinding(ResolutionProperty, resolutionBinding);
+
+                Binding unitsFontSizeBinding = new Binding();
+                unitsFontSizeBinding.Source = value;
+                unitsFontSizeBinding.Path = new PropertyPath("UnitsFontSize");
+                this.SetBinding(UnitsFontSizeProperty, unitsFontSizeBinding);
+
+                Binding valueFontSizeBinding = new Binding();
+                valueFontSizeBinding.Source = value;
+                valueFontSizeBinding.Path = new PropertyPath("ValueFontSize");
+                this.SetBinding(ValueFontSizeProperty, valueFontSizeBinding);
+            }
+        }
 
         #region SwitchCounter
         public static readonly DependencyProperty SwitchCounterProperty = DependencyProperty.Register(

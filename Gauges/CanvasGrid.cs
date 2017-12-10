@@ -1,11 +1,26 @@
-﻿using System;
+﻿//////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                  //
+// Copyright (c) 2017 Dwight Kruger and Infinity Group LLC, All rights reserved.                    //
+//                                                                                                  //
+//////////////////////////////////////////////////////////////////////////////////////////////////////     
+
+using InfinityGroup.VesselMonitoring.Controls;
+using InfinityGroup.VesselMonitoring.Interfaces;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace InfinityGroup.VesselMonitoring.Controls
+/// <summary>
+/// This is the classic UWP canvas control with the option to add Gauge items to a regular grid layout.
+/// This is used to provide automajic layout of gauge controls when new sensors are discovered upon first
+/// run.
+/// </summary>
+
+namespace InfinityGroup.VesselMonitoring.Gauges
 {
     public class CanvasGrid : Canvas
     {
@@ -35,7 +50,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 "Rows",
                 typeof(int),
                 typeof(CanvasGrid),
-                new PropertyMetadata(0, OnRowsColumnsChanged));
+                new PropertyMetadata(1, OnRowsColumnsChanged));
 
         #endregion
 
@@ -56,7 +71,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 "Columns",
                 typeof(int),
                 typeof(CanvasGrid),
-                new PropertyMetadata(0, OnRowsColumnsChanged));
+                new PropertyMetadata(1, OnRowsColumnsChanged));
 
         #endregion
 
@@ -94,7 +109,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
             source.InvalidateMeasure();
         }
 
-        public void AddChildUIElement(UIElement child, int row, int column)
+        public void AddChildBaseGauge(BaseGauge child, int row, int column)
         {
             // Determine the top and left location of the child based on its row and column.
             this.Children.Add(child);
@@ -105,11 +120,16 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             Size newSize = base.MeasureOverride(constraint);
 
-            // Position the children
+            // Position each of the children
             foreach (GridChild child in _gridChildren)
             {
-                ((BaseGauge)child.Child).Left = child.Column * (constraint.Width / this.Columns);
-                ((BaseGauge)child.Child).Top  = child.Row * (constraint.Height / this.Rows);
+                child.Gauge.Top   = child.Row    * (constraint.Height / this.Rows);
+                child.Gauge.Left  = child.Column * (constraint.Width / this.Columns);
+
+                //Debug.WriteLine("Columns = " + this.Columns.ToString());
+                //Debug.WriteLine("Rows = " + this.Rows.ToString());
+                //Debug.WriteLine("GaugeLeft = " + gaugeItem.GaugeLeft.ToString());
+                //Debug.WriteLine("");
             }
 
             return newSize;
@@ -123,14 +143,14 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
     public class GridChild
     {
-        public GridChild(UIElement child, int row, int column)
+        public GridChild(BaseGauge gauge, int row, int column)
         {
-            this.Child = child;
+            this.Gauge = gauge;
             this.Row = row;
             this.Column = column;
         }
 
-        public UIElement Child { get; set; }
+        public BaseGauge Gauge { get; set; }
         public int Row { get; set; }
         public int Column { get; set; }
     }

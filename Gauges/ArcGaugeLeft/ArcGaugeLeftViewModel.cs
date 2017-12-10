@@ -9,23 +9,10 @@ using InfinityGroup.VesselMonitoring.Interfaces;
 
 namespace InfinityGroup.VesselMonitoring.Gauges
 {
-    public class ArcGaugeLeftViewModel : ObservableObject
+    public class ArcGaugeLeftViewModel : BaseGaugeViewModel
     {
-        private IGaugeItem _gaugeItem;
-
-        public const string GaugeItemPropertyName = "GaugeItem";
-
         public ArcGaugeLeftViewModel()
         {
-        }
-
-        public IGaugeItem GaugeItem
-        {
-            get { return _gaugeItem; }
-            set
-            {
-                Set(GaugeItemPropertyName, ref _gaugeItem, value);
-            }
         }
     }
 }

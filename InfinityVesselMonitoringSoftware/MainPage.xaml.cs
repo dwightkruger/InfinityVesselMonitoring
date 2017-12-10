@@ -12,14 +12,12 @@ using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Utilities;
 using InfinityVesselMonitoringSoftware;
-using Microsoft.Graphics.Canvas.Text;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using VesselMonitoringSuite.Sensors;
 using VesselMonitoringSuite.ViewModels;
 using VesselMonitoringSuite.Views;
 using Windows.Storage;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -135,25 +133,25 @@ namespace VesselMonitoring
             gaugePageItem.Position = 0;
             await this.GaugePageCollection.BeginAddPage(gaugePageItem);
 
-            gaugePageItem = new GaugePageItem();
-            gaugePageItem.PageName = "Tanks";
-            gaugePageItem.Position = 1;
-            await this.GaugePageCollection.BeginAddPage(gaugePageItem);
+            //gaugePageItem = new GaugePageItem();
+            //gaugePageItem.PageName = "Tanks";
+            //gaugePageItem.Position = 1;
+            //await this.GaugePageCollection.BeginAddPage(gaugePageItem);
 
-            gaugePageItem = new GaugePageItem();
-            gaugePageItem.PageName = "AC Electrical";
-            gaugePageItem.Position = 2;
-            await this.GaugePageCollection.BeginAddPage(gaugePageItem);
+            //gaugePageItem = new GaugePageItem();
+            //gaugePageItem.PageName = "AC Electrical";
+            //gaugePageItem.Position = 2;
+            //await this.GaugePageCollection.BeginAddPage(gaugePageItem);
 
-            gaugePageItem = new GaugePageItem();
-            gaugePageItem.PageName = "DC Electrical";
-            gaugePageItem.Position = 3;
-            await this.GaugePageCollection.BeginAddPage(gaugePageItem);
+            //gaugePageItem = new GaugePageItem();
+            //gaugePageItem.PageName = "DC Electrical";
+            //gaugePageItem.Position = 3;
+            //await this.GaugePageCollection.BeginAddPage(gaugePageItem);
 
-            gaugePageItem = new GaugePageItem();
-            gaugePageItem.PageName = "Navigation";
-            gaugePageItem.Position = 4;
-            await this.GaugePageCollection.BeginAddPage(gaugePageItem);
+            //gaugePageItem = new GaugePageItem();
+            //gaugePageItem.PageName = "Navigation";
+            //gaugePageItem.Position = 4;
+            //await this.GaugePageCollection.BeginAddPage(gaugePageItem);
 
             BuildDBTables.GaugePageTable.Load();
             this.GaugePageCollection = new GaugePageCollection();
@@ -183,197 +181,197 @@ namespace VesselMonitoring
             gaugeItem.UnitsFontSize = 14;
             await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
-            // gauge 1
-            gaugeItem = new GaugeItem();
-            gaugeItem.GaugeType = GaugeTypeEnum.LeftArcGauge;
-            gaugeItem.PageId = this.GaugePageCollection[0].PageId;
-            gaugeItem.SensorId = 0;
-            gaugeItem.GaugeTop = 0;
-            gaugeItem.GaugeLeft = 364;
-            gaugeItem.GaugeHeight = 190;
-            gaugeItem.GaugeWidth = 190;
-            gaugeItem.Divisions = 4;
-            gaugeItem.MinorTicsPerMajorTic = 10;
-            gaugeItem.MediumTicsPerMajorTic = 0;
-            gaugeItem.ValueFontSize = 12;
-            gaugeItem.UnitsFontSize = 12;
-            gaugeItem.MajorTicLength = 12;
-            gaugeItem.MiddleCircleDelta = 45;
-            gaugeItem.InnerCircleDelta = 20;
-            await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            //// gauge 1
+            //gaugeItem = new GaugeItem();
+            //gaugeItem.GaugeType = GaugeTypeEnum.LeftArcGauge;
+            //gaugeItem.PageId = this.GaugePageCollection[0].PageId;
+            //gaugeItem.SensorId = 0;
+            //gaugeItem.GaugeTop = 0;
+            //gaugeItem.GaugeLeft = 364;
+            //gaugeItem.GaugeHeight = 190;
+            //gaugeItem.GaugeWidth = 190;
+            //gaugeItem.Divisions = 4;
+            //gaugeItem.MinorTicsPerMajorTic = 10;
+            //gaugeItem.MediumTicsPerMajorTic = 0;
+            //gaugeItem.ValueFontSize = 12;
+            //gaugeItem.UnitsFontSize = 12;
+            //gaugeItem.MajorTicLength = 12;
+            //gaugeItem.MiddleCircleDelta = 45;
+            //gaugeItem.InnerCircleDelta = 20;
+            //await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
-            // gauge 2
-            gaugeItem = new GaugeItem();
-            gaugeItem.GaugeType = GaugeTypeEnum.LeftArcGauge;
-            gaugeItem.PageId = this.GaugePageCollection[0].PageId;
-            gaugeItem.SensorId = 0;
-            gaugeItem.GaugeTop = 230;
-            gaugeItem.GaugeLeft = 346;
-            gaugeItem.GaugeHeight = 190;
-            gaugeItem.GaugeWidth = 190;
-            gaugeItem.Divisions = 4;
-            gaugeItem.MinorTicsPerMajorTic = 10;
-            gaugeItem.MediumTicsPerMajorTic = 0;
-            gaugeItem.ValueFontSize = 12;
-            gaugeItem.UnitsFontSize = 12;
-            gaugeItem.MajorTicLength = 12;
-            gaugeItem.MiddleCircleDelta = 45;
-            gaugeItem.InnerCircleDelta = 20;
-            await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            //// gauge 2
+            //gaugeItem = new GaugeItem();
+            //gaugeItem.GaugeType = GaugeTypeEnum.LeftArcGauge;
+            //gaugeItem.PageId = this.GaugePageCollection[0].PageId;
+            //gaugeItem.SensorId = 0;
+            //gaugeItem.GaugeTop = 230;
+            //gaugeItem.GaugeLeft = 346;
+            //gaugeItem.GaugeHeight = 190;
+            //gaugeItem.GaugeWidth = 190;
+            //gaugeItem.Divisions = 4;
+            //gaugeItem.MinorTicsPerMajorTic = 10;
+            //gaugeItem.MediumTicsPerMajorTic = 0;
+            //gaugeItem.ValueFontSize = 12;
+            //gaugeItem.UnitsFontSize = 12;
+            //gaugeItem.MajorTicLength = 12;
+            //gaugeItem.MiddleCircleDelta = 45;
+            //gaugeItem.InnerCircleDelta = 20;
+            //await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
-            // gauge 3
-            gaugeItem = new GaugeItem();
-            gaugeItem.GaugeType = GaugeTypeEnum.LeftArcGauge;
-            gaugeItem.PageId = this.GaugePageCollection[0].PageId;
-            gaugeItem.SensorId = 0;
-            gaugeItem.GaugeTop = 0;
-            gaugeItem.GaugeLeft = 1199;
-            gaugeItem.GaugeHeight = 380;
-            gaugeItem.GaugeWidth = 380;
-            gaugeItem.Divisions = 7;
-            gaugeItem.MinorTicsPerMajorTic = 5;
-            gaugeItem.MediumTicsPerMajorTic = 0;
-            gaugeItem.ValueFontSize = 18;
-            gaugeItem.UnitsFontSize = 14;
-            await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            //// gauge 3
+            //gaugeItem = new GaugeItem();
+            //gaugeItem.GaugeType = GaugeTypeEnum.LeftArcGauge;
+            //gaugeItem.PageId = this.GaugePageCollection[0].PageId;
+            //gaugeItem.SensorId = 0;
+            //gaugeItem.GaugeTop = 0;
+            //gaugeItem.GaugeLeft = 1199;
+            //gaugeItem.GaugeHeight = 380;
+            //gaugeItem.GaugeWidth = 380;
+            //gaugeItem.Divisions = 7;
+            //gaugeItem.MinorTicsPerMajorTic = 5;
+            //gaugeItem.MediumTicsPerMajorTic = 0;
+            //gaugeItem.ValueFontSize = 18;
+            //gaugeItem.UnitsFontSize = 14;
+            //await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
-            // gauge 4
-            gaugeItem = new GaugeItem();
-            gaugeItem.GaugeType = GaugeTypeEnum.LeftArcGauge;
-            gaugeItem.PageId = this.GaugePageCollection[0].PageId;
-            gaugeItem.SensorId = 0;
-            gaugeItem.GaugeTop = 0;
-            gaugeItem.GaugeLeft = 1025;
-            gaugeItem.GaugeHeight = 190;
-            gaugeItem.GaugeWidth = 190;
-            gaugeItem.Divisions = 4;
-            gaugeItem.MinorTicsPerMajorTic = 10;
-            gaugeItem.MediumTicsPerMajorTic = 0;
-            gaugeItem.ValueFontSize = 12;
-            gaugeItem.UnitsFontSize = 12;
-            gaugeItem.MajorTicLength = 12;
-            gaugeItem.MiddleCircleDelta = 45;
-            gaugeItem.InnerCircleDelta = 20;
-            await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            //// gauge 4
+            //gaugeItem = new GaugeItem();
+            //gaugeItem.GaugeType = GaugeTypeEnum.LeftArcGauge;
+            //gaugeItem.PageId = this.GaugePageCollection[0].PageId;
+            //gaugeItem.SensorId = 0;
+            //gaugeItem.GaugeTop = 0;
+            //gaugeItem.GaugeLeft = 1025;
+            //gaugeItem.GaugeHeight = 190;
+            //gaugeItem.GaugeWidth = 190;
+            //gaugeItem.Divisions = 4;
+            //gaugeItem.MinorTicsPerMajorTic = 10;
+            //gaugeItem.MediumTicsPerMajorTic = 0;
+            //gaugeItem.ValueFontSize = 12;
+            //gaugeItem.UnitsFontSize = 12;
+            //gaugeItem.MajorTicLength = 12;
+            //gaugeItem.MiddleCircleDelta = 45;
+            //gaugeItem.InnerCircleDelta = 20;
+            //await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
-            // gauge 5
-            gaugeItem = new GaugeItem();
-            gaugeItem.GaugeType = GaugeTypeEnum.LeftArcGauge;
-            gaugeItem.PageId = this.GaugePageCollection[0].PageId;
-            gaugeItem.SensorId = 0;
-            gaugeItem.GaugeTop = 230;
-            gaugeItem.GaugeLeft = 1042;
-            gaugeItem.GaugeHeight = 190;
-            gaugeItem.GaugeWidth = 190;
-            gaugeItem.Divisions = 4;
-            gaugeItem.MinorTicsPerMajorTic = 10;
-            gaugeItem.MediumTicsPerMajorTic = 0;
-            gaugeItem.ValueFontSize = 12;
-            gaugeItem.UnitsFontSize = 12;
-            gaugeItem.MajorTicLength = 12;
-            gaugeItem.MiddleCircleDelta = 45;
-            gaugeItem.InnerCircleDelta = 20;
-            await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            //// gauge 5
+            //gaugeItem = new GaugeItem();
+            //gaugeItem.GaugeType = GaugeTypeEnum.LeftArcGauge;
+            //gaugeItem.PageId = this.GaugePageCollection[0].PageId;
+            //gaugeItem.SensorId = 0;
+            //gaugeItem.GaugeTop = 230;
+            //gaugeItem.GaugeLeft = 1042;
+            //gaugeItem.GaugeHeight = 190;
+            //gaugeItem.GaugeWidth = 190;
+            //gaugeItem.Divisions = 4;
+            //gaugeItem.MinorTicsPerMajorTic = 10;
+            //gaugeItem.MediumTicsPerMajorTic = 0;
+            //gaugeItem.ValueFontSize = 12;
+            //gaugeItem.UnitsFontSize = 12;
+            //gaugeItem.MajorTicLength = 12;
+            //gaugeItem.MiddleCircleDelta = 45;
+            //gaugeItem.InnerCircleDelta = 20;
+            //await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
-            // tank gauge 0
-            gaugeItem = new GaugeItem();
-            gaugeItem.GaugeType = GaugeTypeEnum.LeftTankGauge;
-            gaugeItem.PageId = this.GaugePageCollection[1].PageId;
-            gaugeItem.SensorId = 0;
-            gaugeItem.GaugeTop = 50;
-            gaugeItem.GaugeLeft = 540;
-            gaugeItem.GaugeHeight = 330;
-            gaugeItem.GaugeWidth = 140;
-            gaugeItem.Resolution = 0;
-            await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            //// tank gauge 0
+            //gaugeItem = new GaugeItem();
+            //gaugeItem.GaugeType = GaugeTypeEnum.LeftTankGauge;
+            //gaugeItem.PageId = this.GaugePageCollection[1].PageId;
+            //gaugeItem.SensorId = 0;
+            //gaugeItem.GaugeTop = 50;
+            //gaugeItem.GaugeLeft = 540;
+            //gaugeItem.GaugeHeight = 330;
+            //gaugeItem.GaugeWidth = 140;
+            //gaugeItem.Resolution = 0;
+            //await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
-            // tank gauge 1
-            gaugeItem = new GaugeItem();
-            gaugeItem.GaugeType = GaugeTypeEnum.LeftTankGauge;
-            gaugeItem.PageId = this.GaugePageCollection[1].PageId;
-            gaugeItem.SensorId = 0;
-            gaugeItem.GaugeTop = 50;
-            gaugeItem.GaugeLeft = 680;
-            gaugeItem.GaugeHeight = 330;
-            gaugeItem.GaugeWidth = 140;
-            gaugeItem.Resolution = 0;
-            await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            //// tank gauge 1
+            //gaugeItem = new GaugeItem();
+            //gaugeItem.GaugeType = GaugeTypeEnum.LeftTankGauge;
+            //gaugeItem.PageId = this.GaugePageCollection[1].PageId;
+            //gaugeItem.SensorId = 0;
+            //gaugeItem.GaugeTop = 50;
+            //gaugeItem.GaugeLeft = 680;
+            //gaugeItem.GaugeHeight = 330;
+            //gaugeItem.GaugeWidth = 140;
+            //gaugeItem.Resolution = 0;
+            //await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
-            // tank gauge 2
-            gaugeItem = new GaugeItem();
-            gaugeItem.GaugeType = GaugeTypeEnum.RightTankGauge;
-            gaugeItem.PageId = this.GaugePageCollection[1].PageId;
-            gaugeItem.SensorId = 0;
-            gaugeItem.GaugeTop = 50;
-            gaugeItem.GaugeLeft = 760;
-            gaugeItem.GaugeHeight = 330;
-            gaugeItem.GaugeWidth = 140;
-            gaugeItem.Resolution = 0;
-            await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            //// tank gauge 2
+            //gaugeItem = new GaugeItem();
+            //gaugeItem.GaugeType = GaugeTypeEnum.RightTankGauge;
+            //gaugeItem.PageId = this.GaugePageCollection[1].PageId;
+            //gaugeItem.SensorId = 0;
+            //gaugeItem.GaugeTop = 50;
+            //gaugeItem.GaugeLeft = 760;
+            //gaugeItem.GaugeHeight = 330;
+            //gaugeItem.GaugeWidth = 140;
+            //gaugeItem.Resolution = 0;
+            //await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
-            // tank gauge 3
-            gaugeItem = new GaugeItem();
-            gaugeItem.GaugeType = GaugeTypeEnum.RightTankGauge;
-            gaugeItem.PageId = this.GaugePageCollection[1].PageId;
-            gaugeItem.SensorId = 0;
-            gaugeItem.GaugeTop = 50;
-            gaugeItem.GaugeLeft = 870;
-            gaugeItem.GaugeHeight = 330;
-            gaugeItem.GaugeWidth = 140;
-            gaugeItem.Resolution = 0;
-            await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            //// tank gauge 3
+            //gaugeItem = new GaugeItem();
+            //gaugeItem.GaugeType = GaugeTypeEnum.RightTankGauge;
+            //gaugeItem.PageId = this.GaugePageCollection[1].PageId;
+            //gaugeItem.SensorId = 0;
+            //gaugeItem.GaugeTop = 50;
+            //gaugeItem.GaugeLeft = 870;
+            //gaugeItem.GaugeHeight = 330;
+            //gaugeItem.GaugeWidth = 140;
+            //gaugeItem.Resolution = 0;
+            //await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
-            // text control 0
-            gaugeItem = new GaugeItem();
-            gaugeItem.GaugeType = GaugeTypeEnum.TextControl;
-            gaugeItem.PageId = this.GaugePageCollection[1].PageId;
-            gaugeItem.Text = "Fuel\nPort";
-            gaugeItem.GaugeTop = 10;
-            gaugeItem.GaugeLeft = 595;
-            gaugeItem.TextFontSize = 13;
-            gaugeItem.TextFontColor = Colors.CornflowerBlue;
-            gaugeItem.TextHorizontalAlignment = CanvasHorizontalAlignment.Left;
-            gaugeItem.TextVerticalAlignment = CanvasVerticalAlignment.Top;
-            await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            //// text control 0
+            //gaugeItem = new GaugeItem();
+            //gaugeItem.GaugeType = GaugeTypeEnum.TextControl;
+            //gaugeItem.PageId = this.GaugePageCollection[1].PageId;
+            //gaugeItem.Text = "Fuel\nPort";
+            //gaugeItem.GaugeTop = 10;
+            //gaugeItem.GaugeLeft = 595;
+            //gaugeItem.TextFontSize = 13;
+            //gaugeItem.TextFontColor = Colors.CornflowerBlue;
+            //gaugeItem.TextHorizontalAlignment = CanvasHorizontalAlignment.Left;
+            //gaugeItem.TextVerticalAlignment = CanvasVerticalAlignment.Top;
+            //await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
-            // text control 1
-            gaugeItem = new GaugeItem();
-            gaugeItem.GaugeType = GaugeTypeEnum.TextControl;
-            gaugeItem.PageId = this.GaugePageCollection[1].PageId;
-            gaugeItem.Text = "Fresh\nWater";
-            gaugeItem.GaugeTop = 10;
-            gaugeItem.GaugeLeft = 735;
-            gaugeItem.TextFontSize = 13;
-            gaugeItem.TextFontColor = Colors.CornflowerBlue;
-            gaugeItem.TextHorizontalAlignment = CanvasHorizontalAlignment.Left;
-            gaugeItem.TextVerticalAlignment = CanvasVerticalAlignment.Top;
-            await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            //// text control 1
+            //gaugeItem = new GaugeItem();
+            //gaugeItem.GaugeType = GaugeTypeEnum.TextControl;
+            //gaugeItem.PageId = this.GaugePageCollection[1].PageId;
+            //gaugeItem.Text = "Fresh\nWater";
+            //gaugeItem.GaugeTop = 10;
+            //gaugeItem.GaugeLeft = 735;
+            //gaugeItem.TextFontSize = 13;
+            //gaugeItem.TextFontColor = Colors.CornflowerBlue;
+            //gaugeItem.TextHorizontalAlignment = CanvasHorizontalAlignment.Left;
+            //gaugeItem.TextVerticalAlignment = CanvasVerticalAlignment.Top;
+            //await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
-            // text control 2
-            gaugeItem = new GaugeItem();
-            gaugeItem.GaugeType = GaugeTypeEnum.TextControl;
-            gaugeItem.PageId = this.GaugePageCollection[1].PageId;
-            gaugeItem.Text = "Black\nWater";
-            gaugeItem.GaugeTop = 10;
-            gaugeItem.GaugeLeft = 820;
-            gaugeItem.TextFontSize = 13;
-            gaugeItem.TextFontColor = Colors.CornflowerBlue;
-            gaugeItem.TextHorizontalAlignment = CanvasHorizontalAlignment.Left;
-            gaugeItem.TextVerticalAlignment = CanvasVerticalAlignment.Top;
-            await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            //// text control 2
+            //gaugeItem = new GaugeItem();
+            //gaugeItem.GaugeType = GaugeTypeEnum.TextControl;
+            //gaugeItem.PageId = this.GaugePageCollection[1].PageId;
+            //gaugeItem.Text = "Black\nWater";
+            //gaugeItem.GaugeTop = 10;
+            //gaugeItem.GaugeLeft = 820;
+            //gaugeItem.TextFontSize = 13;
+            //gaugeItem.TextFontColor = Colors.CornflowerBlue;
+            //gaugeItem.TextHorizontalAlignment = CanvasHorizontalAlignment.Left;
+            //gaugeItem.TextVerticalAlignment = CanvasVerticalAlignment.Top;
+            //await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
-            // text control 3
-            gaugeItem = new GaugeItem();
-            gaugeItem.GaugeType = GaugeTypeEnum.TextControl;
-            gaugeItem.PageId = this.GaugePageCollection[1].PageId;
-            gaugeItem.Text = "Fuel\nStbd";
-            gaugeItem.GaugeTop = 10;
-            gaugeItem.GaugeLeft = 925;
-            gaugeItem.TextFontSize = 13;
-            gaugeItem.TextFontColor = Colors.CornflowerBlue;
-            gaugeItem.TextHorizontalAlignment = CanvasHorizontalAlignment.Left;
-            gaugeItem.TextVerticalAlignment = CanvasVerticalAlignment.Top;
-            await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            //// text control 3
+            //gaugeItem = new GaugeItem();
+            //gaugeItem.GaugeType = GaugeTypeEnum.TextControl;
+            //gaugeItem.PageId = this.GaugePageCollection[1].PageId;
+            //gaugeItem.Text = "Fuel\nStbd";
+            //gaugeItem.GaugeTop = 10;
+            //gaugeItem.GaugeLeft = 925;
+            //gaugeItem.TextFontSize = 13;
+            //gaugeItem.TextFontColor = Colors.CornflowerBlue;
+            //gaugeItem.TextHorizontalAlignment = CanvasHorizontalAlignment.Left;
+            //gaugeItem.TextVerticalAlignment = CanvasVerticalAlignment.Top;
+            //await this.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
             BuildDBTables.GaugeTable.Load();
             this.GaugeItemCollection = new GaugeItemCollection();

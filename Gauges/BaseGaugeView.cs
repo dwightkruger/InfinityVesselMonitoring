@@ -6,22 +6,10 @@
 
 using Windows.UI.Xaml.Controls;
 
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
-
-namespace InfinityGroup.VesselMonitoring.Gauges.ArcGaugeLeft
+namespace InfinityGroup.VesselMonitoring.Gauges
 {
-    public sealed partial class ArcGaugeLeftView : BaseGaugeView
+    public class BaseGaugeView : UserControl
     {
-        public ArcGaugeLeftView()
-        {
-            this.InitializeComponent();
-        }
-
-        public InfinityGroup.VesselMonitoring.Controls.ArcGaugeLeft ArcGaugeLeft { get { return ArcGaugeLeftControl; } }
-
-        public override BaseGaugeViewModel ViewModel
-        {
-            get { return this.VM; }
-        }
+        public virtual BaseGaugeViewModel ViewModel { get; }
     }
 }

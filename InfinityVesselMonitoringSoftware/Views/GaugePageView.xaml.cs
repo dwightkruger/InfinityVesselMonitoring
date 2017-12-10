@@ -40,15 +40,18 @@ namespace VesselMonitoringSuite.Views
         public GaugePageView()
         {
             this.InitializeComponent();
-           
+
             for (int row = 0; row < 3; row++)
             {
                 for (int col = 0; col < 3; col++)
                 {
+                    GaugeItem gaugeItem = new GaugeItem();
+                    gaugeItem.GaugeHeight = gaugeItem.GaugeWidth = 300;
+
                     ArcGaugeLeft arcGaugeLeft = new ArcGaugeLeft();
+                    arcGaugeLeft.GaugeItem = gaugeItem;
                     arcGaugeLeft.IsOnline = true;
-                    arcGaugeLeft.Height = arcGaugeLeft.Width = 300;
-                    MainCanvas.AddChildUIElement(arcGaugeLeft, row, col);
+                    this.MainCanvas.AddChildBaseGauge(arcGaugeLeft, row, col);
                 }
             }
 
