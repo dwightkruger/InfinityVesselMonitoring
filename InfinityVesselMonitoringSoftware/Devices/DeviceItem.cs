@@ -50,7 +50,10 @@ namespace VesselMonitoringSuite.Devices
             {
                 lock (_lock)
                 {
-                    Row.SetField<string>("PropertyBag", PropertyBag.JsonSerialize());
+                    if (PropertyBag.IsDirty)
+                    {
+                        Row.SetField<string>("PropertyBag", PropertyBag.JsonSerialize());
+                    }
 
                     if (_deviceId <= 0)
                     {

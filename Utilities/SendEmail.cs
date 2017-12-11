@@ -28,6 +28,7 @@ namespace InfinityGroup.VesselMonitoring.Utilities
                 System.Threading.Timeout.Infinite);
 
         }
+
         static public ObservableCollection<EmailItem> EmailQueue { get; set; }
         static public string FromEmailAddress { get; set; }
         static public string FromEmailPassword { get; set; }

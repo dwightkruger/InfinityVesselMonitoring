@@ -76,7 +76,7 @@ namespace VesselMonitoringSuite.Sensors
 
             // Round off the sensor value to the appropriate number of significant digits and limit it between
             // minValue and MaxValue.
-            double value = _sensorValue;
+            double value = sensorValue;
             value = Math.Max(this.MinValue, value);
             value = Math.Min(this.MaxValue, value);
             value = Math.Round(value * Math.Pow(10, this.Resolution));
@@ -86,7 +86,28 @@ namespace VesselMonitoringSuite.Sensors
             DateTime nowUTC = DateTime.Now.ToUniversalTime();
             bool forceByTime = ((nowUTC - _lastDBWriteTime) >= this.Throttle);
 
-            if (forceFlush)
+            if ((_sensorValue == value) && (this.IsOnline == isOnline) && forceByTime)
+            {
+                // If the sensorValue and isOnline not changed, them simply update the DateTime and the bucket
+                _sensorValueRow.SetField<DateTime>("TimeUTC", nowUTC);
+                _sensorValueRow.SetField<byte>("Bucket", _sensorValueBucket.CalculateBucket(nowUTC, isOnline));
+
+                DispatcherHelper.CheckBeginInvokeOnUI(() => 
+                { 
+                    this.SensorValue = value;
+                    this.IsOnline = isOnline;
+                });
+
+                await BuildDBTables.SensorDataTable.BeginCommitRow(_sensorValueRow, () =>
+                {
+                    _lastDBWriteTime = nowUTC;
+                },
+                (ex) =>
+                {
+                    Telemetry.TrackException(ex);
+                });
+            }
+            else if (forceFlush || forceByTime)
             {
                 // Build a new row and flush it out
                 _sensorValueRow = BuildDBTables.SensorDataTable.CreateRow();
@@ -96,26 +117,15 @@ namespace VesselMonitoringSuite.Sensors
                 _sensorValueRow.SetField<bool>("IsOnline", isOnline);
                 _sensorValueRow.SetField<byte>("Bucket", _sensorValueBucket.CalculateBucket(nowUTC, isOnline));
 
-                await BuildDBTables.SensorDataTable.BeginCommitRow(_sensorValueRow, () =>
+                DispatcherHelper.CheckBeginInvokeOnUI(() =>
                 {
-                    _lastDBWriteTime = nowUTC;
-                    _isOnline = isOnline;
-                },
-                (ex) =>
-                {
-                    Telemetry.TrackException(ex);
+                    this.SensorValue = value;
+                    this.IsOnline = isOnline;
                 });
-            }
-            else if ((_sensorValue == value) && (this.IsOnline == isOnline) && forceByTime) 
-            {
-                // If the sensorValue and isOnline not changed, them simply update the DateTime and the bucket
-                _sensorValueRow.SetField<DateTime>("TimeUTC", nowUTC);
-                _sensorValueRow.SetField<byte>("Bucket", _sensorValueBucket.CalculateBucket(nowUTC, isOnline));
 
                 await BuildDBTables.SensorDataTable.BeginCommitRow(_sensorValueRow, () =>
                 {
                     _lastDBWriteTime = nowUTC;
-                    _isOnline = isOnline;
                 },
                 (ex) =>
                 {
@@ -170,7 +180,7 @@ namespace VesselMonitoringSuite.Sensors
                 {
                     if (null == _valueTimer)
                     {
-                        _valueTimer = new Timer(ValueTimerTic, 0, 5000, 2000);
+                        _valueTimer = new Timer(ValueTimerTic, null, 5000, 2000);
                     }
                     else
                     {
@@ -415,7 +425,7 @@ namespace VesselMonitoringSuite.Sensors
                     return (MaxValue - MinValue) * 0.25;
                 }
 
-                if (!IsOnline) return 0;
+                if (!IsOnline) return 0.0;
 
                 return _sensorValue;
             }
@@ -570,12 +580,34 @@ namespace VesselMonitoringSuite.Sensors
             // BUGBUG write this code
         }
 
-        private void ValueTimerTic(object stateInfo)
+
+        async private void ValueTimerTic(object stateInfo)
         {
-            DispatcherHelper.CheckBeginInvokeOnUI(() =>
+            double value = this.SensorValue;
+
+            if (this.SensorValue == 0)
             {
-                this.SensorValue = randu.Next((int)this.MinValue, (int)this.MaxValue);
-            });
+                value = randu.Next((int)this.MinValue, (int)this.MaxValue);
+            }
+            else
+            {
+                double delta = randu.Next(0, (int)Math.Ceiling((this.MaxValue - this.MinValue) / 30.0));
+                double sign = randu.Next();
+
+                if (sign <= 0.5)
+                {
+                    value += delta;
+                }
+                else
+                {
+                    value -= delta;
+                }
+
+                value = Math.Min(value, this.MaxValue);
+                value = Math.Max(value, this.MinValue);
+            }
+
+            await this.BeginAddSensorValue(value, true, false);
         }
 
         #endregion

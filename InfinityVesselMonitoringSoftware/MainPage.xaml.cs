@@ -50,36 +50,6 @@ namespace VesselMonitoring
 
             Telemetry.TrackEvent("Application Started");
             Telemetry.Flush();
-
-            BuildDBTables.Directory = ApplicationData.Current.TemporaryFolder.Path;
-            BuildDBTables.DatabaseName = "InfinityGroupVesselMonitoring";
-            var x = new BuildDBTables();
-            Task.Run(async () => { await x.DoIt(); }).Wait();
-
-            this.BuildGaugePages();
-
-            Task.Run(async () => { await BuildDBTables.VesselSettingsTable.BeginEmpty(); }).Wait();
-
-            App.VesselSettings = new VesselSettings();            
-            App.VesselSettings.VesselName = "MV Infinity";
-            App.VesselSettings.FromEmailAddress = "";
-            App.VesselSettings.FromEmailPassword = "";
-            App.VesselSettings.ToEmailAddress = "dwightkruger@mvinfinity.com";
-            App.VesselSettings.SMTPServerName = "smtp-mail.outlook.com";
-            App.VesselSettings.SMTPPort = 587;
-            App.VesselSettings.SMTPEncryptionMethod = 2; // SmtpConnectType.ConnectSTARTTLS
-
-            SendEmail.FromEmailAddress     = App.VesselSettings.FromEmailAddress;
-            SendEmail.FromEmailPassword    = App.VesselSettings.FromEmailPassword;
-            SendEmail.SMTPEncryptionMethod = App.VesselSettings.SMTPEncryptionMethod;
-            SendEmail.SMTPPort             = App.VesselSettings.SMTPPort;
-            SendEmail.SMTPServerName       = App.VesselSettings.SMTPServerName;
-
-            //SendEmail.Send(App.VesselSettings.ToEmailAddress,
-            //               App.VesselSettings.VesselName,
-            //               "Test Email",
-            //               "This is a test",
-            //               "");
         }
 
     /// <summary>
@@ -104,6 +74,39 @@ namespace VesselMonitoring
             Telemetry.Flush(); // only for desktop apps
 
             e.Handled = true;
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            BuildDBTables.Directory = ApplicationData.Current.TemporaryFolder.Path;
+            BuildDBTables.DatabaseName = "InfinityGroupVesselMonitoring";
+            var x = new BuildDBTables();
+            Task.Run(async () => { await x.DoIt(); }).Wait();
+
+            this.BuildGaugePages();
+
+            Task.Run(async () => { await BuildDBTables.VesselSettingsTable.BeginEmpty(); }).Wait();
+
+            App.VesselSettings = new VesselSettings();
+            App.VesselSettings.VesselName = "MV Infinity";
+            App.VesselSettings.FromEmailAddress = "";
+            App.VesselSettings.FromEmailPassword = "";
+            App.VesselSettings.ToEmailAddress = "dwightkruger@mvinfinity.com";
+            App.VesselSettings.SMTPServerName = "smtp-mail.outlook.com";
+            App.VesselSettings.SMTPPort = 587;
+            App.VesselSettings.SMTPEncryptionMethod = 2; // SmtpConnectType.ConnectSTARTTLS
+
+            SendEmail.FromEmailAddress = App.VesselSettings.FromEmailAddress;
+            SendEmail.FromEmailPassword = App.VesselSettings.FromEmailPassword;
+            SendEmail.SMTPEncryptionMethod = App.VesselSettings.SMTPEncryptionMethod;
+            SendEmail.SMTPPort = App.VesselSettings.SMTPPort;
+            SendEmail.SMTPServerName = App.VesselSettings.SMTPServerName;
+
+            //SendEmail.Send(App.VesselSettings.ToEmailAddress,
+            //               App.VesselSettings.VesselName,
+            //               "Test Email",
+            //               "This is a test",
+            //               "");
         }
 
         /// <summary>
@@ -394,7 +397,7 @@ namespace VesselMonitoring
             gaugeItem = new GaugeItem();
             gaugeItem.GaugeType = GaugeTypeEnum.RightTankGauge;
             gaugeItem.PageId = App.GaugePageCollection[1].PageId;
-            gaugeItem.SensorId = App.SensorCollection[8].SensorId; 
+            gaugeItem.SensorId = App.SensorCollection[8].SensorId;
             gaugeItem.GaugeTop = 50;
             gaugeItem.GaugeLeft = 760;
             gaugeItem.GaugeHeight = 330;

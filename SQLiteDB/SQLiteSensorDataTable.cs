@@ -34,7 +34,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                                 TableName + "\n" +
                                 " ( \n" +
                                     " SensorId ASC, \n" +
-                                    " Time ASC      \n" +
+                                    " TimeUTC ASC   \n" +
                                 " )";
                     using (var statement = ((ISQLiteConnection)_vesselDB.Connection).Prepare(createIndex))
                     {

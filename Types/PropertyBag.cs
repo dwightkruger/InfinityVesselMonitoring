@@ -13,11 +13,9 @@ using System.Runtime.Serialization;
 namespace InfinityGroup.VesselMonitoring.Types
 {
     [DataContract]
-    //public class PropertyBag : INotifyPropertyChanged
     public class PropertyBag : ObservableObject
     {
         private object _lock = new object();
-        //public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Public constructor
@@ -248,14 +246,6 @@ namespace InfinityGroup.VesselMonitoring.Types
         private ItemColumnCollection RollbackPropertyNameList { get; set; }
 
         private List<object> RollbackPropertyValueList { get; set; }
-
-        //protected void RaisePropertyChanged(string propertyName)
-        //{
-        //    if (PropertyChanged != null)
-        //    {
-        //        PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        //    }
-        //}
     }
 
 }

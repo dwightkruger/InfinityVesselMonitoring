@@ -144,7 +144,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             statement.Bind("@SensorUsage", Convert.ToInt32(itemRow.Field<SensorUsage>("SensorUsage")));
             statement.Bind("@SerialNumber", itemRow.Field<string>("SerialNumber"));
             statement.Bind("@ShowNominalValue", SQLiteDB.Utilities.BooleanSQLite(itemRow.Field<bool>("ShowNominalValue")));
-            statement.Bind("@Throttle", itemRow.Field<Int32>("Throttle"));
+            statement.Bind("@Throttle", itemRow.Field<TimeSpan>("Throttle").TotalSeconds);
         }
 
         protected override void FillDeleteItemStatement(ISQLiteStatement statement, Int64 key)
@@ -190,7 +190,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             statement.Bind("@SensorUsage", Convert.ToInt32(itemRow.Field<SensorUsage>("SensorUsage")));
             statement.Bind("@SerialNumber", itemRow.Field<string>("SerialNumber"));
             statement.Bind("@ShowNominalValue", SQLiteDB.Utilities.BooleanSQLite(itemRow.Field<bool>("ShowNominalValue")));
-            statement.Bind("@Throttle", itemRow.Field<Int32>("Throttle"));
+            statement.Bind("@Throttle", itemRow.Field<TimeSpan>("Throttle").TotalSeconds);
         }
 
         protected override void CreateTableSchema(ItemTable itemTable)
@@ -228,7 +228,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns.Add("SensorUsage", typeof(SensorUsage));
             itemTable.Columns.Add("SerialNumber", typeof(string));
             itemTable.Columns.Add("ShowNominalValue", typeof(bool));
-            itemTable.Columns.Add("Throttle", typeof(Int32));
+            itemTable.Columns.Add("Throttle", typeof(TimeSpan));
 
             itemTable.Columns[PrimaryKeyName].DefaultValue = -1L;
             itemTable.Columns["ChangeDate"].DefaultValue = DateTime.Now.ToUniversalTime();
@@ -263,7 +263,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns["SensorUsage"].DefaultValue = SensorUsage.Other;
             itemTable.Columns["SerialNumber"].DefaultValue = string.Empty;
             itemTable.Columns["ShowNominalValue"].DefaultValue = false;
-            itemTable.Columns["Throttle"].DefaultValue = 2000;
+            itemTable.Columns["Throttle"].DefaultValue = new TimeSpan(0,0,4);
         }
 
         protected override void LoadTableRow(ISQLiteStatement statement)
@@ -304,7 +304,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemRow.SetField<SensorUsage>("SensorUsage", (SensorUsage)Convert.ToInt32(statement[31]));
             itemRow.SetField<string>("SerialNumber", (string)statement[32]);
             itemRow.SetField<bool>("ShowNominalValue", (bool)((Int64)statement[33] != 0));
-            itemRow.SetField<Int32>("Throttle", (Int32)Convert.ToInt32(statement[34]));
+            itemRow.SetField<TimeSpan>("Throttle", (TimeSpan) new TimeSpan(0, 0, Convert.ToInt32(statement[34])));
 
             this.ItemTable.Rows.Add(itemRow);
             itemRow.AcceptChanges();

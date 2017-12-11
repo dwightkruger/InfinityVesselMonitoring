@@ -376,7 +376,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
             BaseGauge g = d as BaseGauge;
             if (Convert.ToBoolean(e.NewValue))
             {
-                g.RefreshValue(e.OldValue, e.NewValue);
+                g.RefreshValue(g.Value, g.Value);
                 g.RefreshTimeSpanValue(TimeSpan.FromSeconds(0), g.TimeSpanValue);
                 g.RefreshAlarmColors();
             }
@@ -981,7 +981,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
         #region TextFontColor
         public static readonly DependencyProperty TextFontColorProperty = DependencyProperty.Register(
             "TextFontColor",
-            typeof(double),
+            typeof(Color),
             typeof(BaseGauge),
             new PropertyMetadata(Colors.White,
                 new PropertyChangedCallback(OnTextFontColorPropertyChanged)));
