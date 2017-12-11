@@ -22,7 +22,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         double Latitude { get; set; }
         double Longitude { get; set; }
         void Rollback();
-        int SensorId { get; set; }
+        long SensorId { get; set; }
         double Value { get; set; }
     }
 

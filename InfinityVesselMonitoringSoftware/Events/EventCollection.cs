@@ -84,8 +84,7 @@ namespace InfinityVesselMonitoringSoftware.Events
             {
                 IEventItem triggerEvent = query.First<IEventItem>();
 
-                IEventItem acknowledgedEvent = new EventItem();
-                acknowledgedEvent.SensorId = triggerEvent.SensorId;
+                IEventItem acknowledgedEvent = new EventItem(triggerEvent.SensorId);
                 acknowledgedEvent.EventPriority = 0;
                 acknowledgedEvent.EventCode = EventCode.AlarmAcknowledged;
                 acknowledgedEvent.Value = 0;

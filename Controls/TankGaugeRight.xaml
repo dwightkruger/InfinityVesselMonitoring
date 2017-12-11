@@ -8,6 +8,7 @@
     DataContext="{Binding RelativeSource={RelativeSource Self}}"
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     x:Name="userControl"
+    CanDrag="True"
     Background="Transparent"    
     mc:Ignorable="d">
 

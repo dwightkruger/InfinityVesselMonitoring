@@ -15,7 +15,6 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         Task BeginDelete();
         bool IsDirty { get; }
         bool IsVisible { get; set; }
-        void Load();
         string PageName { get; set; }
         long PageId { get; }
         int Position { get; set; }

@@ -8,16 +8,17 @@
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     DataContext="{Binding RelativeSource={RelativeSource Self}}"    
     mc:Ignorable="d"
+    CanDrag="True"
     x:Name="userControl"
     Background="Transparent">
 
     <Canvas>
         <Grid 
             x:Name="MainGrid" 
-            Height="{Binding GaugeHeight}" 
-            Width="{Binding GaugeWidth}"
-            Canvas.Left="{Binding Left}"  
-            Canvas.Top="{Binding Top}"
+            Height="{x:Bind Path=GaugeHeight}" 
+            Width="{x:Bind Path=GaugeWidth}"
+            Canvas.Left="{x:Bind Path=Left}"  
+            Canvas.Top="{x:Bind Path=Top}"
             HorizontalAlignment="Center" 
             VerticalAlignment="Center">
 
@@ -30,8 +31,8 @@
 
             <Grid 
                 x:Name="DesignGrid"
-                Width="{Binding GaugeWidth}"
-                Height="{Binding GaugeHeight}">
+                Width="{x:Bind Path=GaugeWidth}"
+                Height="{x:Bind Path=GaugeHeight}">
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>

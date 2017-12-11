@@ -30,13 +30,24 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                 // Create indexes
                 try
                 {
-                    string createIndex = "CREATE INDEX IF NOT EXISTS SensorDataTableIndex_SensorIdTimeIndex ON \n " +
-                                TableName + "\n" +
-                                " ( \n" +
-                                    " SensorId ASC, \n" +
-                                    " TimeUTC ASC   \n" +
-                                " )";
-                    using (var statement = ((ISQLiteConnection)_vesselDB.Connection).Prepare(createIndex))
+                    string createIdTimeIndex = "CREATE INDEX IF NOT EXISTS SensorDataTableIndex_SensorIdTimeIndex ON \n " +
+                        TableName + "\n" +
+                        " ( \n" +
+                            " SensorId ASC, \n" +
+                            " TimeUTC ASC   \n" +
+                        " )";
+                    using (var statement = ((ISQLiteConnection)_vesselDB.Connection).Prepare(createIdTimeIndex))
+                    {
+                        statement.Step();
+                    }
+
+                    string createBucketIndex = "CREATE INDEX IF NOT EXISTS SensorDataTableIndex_SensorIdBucketIndex ON \n " +
+                        TableName + "\n" +
+                        " ( \n" +
+                            " SensorId ASC, \n" +
+                            " Bucket   ASC  \n" +
+                        " )";
+                    using (var statement = ((ISQLiteConnection)_vesselDB.Connection).Prepare(createBucketIndex))
                     {
                         statement.Step();
                     }

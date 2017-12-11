@@ -87,7 +87,13 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                 using (var statement = sqlConnection.Prepare(GetInsertItemSql()))
                 {
                     this.FillInsertItemStatement(statement, item);
-                    statement.Step();
+                    SQLiteResult output = statement.Step();
+
+                    if (output != SQLiteResult.DONE)
+                    {
+                        string foo = sqlConnection.ErrorMessage();
+                        throw new Exception(output.ToString());
+                    }
 
                     result = (Int64)sqlConnection.LastInsertRowId();
                 }

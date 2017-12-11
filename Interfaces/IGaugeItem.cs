@@ -40,7 +40,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         double MediumTicLength { get; set; }
         int MiddleCircleDelta { get; set; }
         double MinorTicLength { get; set; }
-        Int64 PageId { get; set; }
+        Int64 PageId { get; }
         int Resolution { get; set; }
         Int64 SensorId { get; set; }
         string Text { get; set; }

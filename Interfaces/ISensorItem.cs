@@ -13,7 +13,10 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
 {
     public interface ISensorItem
     {
-        Task BeginAddSensorValue(double value, bool isOnline, bool forceFlush);
+        void AddOfflineObservation(bool forceFlush);
+        void AddOfflineObservation(DateTime timeUTC, bool forceFlush);
+        void AddSensorValue(DateTime timeUTC, double value, bool isOnline, bool forceFlush);
+        void AddSensorValue(double value, bool isOnline, bool forceFlush);
         Task BeginCommit();
         DateTime ChangeDate { get; }
         bool DemoMode { get; set; }

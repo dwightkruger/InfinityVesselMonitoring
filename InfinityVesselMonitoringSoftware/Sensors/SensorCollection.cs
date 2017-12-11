@@ -15,6 +15,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace VesselMonitoringSuite.Sensors
@@ -24,9 +25,11 @@ namespace VesselMonitoringSuite.Sensors
         private object _lock = new object();
         private Hashtable _hashBySensorId = new Hashtable();
         private Hashtable _hashBySerialNumber = new Hashtable();
+        private Timer _sensorObservationFlushTimer;
 
         public SensorCollection()
         {
+            _sensorObservationFlushTimer = new Timer(SensorObservationFlushTimerTic, null, 1*60*1000, 2*60*1000);
         }
 
         new public ISensorItem Add(ISensorItem sensorItem)
@@ -81,81 +84,70 @@ namespace VesselMonitoringSuite.Sensors
         /// <summary>
         /// Loads the sensors from the SQL database table
         /// </summary>
-        async public Task BeginLoad()
+        public void Load()
         {
             try
             {
                 foreach (ItemRow row in BuildDBTables.SensorTable.Rows)
                 {
                     ISensorItem sensor = null;
-
-                    // Get the last observation for this sensor.
-                    await BuildDBTables.SensorDataTable.BeginGetLastDataPoint(row.Field<long>("SensorId"), (lastUpdate, lastValue, lastOnline, bucket) => 
+                    switch (row.Field<SensorType>("SensorType"))
                     {
-                        ItemRow sensorValueRow = BuildDBTables.SensorDataTable.CreateRow();
-                        sensorValueRow.SetField<DateTime>("Time", lastUpdate);
-                        sensorValueRow.SetField<double>("Value", lastValue);
-                        sensorValueRow.SetField<bool>("IsOnline", lastOnline);
-                        sensorValueRow.SetField<byte>("Bucket", bucket);
-
-                        switch (row.Field<SensorType>("SensorType"))
+                        case SensorType.AC: break;
+                        case SensorType.Amps: break;
+                        case SensorType.Angle: break;
+                        case SensorType.Battery: break;
+                        case SensorType.Charge: break;
+                        case SensorType.CourseSpeed: break;
+                        case SensorType.CurrentDirection: break;
+                        case SensorType.CurrentSpeed: break;
+                        case SensorType.DC_Amps: break;
+                        case SensorType.Depth: break;
+                        case SensorType.Distance: break;
+                        case SensorType.Flow: break;
+                        case SensorType.FlowTotal: break;
+                        case SensorType.Frequency: break;
+                        case SensorType.FuelEfficiency: break;
+                        case SensorType.Heading: break;
+                        case SensorType.MagneticVariation: break;
+                        case SensorType.Percent: break;
+                        case SensorType.Position: break;
+                        case SensorType.Power: break;
+                        case SensorType.PowerTotal: break;
+                        case SensorType.Pressure: break;
+                        case SensorType.Rotation: break;
+                        case SensorType.Speed: break;
+                        case SensorType.String: break;
+                        case SensorType.Switch: break;
+                        case SensorType.Tank: break;
+                        case SensorType.TankTotal: break;
+                        case SensorType.Temperature: break;
+                        case SensorType.Text: break;
+                        case SensorType.Time: break;
+                        case SensorType.Unknown:
                         {
-                            case SensorType.AC: break;
-                            case SensorType.Amps: break;
-                            case SensorType.Angle: break;
-                            case SensorType.Battery: break;
-                            case SensorType.Charge: break;
-                            case SensorType.CourseSpeed: break;
-                            case SensorType.CurrentDirection: break;
-                            case SensorType.CurrentSpeed: break;
-                            case SensorType.DC_Amps: break;
-                            case SensorType.Depth: break;
-                            case SensorType.Distance: break;
-                            case SensorType.Flow: break;
-                            case SensorType.FlowTotal: break;
-                            case SensorType.Frequency: break;
-                            case SensorType.FuelEfficiency: break;
-                            case SensorType.Heading: break;
-                            case SensorType.MagneticVariation: break;
-                            case SensorType.Percent: break;
-                            case SensorType.Position: break;
-                            case SensorType.Power: break;
-                            case SensorType.PowerTotal: break;
-                            case SensorType.Pressure: break;
-                            case SensorType.Rotation: break;
-                            case SensorType.Speed: break;
-                            case SensorType.String: break;
-                            case SensorType.Switch: break;
-                            case SensorType.Tank: break;
-                            case SensorType.TankTotal: break;
-                            case SensorType.Temperature: break;
-                            case SensorType.Text: break;
-                            case SensorType.Time: break;
-                            case SensorType.Unknown:
-                            {
-                                sensor = new SensorItem(row, sensorValueRow);
-                            }
-                            break;
-
-                            case SensorType.VideoCamera: break;
-                            case SensorType.Volts: break;
-                            case SensorType.Volume: break;
-                            case SensorType.VolumeResettable: break;
-                            case SensorType.VolumeTotal: break;
-                            case SensorType.VolumeTotalResettable: break;
-                            case SensorType.Wind: break;
-                            default:
-                            {
-                                sensor = new SensorItem(row, sensorValueRow);
-                            }
-                            break;
+                            sensor = new SensorItem(row);
                         }
+                        break;
 
-                        if (null != sensor)
+                        case SensorType.VideoCamera: break;
+                        case SensorType.Volts: break;
+                        case SensorType.Volume: break;
+                        case SensorType.VolumeResettable: break;
+                        case SensorType.VolumeTotal: break;
+                        case SensorType.VolumeTotalResettable: break;
+                        case SensorType.Wind: break;
+                        default:
                         {
-                            this.Add(sensor);
+                            sensor = new SensorItem(row);
                         }
-                    });
+                        break;
+                    }
+
+                    if (null != sensor)
+                    {
+                        this.Add(sensor);
+                    }
                 }
             }
             catch (Exception ex)
@@ -197,6 +189,20 @@ namespace VesselMonitoringSuite.Sensors
             return result;
         }
 
+        /// <summary>
+        /// Flush all of the sensor observations to the disk.
+        /// </summary>
+        /// <param name="stateInfo"></param>
+        async private void SensorObservationFlushTimerTic(object stateInfo)
+        {
+            await BuildDBTables.SensorDataTable.BeginCommitAll(()=>
+            {
+            },
+            (ex)=>
+            {
+                Telemetry.TrackException(ex);
+            });
+        }
 
         #region INotifyPropertyChanged
 

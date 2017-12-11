@@ -13,6 +13,7 @@ using InfinityGroup.VesselMonitoring.SQLiteDB;
 using System.Reflection;
 using InfinityGroup.VesselMonitoring.Globals;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace InfinityVesselMonitoringSoftware.Events
 {
@@ -20,10 +21,17 @@ namespace InfinityVesselMonitoringSoftware.Events
     {
         private object _lock = new object();
         private PropertyBag _propertyBag;
-        private int _eventId = 0;
 
-        public EventItem()
+        public EventItem(long sensorId)
         {
+            this.Row = BuildDBTables.EventsTable.CreateRow();
+            BuildDBTables.EventsTable.AddRow(this.Row);
+            this.SensorId = sensorId;
+
+            Task.Run(async () =>
+            {
+                await this.BeginCommit();
+            }).Wait();
         }
 
         public EventItem(ItemRow row)
@@ -38,18 +46,13 @@ namespace InfinityVesselMonitoringSoftware.Events
             lock (_lock)
             {
                 Row.SetField<string>("PropertyBag", PropertyBag.JsonSerialize());
-
-                if (_eventId <= 0)
-                {
-                    BuildDBTables.EventsTable.AddRow(Row);
-                }
             }
 
             // Persist the row into the database
             await BuildDBTables.EventsTable.BeginCommitRow(this.Row,
                 () =>
                 {
-                    _eventId = Row.Field<int>("EventId");
+                    Debug.Assert(Row.Field<long>("EventId") > 0);
                 },
                 (ex) =>
                 {
@@ -123,10 +126,10 @@ namespace InfinityVesselMonitoringSoftware.Events
             }
         }
 
-        public int SensorId
+        public long SensorId
         {
-            get { return GetRowPropertyValue<int>(() => SensorId); }
-            set { SetRowPropertyValue<int>(() => SensorId, value); }
+            get { return GetRowPropertyValue<long>(() => SensorId); }
+            set { SetRowPropertyValue<long>(() => SensorId, value); }
         }
 
         public double Value

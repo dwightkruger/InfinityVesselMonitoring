@@ -69,7 +69,7 @@ namespace InfinityGroup.VesselMonitoring.Gauges
                 {
                     result = this.FirstOrDefault<IGaugePageItem>(item => item.PageId == myPageId);
                 }
-            });
+            }).Wait();
 
             return result;
         }
@@ -82,8 +82,7 @@ namespace InfinityGroup.VesselMonitoring.Gauges
 
                 foreach (ItemRow row in BuildDBTables.GaugePageTable.Rows)
                 {
-                    IGaugePageItem gaugePageItem = new GaugePageItem(row.Field<Int64>(BuildDBTables.GaugePageTable.PrimaryKeyName));
-
+                    IGaugePageItem gaugePageItem = new GaugePageItem(row);
                     this.Add(gaugePageItem);
                 }
             }

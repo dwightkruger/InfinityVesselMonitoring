@@ -102,7 +102,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns[PrimaryKeyName].DefaultValue = -1L;
             itemTable.Columns["ChangeDate"].DefaultValue = DateTime.Now.ToUniversalTime();
             itemTable.Columns["IsVisible"].DefaultValue = true;
-            itemTable.Columns["PageName"].DefaultValue = string.Empty;
+            itemTable.Columns["PageName"].DefaultValue = "Page Name";
             itemTable.Columns["Position"].DefaultValue = 0;
             itemTable.Columns["PropertyBag"].DefaultValue = new PropertyBag().JsonSerialize();
         }

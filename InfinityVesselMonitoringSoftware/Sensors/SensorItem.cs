@@ -4,27 +4,25 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
-using System;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Threading;
+using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
+using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Types;
 using InfinityGroup.VesselMonitoring.Utilities;
+using System;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
-using InfinityVesselMonitoringSoftware;
-using InfinityGroup.VesselMonitoring.SQLiteDB;
-using InfinityGroup.VesselMonitoring.Globals;
-using System.Threading.Tasks;
 using System.Threading;
-using GalaSoft.MvvmLight.Threading;
-using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace VesselMonitoringSuite.Sensors
 {
     public class SensorItem : ObservableObject, ISensorItem
     {
         private bool _isOnline = false;
-        private long _sensorId = -1;
         private double _sensorValue = 0;
         private PropertyBag _propertyBag = null;
         private object _lock = new object();
@@ -40,21 +38,64 @@ namespace VesselMonitoringSuite.Sensors
         /// <summary>
         /// Call this constructor if your building a sensor from scratch.
         /// </summary>
-        public SensorItem()
+        public SensorItem(long deviceId)
         {
+            // Persist the sensor, and write the first record as an offline observation
             this.Row = BuildDBTables.SensorTable.CreateRow();
-            _sensorValueRow = BuildDBTables.SensorDataTable.CreateRow();
+            BuildDBTables.SensorTable.AddRow(this.Row);
+            this.DeviceId = deviceId;
+
+            Task.Run(async () =>
+            {
+                await this.BeginCommit();
+            }).Wait();
+
+            this.AddOfflineObservation(true);
         }
 
         /// <summary>
         /// Call this constructor if you are restoring a sensor from the database.
         /// </summary>
         /// <param name="row"></param>
-        public SensorItem(ItemRow row, ItemRow lastSensorValue)
+        public SensorItem(ItemRow row)
         {
             this.Row = row;
-            _sensorId = this.Row.Field <long>("SensorId");
-            _sensorValueRow = lastSensorValue;
+
+            // If the last observation for this sensor was not offline, then we did not shutdown cleanly.
+            // Add an offline observation
+            Task.Run(async () =>
+            {
+                await BuildDBTables.SensorDataTable.BeginGetLastDataPoint(row.Field<long>("SensorId"),
+                    (lastUpdate, lastValue, lastOnline, bucket) =>
+                    {
+                        AddOfflineObservation(lastUpdate.AddSeconds(2), true);
+                    });
+            }).Wait();
+
+            // Add an off-line observation at the start. Every sensor starts offline
+            this.AddOfflineObservation(true);
+        }
+
+        /// <summary>
+        /// Write an offline observation at the current dateTime
+        /// </summary>
+        /// <param name="forceFlush"></param>
+        /// <returns></returns>
+        public void AddOfflineObservation(bool forceFlush)
+        {
+            DateTime nowUTC = DateTime.Now.ToUniversalTime();
+            this.AddOfflineObservation(nowUTC, forceFlush);
+        }
+
+        /// <summary>
+        /// Write an offline observation at the dateTime provided
+        /// </summary>
+        /// <param name="timeUTC"></param>
+        /// <param name="forceFlush"></param>
+        /// <returns></returns>
+        public void AddOfflineObservation(DateTime timeUTC, bool forceFlush)
+        {
+            this.AddSensorValue(timeUTC, 0, true, forceFlush);
         }
 
         /// <summary>
@@ -64,15 +105,23 @@ namespace VesselMonitoringSuite.Sensors
         /// <param name="isOnline"></param>
         /// <param name="forceFlush"></param>
         /// <returns></returns>
-        async public Task BeginAddSensorValue(double sensorValue, bool isOnline, bool forceFlush)
+        public void AddSensorValue(double sensorValue, bool isOnline, bool forceFlush)
         {
-            // If for some reason this sensor has not been commited, do it now.
-            if (_sensorId <= 0)
-            {
-                await this.BeginCommit();
-            }
+            DateTime nowUTC = DateTime.Now.ToUniversalTime();
+            AddSensorValue(nowUTC, sensorValue, isOnline, forceFlush);
+        }
 
-            Debug.Assert(_sensorId > 0);
+        /// <summary>
+        /// Update the sensor value at the UTC time specified with the value provided.
+        /// </summary>
+        /// <param name="timeUTC"></param>
+        /// <param name="sensorValue"></param>
+        /// <param name="isOnline"></param>
+        /// <param name="forceFlush"></param>
+        /// <returns></returns>
+        public void AddSensorValue(DateTime timeUTC, double sensorValue, bool isOnline, bool forceFlush)
+        {
+            Debug.Assert(this.SensorId > 0);
 
             // Round off the sensor value to the appropriate number of significant digits and limit it between
             // minValue and MaxValue.
@@ -82,55 +131,68 @@ namespace VesselMonitoringSuite.Sensors
             value = Math.Round(value * Math.Pow(10, this.Resolution));
             value = value / Math.Pow(10, this.Resolution);
 
-            // Has enough time elapsed since we last wrote a value to the datahase that we want to do it again.
-            DateTime nowUTC = DateTime.Now.ToUniversalTime();
-            bool forceByTime = ((nowUTC - _lastDBWriteTime) >= this.Throttle);
-
-            if ((_sensorValue == value) && (this.IsOnline == isOnline) && forceByTime)
+            DispatcherHelper.CheckBeginInvokeOnUI(() =>
             {
-                // If the sensorValue and isOnline not changed, them simply update the DateTime and the bucket
-                _sensorValueRow.SetField<DateTime>("TimeUTC", nowUTC);
-                _sensorValueRow.SetField<byte>("Bucket", _sensorValueBucket.CalculateBucket(nowUTC, isOnline));
+                this.SensorValue = value;
+                this.IsOnline = isOnline;
+            });
 
-                DispatcherHelper.CheckBeginInvokeOnUI(() => 
-                { 
-                    this.SensorValue = value;
-                    this.IsOnline = isOnline;
-                });
+            // If the online/offline state changed to offline/online, write out a new record
+            if (this.IsOnline != isOnline)
+            {
+                // Do we need to build a new observation so that we do not overwrite the previous observation?
+                if (null != _sensorValueRow)
+                {
+                    _sensorValueRow = BuildDBTables.SensorDataTable.CreateRow();
+                    _sensorValueRow.SetField<long>("SensorId", this.SensorId);
+                    _sensorValueRow.SetField<double>("SensorValue", value);
+                    _sensorValueRow.SetField<DateTime>("TimeUTC", timeUTC);
+                    _sensorValueRow.SetField<bool>("IsOnline", isOnline);
+                    _sensorValueRow.SetField<byte>("Bucket", _sensorValueBucket.CalculateBucket(timeUTC, isOnline));
+                    BuildDBTables.SensorDataTable.AddRow(_sensorValueRow);
 
-                await BuildDBTables.SensorDataTable.BeginCommitRow(_sensorValueRow, () =>
-                {
-                    _lastDBWriteTime = nowUTC;
-                },
-                (ex) =>
-                {
-                    Telemetry.TrackException(ex);
-                });
+                    _lastDBWriteTime = timeUTC;
+                }
             }
-            else if (forceFlush || forceByTime)
+            else if (forceFlush)
             {
-                // Build a new row and flush it out
+                // Build a new observation and flush it out
                 _sensorValueRow = BuildDBTables.SensorDataTable.CreateRow();
-                _sensorValueRow.SetField<DateTime>("TimeUTC", nowUTC);
+                _sensorValueRow.SetField<DateTime>("TimeUTC", timeUTC);
                 _sensorValueRow.SetField<long>("SensorId", this.SensorId);
                 _sensorValueRow.SetField<double>("SensorValue", value);
                 _sensorValueRow.SetField<bool>("IsOnline", isOnline);
-                _sensorValueRow.SetField<byte>("Bucket", _sensorValueBucket.CalculateBucket(nowUTC, isOnline));
+                _sensorValueRow.SetField<byte>("Bucket", _sensorValueBucket.CalculateBucket(timeUTC, isOnline));
+                BuildDBTables.SensorDataTable.AddRow(_sensorValueRow);
 
-                DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                _sensorValueRow = null;
+                _lastDBWriteTime = timeUTC;
+            }
+            else if ((_sensorValue == value) && (this.IsOnline == isOnline))
+            {
+                // If we do not have a row to contain this observation, create one.
+                if (null == _sensorValueRow)
                 {
-                    this.SensorValue = value;
-                    this.IsOnline = isOnline;
-                });
+                    _sensorValueRow = BuildDBTables.SensorDataTable.CreateRow();
+                    _sensorValueRow.SetField<long>("SensorId", this.SensorId);
+                    _sensorValueRow.SetField<double>("SensorValue", value);
+                    _sensorValueRow.SetField<DateTime>("TimeUTC", timeUTC);
+                    _sensorValueRow.SetField<bool>("IsOnline", isOnline);
+                    _sensorValueRow.SetField<byte>("Bucket", SensorValueBucket.LastBucket);
+                    BuildDBTables.SensorDataTable.AddRow(_sensorValueRow);
+                }
 
-                await BuildDBTables.SensorDataTable.BeginCommitRow(_sensorValueRow, () =>
+                // Has enough time elapsed since we last wrote a value to the datahase that we want to do it again.
+                bool forceByTime = ((timeUTC - _lastDBWriteTime) >= this.Throttle);
+
+                if (forceByTime)
                 {
-                    _lastDBWriteTime = nowUTC;
-                },
-                (ex) =>
-                {
-                    Telemetry.TrackException(ex);
-                });
+                    // If the sensorValue and isOnline not changed, them simply update the DateTime and the bucket
+                    _sensorValueRow.SetField<DateTime>("TimeUTC", timeUTC);
+                    _sensorValueRow.SetField<byte>("Bucket", _sensorValueBucket.CalculateBucket(timeUTC, isOnline));
+
+                    _lastDBWriteTime = timeUTC;
+                }
             }
         }
 
@@ -138,13 +200,11 @@ namespace VesselMonitoringSuite.Sensors
         {
             if (this.IsDirty)
             {
-                lock (_lock)
+                if (this.PropertyBag.IsDirty)
                 {
-                    Row.SetField<string>("PropertyBag", PropertyBag.JsonSerialize());
-
-                    if (_sensorId <= 0)
+                    lock (_lock)
                     {
-                        BuildDBTables.SensorTable.AddRow(Row);
+                        this.Row.SetField<string>("PropertyBag", PropertyBag.JsonSerialize());
                     }
                 }
 
@@ -152,7 +212,7 @@ namespace VesselMonitoringSuite.Sensors
                 await BuildDBTables.SensorTable.BeginCommitRow(this.Row,
                     () =>
                     {
-                        _sensorId = Row.Field<int>("SensorId");
+                        Debug.Assert(this.Row.Field<int>("SensorId") > 0);
                     },
                     (ex) =>
                     {
@@ -180,7 +240,7 @@ namespace VesselMonitoringSuite.Sensors
                 {
                     if (null == _valueTimer)
                     {
-                        _valueTimer = new Timer(ValueTimerTic, null, 5000, 2000);
+                        _valueTimer = new Timer(DemoValueTimerTic, null, 5000, 2000);
                     }
                     else
                     {
@@ -517,7 +577,7 @@ namespace VesselMonitoringSuite.Sensors
                 if (_propertyBag == null)
                 {
                     _propertyBag = new PropertyBag();
-                    Row.SetField<string>("PropertyBag", _propertyBag.JsonSerialize());
+                    this.Row.SetField<string>("PropertyBag", _propertyBag.JsonSerialize());
                 }
 
                 return _propertyBag;
@@ -580,8 +640,7 @@ namespace VesselMonitoringSuite.Sensors
             // BUGBUG write this code
         }
 
-
-        async private void ValueTimerTic(object stateInfo)
+        private void DemoValueTimerTic(object stateInfo)
         {
             double value = this.SensorValue;
 
@@ -607,7 +666,7 @@ namespace VesselMonitoringSuite.Sensors
                 value = Math.Max(value, this.MinValue);
             }
 
-            await this.BeginAddSensorValue(value, true, false);
+            this.AddSensorValue(value, true, false);
         }
 
         #endregion
@@ -622,6 +681,7 @@ namespace VesselMonitoringSuite.Sensors
     public class SensorValueBucket
     {
         public const int TotalBuckets = 21;                                         // 21 total buckets
+        public const byte LastBucket = TotalBuckets - 1;
         private const int c_ObservationsPerBucket = 1000;                           // 10-0 observations per bucket
         private static TimeSpan[] _bucketTimeSpanList = new TimeSpan[TotalBuckets]; // The timespan for each of the buckets
         private DateTime[] _lastObservationTimePerBucket = new DateTime[TotalBuckets];
@@ -674,7 +734,7 @@ namespace VesselMonitoringSuite.Sensors
             {
                 _isOnline = isOnline;
                 for (int i = 0; i < TotalBuckets; i++) _lastObservationTimePerBucket[i] = timeUTC;
-                return 0xFF;
+                return LastBucket;
             }
 
             // Calculate which buckets will contain this entry. We will put the entry to all of the buckets
@@ -723,7 +783,7 @@ namespace VesselMonitoringSuite.Sensors
 
             // Don't run off the end of the buckets. The timespan may be longer than the timespan covered by
             // the last bucket. In this case, just return the last bucket.
-            lastBucket = Math.Min(lastBucket, Convert.ToByte(TotalBuckets - 1));
+            lastBucket = Math.Min(lastBucket, LastBucket);
 
             return lastBucket;
         }

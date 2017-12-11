@@ -12,6 +12,7 @@ using InfinityGroup.VesselMonitoring.Types;
 using InfinityGroup.VesselMonitoring.UndoRedoFramework.Props;
 using Microsoft.Graphics.Canvas.Text;
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.UI;
@@ -28,7 +29,6 @@ namespace InfinityGroup.VesselMonitoring.Gauges
         private PropertyBag _propertyBag;
 
         private UndoableProperty<DateTime> _changeDate;
-        private UndoableProperty<Int64> _gaugeId;
         private UndoableProperty<GaugeTypeEnum> _gaugeType;
         private UndoableProperty<Int64> _pageId;
         private UndoableProperty<double> _gaugeHeight;
@@ -56,7 +56,6 @@ namespace InfinityGroup.VesselMonitoring.Gauges
         private UndoableProperty<Int64> _sensorId;
 
         public const string ChangeDatePropertyName = "ChangeDate";
-        public const string GaugeIdPropertyName = "GaugeId";
         public const string GaugeTypePropertyName = "GaugeType";
         public const string PageIdPropertyName = "PageId";
         public const string SensorIdPropertyName = "SensorId";
@@ -86,16 +85,18 @@ namespace InfinityGroup.VesselMonitoring.Gauges
         /// <summary>
         /// Call this constructor when building a new gauge from scratch
         /// </summary>
-        public GaugeItem()
+        public GaugeItem(long pageId)
         {
             this._context = new UndoRedoContext();
             this.UndoCommand = this._context.GetUndoCommand();
             this.RedoCommand = this._context.GetRedoCommand();
 
+            this.Row = BuildDBTables.GaugeTable.CreateRow();
+            BuildDBTables.GaugeTable.AddRow(this.Row);
+
             _changeDate = new UndoableProperty<DateTime>(this, ChangeDatePropertyName, this._context, DateTime.UtcNow);
-            _gaugeId = new UndoableProperty<Int64>(this, GaugeIdPropertyName, this._context, -1);
             _gaugeType = new UndoableProperty<GaugeTypeEnum>(this, GaugeTypePropertyName, this._context, GaugeTypeEnum.Unknown);
-            _pageId = new UndoableProperty<Int64>(this, PageIdPropertyName, this._context, -1);
+            _pageId = new UndoableProperty<Int64>(this, PageIdPropertyName, this._context, pageId);
 
             _gaugeLeft = new UndoableProperty<double>(this, GaugeLeftPropertyName, this._context, 0);
             _gaugeTop = new UndoableProperty<double>(this, GaugeTopPropertyName, this._context, 0);
@@ -122,7 +123,13 @@ namespace InfinityGroup.VesselMonitoring.Gauges
             _textHorizontalAlignment = new UndoableProperty<CanvasHorizontalAlignment>(this, TextHorizontalAlignmentPropertyName, this._context, CanvasHorizontalAlignment.Left);
             _textVerticalAlignment = new UndoableProperty<CanvasVerticalAlignment>(this, TextVerticalAlignmentPropertyName, this._context, CanvasVerticalAlignment.Top);
 
-            this.Row = BuildDBTables.GaugeTable.CreateRow();
+            this.PageId = pageId;
+
+            Task.Run(async () =>
+            {
+                await this.BeginCommit();
+            }).Wait();
+
         }
 
         /// <summary>
@@ -138,7 +145,6 @@ namespace InfinityGroup.VesselMonitoring.Gauges
             this.RedoCommand = this._context.GetRedoCommand();
 
             _changeDate = new UndoableProperty<DateTime>(this, ChangeDatePropertyName, this._context, this.Row.Field<DateTime>(ChangeDatePropertyName));
-            _gaugeId = new UndoableProperty<Int64>(this, GaugeIdPropertyName, this._context, this.Row.Field<long>(GaugeIdPropertyName));
             _gaugeType = new UndoableProperty<GaugeTypeEnum>(this, GaugeTypePropertyName, this._context, this.Row.Field<GaugeTypeEnum>(GaugeTypePropertyName));
             _pageId = new UndoableProperty<Int64>(this, PageIdPropertyName, this._context, this.Row.Field<long>(PageIdPropertyName));
 
@@ -309,7 +315,7 @@ namespace InfinityGroup.VesselMonitoring.Gauges
         public long PageId
         {
             get { return _pageId.GetValue(); }
-            set
+            protected set
             {
                 _pageId.SetValue(value);
                 Row.SetField<long>(PageIdPropertyName, value);
@@ -474,36 +480,27 @@ namespace InfinityGroup.VesselMonitoring.Gauges
 
         async public Task BeginCommit()
         {
-            if (this.PropertyBag.IsDirty) Row.SetField<string>("PropertyBag", this.PropertyBag.JsonSerialize());
-
             // Persist the row into the database
-            if (GaugeId == -1)
+            if (this.IsDirty)
             {
-                BuildDBTables.GaugeTable.AddRow(Row);
+                if (this.PropertyBag.IsDirty)
+                {
+                    this.Row.SetField<string>("PropertyBag", this.PropertyBag.JsonSerialize());
+                }
+
                 await BuildDBTables.GaugeTable.BeginCommitRow(
                     Row,
                     () =>
                     {
+                        Debug.Assert(this.Row.Field<long>("GaugeId") > 0);
                     },
                     (Exception ex) =>
                     {
                         Telemetry.TrackException(ex);
                     });
             }
-            else if (this.IsDirty)
-            {
-                await BuildDBTables.GaugePageTable.BeginCommitRow(
-                    Row,
-                    () =>
-                    {
-                    },
-                    (Exception ex) =>
-                    {
-                        Telemetry.TrackException(ex);
-                    });
-            }
-
         }
+
         async public Task BeginDelete()
         {
             await BuildDBTables.GaugeTable.BeginRemove(this.Row);

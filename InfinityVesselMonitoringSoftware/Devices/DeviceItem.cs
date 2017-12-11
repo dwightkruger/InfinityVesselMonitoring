@@ -13,10 +13,10 @@ using InfinityVesselMonitoringSoftware;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using VesselMonitoring;
 
 namespace VesselMonitoringSuite.Devices
 {
@@ -25,13 +25,19 @@ namespace VesselMonitoringSuite.Devices
         private PropertyBag _propertyBag;
         private bool _isOnline;
         private object _lock = new object();
-        private long _deviceId = -1;
+ 
         /// <summary>
         /// Call this constructor if you are building a new device item from scratch
         /// </summary>
         public DeviceItem()
         {
             this.Row = BuildDBTables.DeviceTable.CreateRow();
+            BuildDBTables.DeviceTable.AddRow(this.Row);
+
+            Task.Run(async () =>
+            {
+                await this.BeginCommit();
+            }).Wait();
         }
 
         /// <summary>
@@ -41,7 +47,6 @@ namespace VesselMonitoringSuite.Devices
         public DeviceItem(ItemRow row)
         {
             this.Row = row;
-            _deviceId = this.Row.Field<long>("DeviceId");
         }
 
         async public Task BeginCommit()
@@ -54,18 +59,13 @@ namespace VesselMonitoringSuite.Devices
                     {
                         Row.SetField<string>("PropertyBag", PropertyBag.JsonSerialize());
                     }
-
-                    if (_deviceId <= 0)
-                    {
-                        BuildDBTables.DeviceTable.AddRow(Row);
-                    }
                 }
 
                 // Persist the row into the database
                 await BuildDBTables.DeviceTable.BeginCommitRow(this.Row,
                     () =>
                     {
-                        _deviceId = Row.Field<int>("DeviceId");
+                        Debug.Assert(Row.Field<int>("DeviceId") > 0);
                     },
                     (ex) =>
                     {

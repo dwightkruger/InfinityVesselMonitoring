@@ -4,6 +4,7 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
+using InfinityGroup.VesselMonitoring.Interfaces;
 using System;
 using Windows.UI.Xaml.Media;
 
@@ -12,6 +13,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
 {
     public interface IGauge
     {
+        IGaugeItem GaugeItem { get; set; }
         Brush GaugeLabelsBrush { get; set; }
         SolidColorBrush HighAlarmBrush { get; set; }
         double HighAlarmValue { get; set; }

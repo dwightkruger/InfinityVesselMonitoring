@@ -9,7 +9,6 @@
     xmlns:converters="using:InfinityGroup.VesselMonitoring.Globals.Converters"
     xmlns:gauges="using:InfinityGroup.VesselMonitoring.Gauges"
     x:Name="UserControl"
-    AllowDrop="True"
     mc:Ignorable="d"
     d:DesignHeight="800"
     d:DesignWidth="1000">
@@ -21,6 +20,12 @@
     
     <gauges:CanvasGrid 
         x:Name="MainCanvas"
+        CanDrag="True"
+        AllowDrop="True"
+        DropCompleted="MainCanvas_DropCompleted"
+        DragEnter="MainCanvas_DragEnter"
+        DragLeave="MainCanvas_DragLeave"
+        Drop="MainCanvas_Drop"
         Rows="{Binding Rows, ElementName=UserControl}"
         Columns="{Binding Columns, ElementName=UserControl}"
         Width="{Binding Width, ElementName=UserControl}" 

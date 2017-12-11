@@ -21,29 +21,28 @@ namespace InfinityGroup.VesselMonitoring.Gauges
     public class GaugePageItem : ObservableObject, IGaugePageItem
     {
         private PropertyBag _propertyBag;
-        private ItemRow _row;
-        private Int64 _pageId;
 
         /// <summary>
         /// Call this constructor when building a new page from scratch
         /// </summary>
         public GaugePageItem()
         {
-            _pageId = -1;
+            // Persist the sensor, and write the first record as an offline observation
+            this.Row = BuildDBTables.GaugePageTable.CreateRow();
+            BuildDBTables.GaugePageTable.AddRow(this.Row);
+            Task.Run(async () =>
+            {
+                await this.BeginCommit();
+            }).Wait();
         }
 
         /// <summary>
         /// Call this constructor when restoring a page from the backing store (SQLite)
         /// </summary>
         /// <param name="gaugePageID"></param>
-        public GaugePageItem(Int64 gaugePageID)
+        public GaugePageItem(ItemRow row)
         {
-            _pageId = gaugePageID;
-
-            if (_pageId != -1)
-            {
-                this.Load();
-            }
+            this.Row = row;
         }
 
         public DateTime ChangeDate
@@ -58,29 +57,18 @@ namespace InfinityGroup.VesselMonitoring.Gauges
 
         async public Task BeginCommit()
         {
-            if (this.PropertyBag.IsDirty) Row.SetField<string>("PropertyBag", this.PropertyBag.JsonSerialize());
+            if (this.IsDirty)
+            {
+                if (this.PropertyBag.IsDirty)
+                {
+                    this.Row.SetField<string>("PropertyBag", this.PropertyBag.JsonSerialize());
+                }
 
-            // Persist the row into the database
-            if (PageId == -1)
-            {
-                BuildDBTables.GaugePageTable.AddRow(Row);
                 await BuildDBTables.GaugePageTable.BeginCommitRow(
-                    Row,
+                    this.Row,
                     () =>
                     {
-                        _pageId = this.Row.Field<Int64>("PageId");
-                    },
-                    (Exception ex) =>
-                    {
-                        Telemetry.TrackException(ex);
-                    });
-            }
-            else if (this.IsDirty)
-            {
-                await BuildDBTables.GaugePageTable.BeginCommitRow(
-                    Row,
-                    () =>
-                    {
+                        Debug.Assert(this.Row.Field<long>("PageId") > 0);
                     },
                     (Exception ex) =>
                     {
@@ -91,15 +79,16 @@ namespace InfinityGroup.VesselMonitoring.Gauges
 
         async public Task BeginDelete()
         {
-            await BuildDBTables.GaugePageTable.BeginRemove(_row);
+            await BuildDBTables.GaugePageTable.BeginRemove(this.Row);
+            this.Row = null;
         }
 
         public bool IsDirty
         {
             get
             {
-                if (_row == null) return false;                             // We do not have any data
-                if (Row.RowState != ItemRowState.Unchanged) return true;    // No changes have been made
+                if (this.Row == null) return false;                             // We do not have any data
+                if (this.Row.RowState != ItemRowState.Unchanged) return true;    // No changes have been made
                 if (_propertyBag == null) return false;                     // We do not have a property blob
 
                 return PropertyBag.IsDirty;
@@ -153,22 +142,11 @@ namespace InfinityGroup.VesselMonitoring.Gauges
             }
         }
 
-        public void Load()
-        {
-            _row = BuildDBTables.GaugePageTable.Find(_pageId);
-
-            Debug.Assert(_row != null);
-
-            _pageId = this.PageId;
-            LoadPropertyBag();
-            NotifyOfPropertyChangeAll();
-        }
-
         protected void LoadPropertyBag()
         {
             this.PropertyBag = new PropertyBag();
 
-            string json = _row.Field<string>("PropertyBag");
+            string json = this.Row.Field<string>("PropertyBag");
             if (!string.IsNullOrEmpty(json))
             {
                 this.PropertyBag.JsonDeserialize(json);
@@ -226,32 +204,13 @@ namespace InfinityGroup.VesselMonitoring.Gauges
         public void Rollback()
         {
             // Rollback all of the changed values.
-            if ((_row.RowState == ItemRowState.Modified) || PropertyBag.IsDirty)
+            if ((this.Row.RowState == ItemRowState.Modified) || PropertyBag.IsDirty)
             {
-                _row.RejectChanges();
+                this.Row.RejectChanges();
                 this.LoadPropertyBag();
                 NotifyOfPropertyChangeAll();
             }
         }
-
-        private ItemRow Row
-        {
-            get
-            {
-                if (_row == null)
-                {
-                    if (_pageId == -1)
-                    {
-                        _row = BuildDBTables.GaugePageTable.CreateRow();
-                    }
-                    else
-                    {
-                        Load();
-                    }
-                }
-
-                return _row;
-            }
-        }
+        private ItemRow Row { get; set; }
     }
 }

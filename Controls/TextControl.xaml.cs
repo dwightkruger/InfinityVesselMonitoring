@@ -77,11 +77,11 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
         override protected void RefreshLeft(object oldValue, object newValue)
         {
-            if (null != this.CanvasControl) this.CanvasControl.Invalidate();
+            this.CanvasControl?.Invalidate();
         }
         override protected void RefreshTop(object oldValue, object newValue)
         {
-            if (null != this.CanvasControl) this.CanvasControl.Invalidate();
+            this.CanvasControl?.Invalidate();
         }
 
         private void canvasControl_SizeChanged(object sender, SizeChangedEventArgs e)

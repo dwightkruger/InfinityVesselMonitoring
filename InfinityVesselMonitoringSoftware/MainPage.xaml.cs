@@ -49,7 +49,6 @@ namespace VesselMonitoring
             Application.Current.UnhandledException += ApplicationUnhandledException;
 
             Telemetry.TrackEvent("Application Started");
-            Telemetry.Flush();
         }
 
     /// <summary>
@@ -87,20 +86,20 @@ namespace VesselMonitoring
 
             Task.Run(async () => { await BuildDBTables.VesselSettingsTable.BeginEmpty(); }).Wait();
 
-            App.VesselSettings = new VesselSettings();
-            App.VesselSettings.VesselName = "MV Infinity";
-            App.VesselSettings.FromEmailAddress = "";
-            App.VesselSettings.FromEmailPassword = "";
-            App.VesselSettings.ToEmailAddress = "dwightkruger@mvinfinity.com";
-            App.VesselSettings.SMTPServerName = "smtp-mail.outlook.com";
-            App.VesselSettings.SMTPPort = 587;
-            App.VesselSettings.SMTPEncryptionMethod = 2; // SmtpConnectType.ConnectSTARTTLS
+            //App.VesselSettings = new VesselSettings();
+            //App.VesselSettings.VesselName = "MV Infinity";
+            //App.VesselSettings.FromEmailAddress = "";
+            //App.VesselSettings.FromEmailPassword = "";
+            //App.VesselSettings.ToEmailAddress = "dwightkruger@mvinfinity.com";
+            //App.VesselSettings.SMTPServerName = "smtp-mail.outlook.com";
+            //App.VesselSettings.SMTPPort = 587;
+            //App.VesselSettings.SMTPEncryptionMethod = 2; // SmtpConnectType.ConnectSTARTTLS
 
-            SendEmail.FromEmailAddress = App.VesselSettings.FromEmailAddress;
-            SendEmail.FromEmailPassword = App.VesselSettings.FromEmailPassword;
-            SendEmail.SMTPEncryptionMethod = App.VesselSettings.SMTPEncryptionMethod;
-            SendEmail.SMTPPort = App.VesselSettings.SMTPPort;
-            SendEmail.SMTPServerName = App.VesselSettings.SMTPServerName;
+            //SendEmail.FromEmailAddress = App.VesselSettings.FromEmailAddress;
+            //SendEmail.FromEmailPassword = App.VesselSettings.FromEmailPassword;
+            //SendEmail.SMTPEncryptionMethod = App.VesselSettings.SMTPEncryptionMethod;
+            //SendEmail.SMTPPort = App.VesselSettings.SMTPPort;
+            //SendEmail.SMTPServerName = App.VesselSettings.SMTPServerName;
 
             //SendEmail.Send(App.VesselSettings.ToEmailAddress,
             //               App.VesselSettings.VesselName,
@@ -116,8 +115,18 @@ namespace VesselMonitoring
         /// <param name="e"></param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            Telemetry.Flush(); // only for desktop apps
+            Task.Run(async () =>
+            {
+                await BuildDBTables.SensorDataTable.BeginCommitAll(() =>
+                {
+                },
+                (ex) =>
+                {
+                    Telemetry.TrackException(ex);
+                });
+            }).Wait();
 
+            Telemetry.Flush(); // only for desktop apps
             // Allow time for flushing:
             //System.Threading.Thread.Sleep(1000);
         }
@@ -164,9 +173,7 @@ namespace VesselMonitoring
 
         async Task PopulateDeviceCollection()
         {
-            IDeviceTable deviceTable = BuildDBTables.DeviceTable;
-            await deviceTable.BeginEmpty();
-
+            await BuildDBTables.DeviceTable.BeginEmpty();
             App.DeviceCollection.Clear();
 
             // Device 00
@@ -180,91 +187,76 @@ namespace VesselMonitoring
 
         async Task PopulateSensorCollection()
         {
-            ISensorTable sensorTable = BuildDBTables.SensorTable;
-            await sensorTable.BeginEmpty();
-
+            await BuildDBTables.SensorTable.BeginEmpty();
             App.SensorCollection.Clear();
 
             // Sensor 00
-            ISensorItem sensor = new SensorItem();
-            sensor.DeviceId = App.DeviceCollection[0].DeviceId;
+            ISensorItem sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
+            sensor.SerialNumber = Guid.NewGuid().ToString();
             sensor = App.SensorCollection.Add(sensor);
 
             // Sensor 01
-            sensor = new SensorItem();
-            sensor.DeviceId = App.DeviceCollection[0].DeviceId;
+            sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
             sensor = App.SensorCollection.Add(sensor);
 
             // Sensor 02
-            sensor = new SensorItem();
-            sensor.DeviceId = App.DeviceCollection[0].DeviceId;
+            sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
             sensor = App.SensorCollection.Add(sensor);
 
             // Sensor 03
-            sensor = new SensorItem();
-            sensor.DeviceId = App.DeviceCollection[0].DeviceId;
+            sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
             sensor = App.SensorCollection.Add(sensor);
 
             // Sensor 04
-            sensor = new SensorItem();
-            sensor.DeviceId = App.DeviceCollection[0].DeviceId;
+            sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
             sensor = App.SensorCollection.Add(sensor);
 
             // Sensor 05
-            sensor = new SensorItem();
-            sensor.DeviceId = App.DeviceCollection[0].DeviceId;
+            sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
             sensor = App.SensorCollection.Add(sensor);
 
             // Sensor 06
-            sensor = new SensorItem();
-            sensor.DeviceId = App.DeviceCollection[0].DeviceId;
+            sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
             sensor = App.SensorCollection.Add(sensor);
 
             // Sensor 07
-            sensor = new SensorItem();
-            sensor.DeviceId = App.DeviceCollection[0].DeviceId;
+            sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
             sensor = App.SensorCollection.Add(sensor);
 
             // Sensor 08
-            sensor = new SensorItem();
-            sensor.DeviceId = App.DeviceCollection[0].DeviceId;
+            sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
             sensor = App.SensorCollection.Add(sensor);
 
             // Sensor 09
-            sensor = new SensorItem();
-            sensor.DeviceId = App.DeviceCollection[0].DeviceId;
+            sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
             sensor = App.SensorCollection.Add(sensor);
 
             // Sensor 10
-            sensor = new SensorItem();
-            sensor.DeviceId = App.DeviceCollection[0].DeviceId;
+            sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
             sensor = App.SensorCollection.Add(sensor);
 
             App.SensorCollection.Clear();
-            await App.SensorCollection.BeginLoad();
+            App.SensorCollection.Load();
         }
 
         async Task PopulateGaugeCollection()
         {
-            IGaugeTable gaugeTable = BuildDBTables.GaugeTable;
-            await gaugeTable.BeginEmpty();
-
-            App.GaugeItemCollection = new GaugeItemCollection();
+            App.GaugeItemCollection.Clear();
+            await BuildDBTables.GaugeTable.BeginEmpty();
 
             // gauge 0
-            IGaugeItem gaugeItem = new GaugeItem();
+            IGaugeItem gaugeItem = new GaugeItem(App.GaugePageCollection[0].PageId);
             gaugeItem.GaugeType = GaugeTypeEnum.LeftArcGauge;
-            gaugeItem.PageId = App.GaugePageCollection[0].PageId;
             gaugeItem.SensorId = App.SensorCollection[0].SensorId;
             gaugeItem.GaugeTop = 0;
             gaugeItem.GaugeLeft = 0;
@@ -278,9 +270,8 @@ namespace VesselMonitoring
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
             // gauge 1
-            gaugeItem = new GaugeItem();
+            gaugeItem = new GaugeItem(App.GaugePageCollection[0].PageId);
             gaugeItem.GaugeType = GaugeTypeEnum.LeftArcGauge;
-            gaugeItem.PageId = App.GaugePageCollection[0].PageId;
             gaugeItem.SensorId = App.SensorCollection[1].SensorId;
             gaugeItem.GaugeTop = 0;
             gaugeItem.GaugeLeft = 364;
@@ -297,9 +288,8 @@ namespace VesselMonitoring
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
             // gauge 2
-            gaugeItem = new GaugeItem();
+            gaugeItem = new GaugeItem(App.GaugePageCollection[0].PageId);
             gaugeItem.GaugeType = GaugeTypeEnum.LeftArcGauge;
-            gaugeItem.PageId = App.GaugePageCollection[0].PageId;
             gaugeItem.SensorId = App.SensorCollection[2].SensorId;
             gaugeItem.GaugeTop = 230;
             gaugeItem.GaugeLeft = 346;
@@ -316,9 +306,8 @@ namespace VesselMonitoring
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
             // gauge 3
-            gaugeItem = new GaugeItem();
+            gaugeItem = new GaugeItem(App.GaugePageCollection[0].PageId);
             gaugeItem.GaugeType = GaugeTypeEnum.LeftArcGauge;
-            gaugeItem.PageId = App.GaugePageCollection[0].PageId;
             gaugeItem.SensorId = App.SensorCollection[3].SensorId;
             gaugeItem.GaugeTop = 0;
             gaugeItem.GaugeLeft = 1199;
@@ -332,9 +321,8 @@ namespace VesselMonitoring
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
             // gauge 4
-            gaugeItem = new GaugeItem();
+            gaugeItem = new GaugeItem(App.GaugePageCollection[0].PageId);
             gaugeItem.GaugeType = GaugeTypeEnum.LeftArcGauge;
-            gaugeItem.PageId = App.GaugePageCollection[0].PageId;
             gaugeItem.SensorId = App.SensorCollection[4].SensorId;
             gaugeItem.GaugeTop = 0;
             gaugeItem.GaugeLeft = 1025;
@@ -351,9 +339,8 @@ namespace VesselMonitoring
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
             // gauge 5
-            gaugeItem = new GaugeItem();
+            gaugeItem = new GaugeItem(App.GaugePageCollection[0].PageId);
             gaugeItem.GaugeType = GaugeTypeEnum.LeftArcGauge;
-            gaugeItem.PageId = App.GaugePageCollection[0].PageId;
             gaugeItem.SensorId = App.SensorCollection[5].SensorId;
             gaugeItem.GaugeTop = 230;
             gaugeItem.GaugeLeft = 1042;
@@ -370,9 +357,8 @@ namespace VesselMonitoring
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
             // tank gauge 0
-            gaugeItem = new GaugeItem();
+            gaugeItem = new GaugeItem(App.GaugePageCollection[1].PageId);
             gaugeItem.GaugeType = GaugeTypeEnum.LeftTankGauge;
-            gaugeItem.PageId = App.GaugePageCollection[1].PageId;
             gaugeItem.SensorId = App.SensorCollection[6].SensorId;
             gaugeItem.GaugeTop = 50;
             gaugeItem.GaugeLeft = 540;
@@ -382,9 +368,8 @@ namespace VesselMonitoring
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
             // tank gauge 1
-            gaugeItem = new GaugeItem();
+            gaugeItem = new GaugeItem(App.GaugePageCollection[1].PageId);
             gaugeItem.GaugeType = GaugeTypeEnum.LeftTankGauge;
-            gaugeItem.PageId = App.GaugePageCollection[1].PageId;
             gaugeItem.SensorId = App.SensorCollection[7].SensorId;
             gaugeItem.GaugeTop = 50;
             gaugeItem.GaugeLeft = 680;
@@ -394,9 +379,8 @@ namespace VesselMonitoring
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
             // tank gauge 2
-            gaugeItem = new GaugeItem();
+            gaugeItem = new GaugeItem(App.GaugePageCollection[1].PageId);
             gaugeItem.GaugeType = GaugeTypeEnum.RightTankGauge;
-            gaugeItem.PageId = App.GaugePageCollection[1].PageId;
             gaugeItem.SensorId = App.SensorCollection[8].SensorId;
             gaugeItem.GaugeTop = 50;
             gaugeItem.GaugeLeft = 760;
@@ -406,9 +390,8 @@ namespace VesselMonitoring
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
             // tank gauge 3
-            gaugeItem = new GaugeItem();
+            gaugeItem = new GaugeItem(App.GaugePageCollection[1].PageId);
             gaugeItem.GaugeType = GaugeTypeEnum.RightTankGauge;
-            gaugeItem.PageId = App.GaugePageCollection[1].PageId;
             gaugeItem.SensorId = App.SensorCollection[9].SensorId;
             gaugeItem.GaugeTop = 50;
             gaugeItem.GaugeLeft = 870;
@@ -418,9 +401,8 @@ namespace VesselMonitoring
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
             // text control 0
-            gaugeItem = new GaugeItem();
+            gaugeItem = new GaugeItem(App.GaugePageCollection[1].PageId);
             gaugeItem.GaugeType = GaugeTypeEnum.TextControl;
-            gaugeItem.PageId = App.GaugePageCollection[1].PageId;
             gaugeItem.Text = "Fuel\nPort";
             gaugeItem.GaugeTop = 10;
             gaugeItem.GaugeLeft = 595;
@@ -431,9 +413,8 @@ namespace VesselMonitoring
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
             // text control 1
-            gaugeItem = new GaugeItem();
+            gaugeItem = new GaugeItem(App.GaugePageCollection[1].PageId);
             gaugeItem.GaugeType = GaugeTypeEnum.TextControl;
-            gaugeItem.PageId = App.GaugePageCollection[1].PageId;
             gaugeItem.Text = "Fresh\nWater";
             gaugeItem.GaugeTop = 10;
             gaugeItem.GaugeLeft = 735;
@@ -444,9 +425,8 @@ namespace VesselMonitoring
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
             // text control 2
-            gaugeItem = new GaugeItem();
+            gaugeItem = new GaugeItem(App.GaugePageCollection[1].PageId);
             gaugeItem.GaugeType = GaugeTypeEnum.TextControl;
-            gaugeItem.PageId = App.GaugePageCollection[1].PageId;
             gaugeItem.Text = "Black\nWater";
             gaugeItem.GaugeTop = 10;
             gaugeItem.GaugeLeft = 820;
@@ -457,9 +437,8 @@ namespace VesselMonitoring
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
             // text control 3
-            gaugeItem = new GaugeItem();
+            gaugeItem = new GaugeItem(App.GaugePageCollection[1].PageId);
             gaugeItem.GaugeType = GaugeTypeEnum.TextControl;
-            gaugeItem.PageId = App.GaugePageCollection[1].PageId;
             gaugeItem.Text = "Fuel\nStbd";
             gaugeItem.GaugeTop = 10;
             gaugeItem.GaugeLeft = 925;

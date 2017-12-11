@@ -19,6 +19,8 @@ namespace InfinityGroup.VesselMonitoring.Controls
 {
     public class BaseGauge : UserControl, IGauge
     {
+        IGaugeItem _gaugeItem = null;
+
         public BaseGauge()
         {
         }
@@ -107,7 +109,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
         #region GaugeWidth
         public static readonly DependencyProperty GaugeWidthProperty = DependencyProperty.Register(
             "GaugeWidth", typeof(double), typeof(BaseGauge),
-            new PropertyMetadata(200.0,
+            new PropertyMetadata(200.0D,
             new PropertyChangedCallback(OnGaugeWidthPropertyChanged)));
 
         public double GaugeWidth
@@ -793,6 +795,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
         #region GaugeItem
         public IGaugeItem GaugeItem
         {
+            get { return _gaugeItem; }
             set
             {
                 Binding divisionsBinding = new Binding();
@@ -879,6 +882,8 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 valueFontSizeBinding.Source = value;
                 valueFontSizeBinding.Path = new PropertyPath("ValueFontSize");
                 this.SetBinding(ValueFontSizeProperty, valueFontSizeBinding);
+
+                _gaugeItem = value;
             }
         }
         #endregion GaugeItem

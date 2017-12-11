@@ -302,7 +302,6 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                                 "@TextVerticalAlignment, " +
                                 "@Properties " +
                           " ) ";
-
         }
 
         override protected string GetUpdateItemSql()

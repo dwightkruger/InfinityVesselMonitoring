@@ -5,6 +5,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
 using GalaSoft.MvvmLight;
+using InfinityGroup.VesselMonitoring.Interfaces;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Brushes;
 using Microsoft.Graphics.Canvas.Effects;
@@ -14,6 +15,7 @@ using Microsoft.Graphics.Canvas.UI;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using System;
 using System.Numerics;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -44,7 +46,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
             this.ValueFontSize = 14;
             this.UnitsFontSize = 14;
 
-            Divisions = 7;
+            this.Divisions = 7;
             outerCircleThickness = 2;
 
             if (!ViewModelBase.IsInDesignModeStatic)
@@ -473,6 +475,14 @@ namespace InfinityGroup.VesselMonitoring.Controls
         private void canvasControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             _needsResourceRecreation = true;
+        }
+
+        private void userControl_DragStarting(UIElement sender, DragStartingEventArgs args)
+        {
+            args.AllowedOperations = DataPackageOperation.Move;
+            string formatId = typeof(IGaugeItem).ToString();
+            object value = this.GaugeItem;
+            args.Data.Properties.Add(formatId, value);
         }
     }
 }

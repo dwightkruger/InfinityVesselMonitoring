@@ -82,7 +82,6 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
 
         public static string Directory { get; set; }
         public static string DatabaseName { get; set; }
-
         public static IAISTable AISTable { get; private set; }
         public static IDeviceTable DeviceTable { get; private set; }
         public static IEventsTable EventsTable { get; private set; }

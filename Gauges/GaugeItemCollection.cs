@@ -66,7 +66,7 @@ namespace InfinityGroup.VesselMonitoring.Gauges
                 {
                     result = this.FirstOrDefault<IGaugeItem>(item => item.PageId == myPageId);
                 }
-            });
+            }).Wait();
 
             return result;
         }
