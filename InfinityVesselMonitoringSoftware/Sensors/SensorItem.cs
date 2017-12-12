@@ -68,7 +68,10 @@ namespace VesselMonitoringSuite.Sensors
                 await BuildDBTables.SensorDataTable.BeginGetLastDataPoint(row.Field<long>("SensorId"),
                     (lastUpdate, lastValue, lastOnline, bucket) =>
                     {
-                        AddOfflineObservation(lastUpdate.AddSeconds(2), true);
+                        if (lastOnline)
+                        {
+                            AddOfflineObservation(lastUpdate.AddSeconds(2), true);
+                        }
                     });
             }).Wait();
 
@@ -147,7 +150,7 @@ namespace VesselMonitoringSuite.Sensors
                 _sensorValueRow.SetField<bool>("IsOnline", isOnline);
                 _sensorValueRow.SetField<byte>("Bucket", _sensorValueBucket.CalculateBucket(timeUTC, isOnline));
                 BuildDBTables.SensorDataTable.AddRow(_sensorValueRow);
-                Debug.WriteLine("Sensor " + this.SensorId.ToString() + " value = " + value.ToString() + " isOnline = " + isOnline.ToString());
+                Debug.WriteLine("Online changed: Sensor " + this.SensorId.ToString() + " value = " + value.ToString() + " isOnline = " + isOnline.ToString());
 
                 _sensorValueRow = null;
                 _lastDBWriteTime = timeUTC;
@@ -162,7 +165,7 @@ namespace VesselMonitoringSuite.Sensors
                 _sensorValueRow.SetField<bool>("IsOnline", isOnline);
                 _sensorValueRow.SetField<byte>("Bucket", _sensorValueBucket.CalculateBucket(timeUTC, isOnline));
                 BuildDBTables.SensorDataTable.AddRow(_sensorValueRow);
-                Debug.WriteLine("Sensor " + this.SensorId.ToString() + " value = " + value.ToString() + " isOnline = " + isOnline.ToString());
+                Debug.WriteLine("Force flush: Sensor " + this.SensorId.ToString() + " value = " + value.ToString() + " isOnline = " + isOnline.ToString());
 
                 _sensorValueRow = null;
                 _lastDBWriteTime = timeUTC;
@@ -190,7 +193,7 @@ namespace VesselMonitoringSuite.Sensors
                     _sensorValueRow.SetField<DateTime>("TimeUTC", timeUTC);
                     _sensorValueRow.SetField<byte>("Bucket", _sensorValueBucket.CalculateBucket(timeUTC, isOnline));
 
-                    Debug.WriteLine("Sensor " + this.SensorId.ToString() + " value = " + value.ToString() + " isOnline = " + isOnline.ToString());
+                    Debug.WriteLine("Force by time: Sensor " + this.SensorId.ToString() + " value = " + value.ToString() + " isOnline = " + isOnline.ToString());
                     _lastDBWriteTime = timeUTC;
                 }
             }

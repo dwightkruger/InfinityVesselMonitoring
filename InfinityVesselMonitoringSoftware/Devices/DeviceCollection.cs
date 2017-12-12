@@ -8,12 +8,14 @@ using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Types;
+using InfinityVesselMonitoringSoftware;
 using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 
 namespace VesselMonitoringSuite.Devices
 {
@@ -77,9 +79,11 @@ namespace VesselMonitoringSuite.Devices
         {
             try
             {
+                bool isVirtualDeviceFound = false;          // HJave we found the required virtual device
+                IDeviceItem device = null;
+
                 foreach (ItemRow row in BuildDBTables.DeviceTable.Rows)
                 {
-                    IDeviceItem device = null;
                     switch (row.Field<DeviceType>("DeviceType"))
                     {
                         case DeviceType.IPCamera:
@@ -88,11 +92,34 @@ namespace VesselMonitoringSuite.Devices
                         case DeviceType.NMEA2000:
                             break;
 
+                        case DeviceType.Virtual:
+                            device = new DeviceItem(row);
+                            device.IsVirtual = true;
+                            device.DeviceType = DeviceType.Virtual;
+                            this.Add(device);
+                            isVirtualDeviceFound = true;
+                            break;
+
                         default:
                             device = new DeviceItem(row);
                             this.Add(device);
                         break;
                     }
+                }
+
+                // We need at least one virtual device to contain virtual sensors
+                if (!isVirtualDeviceFound)
+                {
+                    device = new DeviceItem();
+                    device.IsVirtual = true;
+                    device.DeviceType = DeviceType.Virtual;
+                    device.SerialNumber = typeof(App).ToString();
+
+                    Package package = Package.Current;
+                    PackageId packageId = package.Id;
+                    PackageVersion packageVersion = packageId.Version;
+
+                    this.Add(device);
                 }
             }
             catch (Exception ex)

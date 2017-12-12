@@ -4,7 +4,6 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
-using InfinityGroup.VesselMonitoring.Types;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,7 +15,8 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         Unknown = 0,
         NMEA2000 = 1,
         OneNet = 2,
-        IPCamera = 3
+        IPCamera = 3,
+        Virtual = 4
     }
 
     public interface IDeviceItem
