@@ -25,7 +25,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         DateTime ChangeDate { get; }
         string Description { get; set; }
         byte DeviceAddress { get; set; }
-        long DeviceId { get; set; }
+        Int64 DeviceId { get; set; }
         DeviceType DeviceType { get; set; }
         string FirmwareVersion { get; set; }
         string HardwareVersion { get; set; }

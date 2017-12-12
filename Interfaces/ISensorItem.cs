@@ -21,7 +21,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         DateTime ChangeDate { get; }
         bool DemoMode { get; set; }
         string Description { get; set; }
-        long DeviceId { get; set; }
+        Int64 DeviceId { get; set; }
         void DisableSensorDataCache();
         void EmptySensorDataCache();
         void EnableSensorDataCache();
@@ -51,7 +51,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         int Priority { get; set; }
         int Resolution { get; set; }
         void Rollback();
-        long SensorId { get; }
+        Int64 SensorId { get; }
         SensorType SensorType { get; set; }
         UnitItem SensorUnits { get; set; }
         SensorUsage SensorUsage { get; set; }

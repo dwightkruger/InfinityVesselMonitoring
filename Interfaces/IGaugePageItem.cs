@@ -16,7 +16,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         bool IsDirty { get; }
         bool IsVisible { get; set; }
         string PageName { get; set; }
-        long PageId { get; }
+        Int64 PageId { get; }
         int Position { get; set; }
 
         Task BeginCommit();

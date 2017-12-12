@@ -40,7 +40,7 @@ namespace InfinityGroup.VesselMonitoring.Utilities
         /// <param name="isContinuousAlarm"></param>
         /// <param name="alarmId"></param>
         /// <returns></returns>
-        static public async Task PlayAlarm(bool isContinuousAlarm, long alarmId)
+        static public async Task PlayAlarm(bool isContinuousAlarm, Int64 alarmId)
         {
             if (null == _alarmFile)
             {
@@ -68,7 +68,7 @@ namespace InfinityGroup.VesselMonitoring.Utilities
             //_mediaPlayer.Play();
         }
 
-        static public void PlayAnnouncement(IStorageFile myAnnouncement, bool isContinuousAlarm, long announcementId)
+        static public void PlayAnnouncement(IStorageFile myAnnouncement, bool isContinuousAlarm, Int64 announcementId)
         {
             PlayAlarmItem item = new PlayAlarmItem(myAnnouncement, isContinuousAlarm, announcementId);
 
@@ -86,7 +86,7 @@ namespace InfinityGroup.VesselMonitoring.Utilities
         /// Cancel the alarm by the id provided. 
         /// </summary>
         /// <param name="alarmId"></param>
-        static public void CancelAlarm(long alarmId)
+        static public void CancelAlarm(Int64 alarmId)
         {
             lock (_lock)
             {
@@ -156,7 +156,7 @@ namespace InfinityGroup.VesselMonitoring.Utilities
     /// </summary>
     public class PlayAlarmItem
     {
-        public PlayAlarmItem(IStorageFile myAlarmFile, bool myIsContinuous, long myAlarmId)
+        public PlayAlarmItem(IStorageFile myAlarmFile, bool myIsContinuous, Int64 myAlarmId)
         {
             this.AlarmFile = myAlarmFile;
             this.IsContinuousAlarm = myIsContinuous;
@@ -164,6 +164,6 @@ namespace InfinityGroup.VesselMonitoring.Utilities
         }
         public IStorageFile AlarmFile { get; set; }
         public bool IsContinuousAlarm { get; set; }
-        public long AlarmId { get; set; }
+        public Int64 AlarmId { get; set; }
     }
 }

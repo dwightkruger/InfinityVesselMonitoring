@@ -263,7 +263,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns["SensorUsage"].DefaultValue = SensorUsage.Other;
             itemTable.Columns["SerialNumber"].DefaultValue = string.Empty;
             itemTable.Columns["ShowNominalValue"].DefaultValue = false;
-            itemTable.Columns["Throttle"].DefaultValue = new TimeSpan(0,0,4);
+            itemTable.Columns["Throttle"].DefaultValue = new TimeSpan(0,0,4);   // 4 seconds
         }
 
         protected override void LoadTableRow(ISQLiteStatement statement)

@@ -4,8 +4,10 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
+using InfinityGroup.VesselMonitoring.Globals;
 using SQLitePCL;
 using System;
+using System.IO;
 using Windows.UI;
 
 namespace InfinityGroup.VesselMonitoring.SQLiteDB
@@ -14,7 +16,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
     {
         public static string DateTimeSQLite(DateTime myDatetime)
         {
-            const string dateTimeFormat = "{0:0000}-{1:00}-{2:00} {3:00}:{4:00}:{5:00}.{6}";
+            const string dateTimeFormat = "{0:0000}-{1:00}-{2:00} {3:00}:{4:00}:{5:00}.{6:000}";
             string result = string.Format(dateTimeFormat, myDatetime.Year, myDatetime.Month, myDatetime.Day, myDatetime.Hour, myDatetime.Minute, myDatetime.Second, myDatetime.Millisecond);
             return result;
         }
@@ -61,6 +63,30 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     (Convert.ToInt64(brush.B));
 
             return value;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="myPath"></param>
+        /// <param name="sidType"></param>
+        public static void CreateDirectory(string myPath)
+        {
+            myPath = myPath.Trim();
+
+            // The directory passed MUST exist, or must be created.  
+            try
+            {
+                if (!System.IO.Directory.Exists(myPath))
+                {
+                    DirectoryInfo dInfo = new DirectoryInfo(myPath);
+                    dInfo.Create();
+                }
+            }
+            catch (Exception ex)
+            {
+                Telemetry.TrackException(ex);
+            }
         }
 
     }

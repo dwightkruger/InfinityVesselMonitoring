@@ -22,7 +22,7 @@ namespace InfinityVesselMonitoringSoftware.Events
         private object _lock = new object();
         private PropertyBag _propertyBag;
 
-        public EventItem(long sensorId)
+        public EventItem(Int64 sensorId)
         {
             this.Row = BuildDBTables.EventsTable.CreateRow();
             BuildDBTables.EventsTable.AddRow(this.Row);
@@ -52,7 +52,7 @@ namespace InfinityVesselMonitoringSoftware.Events
             await BuildDBTables.EventsTable.BeginCommitRow(this.Row,
                 () =>
                 {
-                    Debug.Assert(Row.Field<long>("EventId") > 0);
+                    Debug.Assert(Row.Field<Int64>("EventId") > 0);
                 },
                 (ex) =>
                 {
@@ -72,9 +72,9 @@ namespace InfinityVesselMonitoringSoftware.Events
             set { SetRowPropertyValue<DateTime>(() => EventDateTimeUTC, value); }
         }
 
-        public long EventId
+        public Int64 EventId
         {
-            get { return GetRowPropertyValue<long>(() => EventId); }
+            get { return GetRowPropertyValue<Int64>(() => EventId); }
         }
 
         public int EventPriority
@@ -126,10 +126,10 @@ namespace InfinityVesselMonitoringSoftware.Events
             }
         }
 
-        public long SensorId
+        public Int64 SensorId
         {
-            get { return GetRowPropertyValue<long>(() => SensorId); }
-            set { SetRowPropertyValue<long>(() => SensorId, value); }
+            get { return GetRowPropertyValue<Int64>(() => SensorId); }
+            set { SetRowPropertyValue<Int64>(() => SensorId, value); }
         }
 
         public double Value

@@ -26,10 +26,13 @@ namespace VesselMonitoringSuite.Sensors
         private Hashtable _hashBySensorId = new Hashtable();
         private Hashtable _hashBySerialNumber = new Hashtable();
         private Timer _sensorObservationFlushTimer;
+        private int c_20_seconds = 20 * 1000;
+        private int c_2_minutes = 2 * 60 * 1000;
+
 
         public SensorCollection()
         {
-            _sensorObservationFlushTimer = new Timer(SensorObservationFlushTimerTic, null, 1*60*1000, 2*60*1000);
+            _sensorObservationFlushTimer = new Timer(SensorObservationFlushTimerTic, null, c_20_seconds, c_2_minutes);
         }
 
         new public ISensorItem Add(ISensorItem sensorItem)
@@ -161,7 +164,7 @@ namespace VesselMonitoringSuite.Sensors
         /// </summary>
         /// <param name="deviceId"></param>
         /// <returns></returns>
-        public List<ISensorItem> GetSensorsForDeviceId(long deviceId)
+        public List<ISensorItem> GetSensorsForDeviceId(Int64 deviceId)
         {
             List<ISensorItem> results = null;
 
@@ -177,7 +180,7 @@ namespace VesselMonitoringSuite.Sensors
             return results;
         }
 
-        public ISensorItem FindBySensorId(long sensorId)
+        public ISensorItem FindBySensorId(Int64 sensorId)
         {
             ISensorItem result = null;
 
@@ -195,7 +198,7 @@ namespace VesselMonitoringSuite.Sensors
         /// <param name="stateInfo"></param>
         async private void SensorObservationFlushTimerTic(object stateInfo)
         {
-            await BuildDBTables.SensorDataTable.BeginCommitAll(()=>
+            await BuildDBTables.SensorDataTable.BeginCommitAllAndClear(() =>
             {
             },
             (ex)=>

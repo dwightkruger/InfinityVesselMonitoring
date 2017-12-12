@@ -118,6 +118,10 @@ namespace VesselMonitoringSuite.Devices
                     Package package = Package.Current;
                     PackageId packageId = package.Id;
                     PackageVersion packageVersion = packageId.Version;
+                    device.FirmwareVersion = string.Format("{0}.{1}.{2}",
+                        packageVersion.Major,
+                        packageVersion.Minor,
+                        packageVersion.Revision);
 
                     this.Add(device);
                 }

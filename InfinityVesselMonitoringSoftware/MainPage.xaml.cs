@@ -77,10 +77,18 @@ namespace VesselMonitoring
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            BuildDBTables.Directory = ApplicationData.Current.TemporaryFolder.Path;
+            //BuildDBTables.Directory = Environment.GetEnvironmentVariable("APPDATA") + typeof(App).ToString();
+            BuildDBTables.Directory = ApplicationData.Current.LocalFolder.Path + @"\" + typeof(App).ToString();
+            InfinityGroup.VesselMonitoring.SQLiteDB.Utilities.CreateDirectory(BuildDBTables.Directory);
+
+            //BuildDBTables.Directory = ApplicationData.Current.TemporaryFolder.Path;
             BuildDBTables.DatabaseName = "InfinityGroupVesselMonitoring";
-            var x = new BuildDBTables();
-            Task.Run(async () => { await x.DoIt(); }).Wait();
+
+            Task.Run(async () => 
+            {
+                var x = new BuildDBTables();
+                await x.DoIt();
+            }).Wait();
 
             this.BuildGaugePages();
 

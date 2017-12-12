@@ -96,10 +96,10 @@ namespace VesselMonitoringSuite.Devices
             set { SetRowPropertyValue<byte>(() => DeviceAddress, value); }
         }
 
-        public long DeviceId
+        public Int64 DeviceId
         {
-            get { return GetRowPropertyValue<long>(() => DeviceId); }
-            set { SetRowPropertyValue<long>(() => DeviceId, value); }
+            get { return GetRowPropertyValue<Int64>(() => DeviceId); }
+            set { SetRowPropertyValue<Int64>(() => DeviceId, value); }
         }
 
         public DeviceType DeviceType

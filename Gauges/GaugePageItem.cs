@@ -68,7 +68,7 @@ namespace InfinityGroup.VesselMonitoring.Gauges
                     this.Row,
                     () =>
                     {
-                        Debug.Assert(this.Row.Field<long>("PageId") > 0);
+                        Debug.Assert(this.Row.Field<Int64>("PageId") > 0);
                     },
                     (Exception ex) =>
                     {
@@ -153,11 +153,11 @@ namespace InfinityGroup.VesselMonitoring.Gauges
             }
         }
 
-        public long PageId
+        public Int64 PageId
         {
             get
             {
-                long value = Row.Field<long>("PageId");
+                Int64 value = Row.Field<Int64>("PageId");
                 return value;
             }
         }

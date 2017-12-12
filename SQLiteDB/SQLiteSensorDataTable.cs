@@ -192,7 +192,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     "  WHERE " + PrimaryKeyName + " = @" + PrimaryKeyName;
         }
 
-        async public Task BeginAdd(long mySensorID, DateTime myTimeUtc, double myValue, bool myIsOnline, byte myBucket)
+        async public Task BeginAdd(Int64 mySensorID, DateTime myTimeUtc, double myValue, bool myIsOnline, byte myBucket)
         {
             ItemRow row = null;
 
@@ -272,7 +272,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
         /// <param name="sensorId"></param>
         /// <param name="callback"></param>
         /// <returns></returns>
-        async public Task BeginGetLastDataPoint(long sensorId, Action<DateTime, double, bool, byte> callback)
+        async public Task BeginGetLastDataPoint(Int64 sensorId, Action<DateTime, double, bool, byte> callback)
         {
             string query =
                 "SELECT TimeUTC, Value, IsOnline, Bucket " +

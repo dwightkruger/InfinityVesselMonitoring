@@ -15,14 +15,14 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         Task BeginCommit();
         EventCode EventCode { get; set; }
         DateTime EventDateTimeUTC { get; set; }
-        long EventId { get; }
+        Int64 EventId { get; }
         int EventPriority { get; set; }
         bool IsAlarmOn { get; }
         bool IsWarningOn { get; }
         double Latitude { get; set; }
         double Longitude { get; set; }
         void Rollback();
-        long SensorId { get; set; }
+        Int64 SensorId { get; set; }
         double Value { get; set; }
     }
 

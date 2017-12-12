@@ -4,7 +4,7 @@
   <mp:PhoneIdentity PhoneProductId="d6dc9001-11f3-4bb1-9565-9bff2a7d72df" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>InfinityVesselMonitoringSoftware</DisplayName>
-    <PublisherDisplayName>dkruger</PublisherDisplayName>
+    <PublisherDisplayName>Dwight Kruger</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>

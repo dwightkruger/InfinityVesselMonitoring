@@ -85,7 +85,7 @@ namespace InfinityGroup.VesselMonitoring.Gauges
         /// <summary>
         /// Call this constructor when building a new gauge from scratch
         /// </summary>
-        public GaugeItem(long pageId)
+        public GaugeItem(Int64 pageId)
         {
             this._context = new UndoRedoContext();
             this.UndoCommand = this._context.GetUndoCommand();
@@ -146,13 +146,13 @@ namespace InfinityGroup.VesselMonitoring.Gauges
 
             _changeDate = new UndoableProperty<DateTime>(this, ChangeDatePropertyName, this._context, this.Row.Field<DateTime>(ChangeDatePropertyName));
             _gaugeType = new UndoableProperty<GaugeTypeEnum>(this, GaugeTypePropertyName, this._context, this.Row.Field<GaugeTypeEnum>(GaugeTypePropertyName));
-            _pageId = new UndoableProperty<Int64>(this, PageIdPropertyName, this._context, this.Row.Field<long>(PageIdPropertyName));
+            _pageId = new UndoableProperty<Int64>(this, PageIdPropertyName, this._context, this.Row.Field<Int64>(PageIdPropertyName));
 
             _gaugeLeft = new UndoableProperty<double>(this, GaugeLeftPropertyName, this._context, this.Row.Field<double>(GaugeLeftPropertyName));
             _gaugeTop = new UndoableProperty<double>(this, GaugeTopPropertyName, this._context, this.Row.Field<double>(GaugeTopPropertyName));
             _gaugeHeight = new UndoableProperty<double>(this, GaugeHeightPropertyName, this._context, this.Row.Field<double>(GaugeHeightPropertyName));
             _gaugeWidth = new UndoableProperty<double>(this, GaugeWidthPropertyName, this._context, this.Row.Field<double>(GaugeWidthPropertyName));
-            _sensorId = new UndoableProperty<Int64>(this, SensorIdPropertyName, this._context, this.Row.Field<long>(SensorIdPropertyName));
+            _sensorId = new UndoableProperty<Int64>(this, SensorIdPropertyName, this._context, this.Row.Field<Int64>(SensorIdPropertyName));
 
             _divisions = new UndoableProperty<int>(this, DivisionsPropertyName, this._context, this.Row.Field<int>(DivisionsPropertyName));
             _minorTicsPerMajorTic = new UndoableProperty<int>(this, MinorTicsPerMajorTicPropertyName, this._context, this.Row.Field<int>(MinorTicsPerMajorTicPropertyName));
@@ -201,13 +201,13 @@ namespace InfinityGroup.VesselMonitoring.Gauges
             }
         }
 
-        public long GaugeId
+        public Int64 GaugeId
         {
             get
             {
                 if (null == Row) return -1;
 
-                long value = Row.Field<long>("GaugeId");
+                Int64 value = Row.Field<Int64>("GaugeId");
                 return value;
             }
         }
@@ -312,13 +312,13 @@ namespace InfinityGroup.VesselMonitoring.Gauges
             }
         }
 
-        public long PageId
+        public Int64 PageId
         {
             get { return _pageId.GetValue(); }
             protected set
             {
                 _pageId.SetValue(value);
-                Row.SetField<long>(PageIdPropertyName, value);
+                Row.SetField<Int64>(PageIdPropertyName, value);
                 RaisePropertyChanged(() => PageId);
             }
         }
@@ -345,13 +345,13 @@ namespace InfinityGroup.VesselMonitoring.Gauges
             }
         }
 
-        public long SensorId
+        public Int64 SensorId
         {
             get { return _sensorId.GetValue(); }
             set
             {
                 _sensorId.SetValue(value);
-                Row.SetField<long>(SensorIdPropertyName, value);
+                Row.SetField<Int64>(SensorIdPropertyName, value);
                 RaisePropertyChanged(() => SensorId);
             }
         }
@@ -492,7 +492,7 @@ namespace InfinityGroup.VesselMonitoring.Gauges
                     Row,
                     () =>
                     {
-                        Debug.Assert(this.Row.Field<long>("GaugeId") > 0);
+                        Debug.Assert(this.Row.Field<Int64>("GaugeId") > 0);
                     },
                     (Exception ex) =>
                     {
