@@ -95,7 +95,7 @@ namespace VesselMonitoringSuite.Sensors
         /// <returns></returns>
         public void AddOfflineObservation(DateTime timeUTC, bool forceFlush)
         {
-            this.AddSensorValue(timeUTC, 0, true, forceFlush);
+            this.AddSensorValue(timeUTC, 0, false, forceFlush);
         }
 
         /// <summary>
@@ -140,19 +140,17 @@ namespace VesselMonitoringSuite.Sensors
             // If the online/offline state changed to offline/online, write out a new record
             if (this.IsOnline != isOnline)
             {
-                // Do we need to build a new observation so that we do not overwrite the previous observation?
-                if (null != _sensorValueRow)
-                {
-                    _sensorValueRow = BuildDBTables.SensorDataTable.CreateRow();
-                    _sensorValueRow.SetField<long>("SensorId", this.SensorId);
-                    _sensorValueRow.SetField<double>("SensorValue", value);
-                    _sensorValueRow.SetField<DateTime>("TimeUTC", timeUTC);
-                    _sensorValueRow.SetField<bool>("IsOnline", isOnline);
-                    _sensorValueRow.SetField<byte>("Bucket", _sensorValueBucket.CalculateBucket(timeUTC, isOnline));
-                    BuildDBTables.SensorDataTable.AddRow(_sensorValueRow);
+                _sensorValueRow = BuildDBTables.SensorDataTable.CreateRow();
+                _sensorValueRow.SetField<long>("SensorId", this.SensorId);
+                _sensorValueRow.SetField<double>("Value", value);
+                _sensorValueRow.SetField<DateTime>("TimeUTC", timeUTC);
+                _sensorValueRow.SetField<bool>("IsOnline", isOnline);
+                _sensorValueRow.SetField<byte>("Bucket", _sensorValueBucket.CalculateBucket(timeUTC, isOnline));
+                BuildDBTables.SensorDataTable.AddRow(_sensorValueRow);
+                Debug.WriteLine("Sensor " + this.SensorId.ToString() + " value = " + value.ToString() + " isOnline = " + isOnline.ToString());
 
-                    _lastDBWriteTime = timeUTC;
-                }
+                _sensorValueRow = null;
+                _lastDBWriteTime = timeUTC;
             }
             else if (forceFlush)
             {
@@ -160,10 +158,11 @@ namespace VesselMonitoringSuite.Sensors
                 _sensorValueRow = BuildDBTables.SensorDataTable.CreateRow();
                 _sensorValueRow.SetField<DateTime>("TimeUTC", timeUTC);
                 _sensorValueRow.SetField<long>("SensorId", this.SensorId);
-                _sensorValueRow.SetField<double>("SensorValue", value);
+                _sensorValueRow.SetField<double>("Value", value);
                 _sensorValueRow.SetField<bool>("IsOnline", isOnline);
                 _sensorValueRow.SetField<byte>("Bucket", _sensorValueBucket.CalculateBucket(timeUTC, isOnline));
                 BuildDBTables.SensorDataTable.AddRow(_sensorValueRow);
+                Debug.WriteLine("Sensor " + this.SensorId.ToString() + " value = " + value.ToString() + " isOnline = " + isOnline.ToString());
 
                 _sensorValueRow = null;
                 _lastDBWriteTime = timeUTC;
@@ -175,7 +174,7 @@ namespace VesselMonitoringSuite.Sensors
                 {
                     _sensorValueRow = BuildDBTables.SensorDataTable.CreateRow();
                     _sensorValueRow.SetField<long>("SensorId", this.SensorId);
-                    _sensorValueRow.SetField<double>("SensorValue", value);
+                    _sensorValueRow.SetField<double>("Value", value);
                     _sensorValueRow.SetField<DateTime>("TimeUTC", timeUTC);
                     _sensorValueRow.SetField<bool>("IsOnline", isOnline);
                     _sensorValueRow.SetField<byte>("Bucket", SensorValueBucket.LastBucket);
@@ -191,6 +190,7 @@ namespace VesselMonitoringSuite.Sensors
                     _sensorValueRow.SetField<DateTime>("TimeUTC", timeUTC);
                     _sensorValueRow.SetField<byte>("Bucket", _sensorValueBucket.CalculateBucket(timeUTC, isOnline));
 
+                    Debug.WriteLine("Sensor " + this.SensorId.ToString() + " value = " + value.ToString() + " isOnline = " + isOnline.ToString());
                     _lastDBWriteTime = timeUTC;
                 }
             }

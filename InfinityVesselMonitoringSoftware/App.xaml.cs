@@ -1,22 +1,16 @@
 ﻿using InfinityGroup.VesselMonitoring.Gauges;
+using InfinityGroup.VesselMonitoring.Globals;
+using InfinityGroup.VesselMonitoring.Interfaces;
+using InfinityGroup.VesselMonitoring.SQLiteDB;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using VesselMonitoring;
 using VesselMonitoringSuite.Devices;
 using VesselMonitoringSuite.Sensors;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace InfinityVesselMonitoringSoftware
@@ -96,6 +90,24 @@ namespace InfinityVesselMonitoringSoftware
         /// <param name="e">Details about the suspend request.</param>
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
+            // Write an observation for each of the sensors indicating that it is going offline
+            foreach (ISensorItem sensorItem in SensorCollection)
+            {
+                sensorItem.AddOfflineObservation(true);
+            }
+
+            // Flush all of the records to the database
+            Task.Run(async () =>
+            {
+                await BuildDBTables.SensorDataTable.BeginCommitAll(() =>
+                {
+                },
+                (ex) =>
+                {
+                    Telemetry.TrackException(ex);
+                });
+            }).Wait();
+
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();

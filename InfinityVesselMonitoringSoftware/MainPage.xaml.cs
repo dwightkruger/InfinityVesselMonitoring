@@ -108,29 +108,6 @@ namespace VesselMonitoring
             //               "");
         }
 
-        /// <summary>
-        /// The window is closing. We need to flush out all remaining AppInsights telemetry.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            Task.Run(async () =>
-            {
-                await BuildDBTables.SensorDataTable.BeginCommitAll(() =>
-                {
-                },
-                (ex) =>
-                {
-                    Telemetry.TrackException(ex);
-                });
-            }).Wait();
-
-            Telemetry.Flush(); // only for desktop apps
-            // Allow time for flushing:
-            //System.Threading.Thread.Sleep(1000);
-        }
-
         async Task PopulateGaugePageCollection()
         {
             IGaugeTable gaugeTable = BuildDBTables.GaugeTable;
