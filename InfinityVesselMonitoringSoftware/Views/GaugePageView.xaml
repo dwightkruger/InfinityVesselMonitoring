@@ -14,18 +14,11 @@
     d:DesignWidth="1000">
 
     <UserControl.Resources>
-        <converters:DebugConverter x:Name="DebugConverter"/>
         <vm:GaugePageViewModel x:Key="VMKey" x:Name="VM"/>
     </UserControl.Resources>
     
     <controls:CanvasGrid 
         x:Name="MainCanvas"
-        CanDrag="True"
-        AllowDrop="True"
-        DropCompleted="MainCanvas_DropCompleted"
-        DragEnter="MainCanvas_DragEnter"
-        DragLeave="MainCanvas_DragLeave"
-        Drop="MainCanvas_Drop"
         Rows="{Binding Rows, ElementName=UserControl}"
         Columns="{Binding Columns, ElementName=UserControl}"
         Width="{Binding Width, ElementName=UserControl}" 

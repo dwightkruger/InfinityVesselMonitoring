@@ -163,7 +163,7 @@ namespace VesselMonitoringSuite.Sensors
                 _sensorValueRow.SetField<bool>("IsOnline", isOnline);
                 _sensorValueRow.SetField<byte>("Bucket", _sensorValueBucket.CalculateBucket(timeUTC, isOnline));
                 App.BuildDBTables.SensorDataTable.AddRow(_sensorValueRow);
-                Debug.WriteLine("Online changed: Sensor " + this.SensorId.ToString() + " value = " + value.ToString() + " isOnline = " + isOnline.ToString());
+                //Debug.WriteLine("Online changed: Sensor " + this.SensorId.ToString() + " value = " + value.ToString() + " isOnline = " + isOnline.ToString());
 
                 _sensorValueRow = null;
                 _lastDBWriteTime = timeUTC;
@@ -185,7 +185,7 @@ namespace VesselMonitoringSuite.Sensors
                 _sensorValueRow.SetField<bool>("IsOnline", isOnline);
                 _sensorValueRow.SetField<byte>("Bucket", _sensorValueBucket.CalculateBucket(timeUTC, isOnline));
                 App.BuildDBTables.SensorDataTable.AddRow(_sensorValueRow);
-                Debug.WriteLine("Force flush: Sensor " + this.SensorId.ToString() + " value = " + value.ToString() + " isOnline = " + isOnline.ToString());
+                //Debug.WriteLine("Force flush: Sensor " + this.SensorId.ToString() + " value = " + value.ToString() + " isOnline = " + isOnline.ToString());
 
                 _sensorValueRow = null;
                 _lastDBWriteTime = timeUTC;
@@ -211,7 +211,7 @@ namespace VesselMonitoringSuite.Sensors
                 {
                     App.BuildDBTables.SensorDataTable.AddRow(_sensorValueRow);
 
-                    Debug.WriteLine("Force by time: Sensor " + this.SensorId.ToString() + " value = " + value.ToString() + " isOnline = " + isOnline.ToString());
+                    //Debug.WriteLine("Force by time: Sensor " + this.SensorId.ToString() + " value = " + value.ToString() + " isOnline = " + isOnline.ToString());
                     _lastDBWriteTime = timeUTC;
                 }
             }
@@ -227,7 +227,7 @@ namespace VesselMonitoringSuite.Sensors
                 App.BuildDBTables.SensorDataTable.AddRow(_sensorValueRow);
                 _sensorValueRow = null;
 
-                Debug.WriteLine("Force by delta value: Sensor " + this.SensorId.ToString() + " value = " + value.ToString() + " isOnline = " + isOnline.ToString());
+                //Debug.WriteLine("Force by delta value: Sensor " + this.SensorId.ToString() + " value = " + value.ToString() + " isOnline = " + isOnline.ToString());
                 _lastDBWriteTime = timeUTC;
             }
         }

@@ -4,6 +4,7 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////    
 
+using GalaSoft.MvvmLight.Messaging;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using Microsoft.Graphics.Canvas.Text;
 using System;

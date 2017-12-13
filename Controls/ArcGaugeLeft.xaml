@@ -7,13 +7,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"      
-    CanDrag="True"
-    DragStarting="userControl_DragStarting"
     mc:Ignorable="d"
     Background="Transparent"    
     x:Name="userControl">
 
-    <Canvas>
+    <Canvas x:Name="MainCanvas">
         <Grid 
             x:Name="MainGrid" 
             Canvas.Left="{x:Bind Path=Left}"

@@ -11,9 +11,11 @@ using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityVesselMonitoringSoftware;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using VesselMonitoringSuite.ViewModels;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -231,40 +233,6 @@ namespace VesselMonitoringSuite.Views
 
         private void MainCanvas_DropCompleted(UIElement sender, DropCompletedEventArgs args)
         {
-
-        }
-
-        private void MainCanvas_DragEnter(object sender, DragEventArgs e)
-        {
-            if (e.DataView.Properties.ContainsKey(typeof(IGaugeItem).ToString()))
-            {
-                e.AcceptedOperation = DataPackageOperation.Move;
-                //e.DragUIOverride.IsGlyphVisible = false;
-                //e.DragUIOverride.Caption = "Drop item here to remove it from selection";
-            }
-            else
-            {
-                e.AcceptedOperation = DataPackageOperation.None;
-            }
-        }
-
-        private void MainCanvas_DragLeave(object sender, DragEventArgs e)
-        {
-
-        }
-
-        private void MainCanvas_Drop(object sender, DragEventArgs e)
-        {
-            if (e.DataView.Properties.ContainsKey(typeof(IGaugeItem).ToString()))
-            {
-                e.AcceptedOperation = DataPackageOperation.Move;
-                IGaugeItem gaugeItem = e.DataView.Properties[typeof(IGaugeItem).ToString()] as IGaugeItem;
-
-                DispatcherHelper.CheckBeginInvokeOnUI(() =>
-                { 
-                    gaugeItem.GaugeLeft -= 100;
-                });
-            }
         }
     }
 }

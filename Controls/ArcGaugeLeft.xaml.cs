@@ -5,6 +5,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Messaging;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Brushes;
@@ -19,6 +20,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -427,6 +429,16 @@ namespace InfinityGroup.VesselMonitoring.Controls
             this.canvasControl?.Invalidate();
         }
 
+        override protected void RefreshLeft(object oldValue, object newValue)
+        {
+            Canvas.SetLeft(this.MainGrid, this.Left);
+        }
+
+        override protected void RefreshTop(object oldValue, object newValue)
+        {
+            Canvas.SetTop(this.MainGrid, this.Top);
+        }
+
         override protected void RefreshMaxValue(object oldValue, object newValue)
         {
             this.canvasControl?.Invalidate();
@@ -475,14 +487,6 @@ namespace InfinityGroup.VesselMonitoring.Controls
         private void canvasControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             _needsResourceRecreation = true;
-        }
-
-        private void userControl_DragStarting(UIElement sender, DragStartingEventArgs args)
-        {
-            args.AllowedOperations = DataPackageOperation.Move;
-            string formatId = typeof(IGaugeItem).ToString();
-            object value = this.GaugeItem;
-            args.Data.Properties.Add(formatId, value);
         }
     }
 }

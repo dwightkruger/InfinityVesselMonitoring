@@ -231,6 +231,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Editors\GaugePageEditor\" />
+    <Folder Include="Editors\SensorEditor\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
