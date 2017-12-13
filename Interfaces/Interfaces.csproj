@@ -112,6 +112,7 @@
     <Compile Include="IDeviceTable.cs" />
     <Compile Include="IEventItem.cs" />
     <Compile Include="IEventsTable.cs" />
+    <Compile Include="IGauge.cs" />
     <Compile Include="IGaugeItem.cs" />
     <Compile Include="IGaugePageItem.cs" />
     <Compile Include="IGaugePageTable.cs" />

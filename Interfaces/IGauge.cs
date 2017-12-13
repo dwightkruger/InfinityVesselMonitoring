@@ -5,11 +5,10 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
 using InfinityGroup.VesselMonitoring.Interfaces;
-using System;
 using Windows.UI.Xaml.Media;
 
 
-namespace InfinityGroup.VesselMonitoring.Controls
+namespace InfinityGroup.VesselMonitoring.Interfaces
 {
     public interface IGauge
     {

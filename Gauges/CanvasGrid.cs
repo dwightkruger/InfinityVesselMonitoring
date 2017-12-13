@@ -125,11 +125,6 @@ namespace InfinityGroup.VesselMonitoring.Gauges
             {
                 child.Gauge.Top   = child.Row    * (constraint.Height / this.Rows);
                 child.Gauge.Left  = child.Column * (constraint.Width / this.Columns);
-
-                //Debug.WriteLine("Columns = " + this.Columns.ToString());
-                //Debug.WriteLine("Rows = " + this.Rows.ToString());
-                //Debug.WriteLine("GaugeLeft = " + gaugeItem.GaugeLeft.ToString());
-                //Debug.WriteLine("");
             }
 
             return newSize;

@@ -113,6 +113,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AsyncReaderWriterLock.cs" />
+    <Compile Include="CanvasGrid.cs" />
     <Compile Include="ItemColumn.cs" />
     <Compile Include="ItemColumnCollection.cs" />
     <Compile Include="ItemRow.cs" />

@@ -110,7 +110,6 @@
       <DependentUpon>ArcGaugeLeft.xaml</DependentUpon>
     </Compile>
     <Compile Include="BaseGauge.cs" />
-    <Compile Include="IGauge.cs" />
     <Compile Include="PolyLineControl.xaml.cs">
       <DependentUpon>PolyLineControl.xaml</DependentUpon>
     </Compile>
