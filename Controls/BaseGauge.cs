@@ -868,6 +868,11 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 unitsFontSizeBinding.Path = new PropertyPath("UnitsFontSize");
                 this.SetBinding(UnitsFontSizeProperty, unitsFontSizeBinding);
 
+                Binding textBinding = new Binding();
+                textBinding.Source = value;
+                textBinding.Path = new PropertyPath("Text");
+                this.SetBinding(TextProperty, textBinding);
+
                 Binding textFontSizeBinding = new Binding();
                 textFontSizeBinding.Source = value;
                 textFontSizeBinding.Path = new PropertyPath("TextFontSize");
