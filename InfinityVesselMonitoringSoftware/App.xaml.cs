@@ -2,6 +2,7 @@
 using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.SQLiteDB;
+using InfinityVesselMonitoringSoftware.Gauges;
 using System;
 using System.Threading.Tasks;
 using VesselMonitoring;
@@ -99,7 +100,7 @@ namespace InfinityVesselMonitoringSoftware
             // Flush all of the records to the database
             Task.Run(async () =>
             {
-                await BuildDBTables.SensorDataTable.BeginCommitAll(() =>
+                await App.BuildDBTables.SensorDataTable.BeginCommitAll(() =>
                 {
                 },
                 (ex) =>
@@ -113,6 +114,7 @@ namespace InfinityVesselMonitoringSoftware
             deferral.Complete();
         }
 
+        public static IBuildDBTables BuildDBTables { get; set; }
         public static SensorCollection SensorCollection = new SensorCollection();
         public static DeviceCollection DeviceCollection = new DeviceCollection();
         public static GaugePageCollection GaugePageCollection = new GaugePageCollection();

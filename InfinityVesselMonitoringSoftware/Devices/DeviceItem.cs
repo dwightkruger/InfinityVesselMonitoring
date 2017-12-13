@@ -31,8 +31,8 @@ namespace VesselMonitoringSuite.Devices
         /// </summary>
         public DeviceItem()
         {
-            this.Row = BuildDBTables.DeviceTable.CreateRow();
-            BuildDBTables.DeviceTable.AddRow(this.Row);
+            this.Row = App.BuildDBTables.DeviceTable.CreateRow();
+            App.BuildDBTables.DeviceTable.AddRow(this.Row);
 
             Task.Run(async () =>
             {
@@ -62,7 +62,7 @@ namespace VesselMonitoringSuite.Devices
                 }
 
                 // Persist the row into the database
-                await BuildDBTables.DeviceTable.BeginCommitRow(this.Row,
+                await App.BuildDBTables.DeviceTable.BeginCommitRow(this.Row,
                     () =>
                     {
                         Debug.Assert(Row.Field<int>("DeviceId") > 0);
@@ -320,7 +320,7 @@ namespace VesselMonitoringSuite.Devices
 
         private void NotifyOfPropertyChangeAll()
         {
-            foreach (ItemColumn column in BuildDBTables.DeviceTable.Columns)
+            foreach (ItemColumn column in App.BuildDBTables.DeviceTable.Columns)
             {
                 RaisePropertyChanged(column.ColumnName);
             }

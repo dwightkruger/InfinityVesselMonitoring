@@ -285,7 +285,7 @@ namespace InfinityVesselMonitoringSoftware.Events
                 this.Clear();
                 _alarmOnList.Clear();
 
-                foreach (ItemRow row in BuildDBTables.EventsTable.Rows)
+                foreach (ItemRow row in App.BuildDBTables.EventsTable.Rows)
                 {
                     IEventItem newEvent = new EventItem(row);
                     base.Add(newEvent);

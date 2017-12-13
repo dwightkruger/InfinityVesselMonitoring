@@ -107,10 +107,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CanvasGrid.cs" />
-    <Compile Include="GaugeItem.cs" />
-    <Compile Include="GaugeItemCollection.cs" />
-    <Compile Include="GaugePageCollection.cs" />
-    <Compile Include="GaugePageItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Gauges.rd.xml" />
   </ItemGroup>

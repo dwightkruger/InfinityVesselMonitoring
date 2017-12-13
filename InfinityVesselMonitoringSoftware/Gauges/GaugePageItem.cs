@@ -13,7 +13,7 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace InfinityGroup.VesselMonitoring.Gauges
+namespace InfinityVesselMonitoringSoftware.Gauges
 {
     /// <summary>
     /// This class describes tha attributes of single page containing many gauge. 
@@ -28,8 +28,8 @@ namespace InfinityGroup.VesselMonitoring.Gauges
         public GaugePageItem()
         {
             // Persist the sensor, and write the first record as an offline observation
-            this.Row = BuildDBTables.GaugePageTable.CreateRow();
-            BuildDBTables.GaugePageTable.AddRow(this.Row);
+            this.Row = App.BuildDBTables.GaugePageTable.CreateRow();
+            App.BuildDBTables.GaugePageTable.AddRow(this.Row);
             Task.Run(async () =>
             {
                 await this.BeginCommit();
@@ -64,7 +64,7 @@ namespace InfinityGroup.VesselMonitoring.Gauges
                     this.Row.SetField<string>("PropertyBag", this.PropertyBag.JsonSerialize());
                 }
 
-                await BuildDBTables.GaugePageTable.BeginCommitRow(
+                await App.BuildDBTables.GaugePageTable.BeginCommitRow(
                     this.Row,
                     () =>
                     {
@@ -79,7 +79,7 @@ namespace InfinityGroup.VesselMonitoring.Gauges
 
         async public Task BeginDelete()
         {
-            await BuildDBTables.GaugePageTable.BeginRemove(this.Row);
+            await App.BuildDBTables.GaugePageTable.BeginRemove(this.Row);
             this.Row = null;
         }
 
@@ -131,7 +131,7 @@ namespace InfinityGroup.VesselMonitoring.Gauges
 
         public void NotifyOfPropertyChangeAll()
         {
-            foreach (ItemColumn column in BuildDBTables.GaugePageTable.Columns)
+            foreach (ItemColumn column in App.BuildDBTables.GaugePageTable.Columns)
             {
                 RaisePropertyChanged(column.ColumnName);
             }

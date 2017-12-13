@@ -72,7 +72,7 @@ namespace InfinityVesselMonitoringSoftware
         public List<string> GetImageNames()
         {
             List<string> imageNames = new List<string>();
-            foreach (ItemRow row in BuildDBTables.VesselSettingsTable.Rows)
+            foreach (ItemRow row in App.BuildDBTables.VesselSettingsTable.Rows)
             {
                 if (row.Field<string>("Property").ToLowerInvariant().StartsWith(c_imagePrefix))
                 {
@@ -155,7 +155,7 @@ namespace InfinityVesselMonitoringSoftware
             T value = default(T);
 
             // Iterate through each of the rows looking for the property name
-            foreach (ItemRow row in BuildDBTables.VesselSettingsTable.Rows)
+            foreach (ItemRow row in App.BuildDBTables.VesselSettingsTable.Rows)
             {
                 if (row.Field<string>("Property") == propertyName)
                 {
@@ -199,7 +199,7 @@ namespace InfinityVesselMonitoringSoftware
         private void RaisePropertyChangeAll()
         {
             // Raise an INotifyPropertyChanged for each column in the propertyBlob
-            foreach (ItemRow row in BuildDBTables.VesselSettingsTable.Rows)
+            foreach (ItemRow row in App.BuildDBTables.VesselSettingsTable.Rows)
             {
                 RaisePropertyChanged(row.Field<string>("Property"));
             }
@@ -216,7 +216,7 @@ namespace InfinityVesselMonitoringSoftware
             else
             {
                 // Iterate through each of the rows looking for the property name
-                foreach (ItemRow row in BuildDBTables.VesselSettingsTable.Rows)
+                foreach (ItemRow row in App.BuildDBTables.VesselSettingsTable.Rows)
                 {
                     if (row.Field<string>("Property").ToLowerInvariant() == propertyName)
                     {
@@ -226,14 +226,14 @@ namespace InfinityVesselMonitoringSoftware
                 }
 
                 // If we get this far, the row does not exist. We'll create it and set the value.
-                ItemRow newRow = BuildDBTables.VesselSettingsTable.CreateRow();
+                ItemRow newRow = App.BuildDBTables.VesselSettingsTable.CreateRow();
                 newRow.SetField<string>("Property", propertyName);
                 this.SetPropertyValue<T>(newRow, value);
 
-                BuildDBTables.VesselSettingsTable.AddRow(newRow);
+                App.BuildDBTables.VesselSettingsTable.AddRow(newRow);
                 Task.Run(async () =>
                 {
-                    await BuildDBTables.VesselSettingsTable.BeginCommitRow(newRow, () =>
+                    await App.BuildDBTables.VesselSettingsTable.BeginCommitRow(newRow, () =>
                     {
                     },
                     (ex) =>

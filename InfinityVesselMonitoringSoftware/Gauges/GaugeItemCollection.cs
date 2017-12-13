@@ -1,4 +1,4 @@
-﻿//////////////////////////////////////////////////////////////////////////////////////////////////////
+﻿/////////////////////////////////////////////////////////////////
 //                                                                                                  //
 // Copyright (c) 2017 Dwight Kruger and Infinity Group, All rights reserved.                        //
 //                                                                                                  //
@@ -12,8 +12,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-
-namespace InfinityGroup.VesselMonitoring.Gauges
+namespace InfinityVesselMonitoringSoftware.Gauges
 {
     public class GaugeItemCollection : ObservableCollection<IGaugeItem>
     {
@@ -97,7 +96,7 @@ namespace InfinityGroup.VesselMonitoring.Gauges
             {
                 this.Clear();
 
-                foreach (ItemRow row in BuildDBTables.GaugeTable.Rows)
+                foreach (ItemRow row in App.BuildDBTables.GaugeTable.Rows)
                 {
                     IGaugeItem gaugeItem = new GaugeItem(row);
 

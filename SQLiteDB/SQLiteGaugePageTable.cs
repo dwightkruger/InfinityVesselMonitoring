@@ -28,7 +28,9 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     "ChangeDate     DATETIME NOT NULL, \n " +
                     "IsVisible      BOOL     NOT NULL, \n " +
                     "PageName       TEXT     NOT NULL, \n " +
-                    "Position       INTEGER  NOT NULL, \n" +
+                    "Position       INTEGER  NOT NULL, \n"  +
+                    "PageWidth      INTEGER  NOT NULL, \n"  +
+                    "PageHeight     INTEGER  NOT NULL, \n"  +
                     "PropertyBag    TEXT     NOT NULL  \n " +
                     ") ";
         }
@@ -37,11 +39,13 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
         {
             return
                 "SELECT " +
-                    "PageId, " +
+                    "PageId, "     +
                     "ChangeDate, " +
-                    "IsVisible, " +
-                    "PageName, " +
-                    "Position, " +
+                    "IsVisible, "  +
+                    "PageName, "   +
+                    "Position, "   +
+                    "PageWidth, "  +
+                    "PageHeight, " +
                     "PropertyBag " +
                 "FROM " + TableName;
         }
@@ -55,6 +59,8 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             statement.Bind("@IsVisible", SQLiteDB.Utilities.BooleanSQLite(itemRow.Field<bool>("IsVisible")));
             statement.Bind("@PageName", itemRow.Field<string>("PageName"));
             statement.Bind("@Position", itemRow.Field<Int32>("Position"));
+            statement.Bind("@PageWidth", itemRow.Field<Int32>("PageWidth"));
+            statement.Bind("@PageHeight", itemRow.Field<Int32>("PageHeight"));
             statement.Bind("@PropertyBag", itemRow.Field<string>("PropertyBag"));
         }
 
@@ -72,6 +78,8 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             statement.Bind("@IsVisible", SQLiteDB.Utilities.BooleanSQLite(itemRow.Field<bool>("IsVisible")));
             statement.Bind("@PageName", itemRow.Field<string>("PageName"));
             statement.Bind("@Position", itemRow.Field<Int32>("Position"));
+            statement.Bind("@PageWidth", itemRow.Field<Int32>("PageWidth"));
+            statement.Bind("@PageHeight", itemRow.Field<Int32>("PageHeight"));
             statement.Bind("@PropertyBag", itemRow.Field<string>("PropertyBag"));
         }
 
@@ -84,7 +92,9 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemRow.SetField<bool>("IsVisible", (bool)((Int64)statement[02] != 0));
             itemRow.SetField<string>("PageName", (string)statement[03]);
             itemRow.SetField<Int32>("Position", (Int32)Convert.ToInt32(statement[04]));
-            itemRow.SetField<string>("PropertyBag", (string)statement[05]);
+            itemRow.SetField<Int32>("PageWidth", (Int32)Convert.ToInt32(statement[05]));
+            itemRow.SetField<Int32>("PageHeight", (Int32)Convert.ToInt32(statement[06]));
+            itemRow.SetField<string>("PropertyBag", (string)statement[07]);
 
             this.ItemTable.Rows.Add(itemRow);
             itemRow.AcceptChanges();
@@ -97,6 +107,8 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns.Add("IsVisible", typeof(bool));
             itemTable.Columns.Add("PageName", typeof(string));
             itemTable.Columns.Add("Position", typeof(Int32));
+            itemTable.Columns.Add("PageWidth", typeof(Int32));
+            itemTable.Columns.Add("PageHeight", typeof(Int32));
             itemTable.Columns.Add("PropertyBag", typeof(string));
 
             itemTable.Columns[PrimaryKeyName].DefaultValue = -1L;
@@ -104,6 +116,8 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns["IsVisible"].DefaultValue = true;
             itemTable.Columns["PageName"].DefaultValue = "Page Name";
             itemTable.Columns["Position"].DefaultValue = 0;
+            itemTable.Columns["PageWidth"].DefaultValue = 1600;
+            itemTable.Columns["PageHeight"].DefaultValue = 1000;
             itemTable.Columns["PropertyBag"].DefaultValue = new PropertyBag().JsonSerialize();
         }
 
@@ -116,6 +130,8 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                                 "IsVisible,  \n" +
                                 "PageName,   \n" +
                                 "Position,   \n" +
+                                "PageWidth,  \n" +
+                                "PageHeight, \n" +
                                 "PropertyBag \n" +
                           ") \n" +
                           "VALUES \n" +
@@ -124,6 +140,8 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                                 "@IsVisible,  \n" +
                                 "@PageName,   \n" +
                                 "@Position,   \n" +
+                                "@PageWidth,  \n" +
+                                "@PageHeight, \n" +
                                 "@PropertyBag \n" +
                           ") ";
         }
@@ -136,6 +154,8 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                    "     IsVisible   = @IsVisible,  \n" +
                    "     PageName    = @PageName,   \n" +
                    "     Position    = @Position,   \n" +
+                   "     PageWidth   = @PageWidth,  \n" +
+                   "     PageHeight  = @PageHeight, \n" +
                    "     PropertyBag = @PropertyBag \n" +
                    "  WHERE " + PrimaryKeyName + " = @" + PrimaryKeyName;
         }
@@ -147,5 +167,4 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                    "  WHERE " + PrimaryKeyName + " = @" + PrimaryKeyName;
         }
     }
-
 }

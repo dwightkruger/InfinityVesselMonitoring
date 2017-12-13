@@ -8,6 +8,7 @@ using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Types;
+using InfinityVesselMonitoringSoftware;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -91,7 +92,7 @@ namespace VesselMonitoringSuite.Sensors
         {
             try
             {
-                foreach (ItemRow row in BuildDBTables.SensorTable.Rows)
+                foreach (ItemRow row in App.BuildDBTables.SensorTable.Rows)
                 {
                     ISensorItem sensor = null;
                     switch (row.Field<SensorType>("SensorType"))
@@ -198,7 +199,7 @@ namespace VesselMonitoringSuite.Sensors
         /// <param name="stateInfo"></param>
         async private void SensorObservationFlushTimerTic(object stateInfo)
         {
-            await BuildDBTables.SensorDataTable.BeginCommitAllAndClear(() =>
+            await App.BuildDBTables.SensorDataTable.BeginCommitAllAndClear(() =>
             {
             },
             (ex)=>

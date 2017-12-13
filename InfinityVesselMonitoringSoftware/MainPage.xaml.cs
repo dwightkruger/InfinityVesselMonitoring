@@ -10,8 +10,8 @@ using InfinityGroup.VesselMonitoring.Gauges;
 using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.SQLiteDB;
-using InfinityGroup.VesselMonitoring.Utilities;
 using InfinityVesselMonitoringSoftware;
+using InfinityVesselMonitoringSoftware.Gauges;
 using Microsoft.Graphics.Canvas.Text;
 using System;
 using System.Collections.Generic;
@@ -22,6 +22,8 @@ using VesselMonitoringSuite.ViewModels;
 using VesselMonitoringSuite.Views;
 using Windows.Storage;
 using Windows.UI;
+using Windows.UI.Popups;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -37,6 +39,7 @@ namespace VesselMonitoring
     {
         //Timer _valueTimer;
         //private Random randu = new Random();
+        private System.Threading.Semaphore _semaphore;
 
         public MainPage()
         {
@@ -49,14 +52,18 @@ namespace VesselMonitoring
             Application.Current.UnhandledException += ApplicationUnhandledException;
 
             Telemetry.TrackEvent("Application Started");
+
+            // Specify the startup mode to be full screen.
+            //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
         }
 
-    /// <summary>
-    /// Log unhandled exceptions from the task scheduler
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private static void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        /// <summary>
+        /// Log unhandled exceptions from the task scheduler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
             Telemetry.TrackException(e.Exception);
             Telemetry.Flush(); // only for desktop apps
@@ -75,24 +82,37 @@ namespace VesselMonitoring
             e.Handled = true;
         }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+        async private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            //BuildDBTables.Directory = Environment.GetEnvironmentVariable("APPDATA") + typeof(App).ToString();
-            BuildDBTables.Directory = ApplicationData.Current.LocalFolder.Path + @"\" + typeof(App).ToString();
-            InfinityGroup.VesselMonitoring.SQLiteDB.Utilities.CreateDirectory(BuildDBTables.Directory);
-
-            //BuildDBTables.Directory = ApplicationData.Current.TemporaryFolder.Path;
-            BuildDBTables.DatabaseName = "InfinityGroupVesselMonitoring";
-
-            Task.Run(async () => 
+            // Only allow for one instance of this application to be run on a given machine.
+            bool isSemaphoneCreated = false;
+            _semaphore = new System.Threading.Semaphore(1, 1, typeof(App).ToString(), out isSemaphoneCreated);
+            if (!isSemaphoneCreated)
             {
-                var x = new BuildDBTables();
-                await x.DoIt();
-            }).Wait();
+                ContentDialog dialog = new ContentDialog()
+                {
+                    Title = "Duplicate Instance",
+                    Content = "An instance of this program is already running.",
+                    CloseButtonText = "Close Application"
+                };
 
-            this.BuildGaugePages();
+                await dialog.ShowAsync();
 
-            Task.Run(async () => { await BuildDBTables.VesselSettingsTable.BeginEmpty(); }).Wait();
+                Application.Current.Exit();
+                return;
+            }
+
+            // Connect to the SQL database
+            App.BuildDBTables = new SQLiteBuildDBTables();
+            App.BuildDBTables.Directory = ApplicationData.Current.LocalFolder.Path + @"\" + typeof(App).ToString();
+            InfinityGroup.VesselMonitoring.SQLiteDB.Utilities.CreateDirectory(App.BuildDBTables.Directory);
+            App.BuildDBTables.DatabaseName = "InfinityGroupVesselMonitoring";
+
+            await App.BuildDBTables.Build();
+
+            this.BuildDemoGaugePages();
+
+            //await BuildDBTables.VesselSettingsTable.BeginEmpty();
 
             //App.VesselSettings = new VesselSettings();
             //App.VesselSettings.VesselName = "MV Infinity";
@@ -116,13 +136,10 @@ namespace VesselMonitoring
             //               "");
         }
 
-        async Task PopulateGaugePageCollection()
+        async Task PopulateDemoGaugePageCollection()
         {
-            IGaugeTable gaugeTable = BuildDBTables.GaugeTable;
-            await gaugeTable.BeginEmpty();
-
-            IGaugePageTable gaugePageTable = BuildDBTables.GaugePageTable;
-            await gaugePageTable.BeginEmpty();
+            await App.BuildDBTables.GaugeTable.BeginEmpty();
+            await App.BuildDBTables.GaugePageTable.BeginEmpty();
 
             App.GaugePageCollection = new GaugePageCollection();
 
@@ -151,14 +168,15 @@ namespace VesselMonitoring
             gaugePageItem.Position = 4;
             await App.GaugePageCollection.BeginAddPage(gaugePageItem);
 
-            BuildDBTables.GaugePageTable.Load();
+            App.BuildDBTables.GaugePageTable.Load();
             App.GaugePageCollection = new GaugePageCollection();
             await App.GaugePageCollection.BeginLoad();
         }
 
-        async Task PopulateDeviceCollection()
+        async Task PopulateDemoDeviceCollection()
         {
-            await BuildDBTables.DeviceTable.BeginEmpty();
+            await App.BuildDBTables.SensorTable.BeginEmpty();
+            await App.BuildDBTables.DeviceTable.BeginEmpty();
             App.DeviceCollection.Clear();
 
             // Device 00
@@ -170,9 +188,10 @@ namespace VesselMonitoring
             App.DeviceCollection.Load();
         }
 
-        async Task PopulateSensorCollection()
+        async Task PopulateDemoSensorCollection()
         {
-            await BuildDBTables.SensorTable.BeginEmpty();
+            await App.BuildDBTables.SensorTable.BeginEmpty();
+            await App.BuildDBTables.SensorDataTable.BeginEmpty();
             App.SensorCollection.Clear();
 
             // Sensor 00
@@ -230,14 +249,21 @@ namespace VesselMonitoring
             sensor.SerialNumber = Guid.NewGuid().ToString();
             sensor = App.SensorCollection.Add(sensor);
 
+            for (int i=0; i<100; i++)
+            {
+                sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
+                sensor.SerialNumber = Guid.NewGuid().ToString();
+                sensor = App.SensorCollection.Add(sensor);
+            }
+
             App.SensorCollection.Clear();
             App.SensorCollection.Load();
         }
 
-        async Task PopulateGaugeCollection()
+        async Task PopulateDemoGaugeCollection()
         {
             App.GaugeItemCollection.Clear();
-            await BuildDBTables.GaugeTable.BeginEmpty();
+            await App.BuildDBTables.GaugeTable.BeginEmpty();
 
             // gauge 0
             IGaugeItem gaugeItem = new GaugeItem(App.GaugePageCollection[0].PageId);
@@ -433,17 +459,17 @@ namespace VesselMonitoring
             gaugeItem.TextVerticalAlignment = CanvasVerticalAlignment.Top;
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
-            BuildDBTables.GaugeTable.Load();
+            App.BuildDBTables.GaugeTable.Load();
             App.GaugeItemCollection = new GaugeItemCollection();
             await App.GaugeItemCollection.BeginLoad();
         }
 
-        async private void BuildGaugePages()
+        async private void BuildDemoGaugePages()
         {
-            await this.PopulateDeviceCollection();
-            await this.PopulateSensorCollection();
-            await this.PopulateGaugePageCollection();
-            await this.PopulateGaugeCollection();
+            await this.PopulateDemoDeviceCollection();
+            await this.PopulateDemoSensorCollection();
+            await this.PopulateDemoGaugePageCollection();
+            await this.PopulateDemoGaugeCollection();
 
             this.MainPivot.Items.Clear();
 

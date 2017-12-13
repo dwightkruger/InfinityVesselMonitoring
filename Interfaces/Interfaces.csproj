@@ -107,6 +107,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="IAISTable.cs" />
+    <Compile Include="IBuildDBTables.cs" />
     <Compile Include="IDeviceItem.cs" />
     <Compile Include="IDeviceTable.cs" />
     <Compile Include="IEventItem.cs" />

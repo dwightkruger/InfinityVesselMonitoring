@@ -82,7 +82,7 @@ namespace VesselMonitoringSuite.Devices
                 bool isVirtualDeviceFound = false;          // HJave we found the required virtual device
                 IDeviceItem device = null;
 
-                foreach (ItemRow row in BuildDBTables.DeviceTable.Rows)
+                foreach (ItemRow row in App.BuildDBTables.DeviceTable.Rows)
                 {
                     switch (row.Field<DeviceType>("DeviceType"))
                     {

@@ -24,8 +24,8 @@ namespace InfinityVesselMonitoringSoftware.Events
 
         public EventItem(Int64 sensorId)
         {
-            this.Row = BuildDBTables.EventsTable.CreateRow();
-            BuildDBTables.EventsTable.AddRow(this.Row);
+            this.Row = App.BuildDBTables.EventsTable.CreateRow();
+            App.BuildDBTables.EventsTable.AddRow(this.Row);
             this.SensorId = sensorId;
 
             Task.Run(async () =>
@@ -49,7 +49,7 @@ namespace InfinityVesselMonitoringSoftware.Events
             }
 
             // Persist the row into the database
-            await BuildDBTables.EventsTable.BeginCommitRow(this.Row,
+            await App.BuildDBTables.EventsTable.BeginCommitRow(this.Row,
                 () =>
                 {
                     Debug.Assert(Row.Field<Int64>("EventId") > 0);
@@ -189,7 +189,7 @@ namespace InfinityVesselMonitoringSoftware.Events
         private void RaisePropertyChangeAll()
         {
             // Raise an INotifyProperty changed on each row in the SQL table
-            foreach (ItemColumn column in BuildDBTables.EventsTable.Columns)
+            foreach (ItemColumn column in App.BuildDBTables.EventsTable.Columns)
             {
                 RaisePropertyChanged(column.ColumnName);
             }

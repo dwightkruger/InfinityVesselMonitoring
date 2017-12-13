@@ -7,7 +7,6 @@
 using GalaSoft.MvvmLight;
 using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
-using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Types;
 using InfinityGroup.VesselMonitoring.UndoRedoFramework.Props;
 using Microsoft.Graphics.Canvas.Text;
@@ -17,7 +16,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.UI;
 
-namespace InfinityGroup.VesselMonitoring.Gauges
+namespace InfinityVesselMonitoringSoftware.Gauges
 {
     /// <summary>
     /// This class contains the information telling which page the gauge should contain this page (pageId), the
@@ -91,8 +90,8 @@ namespace InfinityGroup.VesselMonitoring.Gauges
             this.UndoCommand = this._context.GetUndoCommand();
             this.RedoCommand = this._context.GetRedoCommand();
 
-            this.Row = BuildDBTables.GaugeTable.CreateRow();
-            BuildDBTables.GaugeTable.AddRow(this.Row);
+            this.Row = App.BuildDBTables.GaugeTable.CreateRow();
+            App.BuildDBTables.GaugeTable.AddRow(this.Row);
 
             _changeDate = new UndoableProperty<DateTime>(this, ChangeDatePropertyName, this._context, DateTime.UtcNow);
             _gaugeType = new UndoableProperty<GaugeTypeEnum>(this, GaugeTypePropertyName, this._context, GaugeTypeEnum.Unknown);
@@ -488,7 +487,7 @@ namespace InfinityGroup.VesselMonitoring.Gauges
                     this.Row.SetField<string>("PropertyBag", this.PropertyBag.JsonSerialize());
                 }
 
-                await BuildDBTables.GaugeTable.BeginCommitRow(
+                await App.BuildDBTables.GaugeTable.BeginCommitRow(
                     Row,
                     () =>
                     {
@@ -503,7 +502,7 @@ namespace InfinityGroup.VesselMonitoring.Gauges
 
         async public Task BeginDelete()
         {
-            await BuildDBTables.GaugeTable.BeginRemove(this.Row);
+            await App.BuildDBTables.GaugeTable.BeginRemove(this.Row);
         }
 
         public void Rollback()
@@ -519,7 +518,7 @@ namespace InfinityGroup.VesselMonitoring.Gauges
 
         public void NotifyOfPropertyChangeAll()
         {
-            foreach (ItemColumn column in BuildDBTables.GaugePageTable.Columns)
+            foreach (ItemColumn column in App.BuildDBTables.GaugePageTable.Columns)
             {
                 RaisePropertyChanged(column.ColumnName);
             }

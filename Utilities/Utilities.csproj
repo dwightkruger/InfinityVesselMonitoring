@@ -107,6 +107,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AlarmAudio.cs" />
+    <Compile Include="GetCurrentDisplaySize.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SendEmail.cs" />
     <Compile Include="UnitConverter.cs" />

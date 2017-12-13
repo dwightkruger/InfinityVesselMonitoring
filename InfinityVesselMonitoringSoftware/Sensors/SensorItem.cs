@@ -11,6 +11,7 @@ using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Types;
 using InfinityGroup.VesselMonitoring.Utilities;
+using InfinityVesselMonitoringSoftware;
 using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
@@ -43,8 +44,8 @@ namespace VesselMonitoringSuite.Sensors
         public SensorItem(Int64 deviceId)
         {
             // Persist the sensor, and write the first record as an offline observation
-            this.Row = BuildDBTables.SensorTable.CreateRow();
-            BuildDBTables.SensorTable.AddRow(this.Row);
+            this.Row = App.BuildDBTables.SensorTable.CreateRow();
+            App.BuildDBTables.SensorTable.AddRow(this.Row);
             this.DeviceId = deviceId;
 
             Task.Run(async () =>
@@ -67,7 +68,7 @@ namespace VesselMonitoringSuite.Sensors
             // Add an offline observation
             Task.Run(async () =>
             {
-                await BuildDBTables.SensorDataTable.BeginGetLastDataPoint(row.Field<Int64>("SensorId"),
+                await App.BuildDBTables.SensorDataTable.BeginGetLastDataPoint(row.Field<Int64>("SensorId"),
                     (lastUpdate, lastValue, lastOnline, bucket) =>
                     {
                         if (lastOnline)
@@ -151,17 +152,17 @@ namespace VesselMonitoringSuite.Sensors
                 // If there is an outstanding observation, flush it out
                 if (null != _sensorValueRow)
                 {
-                    BuildDBTables.SensorDataTable.AddRow(_sensorValueRow);
+                    App.BuildDBTables.SensorDataTable.AddRow(_sensorValueRow);
                     _sensorValueRow = null;
                 }
 
-                _sensorValueRow = BuildDBTables.SensorDataTable.CreateRow();
+                _sensorValueRow = App.BuildDBTables.SensorDataTable.CreateRow();
                 _sensorValueRow.SetField<Int64>("SensorId", this.SensorId);
                 _sensorValueRow.SetField<double>("Value", value);
                 _sensorValueRow.SetField<DateTime>("TimeUTC", timeUTC);
                 _sensorValueRow.SetField<bool>("IsOnline", isOnline);
                 _sensorValueRow.SetField<byte>("Bucket", _sensorValueBucket.CalculateBucket(timeUTC, isOnline));
-                BuildDBTables.SensorDataTable.AddRow(_sensorValueRow);
+                App.BuildDBTables.SensorDataTable.AddRow(_sensorValueRow);
                 Debug.WriteLine("Online changed: Sensor " + this.SensorId.ToString() + " value = " + value.ToString() + " isOnline = " + isOnline.ToString());
 
                 _sensorValueRow = null;
@@ -172,18 +173,18 @@ namespace VesselMonitoringSuite.Sensors
                 // If there is an outstanding observation, flush it out
                 if (null != _sensorValueRow)
                 {
-                    BuildDBTables.SensorDataTable.AddRow(_sensorValueRow);
+                    App.BuildDBTables.SensorDataTable.AddRow(_sensorValueRow);
                     _sensorValueRow = null;
                 }
 
                 // Build a new observation and flush it out
-                _sensorValueRow = BuildDBTables.SensorDataTable.CreateRow();
+                _sensorValueRow = App.BuildDBTables.SensorDataTable.CreateRow();
                 _sensorValueRow.SetField<DateTime>("TimeUTC", timeUTC);
                 _sensorValueRow.SetField<Int64>("SensorId", this.SensorId);
                 _sensorValueRow.SetField<double>("Value", value);
                 _sensorValueRow.SetField<bool>("IsOnline", isOnline);
                 _sensorValueRow.SetField<byte>("Bucket", _sensorValueBucket.CalculateBucket(timeUTC, isOnline));
-                BuildDBTables.SensorDataTable.AddRow(_sensorValueRow);
+                App.BuildDBTables.SensorDataTable.AddRow(_sensorValueRow);
                 Debug.WriteLine("Force flush: Sensor " + this.SensorId.ToString() + " value = " + value.ToString() + " isOnline = " + isOnline.ToString());
 
                 _sensorValueRow = null;
@@ -196,7 +197,7 @@ namespace VesselMonitoringSuite.Sensors
                 // If we do not have a row to contain this observation, create one.
                 if (null == _sensorValueRow)
                 {
-                    _sensorValueRow = BuildDBTables.SensorDataTable.CreateRow();
+                    _sensorValueRow = App.BuildDBTables.SensorDataTable.CreateRow();
                     _sensorValueRow.SetField<Int64>("SensorId", this.SensorId);
                     _sensorValueRow.SetField<double>("Value", value);
                     _sensorValueRow.SetField<DateTime>("TimeUTC", timeUTC);
@@ -208,7 +209,7 @@ namespace VesselMonitoringSuite.Sensors
                 bool forceSameObservationByTime = ((timeUTC - _lastDBWriteTime) >= c_10Minutes);
                 if (forceSameObservationByTime)
                 {
-                    BuildDBTables.SensorDataTable.AddRow(_sensorValueRow);
+                    App.BuildDBTables.SensorDataTable.AddRow(_sensorValueRow);
 
                     Debug.WriteLine("Force by time: Sensor " + this.SensorId.ToString() + " value = " + value.ToString() + " isOnline = " + isOnline.ToString());
                     _lastDBWriteTime = timeUTC;
@@ -217,13 +218,13 @@ namespace VesselMonitoringSuite.Sensors
             else if (forceByTime)
             {
                 // The sensor value has changed a significant amount. persist this observation. 
-                _sensorValueRow = BuildDBTables.SensorDataTable.CreateRow();
+                _sensorValueRow = App.BuildDBTables.SensorDataTable.CreateRow();
                 _sensorValueRow.SetField<Int64>("SensorId", this.SensorId);
                 _sensorValueRow.SetField<double>("Value", value);
                 _sensorValueRow.SetField<DateTime>("TimeUTC", timeUTC);
                 _sensorValueRow.SetField<bool>("IsOnline", isOnline);
                 _sensorValueRow.SetField<byte>("Bucket", _sensorValueBucket.CalculateBucket(timeUTC, isOnline));
-                BuildDBTables.SensorDataTable.AddRow(_sensorValueRow);
+                App.BuildDBTables.SensorDataTable.AddRow(_sensorValueRow);
                 _sensorValueRow = null;
 
                 Debug.WriteLine("Force by delta value: Sensor " + this.SensorId.ToString() + " value = " + value.ToString() + " isOnline = " + isOnline.ToString());
@@ -244,7 +245,7 @@ namespace VesselMonitoringSuite.Sensors
                 }
 
                 // Persist the row into the database
-                await BuildDBTables.SensorTable.BeginCommitRow(this.Row,
+                await App.BuildDBTables.SensorTable.BeginCommitRow(this.Row,
                     () =>
                     {
                         Debug.Assert(this.Row.Field<int>("SensorId") > 0);
@@ -632,7 +633,7 @@ namespace VesselMonitoringSuite.Sensors
         private void RaisePropertyChangeAll()
         {
             // Raise an INotifyProperty changed on each row in the SQL table
-            foreach (ItemColumn column in BuildDBTables.SensorTable.Columns)
+            foreach (ItemColumn column in App.BuildDBTables.SensorTable.Columns)
             {
                 RaisePropertyChanged(column.ColumnName);
             }
@@ -683,10 +684,10 @@ namespace VesselMonitoringSuite.Sensors
             {
                 value = randu.Next((int)this.MinValue, (int)this.MaxValue);
             }
-            else
-            {
+            else  if (randu.NextDouble() < 0.4)
+            {                
                 double delta = randu.Next(0, (int)Math.Ceiling((this.MaxValue - this.MinValue) / 30.0));
-                double sign = randu.Next();
+                double sign = randu.NextDouble();
 
                 if (sign <= 0.5)
                 {

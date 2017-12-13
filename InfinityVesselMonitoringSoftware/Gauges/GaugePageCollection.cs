@@ -12,7 +12,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace InfinityGroup.VesselMonitoring.Gauges
+namespace InfinityVesselMonitoringSoftware.Gauges
 {
     /// <summary>
     /// This class maintains a collection of all of the PAGES which contain gauges. It reads and writes the collection to 
@@ -80,7 +80,7 @@ namespace InfinityGroup.VesselMonitoring.Gauges
             {
                 this.Clear();
 
-                foreach (ItemRow row in BuildDBTables.GaugePageTable.Rows)
+                foreach (ItemRow row in App.BuildDBTables.GaugePageTable.Rows)
                 {
                     IGaugePageItem gaugePageItem = new GaugePageItem(row);
                     this.Add(gaugePageItem);

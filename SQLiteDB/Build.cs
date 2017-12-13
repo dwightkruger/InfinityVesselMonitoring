@@ -7,18 +7,14 @@
 using Autofac;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using InfinityGroup.VesselMonitoring.Globals;
 
 namespace InfinityGroup.VesselMonitoring.SQLiteDB
 {
-    public class BuildDBTables
+    public class SQLiteBuildDBTables : IBuildDBTables
     {
-        async public Task DoIt()
+        async public Task Build()
         { 
             var builder = new ContainerBuilder();
             builder.RegisterType<SQLiteVesselDB>().As<IVesselDB>().SingleInstance();
@@ -80,18 +76,18 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             builder.RegisterInstance<IVesselSettingsTable>(VesselSettingsTable).SingleInstance();
         }
 
-        public static string Directory { get; set; }
-        public static string DatabaseName { get; set; }
-        public static IAISTable AISTable { get; private set; }
-        public static IDeviceTable DeviceTable { get; private set; }
-        public static IEventsTable EventsTable { get; private set; }
-        public static IGaugePageTable GaugePageTable { get; private set; }
-        public static IGaugeTable GaugeTable { get; private set; }
-        public static ISensorTable SensorTable { get; private set; }
-        public static ISensorDataTable SensorDataTable { get; private set; }
-        public static IVesselDB VesselDB { get; private set; }
-        public static IVesselSettingsTable VesselSettingsTable { get; private set; }
+        public string Directory { get; set; }
+        public string DatabaseName { get; set; }
+        public IAISTable AISTable { get; private set; }
+        public IDeviceTable DeviceTable { get; private set; }
+        public IEventsTable EventsTable { get; private set; }
+        public IGaugePageTable GaugePageTable { get; private set; }
+        public IGaugeTable GaugeTable { get; private set; }
+        public ISensorTable SensorTable { get; private set; }
+        public ISensorDataTable SensorDataTable { get; private set; }
+        public IVesselDB VesselDB { get; private set; }
+        public IVesselSettingsTable VesselSettingsTable { get; private set; }
 
-        public static IContainer Container { get; set; }
+        public IContainer Container { get; set; }
     }
 }

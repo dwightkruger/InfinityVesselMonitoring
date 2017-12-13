@@ -11,6 +11,8 @@ using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Types;
+using InfinityVesselMonitoringSoftware;
+using InfinityVesselMonitoringSoftware.Gauges;
 using System.Collections.Generic;
 
 namespace VesselMonitoringSuite.ViewModels
@@ -44,7 +46,7 @@ namespace VesselMonitoringSuite.ViewModels
 
             _gaugeItemList.Clear();
 
-            BuildDBTables.GaugeTable.BeginFindByGaugePageId(this.GaugePageItem.PageId, (System.Action<ItemTable>)((itemTable) =>
+            App.BuildDBTables.GaugeTable.BeginFindByGaugePageId(this.GaugePageItem.PageId, (System.Action<ItemTable>)((itemTable) =>
             {
                 foreach (ItemRow row in itemTable.Rows)
                 {
