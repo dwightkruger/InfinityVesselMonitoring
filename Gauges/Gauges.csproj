@@ -106,7 +106,6 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CanvasGrid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Gauges.rd.xml" />
   </ItemGroup>
@@ -118,9 +117,7 @@
       <Version>5.3.0</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="GaugePageEditor\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Controls\Controls.csproj">
       <Project>{be74c59b-6793-4427-9ea8-279f960b5093}</Project>

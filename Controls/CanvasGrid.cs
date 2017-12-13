@@ -4,11 +4,9 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
-using InfinityGroup.VesselMonitoring.Controls;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using Windows.Foundation;
 using Windows.UI.Xaml;
@@ -20,7 +18,7 @@ using Windows.UI.Xaml.Controls;
 /// run.
 /// </summary>
 
-namespace InfinityGroup.VesselMonitoring.Gauges
+namespace InfinityGroup.VesselMonitoring.Controls
 {
     public class CanvasGrid : Canvas
     {
@@ -123,8 +121,8 @@ namespace InfinityGroup.VesselMonitoring.Gauges
             // Position each of the children
             foreach (GridChild child in _gridChildren)
             {
-                child.Gauge.Top   = child.Row    * (constraint.Height / this.Rows);
-                child.Gauge.Left  = child.Column * (constraint.Width / this.Columns);
+                child.Gauge.Top = child.Row * (constraint.Height / this.Rows);
+                child.Gauge.Left = child.Column * (constraint.Width / this.Columns);
             }
 
             return newSize;
@@ -138,14 +136,14 @@ namespace InfinityGroup.VesselMonitoring.Gauges
 
     public class GridChild
     {
-        public GridChild(BaseGauge gauge, int row, int column)
+        public GridChild(IGauge gauge, int row, int column)
         {
             this.Gauge = gauge;
             this.Row = row;
             this.Column = column;
         }
 
-        public BaseGauge Gauge { get; set; }
+        public IGauge Gauge { get; set; }
         public int Row { get; set; }
         public int Column { get; set; }
     }

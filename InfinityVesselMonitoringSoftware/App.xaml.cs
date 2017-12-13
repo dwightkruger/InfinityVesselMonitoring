@@ -1,5 +1,4 @@
-﻿using InfinityGroup.VesselMonitoring.Gauges;
-using InfinityGroup.VesselMonitoring.Globals;
+﻿using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityVesselMonitoringSoftware.Gauges;

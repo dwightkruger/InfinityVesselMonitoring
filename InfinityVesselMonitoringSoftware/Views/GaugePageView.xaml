@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:VesselMonitoringSuite.ViewModels"
     xmlns:converters="using:InfinityGroup.VesselMonitoring.Globals.Converters"
-    xmlns:gauges="using:InfinityGroup.VesselMonitoring.Gauges"
+    xmlns:controls="using:InfinityGroup.VesselMonitoring.Controls"
     x:Name="UserControl"
     mc:Ignorable="d"
     d:DesignHeight="800"
@@ -18,7 +18,7 @@
         <vm:GaugePageViewModel x:Key="VMKey" x:Name="VM"/>
     </UserControl.Resources>
     
-    <gauges:CanvasGrid 
+    <controls:CanvasGrid 
         x:Name="MainCanvas"
         CanDrag="True"
         AllowDrop="True"
@@ -30,6 +30,6 @@
         Columns="{Binding Columns, ElementName=UserControl}"
         Width="{Binding Width, ElementName=UserControl}" 
         Height="{Binding Height, ElementName=UserControl}">
-    </gauges:CanvasGrid>
+    </controls:CanvasGrid>
 
 </UserControl>

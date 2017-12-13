@@ -204,10 +204,6 @@
       <Project>{be74c59b-6793-4427-9ea8-279f960b5093}</Project>
       <Name>Controls</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Gauges\Gauges.csproj">
-      <Project>{83f8d5c3-7d8a-4e64-a1dc-d717a3e35337}</Project>
-      <Name>Gauges</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Globals\Globals.csproj">
       <Project>{84f92aeb-0c3d-465d-a3a1-ecb91f9bf588}</Project>
       <Name>Globals</Name>
@@ -232,6 +228,9 @@
       <Project>{0877e64b-3586-4b64-bff4-3e98ed57f322}</Project>
       <Name>Utilities</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Editors\GaugePageEditor\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

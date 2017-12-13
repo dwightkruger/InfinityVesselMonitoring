@@ -4,13 +4,12 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
-using InfinityGroup.VesselMonitoring.Interfaces;
 using Windows.UI.Xaml.Media;
 
 
 namespace InfinityGroup.VesselMonitoring.Interfaces
 {
-    public interface IGauge
+    public interface IGauge 
     {
         IGaugeItem GaugeItem { get; set; }
         Brush GaugeLabelsBrush { get; set; }
