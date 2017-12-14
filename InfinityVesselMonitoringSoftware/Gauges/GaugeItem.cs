@@ -9,6 +9,7 @@ using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.Types;
 using InfinityGroup.VesselMonitoring.UndoRedoFramework.Props;
+using InfinityGroup.VesselMonitoring.Utilities;
 using Microsoft.Graphics.Canvas.Text;
 using System;
 using System.Diagnostics;
@@ -54,6 +55,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
         private UndoableProperty<CanvasHorizontalAlignment> _textHorizontalAlignment;
         private UndoableProperty<CanvasVerticalAlignment> _textVerticalAlignment;
         private UndoableProperty<Int64> _sensorId;
+        private UndoableProperty<Units> _units;
 
         public const string ChangeDatePropertyName = "ChangeDate";
         public const string GaugeTypePropertyName = "GaugeType";
@@ -82,6 +84,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
         public const string TextFontColorPropertyName = "TextFontColor";
         public const string TextHorizontalAlignmentPropertyName = "TextHorizontalAlignment";
         public const string TextVerticalAlignmentPropertyName = "TextVerticalAlignment";
+        public const string UnitsPropertyName = "Units";
 
         /// <summary>
         /// Call this constructor when building a new gauge from scratch
@@ -124,6 +127,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             _textFontColor = new UndoableProperty<Color>(this, TextFontColorPropertyName, this._context, Colors.White);
             _textHorizontalAlignment = new UndoableProperty<CanvasHorizontalAlignment>(this, TextHorizontalAlignmentPropertyName, this._context, CanvasHorizontalAlignment.Left);
             _textVerticalAlignment = new UndoableProperty<CanvasVerticalAlignment>(this, TextVerticalAlignmentPropertyName, this._context, CanvasVerticalAlignment.Top);
+            _units = new UndoableProperty<Units>(this, UnitsPropertyName, this._context, InfinityGroup.VesselMonitoring.Utilities.Units.AmpHrs);
 
             this.PageId = pageId;
 
@@ -175,6 +179,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             _textFontColor = new UndoableProperty<Color>(this, TextFontColorPropertyName, this._context, this.Row.Field<Color>(TextFontColorPropertyName));
             _textHorizontalAlignment = new UndoableProperty<CanvasHorizontalAlignment>(this, TextHorizontalAlignmentPropertyName, this._context, this.Row.Field<CanvasHorizontalAlignment>(TextHorizontalAlignmentPropertyName));
             _textVerticalAlignment = new UndoableProperty<CanvasVerticalAlignment>(this, TextVerticalAlignmentPropertyName, this._context, this.Row.Field<CanvasVerticalAlignment>(TextVerticalAlignmentPropertyName));
+            _units = new UndoableProperty<Units>(this, UnitsPropertyName, this._context, this.Row.Field<Units>(UnitsPropertyName)); 
 
             NotifyOfPropertyChangeAll();
         }
@@ -491,6 +496,16 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             }
         }
 
+        public Units Units
+        {
+            get { return _units.GetValue(); }
+            set
+            {
+                _units.SetValue(value);
+                Row.SetField<Units>(UnitsPropertyName, value);
+                RaisePropertyChanged(() => Units);
+            }
+        }
 
         async public Task BeginCommit()
         {

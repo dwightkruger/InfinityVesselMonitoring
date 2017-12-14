@@ -4,6 +4,7 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
+using Windows.UI;
 using Windows.UI.Xaml.Media;
 
 
@@ -12,10 +13,10 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
     public interface IGauge 
     {
         IGaugeItem GaugeItem { get; set; }
-        Brush GaugeLabelsBrush { get; set; }
-        SolidColorBrush HighAlarmBrush { get; set; }
+        Color GaugeLabelsColor { get; set; }
+        Color HighAlarmColor { get; set; }
         double HighAlarmValue { get; set; }
-        SolidColorBrush HighWarningBrush { get; set; }
+        Color HighWarningColor { get; set; }
         double HighWarningValue { get; set; }
         bool IsSensorEnabled { get; set; }
         bool IsHighAlarmEnabled { get; set; }
@@ -25,9 +26,9 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         //bool IsNightMode { get; set; }
         bool IsNominalValueEnabled { get; set; }
         bool IsOnline { get; set; }
-        SolidColorBrush LowAlarmBrush { get; set; }
+        Color LowAlarmColor { get; set; }
         double LowAlarmValue { get; set; }
-        SolidColorBrush LowWarningBrush { get; set; }
+        Color LowWarningColor { get; set; }
         double LowWarningValue { get; set; }
         double MaxValue { get; set; }
         double MinValue { get; set; }
@@ -35,9 +36,9 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         int Resolution { get; set; }
         string Title { get; set; }
         double TitleFontSize { get; set; }
-        Brush TitleBrush { get; set; }
+        Color TitleColor { get; set; }
         double Value { get; set; }
-        Brush ValueBrush { get; set; }
+        Color ValueColor { get; set; }
         double ValueFontSize { get; set; }
         string Units { get; set; }
         double UnitsFontSize { get; set; }

@@ -6,6 +6,7 @@
 
 using System;
 using System.Threading.Tasks;
+using InfinityGroup.VesselMonitoring.Utilities;
 using Microsoft.Graphics.Canvas.Text;
 using Windows.UI;
 
@@ -31,6 +32,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         double GaugeLeft { get; set; }
         Windows.UI.Xaml.Visibility GaugeOutlineVisibility { get; set; }
         double GaugeTop { get; set; }
+        Color GaugeColor { get; set; }
         GaugeTypeEnum GaugeType { get; set; }
         double GaugeWidth { get; set; }
         int InnerCircleDelta { get; set; }
@@ -51,6 +53,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         CanvasHorizontalAlignment TextHorizontalAlignment { get; set; }
         CanvasVerticalAlignment TextVerticalAlignment { get; set; }
         double ValueFontSize { get; set; }
+        Units Units { get; set; }
         double UnitsFontSize { get; set; }
         Task BeginCommit();
         Task BeginDelete();

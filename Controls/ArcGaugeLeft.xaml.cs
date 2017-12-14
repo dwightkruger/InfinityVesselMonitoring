@@ -98,11 +98,11 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
             ds.FillCircle(Center, InnerCircleRadius, InnerCircleBrush);
 
-            if (IsLowWarningEnabled) DrawAlarmLowArc(sender, args, LowWarningBrush.Color, LowWarningValue);
-            if (IsLowAlarmEnabled) DrawAlarmLowArc(sender, args, LowAlarmBrush.Color, LowAlarmValue);
+            if (IsLowWarningEnabled) DrawAlarmLowArc(sender, args, LowWarningColor, LowWarningValue);
+            if (IsLowAlarmEnabled) DrawAlarmLowArc(sender, args, LowAlarmColor, LowAlarmValue);
 
-            if (IsHighWarningEnabled) DrawAlarmHighArc(sender, args, HighWarningBrush.Color, HighWarningValue);
-            if (IsHighAlarmEnabled) DrawAlarmHighArc(sender, args, HighAlarmBrush.Color, HighAlarmValue);
+            if (IsHighWarningEnabled) DrawAlarmHighArc(sender, args, HighWarningColor, HighWarningValue);
+            if (IsHighAlarmEnabled) DrawAlarmHighArc(sender, args, HighAlarmColor, HighAlarmValue);
 
             DrawTicks(args, totalMajorTics, (float)MajorTicLength, MiddleCircleRadius);    // Major tics
             DrawTicks(args, totalMediumTics, (float)MediumTicLength, MiddleCircleRadius);  // Medium tics
@@ -124,19 +124,19 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
             if (IsLowAlarmEnabled && (Value <= LowAlarmValue) && IsOnline)
             {
-                edgeColor = LowAlarmBrush.Color;
+                edgeColor = LowAlarmColor;
             }
             else if (IsLowWarningEnabled && (Value <= LowWarningValue) && IsOnline)
             {
-                edgeColor = LowWarningBrush.Color;
+                edgeColor = LowWarningColor;
             }
             else if (IsHighAlarmEnabled && (Value >= HighAlarmValue) && IsOnline)
             {
-                edgeColor = HighAlarmBrush.Color;
+                edgeColor = HighAlarmColor;
             }
             else if (IsHighWarningEnabled && (Value >= HighWarningValue) && IsOnline)
             {
-                edgeColor = HighWarningBrush.Color;
+                edgeColor = HighWarningColor;
             }
 
             CanvasCommandList cl = new CanvasCommandList(sender);
@@ -269,19 +269,19 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
                 if (IsLowAlarmEnabled && (Value <= LowAlarmValue))
                 {
-                    result = LowAlarmBrush.Color;
+                    result = LowAlarmColor;
                 }
                 else if (IsLowWarningEnabled && (Value <= LowWarningValue))
                 {
-                    result = LowWarningBrush.Color;
+                    result = LowWarningColor;
                 }
                 else if (IsHighAlarmEnabled && (Value >= HighAlarmValue))
                 {
-                    result = HighAlarmBrush.Color;
+                    result = HighAlarmColor;
                 }
                 else if (IsHighWarningEnabled && (Value >= HighWarningValue))
                 {
-                    result = HighWarningBrush.Color;
+                    result = HighWarningColor;
                 }
 
                 return result;

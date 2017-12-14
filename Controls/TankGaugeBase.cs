@@ -60,11 +60,11 @@ namespace InfinityGroup.VesselMonitoring.Controls
             DrawOuterBox(sender, args);
             DrawInnerBox(args);
 
-            if (IsLowWarningEnabled) DrawAlarmLow(args, LowWarningBrush.Color, LowWarningValue);
-            if (IsLowAlarmEnabled) DrawAlarmLow(args, LowAlarmBrush.Color, LowAlarmValue);
+            if (IsLowWarningEnabled) DrawAlarmLow(args, LowWarningColor, LowWarningValue);
+            if (IsLowAlarmEnabled) DrawAlarmLow(args, LowAlarmColor, LowAlarmValue);
 
-            if (IsHighWarningEnabled) DrawAlarmHigh(args, HighWarningBrush.Color, HighWarningValue);
-            if (IsHighAlarmEnabled) DrawAlarmHigh(args, HighAlarmBrush.Color, HighAlarmValue);
+            if (IsHighWarningEnabled) DrawAlarmHigh(args, HighWarningColor, HighWarningValue);
+            if (IsHighAlarmEnabled) DrawAlarmHigh(args, HighAlarmColor, HighAlarmValue);
 
             DrawTics(args, totalMajorTics, majorTicLength);
             DrawTics(args, totalMediumTics, mediumTicLength);
@@ -128,23 +128,23 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             var ds = args.DrawingSession;
 
-            Color edgeColor = Colors.CornflowerBlue;
+            Color edgeColor = this.GaugeColor;
 
             if (IsLowAlarmEnabled && (Value <= LowAlarmValue) && IsOnline)
             {
-                edgeColor = LowAlarmBrush.Color;
+                edgeColor = LowAlarmColor;
             }
             else if (IsLowWarningEnabled && (Value <= LowWarningValue) && IsOnline)
             {
-                edgeColor = LowWarningBrush.Color;
+                edgeColor = LowWarningColor;
             }
             else if (IsHighAlarmEnabled && (Value >= HighAlarmValue) && IsOnline)
             {
-                edgeColor = HighAlarmBrush.Color;
+                edgeColor = HighAlarmColor;
             }
             else if (IsHighWarningEnabled && (Value >= HighWarningValue) && IsOnline)
             {
-                edgeColor = HighWarningBrush.Color;
+                edgeColor = HighWarningColor;
             }
 
             CanvasCommandList cl = new CanvasCommandList(sender);

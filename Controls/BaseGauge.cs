@@ -4,10 +4,13 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////    
 
+using InfinityGroup.VesselMonitoring.Controls.Converters;
 using InfinityGroup.VesselMonitoring.Interfaces;
+using InfinityGroup.VesselMonitoring.Utilities;
 using Microsoft.Graphics.Canvas.Text;
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -21,6 +24,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
     public class BaseGauge : UserControl, IGauge
     {
         IGaugeItem _gaugeItem = null;
+        private static IValueConverter _uc = new SensorValueToGaugeValueConverter();
 
         public BaseGauge()
         {
@@ -105,21 +109,21 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
         #endregion
 
-        #region GaugeLabelsBrush
-        public static readonly DependencyProperty GaugeLabelsBrushProperty = DependencyProperty.Register(
-            "GaugeLabelsBrush",
-            typeof(Brush),
+        #region GaugeLabelsColor
+        public static readonly DependencyProperty GaugeLabelsColorProperty = DependencyProperty.Register(
+            "GaugeLabelsColor",
+            typeof(Color),
             typeof(BaseGauge),
-            new PropertyMetadata(new SolidColorBrush(Windows.UI.Colors.White),
-                                 new PropertyChangedCallback(OnGaugeLabelsBrushPropertyChanged)));
+            new PropertyMetadata(Windows.UI.Colors.White,
+                                 new PropertyChangedCallback(OnGaugeLabelsColorPropertyChanged)));
 
-        public Brush GaugeLabelsBrush
+        public Color GaugeLabelsColor
         {
-            get { return (Brush)this.GetValue(GaugeLabelsBrushProperty); }
-            set { this.SetValue(GaugeLabelsBrushProperty, value); }
+            get { return (Color)this.GetValue(GaugeLabelsColorProperty); }
+            set { this.SetValue(GaugeLabelsColorProperty, value); }
         }
 
-        protected static void OnGaugeLabelsBrushPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        protected static void OnGaugeLabelsColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             BaseGauge g = d as BaseGauge;
         }
@@ -162,24 +166,23 @@ namespace InfinityGroup.VesselMonitoring.Controls
         }
         #endregion
 
-        #region HighAlarmBrush
-        public static readonly DependencyProperty HighAlarmBrushProperty = DependencyProperty.Register(
-            "HighAlarmBrush",
-            typeof(SolidColorBrush),
+        #region HighAlarmColor
+        public static readonly DependencyProperty HighAlarmColorProperty = DependencyProperty.Register(
+            "HighAlarmColor",
+            typeof(Color),
             typeof(BaseGauge),
-            new PropertyMetadata(new SolidColorBrush(Windows.UI.Colors.Red),
-                                 new PropertyChangedCallback(OnHighAlarmBrushPropertyChanged)));
+            new PropertyMetadata(Windows.UI.Colors.Red,
+                                 new PropertyChangedCallback(OnHighAlarmColorPropertyChanged)));
 
-        public SolidColorBrush HighAlarmBrush
+        public Color HighAlarmColor
         {
-            get { return (SolidColorBrush)this.GetValue(HighAlarmBrushProperty); }
-            set { this.SetValue(HighAlarmBrushProperty, value); }
+            get { return (Color)this.GetValue(HighAlarmColorProperty); }
+            set { this.SetValue(HighAlarmColorProperty, value); }
         }
 
-        protected static void OnHighAlarmBrushPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        protected static void OnHighAlarmColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             BaseGauge g = d as BaseGauge;
-
             g.RefreshAlarmColors();
         }
         #endregion
@@ -206,24 +209,23 @@ namespace InfinityGroup.VesselMonitoring.Controls
         }
         #endregion
 
-        #region HighWarningBrush
-        public static readonly DependencyProperty HighWarningBrushProperty = DependencyProperty.Register(
-            "HighWarningBrush",
-            typeof(SolidColorBrush),
+        #region HighWarningColor
+        public static readonly DependencyProperty HighWarningColorProperty = DependencyProperty.Register(
+            "HighWarningColor",
+            typeof(Color),
             typeof(BaseGauge),
-            new PropertyMetadata(new SolidColorBrush(Windows.UI.Colors.Orange),
-                                 new PropertyChangedCallback(OnHighWarningBrushPropertyChanged)));
+            new PropertyMetadata(Windows.UI.Colors.Orange,
+                                 new PropertyChangedCallback(OnHighWarningColorPropertyChanged)));
 
-        public SolidColorBrush HighWarningBrush
+        public Color HighWarningColor
         {
-            get { return (SolidColorBrush)this.GetValue(HighWarningBrushProperty); }
-            set { this.SetValue(HighWarningBrushProperty, value); }
+            get { return (Color)this.GetValue(HighWarningColorProperty); }
+            set { this.SetValue(HighWarningColorProperty, value); }
         }
 
-        protected static void OnHighWarningBrushPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        protected static void OnHighWarningColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             BaseGauge g = d as BaseGauge;
-
             g.RefreshAlarmColors();
         }
         #endregion
@@ -532,24 +534,23 @@ namespace InfinityGroup.VesselMonitoring.Controls
         }
         #endregion
 
-        #region LowAlarmBrush
-        public static readonly DependencyProperty LowAlarmBrushProperty = DependencyProperty.Register(
-            "LowAlarmBrush",
-            typeof(SolidColorBrush),
+        #region LowAlarmColor
+        public static readonly DependencyProperty LowAlarmColorProperty = DependencyProperty.Register(
+            "LowAlarmColor",
+            typeof(Color),
             typeof(BaseGauge),
-            new PropertyMetadata(new SolidColorBrush(Windows.UI.Colors.Red),
-            new PropertyChangedCallback(OnLowAlarmBrushPropertyChanged)));
+            new PropertyMetadata(Windows.UI.Colors.Red,
+            new PropertyChangedCallback(OnLowAlarmColorPropertyChanged)));
 
-        public SolidColorBrush LowAlarmBrush
+        public Color LowAlarmColor
         {
-            get { return (SolidColorBrush)this.GetValue(LowAlarmBrushProperty); }
-            set { this.SetValue(LowAlarmBrushProperty, value); }
+            get { return (Color)this.GetValue(LowAlarmColorProperty); }
+            set { this.SetValue(LowAlarmColorProperty, value); }
         }
 
-        protected static void OnLowAlarmBrushPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        protected static void OnLowAlarmColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             BaseGauge g = d as BaseGauge;
-
             g.RefreshAlarmColors();
         }
         #endregion
@@ -577,24 +578,23 @@ namespace InfinityGroup.VesselMonitoring.Controls
         }
         #endregion
 
-        #region LowWarningBrush
-        public static readonly DependencyProperty LowWarningBrushProperty = DependencyProperty.Register(
-            "LowWarningBrush",
-            typeof(SolidColorBrush),
+        #region LowWarningColor
+        public static readonly DependencyProperty LowWarningColorProperty = DependencyProperty.Register(
+            "LowWarningColor",
+            typeof(Color),
             typeof(BaseGauge),
-            new PropertyMetadata(new SolidColorBrush(Windows.UI.Colors.Orange),
-            new PropertyChangedCallback(OnLowWarningBrushPropertyChanged)));
+            new PropertyMetadata(Windows.UI.Colors.Orange,
+            new PropertyChangedCallback(OnLowWarningColorPropertyChanged)));
 
-        public SolidColorBrush LowWarningBrush
+        public Color LowWarningColor
         {
-            get { return (SolidColorBrush)this.GetValue(LowWarningBrushProperty); }
-            set { this.SetValue(LowWarningBrushProperty, value); }
+            get { return (Color)this.GetValue(LowWarningColorProperty); }
+            set { this.SetValue(LowWarningColorProperty, value); }
         }
 
-        protected static void OnLowWarningBrushPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        protected static void OnLowWarningColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             BaseGauge g = d as BaseGauge;
-
             g.RefreshAlarmColors();
         }
         #endregion
@@ -946,6 +946,11 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 textFontColorBinding.Path = new PropertyPath("TextFontColor");
                 this.SetBinding(TextFontColorProperty, textFontColorBinding);
 
+                Binding unitsBinding = new Binding();
+                unitsBinding.Source = value;
+                unitsBinding.Path = new PropertyPath("Units");
+                this.SetBinding(UnitsProperty, unitsBinding);
+
                 Binding valueFontSizeBinding = new Binding();
                 valueFontSizeBinding.Source = value;
                 valueFontSizeBinding.Path = new PropertyPath("ValueFontSize");
@@ -966,23 +971,60 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 isOnlineBinding.Path = new PropertyPath("IsOnline");
                 this.SetBinding(IsOnlineProperty, isOnlineBinding);
 
+                Binding lowAlarmBinding = new Binding();
+                lowAlarmBinding.Source = value;
+                lowAlarmBinding.Converter = _uc;
+                lowAlarmBinding.ConverterParameter = Tuple.Create<ISensorItem, IGaugeItem>(value, _gaugeItem);
+                lowAlarmBinding.Path = new PropertyPath("LowAlarmValue");
+                this.SetBinding(LowAlarmValueProperty, lowAlarmBinding);
+
+                Binding lowWarningBinding = new Binding();
+                lowWarningBinding.Source = value;
+                lowWarningBinding.Converter = _uc;
+                lowWarningBinding.ConverterParameter = Tuple.Create<ISensorItem, IGaugeItem>(value, _gaugeItem);
+                lowWarningBinding.Path = new PropertyPath("LowWarningValue");
+                this.SetBinding(LowWarningValueProperty, lowWarningBinding);
+
+                Binding highAlarmBinding = new Binding();
+                highAlarmBinding.Source = value;
+                highAlarmBinding.Converter = _uc;
+                highAlarmBinding.ConverterParameter = Tuple.Create<ISensorItem, IGaugeItem>(value, _gaugeItem);
+                highAlarmBinding.Path = new PropertyPath("HighAlarmValue");
+                this.SetBinding(HighAlarmValueProperty, highAlarmBinding);
+
+                Binding highWarningBinding = new Binding();
+                highWarningBinding.Source = value;
+                highWarningBinding.Converter = _uc;
+                highWarningBinding.ConverterParameter = Tuple.Create<ISensorItem, IGaugeItem>(value, _gaugeItem);
+                highWarningBinding.Path = new PropertyPath("HighWarningValue");
+                this.SetBinding(HighWarningValueProperty, highWarningBinding);
+
                 Binding maxValueBinding = new Binding();
                 maxValueBinding.Source = value;
+                maxValueBinding.Converter = _uc;
+                maxValueBinding.ConverterParameter = Tuple.Create<ISensorItem, IGaugeItem>(value, _gaugeItem);
                 maxValueBinding.Path = new PropertyPath("MaxValue");
                 this.SetBinding(MaxValueProperty, maxValueBinding);
 
                 Binding minValueBinding = new Binding();
                 minValueBinding.Source = value;
+                minValueBinding.Converter = _uc;
+                minValueBinding.ConverterParameter = Tuple.Create<ISensorItem, IGaugeItem>(value, _gaugeItem);
                 minValueBinding.Path = new PropertyPath("MinValue");
                 this.SetBinding(MinValueProperty, minValueBinding);
 
                 Binding nominalValueBinding = new Binding();
                 nominalValueBinding.Source = value;
+                nominalValueBinding.Converter = _uc;
+                nominalValueBinding.ConverterParameter = Tuple.Create<ISensorItem, IGaugeItem>(value, _gaugeItem);
                 nominalValueBinding.Path = new PropertyPath("NominalValue");
                 this.SetBinding(NominalValueProperty, nominalValueBinding);
 
+                Debug.Assert(_gaugeItem != null);
                 Binding sensorValueBinding = new Binding();
                 sensorValueBinding.Source = value;
+                sensorValueBinding.Converter = _uc;
+                sensorValueBinding.ConverterParameter = Tuple.Create<ISensorItem,IGaugeItem>(value, _gaugeItem);
                 sensorValueBinding.Path = new PropertyPath("SensorValue");
                 this.SetBinding(ValueProperty, sensorValueBinding);
             }
@@ -1172,22 +1214,22 @@ namespace InfinityGroup.VesselMonitoring.Controls
         }
         #endregion
 
-        #region TitleBrush
-        public static readonly DependencyProperty TitleBrushProperty = DependencyProperty.Register(
-            "TitleBrush",
-            typeof(Brush),
+        #region TitleColor
+        public static readonly DependencyProperty TitleColorProperty = DependencyProperty.Register(
+            "TitleColor",
+            typeof(Color),
             typeof(BaseGauge),
             new PropertyMetadata(
-                new SolidColorBrush(Windows.UI.Colors.LightSkyBlue),
-                new PropertyChangedCallback(OnTitleBrushPropertyChanged)));
+                Windows.UI.Colors.LightSkyBlue,
+                new PropertyChangedCallback(OnTitleColorPropertyChanged)));
 
-        public Brush TitleBrush
+        public Color TitleColor
         {
-            get { return (Brush)this.GetValue(TitleBrushProperty); }
-            set { this.SetValue(TitleBrushProperty, value); }
+            get { return (Color)this.GetValue(TitleColorProperty); }
+            set { this.SetValue(TitleColorProperty, value); }
         }
 
-        protected static void OnTitleBrushPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        protected static void OnTitleColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             BaseGauge g = d as BaseGauge;
             g.RefreshAlarmColors();
@@ -1259,21 +1301,21 @@ namespace InfinityGroup.VesselMonitoring.Controls
         }
         #endregion
 
-        #region ValueBrush
-        public static readonly DependencyProperty ValueBrushProperty = DependencyProperty.Register(
-            "ValueBrush",
-            typeof(Brush),
+        #region ValueColor
+        public static readonly DependencyProperty ValueColorProperty = DependencyProperty.Register(
+            "ValueColor",
+            typeof(Color),
             typeof(BaseGauge),
-            new PropertyMetadata(new SolidColorBrush(Windows.UI.Colors.White),
-                new PropertyChangedCallback(OnValueBrushPropertyChanged)));
+            new PropertyMetadata(Windows.UI.Colors.White,
+                new PropertyChangedCallback(OnValueColorPropertyChanged)));
 
-        public Brush ValueBrush
+        public Color ValueColor
         {
-            get { return (Brush)this.GetValue(ValueBrushProperty); }
-            set { this.SetValue(ValueBrushProperty, value); }
+            get { return (Color)this.GetValue(ValueColorProperty); }
+            set { this.SetValue(ValueColorProperty, value); }
         }
 
-        protected static void OnValueBrushPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        protected static void OnValueColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             BaseGauge g = d as BaseGauge;
             g.RefreshAlarmColors();

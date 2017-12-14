@@ -111,6 +111,7 @@
     </Compile>
     <Compile Include="BaseGauge.cs" />
     <Compile Include="CanvasGrid.cs" />
+    <Compile Include="Converters\SensorValueToGaugeValueConverter.cs" />
     <Compile Include="PolyLineControl.xaml.cs">
       <DependentUpon>PolyLineControl.xaml</DependentUpon>
     </Compile>
@@ -172,6 +173,10 @@
     <ProjectReference Include="..\Interfaces\Interfaces.csproj">
       <Project>{063eb013-e492-4ce7-b97a-09c3be5ec2b7}</Project>
       <Name>Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{0877e64b-3586-4b64-bff4-3e98ed57f322}</Project>
+      <Name>Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

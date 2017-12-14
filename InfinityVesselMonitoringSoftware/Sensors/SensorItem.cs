@@ -474,36 +474,16 @@ namespace VesselMonitoringSuite.Sensors
             set { SetRowPropertyValue<SensorType>(() => SensorType, value); }
         }
 
-        public UnitItem SensorUnits
+        public Units SensorUnits
         {
-            get
-            {
-                if (null == this.Row) return SensorItem.OtherUnit;
+            get { return GetRowPropertyValue<Units>(() => SensorUnits); }
+            set { SetRowPropertyValue<Units>(() => SensorUnits, value); }
+        }
 
-                if (_sensorUnits == SensorItem.OtherUnit)
-                {
-                    Units value = this.Row.Field<Units>("SensorUnits");
-                    _sensorUnits = UnitsConverter.Find(value);
-                }
-
-                return _sensorUnits;
-            }
-            set
-            {
-                if (null == this.Row) return;
-
-                // Verify we have a valid unit for this sensor
-                this.ValidateUnits(value);
-
-                if (Row.Field<Units>("SensorUnits") != value.Units)
-                {
-                    _sensorUnits = value;
-                    Row.SetField<Units>("SensorUnits", value.Units);
-
-                    RaisePropertyChanged(() => SensorUnits);
-                    RaisePropertyChanged(() => IsDirty);
-                }
-            }
+        public UnitType SensorUnitType
+        {
+            get { return GetRowPropertyValue<UnitType>(() => SensorUnitType); }
+            set { SetRowPropertyValue<UnitType>(() => SensorUnitType, value); }
         }
 
         public SensorUsage SensorUsage
@@ -572,11 +552,6 @@ namespace VesselMonitoringSuite.Sensors
             {
                 this.Row.RejectChanges();
                 LoadPropertyBag();
-
-                // We need to rebuild SensorUnits because it is not
-                // rebuilt when we reload the DataRow
-                this.SensorUnits = UnitsConverter.Find((Units)Row.Field<int>("SensorUnits"));
-
                 RaisePropertyChangeAll();
             }
         }

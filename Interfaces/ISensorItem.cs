@@ -53,7 +53,8 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         void Rollback();
         Int64 SensorId { get; }
         SensorType SensorType { get; set; }
-        UnitItem SensorUnits { get; set; }
+        UnitType SensorUnitType { get; set; }
+        Units SensorUnits { get; set; }
         SensorUsage SensorUsage { get; set; }
         double SensorValue { get; }
         string SerialNumber { get; set; }

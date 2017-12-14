@@ -29,7 +29,6 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     "ChangeDate           DATETIME      NOT NULL, \n " +
                     "Description          TEXT          NOT NULL, \n " +
                     "DeviceId             INTEGER       NOT NULL, \n " +
-                    "GaugeUnits           INTEGER       NOT NULL, \n " +
                     "HighAlarmValue       FLOAT         NOT NULL, \n " +
                     "HighWarningValue     FLOAT         NOT NULL, \n " +
                     "IsCalibrated         BOOLEAN       NOT NULL, \n " +
@@ -55,6 +54,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     "PropertyBag          TEXT          NOT NULL, \n " +
                     "Resolution           INTEGER       NOT NULL, \n " +
                     "SensorType           INTEGER       NOT NULL, \n " +
+                    "SensorUnitType       INTEGER       NOT NULL, \n " +
                     "SensorUnits          INTEGER       NOT NULL, \n " +
                     "SensorUsage          INTEGER       NOT NULL, \n " +
                     "SerialNumber         TEXT          NOT NULL, \n " +
@@ -72,7 +72,6 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     "ChangeDate,           \n " +
                     "Description,          \n " +
                     "DeviceId,             \n " +
-                    "GaugeUnits,           \n" +
                     "HighAlarmValue,       \n " +
                     "HighWarningValue,     \n " +
                     "IsCalibrated,         \n " +
@@ -98,6 +97,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     "PropertyBag,          \n " +
                     "Resolution,           \n " +
                     "SensorType,           \n " +
+                    "SensorUnitType,       \n " +
                     "SensorUnits,          \n " +
                     "SensorUsage,          \n " +
                     "SerialNumber,         \n " +
@@ -114,7 +114,6 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             statement.Bind("@ChangeDate", SQLiteDB.Utilities.DateTimeSQLite(itemRow.Field<DateTime>("ChangeDate")));
             statement.Bind("@Description", itemRow.Field<string>("Description"));
             statement.Bind("@DeviceId", itemRow.Field<Int64>("DeviceId"));
-            statement.Bind("@GaugeUnits", Convert.ToInt32(itemRow.Field<UnitType>("GaugeUnits")));
             statement.Bind("@HighAlarmValue", itemRow.Field<double>("HighAlarmValue"));
             statement.Bind("@HighWarningValue", itemRow.Field<double>("HighWarningValue"));
             statement.Bind("@IsCalibrated", SQLiteDB.Utilities.BooleanSQLite(itemRow.Field<bool>("IsCalibrated")));
@@ -140,7 +139,8 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             statement.Bind("@PropertyBag", itemRow.Field<string>("PropertyBag"));
             statement.Bind("@Resolution", itemRow.Field<Int32>("Resolution"));
             statement.Bind("@SensorType", Convert.ToInt32(itemRow.Field<SensorType>("SensorType")));
-            statement.Bind("@SensorUnits", Convert.ToInt32(itemRow.Field<UnitType>("SensorUnits")));
+            statement.Bind("@SensorUnitType", Convert.ToInt32(itemRow.Field<UnitType>("SensorUnitType")));
+            statement.Bind("@SensorUnits", Convert.ToInt32(itemRow.Field<Units>("SensorUnits")));
             statement.Bind("@SensorUsage", Convert.ToInt32(itemRow.Field<SensorUsage>("SensorUsage")));
             statement.Bind("@SerialNumber", itemRow.Field<string>("SerialNumber"));
             statement.Bind("@ShowNominalValue", SQLiteDB.Utilities.BooleanSQLite(itemRow.Field<bool>("ShowNominalValue")));
@@ -160,7 +160,6 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             statement.Bind("@ChangeDate", SQLiteDB.Utilities.DateTimeSQLite(itemRow.Field<DateTime>("ChangeDate")));
             statement.Bind("@Description", itemRow.Field<string>("Description"));
             statement.Bind("@DeviceId", itemRow.Field<Int64>("DeviceId"));
-            statement.Bind("@GaugeUnits", Convert.ToInt32(itemRow.Field<UnitType>("GaugeUnits")));
             statement.Bind("@HighAlarmValue", itemRow.Field<double>("HighAlarmValue"));
             statement.Bind("@HighWarningValue", itemRow.Field<double>("HighWarningValue"));
             statement.Bind("@IsCalibrated", SQLiteDB.Utilities.BooleanSQLite(itemRow.Field<bool>("IsCalibrated")));
@@ -186,7 +185,8 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             statement.Bind("@PropertyBag", itemRow.Field<string>("PropertyBag"));
             statement.Bind("@Resolution", itemRow.Field<Int32>("Resolution"));
             statement.Bind("@SensorType", Convert.ToInt32(itemRow.Field<SensorType>("SensorType")));
-            statement.Bind("@SensorUnits", Convert.ToInt32(itemRow.Field<UnitType>("SensorUnits")));
+            statement.Bind("@SensorUnitType", Convert.ToInt32(itemRow.Field<UnitType>("SensorUnitType")));
+            statement.Bind("@SensorUnits", Convert.ToInt32(itemRow.Field<Units>("SensorUnits")));
             statement.Bind("@SensorUsage", Convert.ToInt32(itemRow.Field<SensorUsage>("SensorUsage")));
             statement.Bind("@SerialNumber", itemRow.Field<string>("SerialNumber"));
             statement.Bind("@ShowNominalValue", SQLiteDB.Utilities.BooleanSQLite(itemRow.Field<bool>("ShowNominalValue")));
@@ -199,7 +199,6 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns.Add("ChangeDate", typeof(DateTime));
             itemTable.Columns.Add("Description", typeof(string));
             itemTable.Columns.Add("DeviceId", typeof(Int64));
-            itemTable.Columns.Add("GaugeUnits", typeof(UnitType));
             itemTable.Columns.Add("HighAlarmValue", typeof(double));
             itemTable.Columns.Add("HighWarningValue", typeof(double));
             itemTable.Columns.Add("IsCalibrated", typeof(bool));
@@ -224,7 +223,8 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns.Add("PropertyBag", typeof(string));
             itemTable.Columns.Add("Resolution", typeof(Int32));
             itemTable.Columns.Add("SensorType", typeof(SensorType));
-            itemTable.Columns.Add("SensorUnits", typeof(UnitType));
+            itemTable.Columns.Add("SensorUnitType", typeof(UnitType));
+            itemTable.Columns.Add("SensorUnits", typeof(Units));
             itemTable.Columns.Add("SensorUsage", typeof(SensorUsage));
             itemTable.Columns.Add("SerialNumber", typeof(string));
             itemTable.Columns.Add("ShowNominalValue", typeof(bool));
@@ -234,7 +234,6 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns["ChangeDate"].DefaultValue = DateTime.Now.ToUniversalTime();
             itemTable.Columns["Description"].DefaultValue = "Description";
             itemTable.Columns["DeviceId"].DefaultValue = -1;
-            itemTable.Columns["GaugeUnits"].DefaultValue = UnitType.Uninitialized;
             itemTable.Columns["HighAlarmValue"].DefaultValue = 95D;
             itemTable.Columns["HighWarningValue"].DefaultValue = 90D;
             itemTable.Columns["IsCalibrated"].DefaultValue = false;
@@ -259,7 +258,8 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns["PropertyBag"].DefaultValue = new PropertyBag().JsonSerialize();
             itemTable.Columns["Resolution"].DefaultValue = 2;
             itemTable.Columns["SensorType"].DefaultValue = SensorType.Unknown;
-            itemTable.Columns["SensorUnits"].DefaultValue = UnitType.Uninitialized;
+            itemTable.Columns["SensorUnitType"].DefaultValue = UnitType.Uninitialized;
+            itemTable.Columns["SensorUnits"].DefaultValue = Units.Other;
             itemTable.Columns["SensorUsage"].DefaultValue = SensorUsage.Other;
             itemTable.Columns["SerialNumber"].DefaultValue = string.Empty;
             itemTable.Columns["ShowNominalValue"].DefaultValue = false;
@@ -274,33 +274,33 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemRow.SetField<DateTime>("ChangeDate", (DateTime)DateTime.Parse((string)statement[01]));
             itemRow.SetField<string>("Description", (string)statement[02]);
             itemRow.SetField<Int64>("DeviceId", (Int64)Convert.ToInt64(statement[03]));
-            itemRow.SetField<UnitType>("GaugeUnits", (UnitType)Convert.ToInt32(statement[04]));
-            itemRow.SetField<double>("HighAlarmValue", (double)Convert.ToDouble(statement[05]));
-            itemRow.SetField<double>("HighWarningValue", (double)Convert.ToDouble(statement[06]));
-            itemRow.SetField<bool>("IsCalibrated", (bool)((Int64)statement[07] != 0));
-            itemRow.SetField<bool>("IsEnabled", (bool)((Int64)statement[08] != 0));
-            itemRow.SetField<bool>("IsHighAlarmEnabled", (bool)((Int64)statement[09] != 0));
-            itemRow.SetField<bool>("IsHighWarningEnabled", (bool)((Int64)statement[10] != 0));
-            itemRow.SetField<bool>("IsLowAlarmEnabled", (bool)((Int64)statement[11] != 0));
-            itemRow.SetField<bool>("IsLowWarningEnabled", (bool)((Int64)statement[12] != 0));
-            itemRow.SetField<bool>("IsOnline", (bool)((Int64)statement[13] != 0));
-            itemRow.SetField<bool>("IsPersisted", (bool)((Int64)statement[14] != 0));
-            itemRow.SetField<bool>("IsVirtual", (bool)((Int64)statement[15] != 0));
-            itemRow.SetField<string>("Location", (string)statement[16]);
-            itemRow.SetField<double>("LowAlarmValue", (double)Convert.ToDouble(statement[17]));
-            itemRow.SetField<double>("LowWarningValue", (double)Convert.ToDouble(statement[18]));
-            itemRow.SetField<double>("MaxValue", (double)Convert.ToDouble(statement[19]));
-            itemRow.SetField<double>("MinValue", (double)Convert.ToDouble(statement[20]));
-            itemRow.SetField<string>("Name", (string)statement[21]);
-            itemRow.SetField<double>("NominalValue", (double)Convert.ToDouble(statement[22]));
-            itemRow.SetField<bool>("PersistDataPoints", (bool)((Int64)statement[23] != 0));
-            itemRow.SetField<Int32>("PGN", (Int32)Convert.ToInt32(statement[24]));
-            itemRow.SetField<Int32>("PortNumber", (Int32)Convert.ToInt32(statement[25]));
-            itemRow.SetField<Int32>("Priority", (Int32)Convert.ToInt32(statement[26]));
-            itemRow.SetField<string>("PropertyBag", (string)statement[27]);
-            itemRow.SetField<Int32>("Resolution", (Int32)Convert.ToInt32(statement[28]));
-            itemRow.SetField<SensorType>("SensorType", (SensorType)Convert.ToInt32(statement[29]));
-            itemRow.SetField<UnitType>("SensorUnits", (UnitType)Convert.ToInt32(statement[30]));
+            itemRow.SetField<double>("HighAlarmValue", (double)Convert.ToDouble(statement[04]));
+            itemRow.SetField<double>("HighWarningValue", (double)Convert.ToDouble(statement[05]));
+            itemRow.SetField<bool>("IsCalibrated", (bool)((Int64)statement[06] != 0));
+            itemRow.SetField<bool>("IsEnabled", (bool)((Int64)statement[07] != 0));
+            itemRow.SetField<bool>("IsHighAlarmEnabled", (bool)((Int64)statement[08] != 0));
+            itemRow.SetField<bool>("IsHighWarningEnabled", (bool)((Int64)statement[09] != 0));
+            itemRow.SetField<bool>("IsLowAlarmEnabled", (bool)((Int64)statement[10] != 0));
+            itemRow.SetField<bool>("IsLowWarningEnabled", (bool)((Int64)statement[11] != 0));
+            itemRow.SetField<bool>("IsOnline", (bool)((Int64)statement[12] != 0));
+            itemRow.SetField<bool>("IsPersisted", (bool)((Int64)statement[13] != 0));
+            itemRow.SetField<bool>("IsVirtual", (bool)((Int64)statement[14] != 0));
+            itemRow.SetField<string>("Location", (string)statement[15]);
+            itemRow.SetField<double>("LowAlarmValue", (double)Convert.ToDouble(statement[16]));
+            itemRow.SetField<double>("LowWarningValue", (double)Convert.ToDouble(statement[17]));
+            itemRow.SetField<double>("MaxValue", (double)Convert.ToDouble(statement[18]));
+            itemRow.SetField<double>("MinValue", (double)Convert.ToDouble(statement[19]));
+            itemRow.SetField<string>("Name", (string)statement[20]);
+            itemRow.SetField<double>("NominalValue", (double)Convert.ToDouble(statement[21]));
+            itemRow.SetField<bool>("PersistDataPoints", (bool)((Int64)statement[22] != 0));
+            itemRow.SetField<Int32>("PGN", (Int32)Convert.ToInt32(statement[23]));
+            itemRow.SetField<Int32>("PortNumber", (Int32)Convert.ToInt32(statement[24]));
+            itemRow.SetField<Int32>("Priority", (Int32)Convert.ToInt32(statement[25]));
+            itemRow.SetField<string>("PropertyBag", (string)statement[26]);
+            itemRow.SetField<Int32>("Resolution", (Int32)Convert.ToInt32(statement[27]));
+            itemRow.SetField<SensorType>("SensorType", (SensorType)Convert.ToInt32(statement[28]));
+            itemRow.SetField<UnitType>("SensorUnitType", (UnitType)Convert.ToInt32(statement[29]));
+            itemRow.SetField<Units>("SensorUnits", (Units)Convert.ToInt32(statement[30]));
             itemRow.SetField<SensorUsage>("SensorUsage", (SensorUsage)Convert.ToInt32(statement[31]));
             itemRow.SetField<string>("SerialNumber", (string)statement[32]);
             itemRow.SetField<bool>("ShowNominalValue", (bool)((Int64)statement[33] != 0));
@@ -318,7 +318,6 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     "ChangeDate,           " +
                     "Description,          " +
                     "DeviceId,             " +
-                    "GaugeUnits,           " +
                     "HighAlarmValue,       " +
                     "HighWarningValue,     " +
                     "IsCalibrated,         " +
@@ -344,6 +343,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     "PropertyBag,          " +
                     "Resolution,           " +
                     "SensorType,           " +
+                    "SensorUnitType,       " +
                     "SensorUnits,          " +
                     "SensorUsage,          " +
                     "SerialNumber,         " +
@@ -355,7 +355,6 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     "@ChangeDate,           " +
                     "@Description,          " +
                     "@DeviceId,             " +
-                    "@GaugeUnits,           " +
                     "@HighAlarmValue,       " +
                     "@HighWarningValue,     " +
                     "@IsCalibrated,         " +
@@ -381,6 +380,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     "@PropertyBag,          " +
                     "@Resolution,           " +
                     "@SensorType,           " +
+                    "@SensorUnitType,       " +
                     "@SensorUnits,          " +
                     "@SensorUsage,          " +
                     "@SerialNumber,         " +
@@ -397,7 +397,6 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     "ChangeDate           = @ChangeDate,           \n" +
                     "Description          = @Description,          \n" +
                     "DeviceId             = @DeviceId,             \n" +
-                    "GaugeUnits           = @GaugeUnits,           \n" +
                     "HighAlarmValue       = @HighAlarmValue,       \n" +
                     "HighWarningValue     = @HighWarningValue,     \n" +
                     "IsCalibrated         = @IsCalibrated,         \n" +
@@ -423,6 +422,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     "PropertyBag          = @PropertyBag,          \n" +
                     "Resolution           = @Resolution,           \n" +
                     "SensorType           = @SensorType,           \n" +
+                    "SensorUnitType       = @SensorUnitType,       \n" +
                     "SensorUnits          = @SensorUnits,          \n" +
                     "SensorUsage          = @SensorUsage,          \n" +
                     "SerialNumber         = @SerialNumber,         \n" +

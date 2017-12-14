@@ -9,6 +9,7 @@ using GalaSoft.MvvmLight.Threading;
 using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.SQLiteDB;
+using InfinityGroup.VesselMonitoring.Utilities;
 using InfinityVesselMonitoringSoftware;
 using InfinityVesselMonitoringSoftware.Gauges;
 using Microsoft.Graphics.Canvas.Text;
@@ -19,6 +20,7 @@ using VesselMonitoringSuite.Devices;
 using VesselMonitoringSuite.Sensors;
 using VesselMonitoringSuite.ViewModels;
 using VesselMonitoringSuite.Views;
+using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Popups;
@@ -108,7 +110,6 @@ namespace VesselMonitoring
             App.BuildDBTables.Directory = ApplicationData.Current.LocalFolder.Path + @"\" + typeof(App).ToString();
             InfinityGroup.VesselMonitoring.SQLiteDB.Utilities.CreateDirectory(App.BuildDBTables.Directory);
             App.BuildDBTables.DatabaseName = "InfinityGroupVesselMonitoring";
-
             await App.BuildDBTables.Build();
 
             this.BuildDemoGaugePages();
@@ -199,62 +200,86 @@ namespace VesselMonitoring
             // Sensor 00
             ISensorItem sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
+            sensor.SensorUnitType = UnitType.Power;
+            sensor.SensorUnits = Units.AmpHrs;
             sensor = await App.SensorCollection.BeginAdd(sensor);
 
             // Sensor 01
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
+            sensor.SensorUnits = Units.Amps;
+            sensor.SensorUnitType = UnitType.Current;
             sensor = await App.SensorCollection.BeginAdd(sensor);
 
             // Sensor 02
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
+            sensor.SensorUnits = Units.Bar;
+            sensor.SensorUnitType = UnitType.Pressure;
             sensor = await App.SensorCollection.BeginAdd(sensor);
 
             // Sensor 03
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
+            sensor.SensorUnits = Units.Fahrenheit;
+            sensor.SensorUnitType = UnitType.Temperature;
             sensor = await App.SensorCollection.BeginAdd(sensor);
 
             // Sensor 04
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
+            sensor.SensorUnits = Units.CubicMeters;
+            sensor.SensorUnitType = UnitType.Volume;
             sensor = await App.SensorCollection.BeginAdd(sensor);
 
             // Sensor 05
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
+            sensor.SensorUnits = Units.CubicMetersPerHr;
+            sensor.SensorUnitType = UnitType.VolumeFlow;
             sensor = await App.SensorCollection.BeginAdd(sensor);
 
             // Sensor 06
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
+            sensor.SensorUnits = Units.CubicMetersPerHr;
+            sensor.SensorUnitType = UnitType.VolumeFlow;
             sensor = await App.SensorCollection.BeginAdd(sensor);
 
             // Sensor 07
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
+            sensor.SensorUnits = Units.CubicMetersPerHr;
+            sensor.SensorUnitType = UnitType.VolumeFlow;
             sensor = await App.SensorCollection.BeginAdd(sensor);
 
             // Sensor 08
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
+            sensor.SensorUnits = Units.CubicMetersPerHr;
+            sensor.SensorUnitType = UnitType.VolumeFlow;
             sensor = await App.SensorCollection.BeginAdd(sensor);
 
             // Sensor 09
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
+            sensor.SensorUnits = Units.CubicMetersPerHr;
+            sensor.SensorUnitType = UnitType.VolumeFlow;
             sensor = await App.SensorCollection.BeginAdd(sensor);
 
             // Sensor 10
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
+            sensor.SensorUnits = Units.CubicMetersPerHr;
+            sensor.SensorUnitType = UnitType.VolumeFlow;
             sensor = await App.SensorCollection.BeginAdd(sensor);
 
             for (int i=0; i<100; i++)
             {
                 sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
                 sensor.SerialNumber = Guid.NewGuid().ToString();
+                sensor.SensorUnits = Units.CubicMetersPerHr;
+                sensor.SensorUnitType = UnitType.VolumeFlow;
                 sensor = await App.SensorCollection.BeginAdd(sensor);
             }
 
@@ -275,11 +300,13 @@ namespace VesselMonitoring
             gaugeItem.GaugeLeft = 0;
             gaugeItem.GaugeHeight = 380;
             gaugeItem.GaugeWidth = 380;
+            gaugeItem.GaugeColor = App.VesselSettings.ThemeColor;
             gaugeItem.Divisions = 7;
             gaugeItem.MinorTicsPerMajorTic = 5;
             gaugeItem.MediumTicsPerMajorTic = 0;
             gaugeItem.ValueFontSize = 18;
             gaugeItem.UnitsFontSize = 14;
+            gaugeItem.Units = Units.AmpHrs;
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
             // gauge 1
@@ -290,6 +317,7 @@ namespace VesselMonitoring
             gaugeItem.GaugeLeft = 364;
             gaugeItem.GaugeHeight = 190;
             gaugeItem.GaugeWidth = 190;
+            gaugeItem.GaugeColor = App.VesselSettings.ThemeColor;
             gaugeItem.Divisions = 4;
             gaugeItem.MinorTicsPerMajorTic = 10;
             gaugeItem.MediumTicsPerMajorTic = 0;
@@ -298,6 +326,7 @@ namespace VesselMonitoring
             gaugeItem.MajorTicLength = 12;
             gaugeItem.MiddleCircleDelta = 45;
             gaugeItem.InnerCircleDelta = 20;
+            gaugeItem.Units = Units.Amps;
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
             // gauge 2
@@ -308,6 +337,7 @@ namespace VesselMonitoring
             gaugeItem.GaugeLeft = 346;
             gaugeItem.GaugeHeight = 190;
             gaugeItem.GaugeWidth = 190;
+            gaugeItem.GaugeColor = App.VesselSettings.ThemeColor;
             gaugeItem.Divisions = 4;
             gaugeItem.MinorTicsPerMajorTic = 10;
             gaugeItem.MediumTicsPerMajorTic = 0;
@@ -316,6 +346,7 @@ namespace VesselMonitoring
             gaugeItem.MajorTicLength = 12;
             gaugeItem.MiddleCircleDelta = 45;
             gaugeItem.InnerCircleDelta = 20;
+            gaugeItem.Units = Units.Bar;
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
             // gauge 3
@@ -326,11 +357,13 @@ namespace VesselMonitoring
             gaugeItem.GaugeLeft = 1199;
             gaugeItem.GaugeHeight = 380;
             gaugeItem.GaugeWidth = 380;
+            gaugeItem.GaugeColor = App.VesselSettings.ThemeColor;
             gaugeItem.Divisions = 7;
             gaugeItem.MinorTicsPerMajorTic = 5;
             gaugeItem.MediumTicsPerMajorTic = 0;
             gaugeItem.ValueFontSize = 18;
             gaugeItem.UnitsFontSize = 14;
+            gaugeItem.Units = Units.Celsius;
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
             // gauge 4
@@ -341,6 +374,7 @@ namespace VesselMonitoring
             gaugeItem.GaugeLeft = 1025;
             gaugeItem.GaugeHeight = 190;
             gaugeItem.GaugeWidth = 190;
+            gaugeItem.GaugeColor = App.VesselSettings.ThemeColor;
             gaugeItem.Divisions = 4;
             gaugeItem.MinorTicsPerMajorTic = 10;
             gaugeItem.MediumTicsPerMajorTic = 0;
@@ -349,6 +383,7 @@ namespace VesselMonitoring
             gaugeItem.MajorTicLength = 12;
             gaugeItem.MiddleCircleDelta = 45;
             gaugeItem.InnerCircleDelta = 20;
+            gaugeItem.Units = Units.CubicMeters;
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
             // gauge 5
@@ -359,6 +394,7 @@ namespace VesselMonitoring
             gaugeItem.GaugeLeft = 1042;
             gaugeItem.GaugeHeight = 190;
             gaugeItem.GaugeWidth = 190;
+            gaugeItem.GaugeColor = App.VesselSettings.ThemeColor;
             gaugeItem.Divisions = 4;
             gaugeItem.MinorTicsPerMajorTic = 10;
             gaugeItem.MediumTicsPerMajorTic = 0;
@@ -367,6 +403,7 @@ namespace VesselMonitoring
             gaugeItem.MajorTicLength = 12;
             gaugeItem.MiddleCircleDelta = 45;
             gaugeItem.InnerCircleDelta = 20;
+            gaugeItem.Units = Units.CubicMetersPerHr;
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
             // tank gauge 0
@@ -377,6 +414,8 @@ namespace VesselMonitoring
             gaugeItem.GaugeLeft = 540;
             gaugeItem.GaugeHeight = 330;
             gaugeItem.GaugeWidth = 140;
+            gaugeItem.GaugeColor = App.VesselSettings.ThemeColor;
+            gaugeItem.Units = Units.CubicMetersPerHr;
             gaugeItem.Resolution = 0;
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
@@ -388,6 +427,8 @@ namespace VesselMonitoring
             gaugeItem.GaugeLeft = 680;
             gaugeItem.GaugeHeight = 330;
             gaugeItem.GaugeWidth = 140;
+            gaugeItem.GaugeColor = App.VesselSettings.ThemeColor;
+            gaugeItem.Units = Units.CubicMetersPerHr;
             gaugeItem.Resolution = 0;
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
@@ -399,6 +440,8 @@ namespace VesselMonitoring
             gaugeItem.GaugeLeft = 760;
             gaugeItem.GaugeHeight = 330;
             gaugeItem.GaugeWidth = 140;
+            gaugeItem.GaugeColor = App.VesselSettings.ThemeColor;
+            gaugeItem.Units = Units.CubicMetersPerHr;
             gaugeItem.Resolution = 0;
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
@@ -410,6 +453,8 @@ namespace VesselMonitoring
             gaugeItem.GaugeLeft = 870;
             gaugeItem.GaugeHeight = 330;
             gaugeItem.GaugeWidth = 140;
+            gaugeItem.GaugeColor = App.VesselSettings.ThemeColor;
+            gaugeItem.Units = Units.CubicMetersPerHr;
             gaugeItem.Resolution = 0;
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
 
@@ -502,6 +547,8 @@ namespace VesselMonitoring
             // For each gauge page, build the view and view model
             foreach (IGaugePageItem item in App.GaugePageCollection)
             {
+                Size ds = DisplaySize.GetCurrentDisplaySize();
+
                 GaugePageView view = new GaugePageView();
                 view.Rows = 3;
                 view.Columns = 3;
