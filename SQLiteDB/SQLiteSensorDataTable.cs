@@ -299,10 +299,10 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     // If data was returned copy it into the return parameters.
                     if (statement.DataCount >= 4)
                     {
-                        timeUtc = DateTime.Parse((string)statement[0]);
-                        value = (double)statement[1];
-                        isOnline = (bool)statement[2];
-                        bucket = (byte)statement[3];
+                        timeUtc = DateTime.Parse(Convert.ToString(statement[0]));
+                        value = Convert.ToDouble(statement[1]);
+                        isOnline = Convert.ToBoolean(statement[2]);
+                        bucket = Convert.ToByte(statement[3]);
                     }
                 }
             }));

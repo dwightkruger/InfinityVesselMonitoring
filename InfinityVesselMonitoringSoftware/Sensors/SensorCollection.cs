@@ -23,7 +23,7 @@ namespace VesselMonitoringSuite.Sensors
 {
     public class SensorCollection : ObservableCollection<ISensorItem>, INotifyPropertyChanged
     {
-        private object _lock = new object();
+        private readonly AsyncReaderWriterLock _lock = new AsyncReaderWriterLock();
         private Hashtable _hashBySensorId = new Hashtable();
         private Hashtable _hashBySerialNumber = new Hashtable();
         private Timer _sensorObservationFlushTimer;
@@ -36,18 +36,27 @@ namespace VesselMonitoringSuite.Sensors
             _sensorObservationFlushTimer = new Timer(SensorObservationFlushTimerTic, null, c_20_seconds, c_2_minutes);
         }
 
-        new public ISensorItem Add(ISensorItem sensorItem)
+        /// <summary>
+        /// Do not call this function. Call await BeginAdd instead.
+        /// </summary>
+        /// <param name="sensorItem"></param>
+        new public void Add(ISensorItem sensorItem)
+        {
+            throw new NotImplementedException("Use BeginAdd instead");
+        }
+
+        async public Task<ISensorItem> BeginAdd(ISensorItem sensorItem)
         {
             ISensorItem item = null;
 
-            lock (_lock)
+            using (var releaser = await _lock.WriterLockAsync())
             {
-                item = this.FindBySerialNumber(sensorItem.SerialNumber);
+                item = (ISensorItem)_hashBySerialNumber[sensorItem.SerialNumber];
 
                 // If the item was not found, then we have a new sensor. Add it.
                 if (null == item)
                 {
-                    Task.Run(async () => { await sensorItem.BeginCommit(); }).Wait();
+                    await sensorItem.BeginCommit();
 
                     _hashBySerialNumber.Add(sensorItem.SerialNumber, sensorItem);
                     _hashBySensorId.Add(sensorItem.SensorId, sensorItem);
@@ -64,19 +73,22 @@ namespace VesselMonitoringSuite.Sensors
 
         new public void Clear()
         {
-            lock (_lock)
+            Task.Run(async () =>
             {
-                _hashBySensorId.Clear();
-                _hashBySerialNumber.Clear();
-                base.Clear();
-            }
+                using (var releaser = await _lock.WriterLockAsync())
+                {
+                    _hashBySensorId.Clear();
+                    _hashBySerialNumber.Clear();
+                    base.Clear();
+                }
+            });
         }
 
-        public ISensorItem FindBySerialNumber(string serialNumber)
+        async public Task<ISensorItem> BeginFindBySerialNumber(string serialNumber)
         {
             ISensorItem result = null;
 
-            lock (_lock)
+            using (var releaser = await _lock.WriterLockAsync())
             {
                 result = (ISensorItem)_hashBySerialNumber[serialNumber];
             }
@@ -88,13 +100,13 @@ namespace VesselMonitoringSuite.Sensors
         /// <summary>
         /// Loads the sensors from the SQL database table
         /// </summary>
-        public void Load()
+        async public Task BeginLoad()
         {
             try
             {
                 foreach (ItemRow row in App.BuildDBTables.SensorTable.Rows)
                 {
-                    ISensorItem sensor = null;
+                    ISensorItem sensorItem = null;
                     switch (row.Field<SensorType>("SensorType"))
                     {
                         case SensorType.AC: break;
@@ -130,7 +142,7 @@ namespace VesselMonitoringSuite.Sensors
                         case SensorType.Time: break;
                         case SensorType.Unknown:
                         {
-                            sensor = new SensorItem(row);
+                            sensorItem = new SensorItem(row);
                         }
                         break;
 
@@ -143,14 +155,16 @@ namespace VesselMonitoringSuite.Sensors
                         case SensorType.Wind: break;
                         default:
                         {
-                            sensor = new SensorItem(row);
+                            sensorItem = new SensorItem(row);
                         }
                         break;
                     }
 
-                    if (null != sensor)
+                    if (null != sensorItem)
                     {
-                        this.Add(sensor);
+                        base.Add(sensorItem);
+                        _hashBySerialNumber.Add(sensorItem.SerialNumber, sensorItem);
+                        _hashBySensorId.Add(sensorItem.SensorId, sensorItem);
                     }
                 }
             }

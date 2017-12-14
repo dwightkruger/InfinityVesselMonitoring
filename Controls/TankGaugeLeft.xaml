@@ -5,21 +5,21 @@
     xmlns:local="using:InfinityGroup.VesselMonitoring.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    DataContext="{Binding RelativeSource={RelativeSource Self}}"
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
-    DataContext="{Binding RelativeSource={RelativeSource Self}}"    
-    mc:Ignorable="d"
     x:Name="userControl"
-    Background="Transparent">
+    Background="Transparent"    
+    mc:Ignorable="d">
 
     <Canvas>
         <Grid 
             x:Name="MainGrid" 
-            Height="{x:Bind Path=GaugeHeight}" 
-            Width="{x:Bind Path=GaugeWidth}"
-            Canvas.Left="{x:Bind Path=Left}"  
-            Canvas.Top="{x:Bind Path=Top}"
-            HorizontalAlignment="Center" 
-            VerticalAlignment="Center">
+            Canvas.Left="{Binding Left}"  
+            Canvas.Top="{Binding Top}"
+            Height="{Binding GaugeHeight}" 
+            Width="{Binding GaugeWidth}"
+            HorizontalAlignment="Stretch" 
+            VerticalAlignment="Stretch">
 
             <canvas:CanvasControl 
             x:Name="canvasControl" 

@@ -120,7 +120,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             var ds = args.DrawingSession;
 
-            Color edgeColor = Colors.CornflowerBlue;
+            Color edgeColor = this.GaugeColor;
 
             if (IsLowAlarmEnabled && (Value <= LowAlarmValue) && IsOnline)
             {

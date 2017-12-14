@@ -8,6 +8,7 @@ using System;
 using InfinityGroup.VesselMonitoring.Types;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using SQLitePCL;
+using System.Threading.Tasks;
 
 namespace InfinityGroup.VesselMonitoring.SQLiteDB
 {
@@ -19,6 +20,19 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             TableName = "VesselSettingsTable";
         }
 
+        public async Task BeginRemove(string propertyName)
+        {
+            await Task.Run(() =>
+            {
+                string sqlCmd = "REMOVE FROM " + TableName + " \n" +
+                                " WHERE Property = ' " + propertyName + "';";
+
+                using (var statement = sqlConnection.Prepare(sqlCmd))
+                {
+                    statement.Step();
+                }
+            });
+        }
         protected override string GetCreateTableSql()
         {
             return
@@ -27,12 +41,12 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     "KeyId      INTEGER       NOT NULL PRIMARY KEY AUTOINCREMENT, \n " +
                     "Property   TEXT          NOT NULL CONSTRAINT CeProp_Unique UNIQUE, \n" +
                     "ChangeDate DATETIME      NOT NULL, \n" +
-                    Constants.c_SystemInt64     + " INTEGER NULL,  \n" +
-                    Constants.c_SystemDouble    + " FLOAT NULL,    \n" +
-                    Constants.c_SystemString    + " NTEXT NULL,    \n" +
-                    Constants.c_SystemByteArray + " BLOB NULL,     \n" +
+                    Constants.c_SystemInt64     + " INTEGER  NULL, \n" +
+                    Constants.c_SystemDouble    + " FLOAT    NULL, \n" +
+                    Constants.c_SystemString    + " NTEXT    NULL, \n" +
+                    Constants.c_SystemByteArray + " BLOB     NULL, \n" +
                     Constants.c_SystemDateTime  + " DATETIME NULL, \n" +
-                    Constants.c_SystemBoolean   + " BOOLEAN NULL   \n" +
+                    Constants.c_SystemBoolean   + " BOOLEAN  NULL  \n" +
                 ") ";
         }
 

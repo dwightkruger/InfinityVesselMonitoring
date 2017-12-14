@@ -37,6 +37,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     "GaugeTop                FLOAT    NOT NULL, \n " +
                     "GaugeHeight             FLOAT    NOT NULL, \n " +
                     "GaugeWidth              FLOAT    NOT NULL, \n " +
+                    "GaugeColor              INTEGER  NOT NULL, \n " +
                     "Divisions               INTEGER  NOT NULL, \n " +
                     "MinorTicsPerMajorTic    INTEGER  NOT NULL, \n " +
                     "MediumTicsPerMajorTic   INTEGER  NOT NULL, \n " +
@@ -73,6 +74,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     "GaugeTop, " +
                     "GaugeHeight, " +
                     "GaugeWidth, " +
+                    "GaugeColor, " +
                     "Divisions, " +
                     "MinorTicsPerMajorTic, " +
                     "MediumTicsPerMajorTic, " +
@@ -113,6 +115,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             statement.Bind("@GaugeTop",                itemRow.Field<double>("GaugeTop"));
             statement.Bind("@GaugeHeight",             itemRow.Field<double>("GaugeHeight"));
             statement.Bind("@GaugeWidth",              itemRow.Field<double>("GaugeWidth"));
+            statement.Bind("@GaugeColor",              Utilities.ColorToI64(itemRow.Field<Color>("GaugeColor")));
             statement.Bind("@Divisions",               itemRow.Field<int>("Divisions"));
             statement.Bind("@MinorTicsPerMajorTic",    itemRow.Field<int>("MinorTicsPerMajorTic"));
             statement.Bind("@MediumTicsPerMajorTic",   itemRow.Field<int>("MediumTicsPerMajorTic"));
@@ -154,25 +157,26 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemRow.SetField<double>("GaugeTop",                (double)Convert.ToDouble(statement[06]));
             itemRow.SetField<double>("GaugeHeight",             (double)Convert.ToDouble(statement[07]));
             itemRow.SetField<double>("GaugeWidth",              (double)Convert.ToDouble(statement[08]));
-            itemRow.SetField<int>("Divisions",                  (int)Convert.ToInt32(statement[09]));
-            itemRow.SetField<int>("MinorTicsPerMajorTic",       (int)Convert.ToInt32(statement[10]));
-            itemRow.SetField<int>("MediumTicsPerMajorTic",      (int)Convert.ToInt32(statement[11]));
-            itemRow.SetField<int>("Resolution",                 (int)Convert.ToInt32(statement[12]));
-            itemRow.SetField<int>("GaugeOutlineVisibility",     (int)Convert.ToInt32(statement[13]));
-            itemRow.SetField<int>("MiddleCircleDelta",          (int)Convert.ToInt32(statement[14]));
-            itemRow.SetField<int>("InnerCircleDelta",           (int)Convert.ToInt32(statement[15]));
-            itemRow.SetField<double>("ValueFontSize",           (double)Convert.ToDouble(statement[16]));
-            itemRow.SetField<double>("UnitsFontSize",           (double)Convert.ToDouble(statement[17]));
-            itemRow.SetField<double>("MajorTicLength",          (double)Convert.ToDouble(statement[18]));
-            itemRow.SetField<double>("MediumTicLength",         (double)Convert.ToDouble(statement[19]));
-            itemRow.SetField<double>("MinorTicLength",          (double)Convert.ToDouble(statement[20]));
-            itemRow.SetField<string>("Text",                    (string)Convert.ToString(statement[21]));
-            itemRow.SetField<double>("TextFontSize",            (double)Convert.ToDouble(statement[22]));
-            itemRow.SetField<Color>("TextFontColor",            (Color)Utilities.ColorFromI64((Int64)statement[23])); 
-            itemRow.SetField<double>("TextAngle",               (double)Convert.ToDouble(statement[24]));
-            itemRow.SetField<CanvasHorizontalAlignment>("TextHorizontalAlignment", (CanvasHorizontalAlignment)Convert.ToInt32(statement[25]));
-            itemRow.SetField<CanvasVerticalAlignment>("TextVerticalAlignment",     (CanvasVerticalAlignment)Convert.ToInt32(statement[26]));
-            itemRow.SetField<string>("Properties",              (string)statement[27]);
+            itemRow.SetField<Color>("GaugeColor",               (Color)Utilities.ColorFromI64(Convert.ToInt64(statement[09])));
+            itemRow.SetField<int>("Divisions",                  (int)Convert.ToInt32(statement[10]));
+            itemRow.SetField<int>("MinorTicsPerMajorTic",       (int)Convert.ToInt32(statement[11]));
+            itemRow.SetField<int>("MediumTicsPerMajorTic",      (int)Convert.ToInt32(statement[12]));
+            itemRow.SetField<int>("Resolution",                 (int)Convert.ToInt32(statement[13]));
+            itemRow.SetField<int>("GaugeOutlineVisibility",     (int)Convert.ToInt32(statement[14]));
+            itemRow.SetField<int>("MiddleCircleDelta",          (int)Convert.ToInt32(statement[15]));
+            itemRow.SetField<int>("InnerCircleDelta",           (int)Convert.ToInt32(statement[16]));
+            itemRow.SetField<double>("ValueFontSize",           (double)Convert.ToDouble(statement[17]));
+            itemRow.SetField<double>("UnitsFontSize",           (double)Convert.ToDouble(statement[18]));
+            itemRow.SetField<double>("MajorTicLength",          (double)Convert.ToDouble(statement[19]));
+            itemRow.SetField<double>("MediumTicLength",         (double)Convert.ToDouble(statement[20]));
+            itemRow.SetField<double>("MinorTicLength",          (double)Convert.ToDouble(statement[21]));
+            itemRow.SetField<string>("Text",                    (string)Convert.ToString(statement[22]));
+            itemRow.SetField<double>("TextFontSize",            (double)Convert.ToDouble(statement[23]));
+            itemRow.SetField<Color>("TextFontColor",            (Color)Utilities.ColorFromI64((Int64)statement[24])); 
+            itemRow.SetField<double>("TextAngle",               (double)Convert.ToDouble(statement[25]));
+            itemRow.SetField<CanvasHorizontalAlignment>("TextHorizontalAlignment", (CanvasHorizontalAlignment)Convert.ToInt32(statement[26]));
+            itemRow.SetField<CanvasVerticalAlignment>("TextVerticalAlignment",     (CanvasVerticalAlignment)Convert.ToInt32(statement[27]));
+            itemRow.SetField<string>("Properties",              (string)statement[28]);
 
             itemTable.Rows.Add(itemRow);
             itemRow.AcceptChanges();
@@ -189,6 +193,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns.Add("GaugeTop",                typeof(double));
             itemTable.Columns.Add("GaugeHeight",             typeof(double));
             itemTable.Columns.Add("GaugeWidth",              typeof(double));
+            itemTable.Columns.Add("GaugeColor",              typeof(Color));
             itemTable.Columns.Add("Divisions",               typeof(int));
             itemTable.Columns.Add("MinorTicsPerMajorTic",    typeof(int));
             itemTable.Columns.Add("MediumTicsPerMajorTic",   typeof(int));
@@ -218,6 +223,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns["GaugeTop"].DefaultValue                = 0D;
             itemTable.Columns["GaugeHeight"].DefaultValue             = 300D;
             itemTable.Columns["GaugeWidth"].DefaultValue              = 200D;
+            itemTable.Columns["GaugeColor"].DefaultValue              = Colors.White;
             itemTable.Columns["Divisions"].DefaultValue               = 7;
             itemTable.Columns["MinorTicsPerMajorTic"].DefaultValue    = 3;
             itemTable.Columns["MediumTicsPerMajorTic"].DefaultValue   = 6;
@@ -252,6 +258,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                                 "GaugeTop, " +
                                 "GaugeHeight, " +
                                 "GaugeWidth, " +
+                                "GaugeColor, " +
                                 "Divisions," +
                                 "MinorTicsPerMajorTic," +
                                 "MediumTicsPerMajorTic," +
@@ -281,6 +288,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                                 "@GaugeLeft, " +
                                 "@GaugeTop, " +
                                 "@GaugeHeight, " +
+                                "@GaugeColor, " +
                                 "@GaugeWidth, " +
                                 "@Divisions," +
                                 "@MinorTicsPerMajorTic," +
@@ -316,6 +324,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                    "    GaugeTop                = @GaugeTop               , \n" +
                    "    GaugeHeight             = @GaugeHeight            , \n" +
                    "    GaugeWidth              = @GaugeWidth             , \n" +
+                   "    GaugeColor              = @GaugeColor             , \n" +
                    "    Divisions               = @Divisions              , \n" +
                    "    MinorTicsPerMajorTic    = @MinorTicsPerMajorTic   , \n" +
                    "    MediumTicsPerMajorTic   = @MediumTicsPerMajorTic  , \n" +

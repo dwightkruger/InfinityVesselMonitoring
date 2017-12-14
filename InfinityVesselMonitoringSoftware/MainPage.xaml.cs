@@ -55,6 +55,8 @@ namespace VesselMonitoring
             // Specify the startup mode to be full screen.
             //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
+
+            EditRibbonView.ViewModel.IsEditMode = true;
         }
 
         /// <summary>
@@ -111,16 +113,17 @@ namespace VesselMonitoring
 
             this.BuildDemoGaugePages();
 
-            //await BuildDBTables.VesselSettingsTable.BeginEmpty();
+            await App.BuildDBTables.VesselSettingsTable.BeginEmpty();
 
-            //App.VesselSettings = new VesselSettings();
-            //App.VesselSettings.VesselName = "MV Infinity";
-            //App.VesselSettings.FromEmailAddress = "";
-            //App.VesselSettings.FromEmailPassword = "";
-            //App.VesselSettings.ToEmailAddress = "dwightkruger@mvinfinity.com";
-            //App.VesselSettings.SMTPServerName = "smtp-mail.outlook.com";
-            //App.VesselSettings.SMTPPort = 587;
-            //App.VesselSettings.SMTPEncryptionMethod = 2; // SmtpConnectType.ConnectSTARTTLS
+            App.VesselSettings = new VesselSettings();
+            App.VesselSettings.VesselName = "MV Infinity";
+            App.VesselSettings.FromEmailAddress = "";
+            App.VesselSettings.FromEmailPassword = "";
+            App.VesselSettings.ToEmailAddress = "dwightkruger@mvinfinity.com";
+            App.VesselSettings.SMTPServerName = "smtp-mail.outlook.com";
+            App.VesselSettings.SMTPPort = 587;
+            App.VesselSettings.SMTPEncryptionMethod = 2; // SmtpConnectType.ConnectSTARTTLS
+            App.VesselSettings.ThemeColor = Colors.CornflowerBlue;
 
             //SendEmail.FromEmailAddress = App.VesselSettings.FromEmailAddress;
             //SendEmail.FromEmailPassword = App.VesselSettings.FromEmailPassword;
@@ -145,27 +148,27 @@ namespace VesselMonitoring
             IGaugePageItem gaugePageItem = new GaugePageItem();
             gaugePageItem.PageName = "Engines";
             gaugePageItem.Position = 0;
-            await App.GaugePageCollection.BeginAddPage(gaugePageItem);
+            await App.GaugePageCollection.BeginAdd(gaugePageItem);
 
             gaugePageItem = new GaugePageItem();
             gaugePageItem.PageName = "Tanks";
             gaugePageItem.Position = 1;
-            await App.GaugePageCollection.BeginAddPage(gaugePageItem);
+            await App.GaugePageCollection.BeginAdd(gaugePageItem);
 
             gaugePageItem = new GaugePageItem();
             gaugePageItem.PageName = "AC Electrical";
             gaugePageItem.Position = 2;
-            await App.GaugePageCollection.BeginAddPage(gaugePageItem);
+            await App.GaugePageCollection.BeginAdd(gaugePageItem);
 
             gaugePageItem = new GaugePageItem();
             gaugePageItem.PageName = "DC Electrical";
             gaugePageItem.Position = 3;
-            await App.GaugePageCollection.BeginAddPage(gaugePageItem);
+            await App.GaugePageCollection.BeginAdd(gaugePageItem);
 
             gaugePageItem = new GaugePageItem();
             gaugePageItem.PageName = "Navigation";
             gaugePageItem.Position = 4;
-            await App.GaugePageCollection.BeginAddPage(gaugePageItem);
+            await App.GaugePageCollection.BeginAdd(gaugePageItem);
 
             App.BuildDBTables.GaugePageTable.Load();
             App.GaugePageCollection = new GaugePageCollection();
@@ -181,10 +184,10 @@ namespace VesselMonitoring
             // Device 00
             IDeviceItem deviceItem = new DeviceItem();
             deviceItem.SerialNumber = Guid.NewGuid().ToString();
-            deviceItem = App.DeviceCollection.Add(deviceItem);
+            deviceItem = await App.DeviceCollection.BeginAdd(deviceItem);
 
             App.DeviceCollection.Clear();
-            App.DeviceCollection.Load();
+            await App.DeviceCollection.BeginLoad();
         }
 
         async Task PopulateDemoSensorCollection()
@@ -196,67 +199,67 @@ namespace VesselMonitoring
             // Sensor 00
             ISensorItem sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
-            sensor = App.SensorCollection.Add(sensor);
+            sensor = await App.SensorCollection.BeginAdd(sensor);
 
             // Sensor 01
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
-            sensor = App.SensorCollection.Add(sensor);
+            sensor = await App.SensorCollection.BeginAdd(sensor);
 
             // Sensor 02
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
-            sensor = App.SensorCollection.Add(sensor);
+            sensor = await App.SensorCollection.BeginAdd(sensor);
 
             // Sensor 03
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
-            sensor = App.SensorCollection.Add(sensor);
+            sensor = await App.SensorCollection.BeginAdd(sensor);
 
             // Sensor 04
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
-            sensor = App.SensorCollection.Add(sensor);
+            sensor = await App.SensorCollection.BeginAdd(sensor);
 
             // Sensor 05
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
-            sensor = App.SensorCollection.Add(sensor);
+            sensor = await App.SensorCollection.BeginAdd(sensor);
 
             // Sensor 06
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
-            sensor = App.SensorCollection.Add(sensor);
+            sensor = await App.SensorCollection.BeginAdd(sensor);
 
             // Sensor 07
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
-            sensor = App.SensorCollection.Add(sensor);
+            sensor = await App.SensorCollection.BeginAdd(sensor);
 
             // Sensor 08
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
-            sensor = App.SensorCollection.Add(sensor);
+            sensor = await App.SensorCollection.BeginAdd(sensor);
 
             // Sensor 09
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
-            sensor = App.SensorCollection.Add(sensor);
+            sensor = await App.SensorCollection.BeginAdd(sensor);
 
             // Sensor 10
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
-            sensor = App.SensorCollection.Add(sensor);
+            sensor = await App.SensorCollection.BeginAdd(sensor);
 
             for (int i=0; i<100; i++)
             {
                 sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
                 sensor.SerialNumber = Guid.NewGuid().ToString();
-                sensor = App.SensorCollection.Add(sensor);
+                sensor = await App.SensorCollection.BeginAdd(sensor);
             }
 
             App.SensorCollection.Clear();
-            App.SensorCollection.Load();
+            await App.SensorCollection.BeginLoad();
         }
 
         async Task PopulateDemoGaugeCollection()
@@ -416,8 +419,10 @@ namespace VesselMonitoring
             gaugeItem.Text = "Fuel\nPort";
             gaugeItem.GaugeTop = 10;
             gaugeItem.GaugeLeft = 595;
+            gaugeItem.GaugeHeight = 60;
+            gaugeItem.GaugeWidth = 60;
             gaugeItem.TextFontSize = 13;
-            gaugeItem.TextFontColor = Colors.CornflowerBlue;
+            gaugeItem.TextFontColor = App.VesselSettings.ThemeColor;
             gaugeItem.TextHorizontalAlignment = CanvasHorizontalAlignment.Left;
             gaugeItem.TextVerticalAlignment = CanvasVerticalAlignment.Top;
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
@@ -428,8 +433,10 @@ namespace VesselMonitoring
             gaugeItem.Text = "Fresh\nWater";
             gaugeItem.GaugeTop = 10;
             gaugeItem.GaugeLeft = 735;
+            gaugeItem.GaugeHeight = 60;
+            gaugeItem.GaugeWidth = 60;
             gaugeItem.TextFontSize = 13;
-            gaugeItem.TextFontColor = Colors.CornflowerBlue;
+            gaugeItem.TextFontColor = App.VesselSettings.ThemeColor;
             gaugeItem.TextHorizontalAlignment = CanvasHorizontalAlignment.Left;
             gaugeItem.TextVerticalAlignment = CanvasVerticalAlignment.Top;
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
@@ -440,8 +447,10 @@ namespace VesselMonitoring
             gaugeItem.Text = "Black\nWater";
             gaugeItem.GaugeTop = 10;
             gaugeItem.GaugeLeft = 820;
+            gaugeItem.GaugeHeight = 60;
+            gaugeItem.GaugeWidth = 60;
             gaugeItem.TextFontSize = 13;
-            gaugeItem.TextFontColor = Colors.CornflowerBlue;
+            gaugeItem.TextFontColor = App.VesselSettings.ThemeColor;
             gaugeItem.TextHorizontalAlignment = CanvasHorizontalAlignment.Left;
             gaugeItem.TextVerticalAlignment = CanvasVerticalAlignment.Top;
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
@@ -452,8 +461,10 @@ namespace VesselMonitoring
             gaugeItem.Text = "Fuel\nStbd";
             gaugeItem.GaugeTop = 10;
             gaugeItem.GaugeLeft = 925;
+            gaugeItem.GaugeHeight = 60;
+            gaugeItem.GaugeWidth = 60;
             gaugeItem.TextFontSize = 13;
-            gaugeItem.TextFontColor = Colors.CornflowerBlue;
+            gaugeItem.TextFontColor = App.VesselSettings.ThemeColor;
             gaugeItem.TextHorizontalAlignment = CanvasHorizontalAlignment.Left;
             gaugeItem.TextVerticalAlignment = CanvasVerticalAlignment.Top;
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
@@ -470,18 +481,31 @@ namespace VesselMonitoring
             await this.PopulateDemoGaugePageCollection();
             await this.PopulateDemoGaugeCollection();
 
+            //App.BuildDBTables.DeviceTable.Load();
+            //App.DeviceCollection.Clear();
+            //await App.DeviceCollection.BeginLoad();
+
+            //App.BuildDBTables.SensorTable.Load();
+            //App.SensorCollection.Clear();
+            //await App.SensorCollection.BeginLoad();
+
+            //App.BuildDBTables.GaugePageTable.Load();
+            //App.GaugePageCollection.Clear();
+            //await App.GaugePageCollection.BeginLoad();
+
+            //App.BuildDBTables.GaugeTable.Load();
+            //App.GaugeItemCollection.Clear(); 
+            //await App.GaugeItemCollection.BeginLoad();
+
             this.MainPivot.Items.Clear();
 
-            // For each gaugepage, build the view and view model
+            // For each gauge page, build the view and view model
             foreach (IGaugePageItem item in App.GaugePageCollection)
             {
-                GaugePageViewModel viewModel = new GaugePageViewModel();
-                viewModel.GaugePageItem = item;
-
                 GaugePageView view = new GaugePageView();
                 view.Rows = 3;
                 view.Columns = 3;
-                view.ViewModel = viewModel;
+                view.ViewModel.GaugePageItem = item; 
 
                 Binding widthBinding = new Binding();
                 widthBinding.Source = this.MainPivot;
@@ -505,7 +529,7 @@ namespace VesselMonitoring
                 this.MainPivot.Items.Add(pivotItem);
 
                 // Get all of the gauges for this page and tell the page to build itself.
-                List<IGaugeItem> gaugeItemList = App.GaugeItemCollection.FindAllByPageId(item.PageId);
+                List<IGaugeItem> gaugeItemList = await App.GaugeItemCollection.BeginFindAllByPageId(item.PageId);
                 if ((null != gaugeItemList) && (gaugeItemList.Count > 0))
                 {
                     Messenger.Default.Send<List<IGaugeItem>>(gaugeItemList, "BuildGaugeItemList");

@@ -121,6 +121,7 @@
     <Compile Include="ISensorItem.cs" />
     <Compile Include="ISensorTable.cs" />
     <Compile Include="IVesselDB.cs" />
+    <Compile Include="IVesselSettings.cs" />
     <Compile Include="IVesselSettingsTable.cs" />
     <Compile Include="IVesselTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

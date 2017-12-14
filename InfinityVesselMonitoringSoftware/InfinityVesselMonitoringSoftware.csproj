@@ -103,6 +103,10 @@
     </Compile>
     <Compile Include="Devices\DeviceCollection.cs" />
     <Compile Include="Devices\DeviceItem.cs" />
+    <Compile Include="Editors\GaugePageEditor\EditRibbonView.xaml.cs">
+      <DependentUpon>EditRibbonView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\GaugePageEditor\EditRibbonViewModel.cs" />
     <Compile Include="Events\EventCollection.cs" />
     <Compile Include="Events\EventItem.cs" />
     <Compile Include="Gauges\GaugeItem.cs" />
@@ -172,6 +176,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Editors\GaugePageEditor\EditRibbonView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -230,7 +238,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Editors\GaugePageEditor\" />
     <Folder Include="Editors\SensorEditor\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

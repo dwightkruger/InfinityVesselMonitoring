@@ -22,23 +22,33 @@ namespace InfinityVesselMonitoringSoftware.Gauges
         {
         }
 
+        /// <summary>
+        /// Do not call this function. Call await BeginAdd instead.
+        /// </summary>
+        /// <param name="sensorItem"></param>
+        new public void Add(ISensorItem sensorItem)
+        {
+            throw new NotImplementedException("Use BeginAdd instead");
+        }
+
+
         async public Task<IGaugeItem> BeginAddGauge(IGaugeItem item)
         {
             IGaugeItem newGaugeItem = null;
 
-            // Is this item already in our list?
-            newGaugeItem = FindFirstByPageId(item.GaugeId);
+            using (var releaser = await _lock.WriterLockAsync())
+            { 
+                // Is this item already in our list?
+                newGaugeItem = this.FirstOrDefault<IGaugeItem>(gaugeItem => gaugeItem.GaugeId == item.GaugeId);
 
-            // If not in the list already, add it.
-            if (null == newGaugeItem)
-            {
-                newGaugeItem = item;
-                using (var releaser = await _lock.WriterLockAsync())
+                // If not in the list already, add it.
+                if (null == newGaugeItem)
                 {
+                    newGaugeItem = item;
                     base.Add(newGaugeItem);
-                }
 
-                await newGaugeItem.BeginCommit();
+                    await newGaugeItem.BeginCommit();
+                }
             }
 
             return newGaugeItem;
@@ -46,7 +56,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
 
         public async Task BeginCommitAll()
         {
-            using (var releaser = await _lock.WriterLockAsync())
+            using (var releaser = await _lock.ReaderLockAsync())
             {
                 foreach (IGaugeItem item in this)
                 {
@@ -55,37 +65,31 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             }
         }
 
-        public IGaugeItem FindFirstByPageId(Int64 myPageId)
+        async public Task<IGaugeItem> BeginFindFirstByPageId(Int64 myPageId)
         {
             IGaugeItem result = null;
 
-            Task.Run(async () =>
+            using (var releaser = await _lock.ReaderLockAsync())
             {
-                using (var releaser = await _lock.ReaderLockAsync())
-                {
-                    result = this.FirstOrDefault<IGaugeItem>(item => item.PageId == myPageId);
-                }
-            }).Wait();
+                result = this.FirstOrDefault<IGaugeItem>(item => item.PageId == myPageId);
+            }
 
             return result;
         }
 
-        public List<IGaugeItem> FindAllByPageId(Int64 myPageId)
+        async public Task<List<IGaugeItem>> BeginFindAllByPageId(Int64 myPageId)
         {
             List<IGaugeItem> results = null;
 
-            Task.Run(async () =>
+            using (var releaser = await _lock.ReaderLockAsync())
             {
-                using (var releaser = await _lock.ReaderLockAsync())
-                {
-                    IEnumerable<IGaugeItem> query = this.Where((item) => item.PageId == myPageId);
+                IEnumerable<IGaugeItem> query = this.Where((item) => item.PageId == myPageId);
 
-                    if (query.Count<IGaugeItem>() > 0)
-                        results = query.ToList<IGaugeItem>();
-                    else
-                        results = new List<IGaugeItem>();
-                }
-            }).Wait();
+                if (query.Count<IGaugeItem>() > 0)
+                    results = query.ToList<IGaugeItem>();
+                else
+                    results = new List<IGaugeItem>();
+            }
 
             return results;
         }

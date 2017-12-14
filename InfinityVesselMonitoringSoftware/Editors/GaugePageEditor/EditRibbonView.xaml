@@ -1,0 +1,48 @@
+﻿<UserControl
+    x:Class="InfinityVesselMonitoringSoftware.Editors.GaugePageEditor.EditRibbonView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:InfinityVesselMonitoringSoftware.Editors.GaugePageEditor"
+    xmlns:converters="using:InfinityGroup.VesselMonitoring.Globals.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="100"
+    d:DesignWidth="1500">
+
+    <UserControl.Resources>
+        <local:EditRibbonViewModel x:Key="VMKey" x:Name="VM"/>
+        <converters:BoolToVisibilityConverter x:Name="BoolToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <Grid Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"
+        DataContext="{StaticResource VMKey}">
+        <CommandBar 
+            OverflowButtonVisibility="Auto"
+            x:Name="EditRibbonViewCommandBar"  
+            HorizontalAlignment="Left" 
+            DefaultLabelPosition="Bottom">
+            
+            <AppBarButton Icon="Save" Label="Save" ToolTipService.ToolTip="Save changes" Command="{Binding SaveCommand}"/>
+            <AppBarButton Icon="Refresh" Label="Rollback" ToolTipService.ToolTip="Undo all changes" Command="{Binding RevertCommand}"/>
+            <AppBarButton Icon="Stop" Label="Stop" ToolTipService.ToolTip="Stop editing and exit the editor" Command="{Binding ExitCommand}" />
+            <AppBarSeparator/>
+            <AppBarButton Icon="Font" Label="Font" ToolTipService.ToolTip="Text font"/>
+            <AppBarButton Icon="FontSize" Label="Size" ToolTipService.ToolTip="Font size"/>
+            <AppBarButton Icon="FontIncrease" Label="Increase" ToolTipService.ToolTip="Increase font size" Command="{Binding FontSizeIncreaseCommand}"/>
+            <AppBarButton Icon="FontDecrease" Label="Decrease" ToolTipService.ToolTip="Decrease font size" Command="{Binding FontSizeDecreaseCommand}"/>
+            <AppBarToggleButton Icon="Bold" Label="Bold" ToolTipService.ToolTip="Bold font" Command="{Binding BoldFontCommand}"/>
+            <AppBarToggleButton Icon="Italic" Label="Italics" ToolTipService.ToolTip="Italics" Command="{Binding ItalicsFontCommand}"/>
+            <AppBarToggleButton Icon="Underline" Label="Underline" ToolTipService.ToolTip="Underline font" Command="{Binding UnderlineFontCommand}"/>
+            <AppBarButton Icon="FontColor" Label="Color" ToolTipService.ToolTip="Font color"/>
+            <AppBarButton Icon="AlignLeft" Label="Left" ToolTipService.ToolTip="Left align text" Command="{Binding LeftAlignTextCommand}"/>
+            <AppBarButton Icon="AlignRight" Label="Right" ToolTipService.ToolTip="Right align text" Command="{Binding RightAlignTextCommand}"/>
+            <AppBarButton Icon="AlignCenter" Label="Center" ToolTipService.ToolTip="Center text" Command="{Binding CenterAlignTextCommand}"/>
+            <AppBarButton Icon="Rotate" Label="Rotate" ToolTipService.ToolTip="Rotate text"/>
+            <AppBarSeparator/>
+            <AppBarButton Icon="Copy" Label="Copy" ToolTipService.ToolTip="Copy"/>
+            <AppBarButton Icon="Paste" Label="Paste" ToolTipService.ToolTip="Paste"/>
+            <AppBarButton Icon="Delete" Label="Delete" ToolTipService.ToolTip="Delete"/>
+        </CommandBar>
+    </Grid>
+</UserControl>

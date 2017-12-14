@@ -21,23 +21,32 @@ namespace VesselMonitoringSuite.Devices
 {
     public class DeviceCollection : ObservableCollection<IDeviceItem>, INotifyPropertyChanged
     {
-        private object _lock = new object();
+        private readonly AsyncReaderWriterLock _lock = new AsyncReaderWriterLock();
         private Hashtable _hashBySerialNumber = new Hashtable();
 
         public DeviceCollection()
         {
         }
 
-        new public IDeviceItem Add(IDeviceItem deviceItem) 
+        /// <summary>
+        /// Do not call this function. Call await BeginAdd instead.
+        /// </summary>
+        /// <param name="item"></param>
+        public new void Add(IGaugePageItem item)
         {
-            lock (_lock)
+            throw new NotImplementedException("Use BeginAdd");
+        }
+
+        async public Task<IDeviceItem> BeginAdd(IDeviceItem deviceItem) 
+        {
+            using (var releaser = await _lock.WriterLockAsync())
             {
-                IDeviceItem item = this.FindBySerialNumber(deviceItem.SerialNumber);
+                IDeviceItem item = (IDeviceItem)_hashBySerialNumber[deviceItem.SerialNumber];
 
                 // If the item was not found, then we have a new device. Add it.
-                if  (null == item)
+                if (null == item)
                 {
-                    Task.Run(async () => { await deviceItem.BeginCommit(); }).Wait();
+                    await deviceItem.BeginCommit(); 
                     _hashBySerialNumber.Add(deviceItem.SerialNumber, deviceItem);
                     base.Add(deviceItem);
                 }
@@ -50,21 +59,23 @@ namespace VesselMonitoringSuite.Devices
             return deviceItem;
         }
 
-        new public void Clear()
+        new public void BeginClear()
         {
-            lock (_lock)
+            Task.Run(async () =>
             {
-                _hashBySerialNumber.Clear();
-                base.Clear();
-            }
+                using (var releaser = await _lock.WriterLockAsync())
+                {
+                    _hashBySerialNumber.Clear();
+                    base.Clear();
+                }
+            });
         }
 
-
-        public IDeviceItem FindBySerialNumber(string serialNumber)
+        async public Task<IDeviceItem> BeginFindBySerialNumber(string serialNumber)
         {
             IDeviceItem deviceItem = null;
 
-            lock (_lock)
+            using (var releaser = await _lock.ReaderLockAsync())
             {
                 deviceItem = (IDeviceItem)_hashBySerialNumber[serialNumber];
             }
@@ -75,55 +86,57 @@ namespace VesselMonitoringSuite.Devices
         /// <summary>
         /// Load all of the devices from the device table
         /// </summary>
-        public void Load()
+        async public Task BeginLoad()
         {
             try
             {
                 bool isVirtualDeviceFound = false;          // HJave we found the required virtual device
                 IDeviceItem device = null;
-
-                foreach (ItemRow row in App.BuildDBTables.DeviceTable.Rows)
+                using (var releaser = await _lock.ReaderLockAsync())
                 {
-                    switch (row.Field<DeviceType>("DeviceType"))
+                    foreach (ItemRow row in App.BuildDBTables.DeviceTable.Rows)
                     {
-                        case DeviceType.IPCamera:
-                            break;
+                        switch (row.Field<DeviceType>("DeviceType"))
+                        {
+                            case DeviceType.IPCamera:
+                                break;
 
-                        case DeviceType.NMEA2000:
-                            break;
+                            case DeviceType.NMEA2000:
+                                break;
 
-                        case DeviceType.Virtual:
-                            device = new DeviceItem(row);
-                            device.IsVirtual = true;
-                            device.DeviceType = DeviceType.Virtual;
-                            this.Add(device);
-                            isVirtualDeviceFound = true;
-                            break;
+                            case DeviceType.Virtual:
+                                device = new DeviceItem(row);
+                                device.IsVirtual = true;
+                                device.DeviceType = DeviceType.Virtual;
+                                this.Add(device);
+                                isVirtualDeviceFound = true;
+                                break;
 
-                        default:
-                            device = new DeviceItem(row);
-                            this.Add(device);
-                        break;
+                            default:
+                                device = new DeviceItem(row);
+                                this.Add(device);
+                                break;
+                        }
                     }
-                }
 
-                // We need at least one virtual device to contain virtual sensors
-                if (!isVirtualDeviceFound)
-                {
-                    device = new DeviceItem();
-                    device.IsVirtual = true;
-                    device.DeviceType = DeviceType.Virtual;
-                    device.SerialNumber = typeof(App).ToString();
+                    // We need at least one virtual device to contain virtual sensors
+                    if (!isVirtualDeviceFound)
+                    {
+                        device = new DeviceItem();
+                        device.IsVirtual = true;
+                        device.DeviceType = DeviceType.Virtual;
+                        device.SerialNumber = typeof(App).ToString();
 
-                    Package package = Package.Current;
-                    PackageId packageId = package.Id;
-                    PackageVersion packageVersion = packageId.Version;
-                    device.FirmwareVersion = string.Format("{0}.{1}.{2}",
-                        packageVersion.Major,
-                        packageVersion.Minor,
-                        packageVersion.Revision);
+                        Package package = Package.Current;
+                        PackageId packageId = package.Id;
+                        PackageVersion packageVersion = packageId.Version;
+                        device.FirmwareVersion = string.Format("{0}.{1}.{2}",
+                            packageVersion.Major,
+                            packageVersion.Minor,
+                            packageVersion.Revision);
 
-                    this.Add(device);
+                        this.Add(device);
+                    }
                 }
             }
             catch (Exception ex)

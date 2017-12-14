@@ -4,7 +4,6 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////    
 
-using GalaSoft.MvvmLight.Messaging;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using Microsoft.Graphics.Canvas.Text;
 using System;
@@ -14,6 +13,7 @@ using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 
 namespace InfinityGroup.VesselMonitoring.Controls
@@ -24,6 +24,43 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
         public BaseGauge()
         {
+            // Establish the event handlers for moving the gauge around the screen with the pointer
+            this.ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY;
+            this.ManipulationStarted += BaseGauge_ManipulationStarted;
+            this.ManipulationCompleted += BaseGauge_ManipulationCompleted;
+            this.ManipulationDelta += BaseGauge_ManipulationDelta;
+
+            this.InEditMode = true;
+        }
+
+        /// <summary>
+        /// Move the gauge around the screen by the amount specified in ManipulationDeltaRoutedEventArgs
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BaseGauge_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            if (this.InEditMode)
+            {
+                this.Left += e.Delta.Translation.X * e.Delta.Scale;
+                this.Top += e.Delta.Translation.Y * e.Delta.Scale;
+            }
+        }
+
+        private void BaseGauge_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
+        {
+            if (this.InEditMode)
+            {
+                this.Opacity = 1.0;
+            }
+        }
+
+        private void BaseGauge_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
+        {
+            if (this.InEditMode)
+            {
+                this.Opacity = 0.5;
+            }
         }
 
         #region Divisions
@@ -47,21 +84,21 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
         #endregion
 
-        #region GaugeArcBrush
-        public static readonly DependencyProperty GaugeArcBrushProperty = DependencyProperty.Register(
-            "GaugeArcBrush",
-            typeof(Brush),
+        #region GaugeColor
+        public static readonly DependencyProperty GaugeColorProperty = DependencyProperty.Register(
+            "GaugeColor",
+            typeof(Color),
             typeof(BaseGauge),
-            new PropertyMetadata(new SolidColorBrush(Windows.UI.Colors.LightGray),
-                                 new PropertyChangedCallback(OnGaugeArcBrushPropertyChanged)));
+            new PropertyMetadata(Colors.LightGray,
+                                 new PropertyChangedCallback(OnGaugeColorPropertyChanged)));
 
-        public Brush GaugeArcBrush
+        public Color GaugeColor
         {
-            get { return (Brush)this.GetValue(GaugeArcBrushProperty); }
-            set { this.SetValue(GaugeArcBrushProperty, value); }
+            get { return (Color)this.GetValue(GaugeColorProperty); }
+            set { this.SetValue(GaugeColorProperty, value); }
         }
 
-        protected static void OnGaugeArcBrushPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        protected static void OnGaugeColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             BaseGauge g = d as BaseGauge;
         }
@@ -228,6 +265,26 @@ namespace InfinityGroup.VesselMonitoring.Controls
         }
 
         protected static void OnInnerCircleDeltaPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            BaseGauge g = d as BaseGauge;
+        }
+        #endregion
+
+        #region InEditMode
+        public static readonly DependencyProperty InEditModeProperty = DependencyProperty.Register(
+            "InEditMode",
+            typeof(bool),
+            typeof(BaseGauge),
+            new PropertyMetadata(false,
+                                 new PropertyChangedCallback(OnInEditModePropertyChanged)));
+
+        public bool InEditMode
+        {
+            get { return (bool)this.GetValue(InEditModeProperty); }
+            set { this.SetValue(InEditModeProperty, value); }
+        }
+
+        protected static void OnInEditModePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             BaseGauge g = d as BaseGauge;
         }
@@ -823,6 +880,11 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 gaugeWidthBinding.Source = value;
                 gaugeWidthBinding.Path = new PropertyPath("GaugeWidth");
                 this.SetBinding(GaugeWidthProperty, gaugeWidthBinding);
+
+                Binding gaugeColorBinding = new Binding();
+                gaugeColorBinding.Source = value;
+                gaugeColorBinding.Path = new PropertyPath("GaugeColor");
+                this.SetBinding(GaugeColorProperty, gaugeColorBinding);
 
                 Binding innerCircleDeltaBinding = new Binding();
                 innerCircleDeltaBinding.Source = value;
@@ -1504,6 +1566,8 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
             }
         }
+
+        public object App { get; private set; }
 
         #endregion
 

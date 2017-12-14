@@ -6,10 +6,13 @@
 
 using GalaSoft.MvvmLight;
 using InfinityGroup.VesselMonitoring.Globals;
+using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Types;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -17,6 +20,7 @@ using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Windows.UI;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -28,6 +32,33 @@ namespace InfinityVesselMonitoringSoftware
 
         public VesselSettings()
         {
+        }
+
+        public long AISRefreshInterval
+        {
+            get { return GetPropertyRowValue<long>(() => AISRefreshInterval); }
+            set { SetPropertyRowValue<long>(() => AISRefreshInterval, value); }
+        }
+
+        public async Task BeginCommit()
+        {
+            // Persist the row into the database
+            await App.BuildDBTables.VesselSettingsTable.BeginCommitAll(
+                () =>
+                {
+                },
+                (ex) =>
+                {
+                    Telemetry.TrackException(ex);
+                });
+        }
+
+        public async Task BeginDeleteImage(string imageName)
+        {
+            // Every image name starts with c_imagePrefix.  Prepend this to the
+            // image name before attempting to delete it.
+            string fullImageName = c_imagePrefix + imageName.Trim();
+            await App.BuildDBTables.VesselSettingsTable.BeginRemove(fullImageName);
         }
 
         public string FromEmailAddress
@@ -69,9 +100,9 @@ namespace InfinityVesselMonitoringSoftware
         /// Get a list of bitmap images saved in the database.
         /// </summary>
         /// <returns></returns>
-        public List<string> GetImageNames()
+        public ObservableCollection<string> ImageNameList()
         {
-            List<string> imageNames = new List<string>();
+            ObservableCollection<string> imageNames = new ObservableCollection<string>();
             foreach (ItemRow row in App.BuildDBTables.VesselSettingsTable.Rows)
             {
                 if (row.Field<string>("Property").ToLowerInvariant().StartsWith(c_imagePrefix))
@@ -81,6 +112,18 @@ namespace InfinityVesselMonitoringSoftware
             }
 
             return imageNames;
+        }
+
+        public bool IsMKS
+        {
+            get { return GetPropertyRowValue<bool>(() => IsMKS); }
+            set { SetPropertyRowValue<bool>(() => IsMKS, value); }
+        }
+
+        public bool IsNightMode
+        {
+            get { return GetPropertyRowValue<bool>(() => IsNightMode); }
+            set { SetPropertyRowValue<bool>(() => IsNightMode, value); }
         }
 
         /// <summary>
@@ -106,6 +149,7 @@ namespace InfinityVesselMonitoringSoftware
 
             // Save the value in the DB.
             SetPropertyRowValue<byte[]>(c_imagePrefix + imageName, buffer);
+            RaisePropertyChanged("ImageNameList");
         }
 
         public int SMTPEncryptionMethod
@@ -124,6 +168,19 @@ namespace InfinityVesselMonitoringSoftware
         {
             get { return GetPropertyRowValue<string>(() => SMTPServerName); }
             set { SetPropertyRowValue<string>(() => SMTPServerName, value); }
+        }
+        public Color ThemeColor
+        {
+            get
+            {
+                Int64 i64Color = GetPropertyRowValue<Int64>("ThemeColor");
+                return Utilities.ColorFromI64(i64Color);
+            }
+            set
+            {
+                Int64 i64Color = Utilities.ColorToI64(value);
+                SetPropertyRowValue<Int64>("ThemeColor", i64Color);
+            }
         }
 
         public string ToEmailAddress

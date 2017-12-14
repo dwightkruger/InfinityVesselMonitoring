@@ -34,6 +34,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         GaugeTypeEnum GaugeType { get; set; }
         double GaugeWidth { get; set; }
         int InnerCircleDelta { get; set; }
+        bool IsDirty { get; }
         double MajorTicLength { get; set; }
         int MinorTicsPerMajorTic   { get; set; }
         int MediumTicsPerMajorTic  { get; set; }

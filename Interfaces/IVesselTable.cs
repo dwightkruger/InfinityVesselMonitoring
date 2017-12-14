@@ -20,7 +20,6 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         void Load();
         Task BeginRemove(Int64 id);
         Task BeginRemove(ItemRow row);
-
         void AddRow(ItemRow row);
         ItemColumnCollection Columns { get; }
         ItemTable Copy();

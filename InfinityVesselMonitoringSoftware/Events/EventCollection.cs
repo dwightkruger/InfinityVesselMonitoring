@@ -19,7 +19,7 @@ namespace InfinityVesselMonitoringSoftware.Events
 {
     public class EventCollection : ObservableCollection<IEventItem>
     {
-        private object _lock = new object();
+        private readonly AsyncReaderWriterLock _lock = new AsyncReaderWriterLock();
         private ObservableCollection<IEventItem> _alarmOnList = new ObservableCollection<IEventItem>();
 
         public EventCollection()
@@ -29,11 +29,19 @@ namespace InfinityVesselMonitoringSoftware.Events
         }
 
         /// <summary>
+        /// Do not call this function. Call await BeginAdd instead.
+        /// </summary>
+        /// <param name="eventItem"></param>
+        new public void Add(IEventItem eventItem)
+        {
+            throw new NotImplementedException("Use BeginAdd");
+        }
+        /// <summary>
         /// Add an event, and send email if appropriate
         /// </summary>
         /// <param name="myEventItem"></param>
         /// <param name="bRaiseEvent"></param>
-        async public Task AddEvent(IEventItem myEventItem, bool bRaiseEvent)
+        async public Task BeginAddEvent(IEventItem myEventItem, bool bRaiseEvent)
         {
             bool sendEventEmail = false;
             await myEventItem.BeginCommit();
@@ -44,18 +52,18 @@ namespace InfinityVesselMonitoringSoftware.Events
 
             if (myEventItem.IsAlarmOn)
             {
-                lock (_lock)
+                using (var releaser = await _lock.WriterLockAsync())
                 {
                     _alarmOnList.Add(myEventItem);
                 }
+
                 await AlarmAudio.PlayAlarm(false, myEventItem.EventId);
             }
 
-            lock (_lock)
+            using (var releaser = await _lock.WriterLockAsync())
             {
                 base.Add(myEventItem);
             }
-
 
             if (sendEventEmail)
             {
@@ -68,11 +76,11 @@ namespace InfinityVesselMonitoringSoftware.Events
         /// </summary>
         /// <param name="myEventID"></param>
         /// <returns></returns>
-        async public Task AlarmAcknowledge(int myEventId)
+        async public Task BeginAlarmAcknowledge(int myEventId)
         {
             // Find the event we are acknowledging.
             IEnumerable<IEventItem> query = null;
-            lock (_lock)
+            using (var releaser = await _lock.ReaderLockAsync())
             {
                 query = from item in this
                         where item.EventId == myEventId
@@ -89,7 +97,7 @@ namespace InfinityVesselMonitoringSoftware.Events
                 acknowledgedEvent.EventCode = EventCode.AlarmAcknowledged;
                 acknowledgedEvent.Value = 0;
 
-                await this.AddEvent(acknowledgedEvent, true);
+                await this.BeginAddEvent(acknowledgedEvent, true);
 
                 // if this event has triggered an alarm, cancel that alarm.
                 AlarmAudio.CancelAlarm(triggerEvent.EventId);
@@ -102,12 +110,12 @@ namespace InfinityVesselMonitoringSoftware.Events
         /// </summary>
         /// <param name="myEventId"></param>
         /// <returns></returns>
-        public IEventItem FindByEventId(int myEventId)
+        async public Task<IEventItem> BeginFindByEventId(int myEventId)
         {
             IEventItem result = null;
             IEnumerable<IEventItem> query = null;
 
-            lock (_lock)
+            using (var releaser = await _lock.ReaderLockAsync())
             {
                 query = from item in this
                         where item.EventId == myEventId
@@ -128,11 +136,11 @@ namespace InfinityVesselMonitoringSoftware.Events
         /// </summary>
         /// <param name="myAlarmItem"></param>
         /// <remarks></remarks>
-        public void RemoveEvent(IEventItem myEventItem)
+        async public Task BeginRemoveEvent(IEventItem myEventItem)
         {
             IEnumerable<IEventItem> query = null;
 
-            lock (_lock)
+            using (var releaser = await _lock.WriterLockAsync())
             {
                 // Delete the item from the AlarmON list
                 query = from item in _alarmOnList
@@ -153,7 +161,10 @@ namespace InfinityVesselMonitoringSoftware.Events
 
             if (query.Count() != 0)
             {
-                base.Remove(query.First<IEventItem>());
+                using (var releaser = await _lock.WriterLockAsync())
+                {
+                    base.Remove(query.First<IEventItem>());
+                }
             }
         }
 
@@ -162,9 +173,9 @@ namespace InfinityVesselMonitoringSoftware.Events
         /// </summary>
         /// <param name="myAlarmID"></param>
         /// <remarks></remarks>
-        public void RemoveEvent(int myEventId)
+        async public Task BeginRemoveEvent(int myEventId)
         {
-            lock (_lock)
+            using (var releaser = await _lock.WriterLockAsync())
             {
                 // Delete the event if it is still in this collection
                 IEnumerable<IEventItem> query = null;
@@ -176,17 +187,14 @@ namespace InfinityVesselMonitoringSoftware.Events
                     base.Remove(query.First<IEventItem>());
                 }
 
-                lock (_lock)
-                {
-                    // Delete the item from the AlarmON list
-                    query = from item in _alarmOnList
-                            where item.EventId == myEventId
-                            select item;
+                // Delete the item from the AlarmON list
+                query = from item in _alarmOnList
+                        where item.EventId == myEventId
+                        select item;
 
-                    if (query.Count() != 0)
-                    {
-                        _alarmOnList.Remove(query.First<IEventItem>());
-                    }
+                if (query.Count() != 0)
+                {
+                    _alarmOnList.Remove(query.First<IEventItem>());
                 }
             }
         }
@@ -195,11 +203,11 @@ namespace InfinityVesselMonitoringSoftware.Events
         /// Delete all of the events for a given sensor from this collection
         /// </summary>
         /// <param name="mySensorId"></param>
-        public void DeleteEventsForSensor(int mySensorId)
+        async public Task BeginDeleteEventsForSensor(int mySensorId)
         {
             List<IEventItem> myEventList = null;
 
-            lock (_lock)
+            using (var releaser = await _lock.WriterLockAsync())
             {
                 // Get the list of events corresponding to this sensor
                 IEnumerable<IEventItem> query = null;
@@ -214,7 +222,7 @@ namespace InfinityVesselMonitoringSoftware.Events
             {
                 foreach (IEventItem item in myEventList)
                 {
-                    RemoveEvent(item);
+                    await BeginRemoveEvent(item);
                 }
             }
         }
@@ -226,7 +234,7 @@ namespace InfinityVesselMonitoringSoftware.Events
         /// <param name="myMaxAlarms"></param>
         /// <returns></returns>
         /// <remarks></remarks>
-        public List<IEventItem> GetAllEvents(int myMaxAlarms)
+        async public Task<List<IEventItem>> BeginGetAllEvents(int myMaxAlarms)
         {
             List<IEventItem> myEventItemList = null;
             myEventItemList = new List<IEventItem>(100);
@@ -234,7 +242,7 @@ namespace InfinityVesselMonitoringSoftware.Events
             // Get the list of alarm rows corresponding to this sensor
             IEnumerable<IEventItem> query = null;
 
-            lock (_lock)
+            using (var releaser = await _lock.ReaderLockAsync())
             {
                 query = from item in this.AsEnumerable()
                         orderby item.EventDateTimeUTC descending
@@ -251,9 +259,9 @@ namespace InfinityVesselMonitoringSoftware.Events
         /// Get a list of all of the ON alarms.  
         /// </summary>
         /// <returns></returns>
-        public ObservableCollection<IEventItem> GetAllOnAlarmsCollection()
+        async public Task<ObservableCollection<IEventItem>> BeginGetAllOnAlarmsCollection()
         {
-            lock (_lock)
+            using (var releaser = await _lock.ReaderLockAsync())
             {
                 //_AlarmOnList.Sort(_Comparer);
                 return _alarmOnList;
@@ -265,9 +273,9 @@ namespace InfinityVesselMonitoringSoftware.Events
         /// change after we pass it to the caller.
         /// </summary>
         /// <returns></returns>
-        public List<IEventItem> GetAllOnAlarmsList()
+        async public Task<List<IEventItem>> BeginGetAllOnAlarmsList()
         {
-            lock (_lock)
+            using (var releaser = await _lock.ReaderLockAsync())
             {
                 //_AlarmOnList.Sort(_Comparer);
                 return _alarmOnList.ToList<IEventItem>();
@@ -295,8 +303,6 @@ namespace InfinityVesselMonitoringSoftware.Events
 
         private void SendEventEmail(IEventItem myEvent)
         {
-            //if (_locator.VesselAdminParameters.SendAlarmEmail)
-            //{
             ISensorItem mySensor = App.SensorCollection.FindBySensorId(myEvent.SensorId);
 
             if (mySensor != null)

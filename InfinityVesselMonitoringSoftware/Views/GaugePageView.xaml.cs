@@ -9,6 +9,8 @@ using GalaSoft.MvvmLight.Threading;
 using InfinityGroup.VesselMonitoring.Controls;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityVesselMonitoringSoftware;
+using InfinityVesselMonitoringSoftware.Editors.GaugePageEditor;
+using InfinityVesselMonitoringSoftware.Gauges;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -42,7 +44,7 @@ namespace VesselMonitoringSuite.Views
             //{
             //    for (int col = 0; col < 3; col++)
             //    {
-            //        GaugeItem gaugeItem = new GaugeItem();
+            //        IGaugeItem gaugeItem = new GaugeItem(this.ViewModel.GaugePageItem.PageId);
             //        gaugeItem.GaugeHeight = gaugeItem.GaugeWidth = 300;
 
             //        ArcGaugeLeft arcGaugeLeft = new ArcGaugeLeft();
@@ -58,6 +60,7 @@ namespace VesselMonitoringSuite.Views
                 if (gaugeItemList[0].PageId != this.ViewModel.GaugePageItem.PageId) return;
 
                 this.MainCanvas.Children.Clear();
+
                 foreach (IGaugeItem item in gaugeItemList)
                 {
                     switch (item.GaugeType)
@@ -89,7 +92,6 @@ namespace VesselMonitoringSuite.Views
         public GaugePageViewModel ViewModel
         {
             get { return this.VM; }
-            set { this.VM = value; }
         }
 
         private void BuildLeftArcGauge(IGaugeItem gaugeItem)
@@ -231,8 +233,19 @@ namespace VesselMonitoringSuite.Views
             source.InvalidateMeasure();
         }
 
-        private void MainCanvas_DropCompleted(UIElement sender, DropCompletedEventArgs args)
+        private void MainCanvas_ManipulationStarted(object sender, Windows.UI.Xaml.Input.ManipulationStartedRoutedEventArgs e)
         {
+
+        }
+
+        private void MainCanvas_ManipulationCompleted(object sender, Windows.UI.Xaml.Input.ManipulationCompletedRoutedEventArgs e)
+        {
+
+        }
+
+        private void MainCanvas_ManipulationDelta(object sender, Windows.UI.Xaml.Input.ManipulationDeltaRoutedEventArgs e)
+        {
+
         }
     }
 }

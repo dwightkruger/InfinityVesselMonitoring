@@ -4,9 +4,12 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
+using System.Threading.Tasks;
+
 namespace InfinityGroup.VesselMonitoring.Interfaces
 {
     public interface IVesselSettingsTable : IVesselTable
     {
+        Task BeginRemove(string propertyName);
     }
 }

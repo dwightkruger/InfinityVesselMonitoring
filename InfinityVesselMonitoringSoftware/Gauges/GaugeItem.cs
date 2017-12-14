@@ -34,6 +34,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
         private UndoableProperty<double> _gaugeWidth;
         private UndoableProperty<double> _gaugeLeft;
         private UndoableProperty<double> _gaugeTop;
+        private UndoableProperty<Color> _gaugeColor;
         private UndoableProperty<int> _divisions;
         private UndoableProperty<int> _minorTicsPerMajorTic;
         private UndoableProperty<int> _mediumTicsPerMajorTic;
@@ -62,6 +63,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
         public const string GaugeWidthPropertyName = "GaugeWidth";
         public const string GaugeLeftPropertyName = "GaugeLeft";
         public const string GaugeTopPropertyName = "GaugeTop";
+        public const string GaugeColorPropertyName = "GaugeColor";
         public const string DivisionsPropertyName = "Divisions";
         public const string MinorTicsPerMajorTicPropertyName = "MinorTicsPerMajorTic";
         public const string MediumTicsPerMajorTicPropertyName = "MediumTicsPerMajorTic";
@@ -99,6 +101,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
 
             _gaugeLeft = new UndoableProperty<double>(this, GaugeLeftPropertyName, this._context, 0);
             _gaugeTop = new UndoableProperty<double>(this, GaugeTopPropertyName, this._context, 0);
+            _gaugeColor = new UndoableProperty<Color>(this, GaugeColorPropertyName, this._context, Colors.White);
             _gaugeHeight = new UndoableProperty<double>(this, GaugeHeightPropertyName, this._context, 400);
             _gaugeWidth = new UndoableProperty<double>(this, GaugeWidthPropertyName, this._context, 400);
             _sensorId = new UndoableProperty<Int64>(this, SensorIdPropertyName, this._context, -1);
@@ -149,6 +152,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
 
             _gaugeLeft = new UndoableProperty<double>(this, GaugeLeftPropertyName, this._context, this.Row.Field<double>(GaugeLeftPropertyName));
             _gaugeTop = new UndoableProperty<double>(this, GaugeTopPropertyName, this._context, this.Row.Field<double>(GaugeTopPropertyName));
+            _gaugeColor = new UndoableProperty<Color>(this, GaugeColorPropertyName, this._context, this.Row.Field<Color>(GaugeColorPropertyName));
             _gaugeHeight = new UndoableProperty<double>(this, GaugeHeightPropertyName, this._context, this.Row.Field<double>(GaugeHeightPropertyName));
             _gaugeWidth = new UndoableProperty<double>(this, GaugeWidthPropertyName, this._context, this.Row.Field<double>(GaugeWidthPropertyName));
             _sensorId = new UndoableProperty<Int64>(this, SensorIdPropertyName, this._context, this.Row.Field<Int64>(SensorIdPropertyName));
@@ -275,6 +279,17 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _gaugeTop.SetValue(value);
                 Row.SetField<double>(GaugeTopPropertyName, value);
                 RaisePropertyChanged(() => GaugeTop);
+            }
+        }
+
+        public Color GaugeColor
+        {
+            get { return _gaugeColor.GetValue(); }
+            set
+            {
+                _gaugeColor.SetValue(value);
+                Row.SetField<Color>(GaugeColorPropertyName, value);
+                RaisePropertyChanged(() => GaugeColor);
             }
         }
 
