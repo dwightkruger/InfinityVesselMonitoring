@@ -38,7 +38,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     "Manufacturer    TEXT     NOT NULL, \n " +
                     "PropertyBag     TEXT     NOT NULL, \n " +
                     "ReceivePGNList  TEXT     NOT NULL, \n " +
-                    "SerialNumber    TEXT     NOT NULL CONSTRAINT CeProp_Unique UNIQUE, \n " +
+                    "SerialNumber    TEXT     NOT NULL, \n " +
                     "SoftwareVersion TEXT     NOT NULL, \n " +
                     "TransmitPGNList TEXT     NOT NULL  \n " +
                     ") ";

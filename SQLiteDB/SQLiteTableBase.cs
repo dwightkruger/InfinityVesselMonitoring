@@ -18,13 +18,10 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
         protected abstract string GetSelectAllSql();
         protected abstract void FillSelectAllStatement(ISQLiteStatement statement);
 
-
         protected abstract TItemType CreateItem(ISQLiteStatement statement);
-
 
         protected abstract string GetSelectItemSql();
         protected abstract void FillSelectItemStatement(ISQLiteStatement statement, TKeyType key);
-
 
         protected abstract string GetDeleteItemSql();
         protected abstract void FillDeleteItemStatement(ISQLiteStatement statement, TKeyType key);

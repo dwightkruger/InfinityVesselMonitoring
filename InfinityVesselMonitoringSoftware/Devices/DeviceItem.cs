@@ -65,7 +65,7 @@ namespace VesselMonitoringSuite.Devices
                 await App.BuildDBTables.DeviceTable.BeginCommitRow(this.Row,
                     () =>
                     {
-                        Debug.Assert(Row.Field<int>("DeviceId") > 0);
+                        Debug.Assert(Row.Field<Int64>("DeviceId") > 0);
                     },
                     (ex) =>
                     {

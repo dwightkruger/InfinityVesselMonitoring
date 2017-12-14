@@ -57,7 +57,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     "SensorType           INTEGER       NOT NULL, \n " +
                     "SensorUnits          INTEGER       NOT NULL, \n " +
                     "SensorUsage          INTEGER       NOT NULL, \n " +
-                    "SerialNumber         TEXT          NOT NULL CONSTRAINT CeProp_Unique UNIQUE, \n " +
+                    "SerialNumber         TEXT          NOT NULL, \n " +
                     "ShowNominalValue     BOOLEAN       NOT NULL, \n " +
                     "Throttle             INTEGER       NOT NULL, \n " +
                     "FOREIGN KEY(DeviceId) REFERENCES DeviceTable(DeviceId) \n" +
