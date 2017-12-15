@@ -574,10 +574,10 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             get
             {
                 if (this.Row == null) return false;                             // We do not have any data
-                if (Row.RowState != ItemRowState.Unchanged) return true;    // No changes have been made
-                if (_propertyBag == null) return false;                     // We do not have a property blob
+                if (this.Row.RowState != ItemRowState.Unchanged) return true;   // No changes have been made
+                if (_propertyBag == null) return false;                         // We do not have a property blob
 
-                return PropertyBag.IsDirty;
+                return this.PropertyBag.IsDirty;
             }
         }
         public PropertyBag PropertyBag

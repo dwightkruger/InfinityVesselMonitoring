@@ -54,8 +54,7 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
                         },
                         () =>
                         {
-                            //return this.IsDirty;
-                            return true;
+                            return this.IsDirty;
                         }
                        );
                 }
