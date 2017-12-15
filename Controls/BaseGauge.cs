@@ -6,7 +6,6 @@
 
 using InfinityGroup.VesselMonitoring.Controls.Converters;
 using InfinityGroup.VesselMonitoring.Interfaces;
-using InfinityGroup.VesselMonitoring.Utilities;
 using Microsoft.Graphics.Canvas.Text;
 using System;
 using System.Collections.ObjectModel;
@@ -17,7 +16,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 
 namespace InfinityGroup.VesselMonitoring.Controls
 {
@@ -864,21 +862,25 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 Binding gaugeHeightBinding = new Binding();
                 gaugeHeightBinding.Source = value;
                 gaugeHeightBinding.Path = new PropertyPath("GaugeHeight");
+                gaugeHeightBinding.Mode = BindingMode.TwoWay;
                 this.SetBinding(GaugeHeightProperty, gaugeHeightBinding);
 
                 Binding gaugeLeftBinding = new Binding();
                 gaugeLeftBinding.Source = value;
                 gaugeLeftBinding.Path = new PropertyPath("GaugeLeft");
+                gaugeLeftBinding.Mode = BindingMode.TwoWay;
                 this.SetBinding(LeftProperty, gaugeLeftBinding);
 
                 Binding gaugeTopBinding = new Binding();
                 gaugeTopBinding.Source = value;
                 gaugeTopBinding.Path = new PropertyPath("GaugeTop");
+                gaugeTopBinding.Mode = BindingMode.TwoWay;
                 this.SetBinding(TopProperty, gaugeTopBinding);
 
                 Binding gaugeWidthBinding = new Binding();
                 gaugeWidthBinding.Source = value;
                 gaugeWidthBinding.Path = new PropertyPath("GaugeWidth");
+                gaugeWidthBinding.Mode = BindingMode.TwoWay;
                 this.SetBinding(GaugeWidthProperty, gaugeWidthBinding);
 
                 Binding gaugeColorBinding = new Binding();

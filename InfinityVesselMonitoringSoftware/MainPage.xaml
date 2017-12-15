@@ -19,11 +19,7 @@
 
         <Viewbox Stretch="Uniform">
             <Grid Height="1000" Width="1600">
-                <Pivot x:Name="MainPivot"/>
-                <editors:EditRibbonView 
-                    x:Name="EditRibbonView" 
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Bottom"/>
+                <Pivot x:Name="MainPivot" IsHitTestVisible="True"/>
             </Grid>
         </Viewbox>
     </Grid>

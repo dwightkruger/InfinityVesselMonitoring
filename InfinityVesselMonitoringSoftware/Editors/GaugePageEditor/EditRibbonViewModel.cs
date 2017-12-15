@@ -7,8 +7,11 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using InfinityGroup.VesselMonitoring.Interfaces;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Linq;
+using System.Collections.ObjectModel;
 
 namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
 {
@@ -26,7 +29,7 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
         private RelayCommand _rightAlignTextCommand;
         private RelayCommand _centerAlignTextCommand;
 
-        private IGaugeItem _gaugeItem = null;
+        private List<IGaugeItem> _gaugeItemList = null;
         private bool _isEditMode = false;
 
         public bool IsEditMode
@@ -44,12 +47,14 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
                     _saveCommand = new RelayCommand(
                         () =>
                         {
-                            Task.Run(async () => { await App.GaugeItemCollection.BeginCommitAll(); }).Wait();
+                            Task.Run(async () => 
+                            {
+                                await this.BeginCommit();
+                            }).Wait();
                         },
                         () =>
                         {
-                            //if (null == this.GaugeItem) return false;
-                            //return this.GaugeItem.IsDirty;
+                            //return this.IsDirty;
                             return true;
                         }
                        );
@@ -68,11 +73,11 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
                     _revertCommand = new RelayCommand(
                         () =>
                         {
+                            this.Rollback();
                         },
                         () =>
                         {
-                            if (null == this.GaugeItem) return false;
-                            return this.GaugeItem.IsDirty;
+                            return this.IsDirty;
                         }
                        );
                 }
@@ -114,9 +119,9 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
                         },
                         () =>
                         {
-                            if (null == this.GaugeItem) return false;
-                            if (this.GaugeItem.GaugeType != GaugeTypeEnum.TextControl ||
-                                this.GaugeItem.GaugeType != GaugeTypeEnum.TextGauge) return false;
+                            if (!this.IsGaugeType(GaugeTypeEnum.TextControl) &&
+                                !this.IsGaugeType(GaugeTypeEnum.TextGauge)) return false;
+
                             return true;
                         }
                        );
@@ -138,9 +143,9 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
                         },
                         () =>
                         {
-                            if (null == this.GaugeItem) return false;
-                            if (this.GaugeItem.GaugeType != GaugeTypeEnum.TextControl ||
-                                this.GaugeItem.GaugeType != GaugeTypeEnum.TextGauge) return false;
+                            if (!this.IsGaugeType(GaugeTypeEnum.TextControl) &&
+                                !this.IsGaugeType(GaugeTypeEnum.TextGauge)) return false;
+
                             return true;
                         }
                        );
@@ -162,9 +167,9 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
                         },
                         () =>
                         {
-                            if (null == this.GaugeItem) return false;
-                            if (this.GaugeItem.GaugeType != GaugeTypeEnum.TextControl ||
-                                this.GaugeItem.GaugeType != GaugeTypeEnum.TextGauge) return false;
+                            if (!this.IsGaugeType(GaugeTypeEnum.TextControl) &&
+                                !this.IsGaugeType(GaugeTypeEnum.TextGauge)) return false;
+
                             return true;
                         }
                        );
@@ -186,9 +191,9 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
                         },
                         () =>
                         {
-                            if (null == this.GaugeItem) return false;
-                            if (this.GaugeItem.GaugeType != GaugeTypeEnum.TextControl ||
-                                this.GaugeItem.GaugeType != GaugeTypeEnum.TextGauge) return false;
+                            if (!this.IsGaugeType(GaugeTypeEnum.TextControl) &&
+                                !this.IsGaugeType(GaugeTypeEnum.TextGauge)) return false;
+
                             return true;
                         }
                        );
@@ -210,9 +215,9 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
                         },
                         () =>
                         {
-                            if (null == this.GaugeItem) return false;
-                            if (this.GaugeItem.GaugeType != GaugeTypeEnum.TextControl ||
-                                this.GaugeItem.GaugeType != GaugeTypeEnum.TextGauge) return false;
+                            if (!this.IsGaugeType(GaugeTypeEnum.TextControl) &&
+                                !this.IsGaugeType(GaugeTypeEnum.TextGauge)) return false;
+
                             return true;
                         }
                        );
@@ -234,9 +239,9 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
                         },
                         () =>
                         {
-                            if (null == this.GaugeItem) return false;
-                            if (this.GaugeItem.GaugeType != GaugeTypeEnum.TextControl ||
-                                this.GaugeItem.GaugeType != GaugeTypeEnum.TextGauge) return false;
+                            if (!this.IsGaugeType(GaugeTypeEnum.TextControl) &&
+                                !this.IsGaugeType(GaugeTypeEnum.TextGauge)) return false;
+
                             return true;
                         }
                        );
@@ -258,9 +263,9 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
                         },
                         () =>
                         {
-                            if (null == this.GaugeItem) return false;
-                            if (this.GaugeItem.GaugeType != GaugeTypeEnum.TextControl ||
-                                this.GaugeItem.GaugeType != GaugeTypeEnum.TextGauge) return false;
+                            if (!this.IsGaugeType(GaugeTypeEnum.TextControl) &&
+                                !this.IsGaugeType(GaugeTypeEnum.TextGauge)) return false;
+
                             return true;
                         }
                        );
@@ -282,9 +287,8 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
                         },
                         () =>
                         {
-                            if (null == this.GaugeItem) return false;
-                            if (this.GaugeItem.GaugeType != GaugeTypeEnum.TextControl ||
-                                this.GaugeItem.GaugeType != GaugeTypeEnum.TextGauge) return false;
+                            if (!this.IsGaugeType(GaugeTypeEnum.TextControl) &&
+                                !this.IsGaugeType(GaugeTypeEnum.TextGauge)) return false;
 
                             return true;
                         }
@@ -295,25 +299,94 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
             }
         }
 
-        public IGaugeItem GaugeItem
+        /// <summary>
+        /// THe list of gauges that can be edited.
+        /// </summary>
+        public List<IGaugeItem> GaugeItemList
         {
-            get { return _gaugeItem; }
+            get { return _gaugeItemList; }
             set
             {
-                Set<IGaugeItem>(() => GaugeItem, ref _gaugeItem, value );
-
-                _saveCommand.RaiseCanExecuteChanged();
-                _revertCommand.RaiseCanExecuteChanged();
-                _exitCommand.RaiseCanExecuteChanged();
-                _fontSizeIncreaseCommand.RaiseCanExecuteChanged();
-                _fontSizeDecreaseCommand.RaiseCanExecuteChanged();
-                _boldFontCommand.RaiseCanExecuteChanged();
-                _italicsFontCommand.RaiseCanExecuteChanged();
-                _underlineFontCommand.RaiseCanExecuteChanged();
-                _leftAlignTextCommand.RaiseCanExecuteChanged();
-                _rightAlignTextCommand.RaiseCanExecuteChanged();
-                _centerAlignTextCommand.RaiseCanExecuteChanged();
+                Set<List<IGaugeItem>>(() => GaugeItemList, ref _gaugeItemList, value );
+                RaisePropertyChangedAll();
             }
+        }
+
+        /// <summary>
+        /// The current selected gauge
+        /// </summary>
+        public IGaugeItem SelectedGaugeItem { get; set; }
+
+        /// <summary>
+        /// Are one or more of the gauge items in the list of the type specified?
+        /// </summary>
+        /// <param name="gaugeType"></param>
+        /// <returns></returns>
+        private bool IsGaugeType(GaugeTypeEnum gaugeType)
+        {
+            if (null == this.GaugeItemList) return false;
+            if (this.GaugeItemList.Count == 0) return false;
+
+            IEnumerable<IGaugeItem> query = _gaugeItemList.Where((item) => item.GaugeType == gaugeType);
+            return (query.Count<IGaugeItem>() > 0);
+        }
+
+        /// <summary>
+        /// Do any of the gauge items have unsaved changes?
+        /// </summary>
+        private bool IsDirty
+        {
+            get
+            {
+                if (null == this.GaugeItemList) return false;
+                if (this.GaugeItemList.Count == 0) return false;
+
+                IEnumerable<IGaugeItem> query = _gaugeItemList.Where((item) => item.IsDirty);
+                return (query.Count<IGaugeItem>() > 0);
+            }
+        }
+
+        /// <summary>
+        /// Save/commit any dirty gauge items to the sql database
+        /// </summary>
+        /// <returns></returns>
+        async private Task BeginCommit()
+        {
+            if (null == this.GaugeItemList) return;
+            if (this.GaugeItemList.Count == 0) return;
+
+            foreach (IGaugeItem gaugeItem in _gaugeItemList)
+            {
+                await gaugeItem.BeginCommit();
+            }
+        }
+
+        private void Rollback()
+        {
+            if (null == this.GaugeItemList) return;
+            if (this.GaugeItemList.Count == 0) return;
+
+            foreach (IGaugeItem gaugeItem in _gaugeItemList)
+            {
+                gaugeItem.Rollback();
+            }
+
+            RaisePropertyChangedAll();
+        }
+
+        private void RaisePropertyChangedAll()
+        {
+            _saveCommand?.RaiseCanExecuteChanged();
+            _revertCommand?.RaiseCanExecuteChanged();
+            _exitCommand?.RaiseCanExecuteChanged();
+            _fontSizeIncreaseCommand?.RaiseCanExecuteChanged();
+            _fontSizeDecreaseCommand?.RaiseCanExecuteChanged();
+            _boldFontCommand?.RaiseCanExecuteChanged();
+            _italicsFontCommand?.RaiseCanExecuteChanged();
+            _underlineFontCommand?.RaiseCanExecuteChanged();
+            _leftAlignTextCommand?.RaiseCanExecuteChanged();
+            _rightAlignTextCommand?.RaiseCanExecuteChanged();
+            _centerAlignTextCommand?.RaiseCanExecuteChanged();
         }
     }
 }

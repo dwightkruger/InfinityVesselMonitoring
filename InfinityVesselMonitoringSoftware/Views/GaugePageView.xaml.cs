@@ -13,14 +13,20 @@ using InfinityVesselMonitoringSoftware.Editors.GaugePageEditor;
 using InfinityVesselMonitoringSoftware.Gauges;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using VesselMonitoringSuite.ViewModels;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Storage;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Shapes;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -35,10 +41,14 @@ namespace VesselMonitoringSuite.Views
         /// their change handlers.
         /// </summary>
         private bool _ignorePropertyChange;
+        private EditRibbonView _editRibbon;
+        private ObservableCollection<IGaugeItem> _editGaugeItemList = new ObservableCollection<IGaugeItem>();
+        private List<Popup> _adornerList = new List<Popup>();
 
         public GaugePageView()
         {
             this.InitializeComponent();
+            this.PointerPressed += GaugePageView_PointerPressed;
 
             //for (int row = 0; row < 3; row++)
             //{
@@ -52,7 +62,7 @@ namespace VesselMonitoringSuite.Views
             //        arcGaugeLeft.IsOnline = true;
             //        this.MainCanvas.AddChildBaseGauge(arcGaugeLeft, row, col);
             //    }
-            //}
+            //}        
 
             Messenger.Default.Register<List<IGaugeItem>>(this, "BuildGaugeItemList", (gaugeItemList) =>
             {
@@ -86,7 +96,112 @@ namespace VesselMonitoringSuite.Views
                         case GaugeTypeEnum.TextGauge: break;
                     }
                 }
+
+                _editRibbon = new EditRibbonView();
+                _editRibbon.HorizontalAlignment = HorizontalAlignment.Left;
+                _editRibbon.VerticalAlignment = VerticalAlignment.Bottom;
+                _editRibbon.ViewModel.IsEditMode = true;
+                _editRibbon.ViewModel.GaugeItemList = gaugeItemList;
+
+                this.MainCanvas.Children.Add(_editRibbon);
             });
+        }
+
+        /// <summary>
+        /// When an object on the screen is selected, put an an adorder with handles so the object can be
+        /// resized, rotated, moved, etc.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GaugePageView_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            Image image = e.OriginalSource as Image;
+            if (null != image)
+            {
+                BaseGauge baseGauge = image.DataContext as BaseGauge;
+                if (null != baseGauge)
+                {
+                    IGaugeItem gaugeItem = baseGauge.GaugeItem;
+                    if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.Shift)
+                    {
+                        if (_editGaugeItemList.Contains(gaugeItem))
+                        {
+                            this.RemovePopupItem(gaugeItem);
+                        }
+                        else
+                        {
+                            this.AddPopupItem(gaugeItem);
+                        }
+                    }
+                    else
+                    {
+                        bool addPopItem = !_editGaugeItemList.Contains(gaugeItem);
+                        this.RemoveAllPopupItems();
+                        if (addPopItem)
+                        {
+                            this.AddPopupItem(gaugeItem);
+                        }
+                    }
+                }
+                else
+                {
+                    this.RemoveAllPopupItems();
+                }
+            }
+            else
+            {
+                this.RemoveAllPopupItems();
+            }
+        }
+
+        private void RemoveAllPopupItems()
+        {
+            while (_editGaugeItemList.Count > 0)
+            {
+                this.RemovePopupItem(_editGaugeItemList[0]);
+            }
+        }
+
+        private void RemovePopupItem(IGaugeItem gaugeItem)
+        {
+            int index = _editGaugeItemList.IndexOf(gaugeItem);
+            _editGaugeItemList.RemoveAt(index);
+
+            Popup popup = _adornerList[index];
+            popup.IsOpen = false;
+            _adornerList.RemoveAt(index);
+            this.MainCanvas.Children.Remove(popup);
+        }
+
+        private void AddPopupItem(IGaugeItem gaugeItem)
+        {
+            _editGaugeItemList.Add(gaugeItem);
+
+            Rectangle rectangle = new Rectangle()
+            {
+                Stroke = new SolidColorBrush(Colors.White),
+                StrokeThickness = 4,
+                Height = gaugeItem.GaugeHeight,
+                Width = gaugeItem.GaugeWidth
+            };
+
+
+            Popup popup = new Popup();
+            popup.Child = rectangle;
+
+            Binding gaugeLeftBinding = new Binding();
+            gaugeLeftBinding.Source = gaugeItem;
+            gaugeLeftBinding.Path = new PropertyPath("GaugeLeft");
+            popup.SetBinding(Popup.HorizontalOffsetProperty, gaugeLeftBinding);
+
+            Binding gaugeTopBinding = new Binding();
+            gaugeTopBinding.Source = gaugeItem;
+            gaugeTopBinding.Path = new PropertyPath("GaugeTop");
+            popup.SetBinding(Popup.VerticalOffsetProperty, gaugeTopBinding);
+
+            popup.IsOpen = true;
+            _adornerList.Add(popup);
+            this.MainCanvas.Children.Add(popup);
         }
 
         public GaugePageViewModel ViewModel
@@ -231,21 +346,6 @@ namespace VesselMonitoringSuite.Views
 
             // The length properties affect measuring.
             source.InvalidateMeasure();
-        }
-
-        private void MainCanvas_ManipulationStarted(object sender, Windows.UI.Xaml.Input.ManipulationStartedRoutedEventArgs e)
-        {
-
-        }
-
-        private void MainCanvas_ManipulationCompleted(object sender, Windows.UI.Xaml.Input.ManipulationCompletedRoutedEventArgs e)
-        {
-
-        }
-
-        private void MainCanvas_ManipulationDelta(object sender, Windows.UI.Xaml.Input.ManipulationDeltaRoutedEventArgs e)
-        {
-
         }
     }
 }

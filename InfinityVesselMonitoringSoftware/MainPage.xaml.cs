@@ -11,6 +11,7 @@ using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Utilities;
 using InfinityVesselMonitoringSoftware;
+using InfinityVesselMonitoringSoftware.Editors.GaugePageEditor;
 using InfinityVesselMonitoringSoftware.Gauges;
 using Microsoft.Graphics.Canvas.Text;
 using System;
@@ -57,8 +58,6 @@ namespace VesselMonitoring
             // Specify the startup mode to be full screen.
             //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
-
-            EditRibbonView.ViewModel.IsEditMode = true;
         }
 
         /// <summary>
@@ -521,26 +520,26 @@ namespace VesselMonitoring
 
         async private void BuildDemoGaugePages()
         {
-            await this.PopulateDemoDeviceCollection();
-            await this.PopulateDemoSensorCollection();
-            await this.PopulateDemoGaugePageCollection();
-            await this.PopulateDemoGaugeCollection();
+            //await this.PopulateDemoDeviceCollection();
+            //await this.PopulateDemoSensorCollection();
+            //await this.PopulateDemoGaugePageCollection();
+            //await this.PopulateDemoGaugeCollection();
 
-            //App.BuildDBTables.DeviceTable.Load();
-            //App.DeviceCollection.Clear();
-            //await App.DeviceCollection.BeginLoad();
+            App.BuildDBTables.DeviceTable.Load();
+            App.DeviceCollection.Clear();
+            await App.DeviceCollection.BeginLoad();
 
-            //App.BuildDBTables.SensorTable.Load();
-            //App.SensorCollection.Clear();
-            //await App.SensorCollection.BeginLoad();
+            App.BuildDBTables.SensorTable.Load();
+            App.SensorCollection.Clear();
+            await App.SensorCollection.BeginLoad();
 
-            //App.BuildDBTables.GaugePageTable.Load();
-            //App.GaugePageCollection.Clear();
-            //await App.GaugePageCollection.BeginLoad();
+            App.BuildDBTables.GaugePageTable.Load();
+            App.GaugePageCollection.Clear();
+            await App.GaugePageCollection.BeginLoad();
 
-            //App.BuildDBTables.GaugeTable.Load();
-            //App.GaugeItemCollection.Clear(); 
-            //await App.GaugeItemCollection.BeginLoad();
+            App.BuildDBTables.GaugeTable.Load();
+            App.GaugeItemCollection.Clear();
+            await App.GaugeItemCollection.BeginLoad();
 
             this.MainPivot.Items.Clear();
 
