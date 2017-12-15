@@ -5,6 +5,7 @@
     xmlns:local="using:InfinityGroup.VesselMonitoring.Controls"
     DataContext="{Binding RelativeSource={RelativeSource Self}}"    
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"            
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"      
     mc:Ignorable="d"
@@ -28,7 +29,7 @@
                 Loaded="canvasControl_Loaded" 
                 SizeChanged="canvasControl_SizeChanged"
                 CreateResources="canvasControl_CreateResources"/>
-
+            
             <Grid 
                 x:Name="DesignGrid"
                 Width="{x:Bind Path=GaugeWidth}"

@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
+using Microsoft.Toolkit.Uwp;
 
 namespace InfinityGroup.VesselMonitoring.Controls
 {
@@ -36,9 +37,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
         private Rectangle _swHandle;
         private Rectangle _wHandle;
         private List<Rectangle> _handleList = new List<Rectangle>();
-        private const int c_handleHeight = 12;
-        private CoreCursor _defaultCursor;
-        private static CoreCursor _nwCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.SizeNorthwestSoutheast, 0);
+        private const int c_handleHeight = 16;
 
         public Adorner(IGaugeItem gaugeItem)
         {
@@ -46,27 +45,25 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
             Rectangle rectangle = new Rectangle()
             {
-                Fill = c_transparentColor,
                 Stroke = c_handleColor,
                 StrokeThickness = 4,
                 Height = _gaugeItem.GaugeHeight,
                 Width = _gaugeItem.GaugeWidth,
             };
 
+            
             _grid.Children.Add(rectangle);
 
-            _nwHandle = CreateHandle(HorizontalAlignment.Left,   VerticalAlignment.Top,    new Point(1,1));
-            _nHandle  = CreateHandle(HorizontalAlignment.Center, VerticalAlignment.Top,    new Point(0,1));
-            _neHandle = CreateHandle(HorizontalAlignment.Right,  VerticalAlignment.Top,    new Point(1,1));
-            _eHandle  = CreateHandle(HorizontalAlignment.Right,  VerticalAlignment.Center, new Point(1,0));
-            _seHandle = CreateHandle(HorizontalAlignment.Right,  VerticalAlignment.Bottom, new Point(1,1));
-            _sHandle  = CreateHandle(HorizontalAlignment.Center, VerticalAlignment.Bottom, new Point(0,1));
-            _swHandle = CreateHandle(HorizontalAlignment.Left,   VerticalAlignment.Bottom, new Point(1,1));
-            _wHandle  = CreateHandle(HorizontalAlignment.Left,   VerticalAlignment.Center, new Point(1,0));
+            _nwHandle = CreateHandle(HorizontalAlignment.Left,   VerticalAlignment.Top,    new Point(1,1), CoreCursorType.SizeNorthwestSoutheast);
+            _nHandle  = CreateHandle(HorizontalAlignment.Center, VerticalAlignment.Top,    new Point(0,1), CoreCursorType.SizeNorthSouth);
+            _neHandle = CreateHandle(HorizontalAlignment.Right,  VerticalAlignment.Top,    new Point(1,1), CoreCursorType.SizeNortheastSouthwest);
+            _eHandle  = CreateHandle(HorizontalAlignment.Right,  VerticalAlignment.Center, new Point(1,0), CoreCursorType.SizeWestEast);
+            _seHandle = CreateHandle(HorizontalAlignment.Right,  VerticalAlignment.Bottom, new Point(1,1), CoreCursorType.SizeNorthwestSoutheast);
+            _sHandle  = CreateHandle(HorizontalAlignment.Center, VerticalAlignment.Bottom, new Point(0,1), CoreCursorType.SizeNorthSouth);
+            _swHandle = CreateHandle(HorizontalAlignment.Left,   VerticalAlignment.Bottom, new Point(1,1), CoreCursorType.SizeNortheastSouthwest);
+            _wHandle  = CreateHandle(HorizontalAlignment.Left,   VerticalAlignment.Center, new Point(1,0), CoreCursorType.SizeWestEast);
 
             _popup.Child = _grid;
-            _popup.GotFocus += Handle_GotFocus;
-            _popup.LostFocus += Handle_LostFocus;
 
             Binding gaugeLeftBinding = new Binding();
             gaugeLeftBinding.Source = _gaugeItem;
@@ -77,8 +74,6 @@ namespace InfinityGroup.VesselMonitoring.Controls
             gaugeTopBinding.Source = _gaugeItem;
             gaugeTopBinding.Path = new PropertyPath("GaugeTop");
             _popup.SetBinding(Popup.VerticalOffsetProperty, gaugeTopBinding);
-
-            _defaultCursor = Window.Current.CoreWindow.PointerCursor;
         }
 
         public bool IsOpen
@@ -95,7 +90,8 @@ namespace InfinityGroup.VesselMonitoring.Controls
         private Rectangle CreateHandle(
             HorizontalAlignment ha,
             VerticalAlignment va,
-            Point allowedDelta)
+            Point allowedDelta,
+            CoreCursorType cursorType)
         {
             Rectangle handle = new Rectangle()
             {
@@ -107,16 +103,15 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 HorizontalAlignment = ha,
                 VerticalAlignment = va,
                 Tag = allowedDelta,
-                IsHitTestVisible = true,
             };
 
             // Establish the event handlers for changing the size of this object
-            //handle.ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY;
-            //handle.ManipulationStarted += Handle_ManipulationStarted;
-            //handle.ManipulationCompleted += Handle_ManipulationCompleted;
-            //handle.ManipulationDelta += Handle_ManipulationDelta;
-            handle.GotFocus += Handle_GotFocus;
-            handle.LostFocus += Handle_LostFocus;
+            handle.ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY;
+            handle.ManipulationStarted += Handle_ManipulationStarted;
+            handle.ManipulationCompleted += Handle_ManipulationCompleted;
+            handle.ManipulationDelta += Handle_ManipulationDelta;
+
+            Microsoft.Toolkit.Uwp.UI.Extensions.Mouse.SetCursor(handle, cursorType);
 
             _handleList.Add(handle);
 
@@ -125,23 +120,6 @@ namespace InfinityGroup.VesselMonitoring.Controls
             return handle;
         }
 
-        private void Handle_LostFocus(object sender, RoutedEventArgs e)
-        {
-            Window.Current.CoreWindow.PointerCursor = _defaultCursor;
-        }
-
-        /// <summary>
-        /// When the handle gets focus, change the mouse pointer appropritately
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Handle_GotFocus(object sender, RoutedEventArgs e)
-        {
-            Rectangle handle = sender as Rectangle;         // Get the handle being moved
-            Point allowedDeleta = (Point)handle.Tag;        // Get the allowed X/Y deltas for this handle
-
-            Window.Current.CoreWindow.PointerCursor = _nwCursor;
-        }
 
         private void Handle_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
@@ -163,15 +141,10 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
         private void Handle_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
-            Window.Current.CoreWindow.PointerCursor = _defaultCursor;
         }
 
         private void Handle_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
-            Rectangle handle = sender as Rectangle;         // Get the handle being moved
-            Point allowedDeleta = (Point)handle.Tag;        // Get the allowed X/Y deltas for this handle
-
-            Window.Current.CoreWindow.PointerCursor = _nwCursor;
         }
 
         #region IDisposable Support

@@ -5,28 +5,20 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
 using GalaSoft.MvvmLight.Messaging;
-using GalaSoft.MvvmLight.Threading;
 using InfinityGroup.VesselMonitoring.Controls;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityVesselMonitoringSoftware;
 using InfinityVesselMonitoringSoftware.Editors.GaugePageEditor;
-using InfinityVesselMonitoringSoftware.Gauges;
+using Microsoft.Toolkit.Uwp.DeveloperTools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Globalization;
 using VesselMonitoringSuite.ViewModels;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
-using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Shapes;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -42,13 +34,22 @@ namespace VesselMonitoringSuite.Views
         /// </summary>
         private bool _ignorePropertyChange;
         private EditRibbonView _editRibbon;
-        private ObservableCollection<IGaugeItem> _editGaugeItemList = new ObservableCollection<IGaugeItem>();
+        private List<IGaugeItem> _gaugeItemSelectedList = new List<IGaugeItem>();
         private List<Adorner> _adornerList = new List<Adorner>();
+        private AlignmentGrid _alignmentGrid = new AlignmentGrid();
+        private static SolidColorBrush c_BlackBrush = new SolidColorBrush(Colors.Black);
 
         public GaugePageView()
         {
             this.InitializeComponent();
             this.PointerPressed += GaugePageView_PointerPressed;
+
+            _alignmentGrid.Opacity = 1;
+            _alignmentGrid.LineBrush = c_BlackBrush;
+            _alignmentGrid.HorizontalStep = 20;
+            _alignmentGrid.VerticalStep = 20;
+            _alignmentGrid.Height = 1000;
+            _alignmentGrid.Width = 2000;
 
             //for (int row = 0; row < 3; row++)
             //{
@@ -70,6 +71,7 @@ namespace VesselMonitoringSuite.Views
                 if (gaugeItemList[0].PageId != this.ViewModel.GaugePageItem.PageId) return;
 
                 this.MainCanvas.Children.Clear();
+                //this.MainCanvas.Children.Add(_alignmentGrid);
 
                 foreach (IGaugeItem item in gaugeItemList)
                 {
@@ -102,6 +104,7 @@ namespace VesselMonitoringSuite.Views
                 _editRibbon.VerticalAlignment = VerticalAlignment.Bottom;
                 _editRibbon.ViewModel.IsEditMode = true;
                 _editRibbon.ViewModel.GaugeItemList = gaugeItemList;
+                _editRibbon.ViewModel.SelectedGaugeItemList = _gaugeItemSelectedList;
 
                 this.MainCanvas.Children.Add(_editRibbon);
             });
@@ -124,7 +127,7 @@ namespace VesselMonitoringSuite.Views
                     IGaugeItem gaugeItem = baseGauge.GaugeItem;
                     if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.Shift)
                     {
-                        if (_editGaugeItemList.Contains(gaugeItem))
+                        if (_gaugeItemSelectedList.Contains(gaugeItem))
                         {
                             this.RemovePopupItem(gaugeItem);
                         }
@@ -135,7 +138,7 @@ namespace VesselMonitoringSuite.Views
                     }
                     else
                     {
-                        bool addPopItem = !_editGaugeItemList.Contains(gaugeItem);
+                        bool addPopItem = !_gaugeItemSelectedList.Contains(gaugeItem);
                         this.RemoveAllPopupItems();
                         if (addPopItem)
                         {
@@ -156,16 +159,16 @@ namespace VesselMonitoringSuite.Views
 
         private void RemoveAllPopupItems()
         {
-            while (_editGaugeItemList.Count > 0)
+            while (_gaugeItemSelectedList.Count > 0)
             {
-                this.RemovePopupItem(_editGaugeItemList[0]);
+                this.RemovePopupItem(_gaugeItemSelectedList[0]);
             }
         }
 
         private void RemovePopupItem(IGaugeItem gaugeItem)
         {
-            int index = _editGaugeItemList.IndexOf(gaugeItem);
-            _editGaugeItemList.RemoveAt(index);
+            int index = _gaugeItemSelectedList.IndexOf(gaugeItem);
+            _gaugeItemSelectedList.RemoveAt(index);
 
             Adorner adorner = _adornerList[index];
             adorner.IsOpen = false;
@@ -175,37 +178,10 @@ namespace VesselMonitoringSuite.Views
 
         private void AddPopupItem(IGaugeItem gaugeItem)
         {
-            _editGaugeItemList.Add(gaugeItem);
-
-            //Rectangle rectangle = new Rectangle()
-            //{
-            //    Stroke = new SolidColorBrush(Colors.White),
-            //    StrokeThickness = 4,
-            //    Height = gaugeItem.GaugeHeight,
-            //    Width = gaugeItem.GaugeWidth
-            //};
-
+            _gaugeItemSelectedList.Add(gaugeItem);
 
             Adorner adorner = new Adorner(gaugeItem);
             adorner.IsOpen = true;
-
-            //Popup popup = new Popup();
-            //popup.Child = rectangle;
-
-            //Binding gaugeLeftBinding = new Binding();
-            //gaugeLeftBinding.Source = gaugeItem;
-            //gaugeLeftBinding.Path = new PropertyPath("GaugeLeft");
-            //popup.SetBinding(Popup.HorizontalOffsetProperty, gaugeLeftBinding);
-
-            //Binding gaugeTopBinding = new Binding();
-            //gaugeTopBinding.Source = gaugeItem;
-            //gaugeTopBinding.Path = new PropertyPath("GaugeTop");
-            //popup.SetBinding(Popup.VerticalOffsetProperty, gaugeTopBinding);
-
-            //popup.IsOpen = true;
-            //_adornerList.Add(popup);
-            //this.MainCanvas.Children.Add(popup);
-
             _adornerList.Add(adorner);
             this.MainCanvas.Children.Add(adorner.Popup);
         }

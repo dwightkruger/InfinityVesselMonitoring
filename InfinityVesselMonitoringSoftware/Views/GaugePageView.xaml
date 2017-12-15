@@ -23,6 +23,7 @@
         Columns="{Binding Columns, ElementName=UserControl}"
         Width="{Binding Width, ElementName=UserControl}" 
         Height="{Binding Height, ElementName=UserControl}">
-     </controls:CanvasGrid>
+        
+    </controls:CanvasGrid>
 
 </UserControl>

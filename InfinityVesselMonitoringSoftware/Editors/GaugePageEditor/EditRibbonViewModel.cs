@@ -30,6 +30,7 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
         private RelayCommand _centerAlignTextCommand;
 
         private List<IGaugeItem> _gaugeItemList = null;
+        private List<IGaugeItem> _gaugeItemSelectedList = null;
         private bool _isEditMode = false;
 
         public bool IsEditMode
@@ -314,7 +315,15 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
         /// <summary>
         /// The current selected gauge
         /// </summary>
-        public IGaugeItem SelectedGaugeItem { get; set; }
+        public List<IGaugeItem> SelectedGaugeItemList
+        {
+            get { return _gaugeItemSelectedList; }
+            set
+            {
+                Set<List<IGaugeItem>>(() => SelectedGaugeItemList, ref _gaugeItemSelectedList, value);
+                RaisePropertyChangedAll();
+            }
+        }
 
         /// <summary>
         /// Are one or more of the gauge items in the list of the type specified?
@@ -323,10 +332,10 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
         /// <returns></returns>
         private bool IsGaugeType(GaugeTypeEnum gaugeType)
         {
-            if (null == this.GaugeItemList) return false;
-            if (this.GaugeItemList.Count == 0) return false;
+            if (null == this.SelectedGaugeItemList) return false;
+            if (this.SelectedGaugeItemList.Count == 0) return false;
 
-            IEnumerable<IGaugeItem> query = _gaugeItemList.Where((item) => item.GaugeType == gaugeType);
+            IEnumerable<IGaugeItem> query = this.SelectedGaugeItemList.Where((item) => item.GaugeType == gaugeType);
             return (query.Count<IGaugeItem>() > 0);
         }
 
@@ -340,7 +349,7 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
                 if (null == this.GaugeItemList) return false;
                 if (this.GaugeItemList.Count == 0) return false;
 
-                IEnumerable<IGaugeItem> query = _gaugeItemList.Where((item) => item.IsDirty);
+                IEnumerable<IGaugeItem> query = this.GaugeItemList.Where((item) => item.IsDirty);
                 return (query.Count<IGaugeItem>() > 0);
             }
         }
@@ -354,7 +363,7 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
             if (null == this.GaugeItemList) return;
             if (this.GaugeItemList.Count == 0) return;
 
-            foreach (IGaugeItem gaugeItem in _gaugeItemList)
+            foreach (IGaugeItem gaugeItem in this.GaugeItemList)
             {
                 await gaugeItem.BeginCommit();
             }
@@ -365,7 +374,7 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
             if (null == this.GaugeItemList) return;
             if (this.GaugeItemList.Count == 0) return;
 
-            foreach (IGaugeItem gaugeItem in _gaugeItemList)
+            foreach (IGaugeItem gaugeItem in this.GaugeItemList)
             {
                 gaugeItem.Rollback();
             }
