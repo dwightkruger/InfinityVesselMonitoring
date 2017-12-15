@@ -43,7 +43,7 @@ namespace VesselMonitoringSuite.Views
         private bool _ignorePropertyChange;
         private EditRibbonView _editRibbon;
         private ObservableCollection<IGaugeItem> _editGaugeItemList = new ObservableCollection<IGaugeItem>();
-        private List<Popup> _adornerList = new List<Popup>();
+        private List<Adorner> _adornerList = new List<Adorner>();
 
         public GaugePageView()
         {
@@ -167,41 +167,47 @@ namespace VesselMonitoringSuite.Views
             int index = _editGaugeItemList.IndexOf(gaugeItem);
             _editGaugeItemList.RemoveAt(index);
 
-            Popup popup = _adornerList[index];
-            popup.IsOpen = false;
+            Adorner adorner = _adornerList[index];
+            adorner.IsOpen = false;
             _adornerList.RemoveAt(index);
-            this.MainCanvas.Children.Remove(popup);
+            this.MainCanvas.Children.Remove(adorner.Popup);
         }
 
         private void AddPopupItem(IGaugeItem gaugeItem)
         {
             _editGaugeItemList.Add(gaugeItem);
 
-            Rectangle rectangle = new Rectangle()
-            {
-                Stroke = new SolidColorBrush(Colors.White),
-                StrokeThickness = 4,
-                Height = gaugeItem.GaugeHeight,
-                Width = gaugeItem.GaugeWidth
-            };
+            //Rectangle rectangle = new Rectangle()
+            //{
+            //    Stroke = new SolidColorBrush(Colors.White),
+            //    StrokeThickness = 4,
+            //    Height = gaugeItem.GaugeHeight,
+            //    Width = gaugeItem.GaugeWidth
+            //};
 
 
-            Popup popup = new Popup();
-            popup.Child = rectangle;
+            Adorner adorner = new Adorner(gaugeItem);
+            adorner.IsOpen = true;
 
-            Binding gaugeLeftBinding = new Binding();
-            gaugeLeftBinding.Source = gaugeItem;
-            gaugeLeftBinding.Path = new PropertyPath("GaugeLeft");
-            popup.SetBinding(Popup.HorizontalOffsetProperty, gaugeLeftBinding);
+            //Popup popup = new Popup();
+            //popup.Child = rectangle;
 
-            Binding gaugeTopBinding = new Binding();
-            gaugeTopBinding.Source = gaugeItem;
-            gaugeTopBinding.Path = new PropertyPath("GaugeTop");
-            popup.SetBinding(Popup.VerticalOffsetProperty, gaugeTopBinding);
+            //Binding gaugeLeftBinding = new Binding();
+            //gaugeLeftBinding.Source = gaugeItem;
+            //gaugeLeftBinding.Path = new PropertyPath("GaugeLeft");
+            //popup.SetBinding(Popup.HorizontalOffsetProperty, gaugeLeftBinding);
 
-            popup.IsOpen = true;
-            _adornerList.Add(popup);
-            this.MainCanvas.Children.Add(popup);
+            //Binding gaugeTopBinding = new Binding();
+            //gaugeTopBinding.Source = gaugeItem;
+            //gaugeTopBinding.Path = new PropertyPath("GaugeTop");
+            //popup.SetBinding(Popup.VerticalOffsetProperty, gaugeTopBinding);
+
+            //popup.IsOpen = true;
+            //_adornerList.Add(popup);
+            //this.MainCanvas.Children.Add(popup);
+
+            _adornerList.Add(adorner);
+            this.MainCanvas.Children.Add(adorner.Popup);
         }
 
         public GaugePageViewModel ViewModel
