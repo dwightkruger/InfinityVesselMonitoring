@@ -456,6 +456,8 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 this.Row.RejectChanges();
                 this.LoadPropertyBag();
                 this.ReloadFromRow();
+
+                NotifyOfPropertyChangeAll();
             }
         }
 
@@ -508,7 +510,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 return _propertyBag;
             }
 
-            protected set
+            set
             {
                 if (_propertyBag != value)
                 {
@@ -530,7 +532,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             else
             {
                 this.Row.SetField<T>(propertyName, (T)value);
-                RaisePropertyChanged(() => propertyExpression);
+                RaisePropertyChanged(propertyName);
                 RaisePropertyChanged(() => IsDirty);
             }
 
