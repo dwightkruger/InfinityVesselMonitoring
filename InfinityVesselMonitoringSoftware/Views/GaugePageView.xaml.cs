@@ -8,11 +8,8 @@ using GalaSoft.MvvmLight.Messaging;
 using InfinityGroup.VesselMonitoring.Controls;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityVesselMonitoringSoftware;
-using InfinityVesselMonitoringSoftware.Editors.GaugePageEditor;
-using Microsoft.Toolkit.Uwp.DeveloperTools;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using VesselMonitoringSuite.ViewModels;
 using Windows.UI;
@@ -33,23 +30,14 @@ namespace VesselMonitoringSuite.Views
         /// their change handlers.
         /// </summary>
         private bool _ignorePropertyChange;
-        private EditRibbonView _editRibbon;
         private List<IGaugeItem> _gaugeItemSelectedList = new List<IGaugeItem>();
         private List<Adorner> _adornerList = new List<Adorner>();
-        private AlignmentGrid _alignmentGrid = new AlignmentGrid();
-        private static SolidColorBrush c_BlackBrush = new SolidColorBrush(Colors.Black);
 
         public GaugePageView()
         {
             this.InitializeComponent();
             this.PointerPressed += GaugePageView_PointerPressed;
-
-            _alignmentGrid.Opacity = 1;
-            _alignmentGrid.LineBrush = c_BlackBrush;
-            _alignmentGrid.HorizontalStep = 20;
-            _alignmentGrid.VerticalStep = 20;
-            _alignmentGrid.Height = 1000;
-            _alignmentGrid.Width = 2000;
+            this.EditRibbon.ViewModel.SelectedGaugeItemList = _gaugeItemSelectedList;
 
             //for (int row = 0; row < 3; row++)
             //{
@@ -71,7 +59,6 @@ namespace VesselMonitoringSuite.Views
                 if (gaugeItemList[0].PageId != this.ViewModel.GaugePageItem.PageId) return;
 
                 this.MainCanvas.Children.Clear();
-                //this.MainCanvas.Children.Add(_alignmentGrid);
 
                 foreach (IGaugeItem item in gaugeItemList)
                 {
@@ -99,14 +86,7 @@ namespace VesselMonitoringSuite.Views
                     }
                 }
 
-                _editRibbon = new EditRibbonView();
-                _editRibbon.HorizontalAlignment = HorizontalAlignment.Left;
-                _editRibbon.VerticalAlignment = VerticalAlignment.Bottom;
-                _editRibbon.ViewModel.IsEditMode = true;
-                _editRibbon.ViewModel.GaugeItemList = gaugeItemList;
-                _editRibbon.ViewModel.SelectedGaugeItemList = _gaugeItemSelectedList;
-
-                this.MainCanvas.Children.Add(_editRibbon);
+                this.EditRibbon.ViewModel.GaugeItemList = gaugeItemList;
             });
         }
 
@@ -129,43 +109,43 @@ namespace VesselMonitoringSuite.Views
                     {
                         if (_gaugeItemSelectedList.Contains(gaugeItem))
                         {
-                            this.RemovePopupItem(gaugeItem);
+                            this.RemoveAdorner(gaugeItem);
                         }
                         else
                         {
-                            this.AddPopupItem(gaugeItem);
+                            this.AddAdorner(gaugeItem);
                         }
                     }
                     else
                     {
                         bool addPopItem = !_gaugeItemSelectedList.Contains(gaugeItem);
-                        this.RemoveAllPopupItems();
+                        this.RemoveAllAdorners();
                         if (addPopItem)
                         {
-                            this.AddPopupItem(gaugeItem);
+                            this.AddAdorner(gaugeItem);
                         }
                     }
                 }
                 else
                 {
-                    this.RemoveAllPopupItems();
+                    this.RemoveAllAdorners();
                 }
             }
             else
             {
-                this.RemoveAllPopupItems();
+                this.RemoveAllAdorners();
             }
         }
 
-        private void RemoveAllPopupItems()
+        private void RemoveAllAdorners()
         {
             while (_gaugeItemSelectedList.Count > 0)
             {
-                this.RemovePopupItem(_gaugeItemSelectedList[0]);
+                this.RemoveAdorner(_gaugeItemSelectedList[0]);
             }
         }
 
-        private void RemovePopupItem(IGaugeItem gaugeItem)
+        private void RemoveAdorner(IGaugeItem gaugeItem)
         {
             int index = _gaugeItemSelectedList.IndexOf(gaugeItem);
             _gaugeItemSelectedList.RemoveAt(index);
@@ -176,7 +156,7 @@ namespace VesselMonitoringSuite.Views
             this.MainCanvas.Children.Remove(adorner.Popup);
         }
 
-        private void AddPopupItem(IGaugeItem gaugeItem)
+        private void AddAdorner(IGaugeItem gaugeItem)
         {
             _gaugeItemSelectedList.Add(gaugeItem);
 

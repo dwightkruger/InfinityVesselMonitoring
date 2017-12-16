@@ -11,7 +11,6 @@ using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Utilities;
 using InfinityVesselMonitoringSoftware;
-using InfinityVesselMonitoringSoftware.Editors.GaugePageEditor;
 using InfinityVesselMonitoringSoftware.Gauges;
 using Microsoft.Graphics.Canvas.Text;
 using System;
@@ -19,16 +18,16 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using VesselMonitoringSuite.Devices;
 using VesselMonitoringSuite.Sensors;
-using VesselMonitoringSuite.ViewModels;
 using VesselMonitoringSuite.Views;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI;
-using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -39,13 +38,18 @@ namespace VesselMonitoring
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        //Timer _valueTimer;
-        //private Random randu = new Random();
         private System.Threading.Semaphore _semaphore;
 
         public MainPage()
         {
             this.InitializeComponent();
+            Size ds = DisplaySize.GetCurrentDisplaySize();
+
+            const double titlebarHeight = 70;
+            const double pivotHeaderHeight = 68;
+
+            this.MainGrid.Height = ds.Height - titlebarHeight - pivotHeaderHeight;
+            this.MainGrid.Width = ds.Width;
 
             DispatcherHelper.Initialize();
 
@@ -546,8 +550,6 @@ namespace VesselMonitoring
             // For each gauge page, build the view and view model
             foreach (IGaugePageItem item in App.GaugePageCollection)
             {
-                Size ds = DisplaySize.GetCurrentDisplaySize();
-
                 GaugePageView view = new GaugePageView();
                 view.Rows = 3;
                 view.Columns = 3;
@@ -563,15 +565,16 @@ namespace VesselMonitoring
                 heightBinding.Path = new PropertyPath("ActualHeight");
                 view.SetBinding(GaugePageView.HeightProperty, heightBinding);
 
-                PivotItem pivotItem = new PivotItem();
-                pivotItem.Header = item.PageName;
-
                 // Put the view into a Canvas
                 Canvas canvas = new Canvas();
                 canvas.Children.Add(view);
 
+                // Put the canvas into a PivotItem
+                PivotItem pivotItem = new PivotItem();
+                pivotItem.Header = item.PageName;
                 pivotItem.Content = canvas;
 
+                // Put the pivot item on the page
                 this.MainPivot.Items.Add(pivotItem);
 
                 // Get all of the gauges for this page and tell the page to build itself.

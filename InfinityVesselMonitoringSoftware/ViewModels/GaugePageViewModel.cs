@@ -19,11 +19,13 @@ namespace VesselMonitoringSuite.ViewModels
     public class GaugePageViewModel : ObservableObject
     {
         private IGaugePageItem _gaugePageItem;
-        List<IGaugeItem> _gaugeItemList;
+        private List<IGaugeItem> _gaugeItemList;
+        private bool _inEditMode = false;
 
         public GaugePageViewModel()
         {
             _gaugeItemList = new List<IGaugeItem>();
+            this.InEditMode = true;
         }
 
         public IGaugePageItem GaugePageItem
@@ -38,6 +40,11 @@ namespace VesselMonitoringSuite.ViewModels
             }
         }
 
+        public bool InEditMode
+        {
+            get { return _inEditMode; }
+            set { Set(() => InEditMode, ref _inEditMode, value); }
+        }
         private void BuildGaugeItemList()
         {
             if (null == _gaugePageItem) return;

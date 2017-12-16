@@ -5,6 +5,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Messaging;
 using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.Types;
@@ -135,7 +136,6 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             {
                 await this.BeginCommit();
             }).Wait();
-
         }
 
         /// <summary>
@@ -150,38 +150,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             this.UndoCommand = this._context.GetUndoCommand();
             this.RedoCommand = this._context.GetRedoCommand();
 
-            _changeDate = new UndoableProperty<DateTime>(this, ChangeDatePropertyName, this._context, this.Row.Field<DateTime>(ChangeDatePropertyName));
-            _gaugeType = new UndoableProperty<GaugeTypeEnum>(this, GaugeTypePropertyName, this._context, this.Row.Field<GaugeTypeEnum>(GaugeTypePropertyName));
-            _pageId = new UndoableProperty<Int64>(this, PageIdPropertyName, this._context, this.Row.Field<Int64>(PageIdPropertyName));
-
-            _gaugeLeft = new UndoableProperty<double>(this, GaugeLeftPropertyName, this._context, this.Row.Field<double>(GaugeLeftPropertyName));
-            _gaugeTop = new UndoableProperty<double>(this, GaugeTopPropertyName, this._context, this.Row.Field<double>(GaugeTopPropertyName));
-            _gaugeColor = new UndoableProperty<Color>(this, GaugeColorPropertyName, this._context, this.Row.Field<Color>(GaugeColorPropertyName));
-            _gaugeHeight = new UndoableProperty<double>(this, GaugeHeightPropertyName, this._context, this.Row.Field<double>(GaugeHeightPropertyName));
-            _gaugeWidth = new UndoableProperty<double>(this, GaugeWidthPropertyName, this._context, this.Row.Field<double>(GaugeWidthPropertyName));
-            _sensorId = new UndoableProperty<Int64>(this, SensorIdPropertyName, this._context, this.Row.Field<Int64>(SensorIdPropertyName));
-
-            _divisions = new UndoableProperty<int>(this, DivisionsPropertyName, this._context, this.Row.Field<int>(DivisionsPropertyName));
-            _minorTicsPerMajorTic = new UndoableProperty<int>(this, MinorTicsPerMajorTicPropertyName, this._context, this.Row.Field<int>(MinorTicsPerMajorTicPropertyName));
-            _mediumTicsPerMajorTic = new UndoableProperty<int>(this, MediumTicsPerMajorTicPropertyName, this._context, this.Row.Field<int>(MediumTicsPerMajorTicPropertyName));
-            _resolution = new UndoableProperty<int>(this, ResolutionPropertyName, this._context, this.Row.Field<int>(ResolutionPropertyName));
-            _gaugeOutlineVisibility = new UndoableProperty<Windows.UI.Xaml.Visibility>(this, GaugeOutlineVisibilityPropertyName, this._context, this.Row.Field<Windows.UI.Xaml.Visibility>(GaugeOutlineVisibilityPropertyName));
-            _middleCircleDelta = new UndoableProperty<int>(this, MiddleCircleDeltaPropertyName, this._context, this.Row.Field<int>(MiddleCircleDeltaPropertyName));
-            _innerCircleDelta = new UndoableProperty<int>(this, InnerCircleDeltaPropertyName, this._context, this.Row.Field<int>(InnerCircleDeltaPropertyName));
-            _valueFontSize = new UndoableProperty<double>(this, ValueFontSizePropertyName, this._context, this.Row.Field<double>(ValueFontSizePropertyName));
-            _unitsFontSize = new UndoableProperty<double>(this, UnitsFontSizePropertyName, this._context, this.Row.Field<double>(UnitsFontSizePropertyName));
-            _majorTicLength = new UndoableProperty<double>(this, MajorTicLengthPropertyName, this._context, this.Row.Field<double>(MajorTicLengthPropertyName));
-            _mediumTicLength = new UndoableProperty<double>(this, MediumTicLengthPropertyName, this._context, this.Row.Field<double>(MediumTicLengthPropertyName));
-            _minorTicLength = new UndoableProperty<double>(this, MinorTicLengthPropertyName, this._context, this.Row.Field<double>(MinorTicLengthPropertyName));
-            _text = new UndoableProperty<string>(this, TextPropertyName, this._context, this.Row.Field<string>(TextPropertyName));
-            _textFontSize = new UndoableProperty<double>(this, TextFontSizePropertyName, this._context, this.Row.Field<double>(TextFontSizePropertyName));
-            _textAngle = new UndoableProperty<double>(this, TextAnglePropertyName, this._context, this.Row.Field<double>(TextAnglePropertyName));
-            _textFontColor = new UndoableProperty<Color>(this, TextFontColorPropertyName, this._context, this.Row.Field<Color>(TextFontColorPropertyName));
-            _textHorizontalAlignment = new UndoableProperty<CanvasHorizontalAlignment>(this, TextHorizontalAlignmentPropertyName, this._context, this.Row.Field<CanvasHorizontalAlignment>(TextHorizontalAlignmentPropertyName));
-            _textVerticalAlignment = new UndoableProperty<CanvasVerticalAlignment>(this, TextVerticalAlignmentPropertyName, this._context, this.Row.Field<CanvasVerticalAlignment>(TextVerticalAlignmentPropertyName));
-            _units = new UndoableProperty<Units>(this, UnitsPropertyName, this._context, this.Row.Field<Units>(UnitsPropertyName)); 
-
-            NotifyOfPropertyChangeAll();
+            this.LoadFromRow();
         }
 
         public ICommand UndoCommand { get; set; }
@@ -206,6 +175,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _divisions.SetValue(value);
                 Row.SetField<int>(DivisionsPropertyName, value);
                 RaisePropertyChanged(() => Divisions);
+                RaisePropertyChanged(() => IsDirty);
             }
         }
 
@@ -228,6 +198,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _gaugeType.SetValue(value);
                 Row.SetField<GaugeTypeEnum>(GaugeTypePropertyName, value);
                 RaisePropertyChanged(() => GaugeType);
+                RaisePropertyChanged(() => IsDirty);
             }
         }
 
@@ -240,6 +211,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _gaugeHeight.SetValue(value);
                 Row.SetField<double>(GaugeHeightPropertyName, value);
                 RaisePropertyChanged(() => GaugeHeight);
+                RaisePropertyChanged(() => IsDirty);
             }
         }
 
@@ -251,6 +223,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _gaugeWidth.SetValue(value);
                 Row.SetField<double>(GaugeWidthPropertyName, value);
                 RaisePropertyChanged(() => GaugeWidth);
+                RaisePropertyChanged(() => IsDirty);
             }
         }
 
@@ -262,6 +235,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _gaugeLeft.SetValue(value);
                 Row.SetField<double>(GaugeLeftPropertyName, value);
                 RaisePropertyChanged(() => GaugeLeft);
+                RaisePropertyChanged(() => IsDirty);
             }
         }
 
@@ -273,6 +247,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _gaugeOutlineVisibility.SetValue(value);
                 Row.SetField<Windows.UI.Xaml.Visibility>(GaugeOutlineVisibilityPropertyName, value);
                 RaisePropertyChanged(() => GaugeOutlineVisibility);
+                RaisePropertyChanged(() => IsDirty);
             }
         }
 
@@ -284,6 +259,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _gaugeTop.SetValue(value);
                 Row.SetField<double>(GaugeTopPropertyName, value);
                 RaisePropertyChanged(() => GaugeTop);
+                RaisePropertyChanged(() => IsDirty);
             }
         }
 
@@ -295,6 +271,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _gaugeColor.SetValue(value);
                 Row.SetField<Color>(GaugeColorPropertyName, value);
                 RaisePropertyChanged(() => GaugeColor);
+                RaisePropertyChanged(() => IsDirty);
             }
         }
 
@@ -306,6 +283,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _innerCircleDelta.SetValue(value);
                 Row.SetField<int>(InnerCircleDeltaPropertyName, value);
                 RaisePropertyChanged(() => InnerCircleDelta);
+                RaisePropertyChanged(() => IsDirty);
             }
         }
 
@@ -317,6 +295,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _minorTicsPerMajorTic.SetValue(value);
                 Row.SetField<int>(MinorTicsPerMajorTicPropertyName, value);
                 RaisePropertyChanged(() => MinorTicsPerMajorTic);
+                RaisePropertyChanged(() => IsDirty);
             }
         }
 
@@ -327,6 +306,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             {
                 _mediumTicsPerMajorTic.SetValue(value);
                 Row.SetField<int>(MediumTicsPerMajorTicPropertyName, value);
+                RaisePropertyChanged(() => IsDirty);
                 RaisePropertyChanged(() => MediumTicsPerMajorTic);
             }
         }
@@ -350,6 +330,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _resolution.SetValue(value);
                 Row.SetField<int>(ResolutionPropertyName, value);
                 RaisePropertyChanged(() => Resolution);
+                RaisePropertyChanged(() => IsDirty);
             }
         }
 
@@ -361,6 +342,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _middleCircleDelta.SetValue(value);
                 Row.SetField<int>(MiddleCircleDeltaPropertyName, value);
                 RaisePropertyChanged(() => MiddleCircleDelta);
+                RaisePropertyChanged(() => IsDirty);
             }
         }
 
@@ -372,6 +354,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _sensorId.SetValue(value);
                 Row.SetField<Int64>(SensorIdPropertyName, value);
                 RaisePropertyChanged(() => SensorId);
+                RaisePropertyChanged(() => IsDirty);
             }
         }
 
@@ -383,6 +366,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _text.SetValue(value);
                 Row.SetField<string>(TextPropertyName, value);
                 RaisePropertyChanged(() => Text);
+                RaisePropertyChanged(() => IsDirty);
             }
         }
 
@@ -394,6 +378,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _textFontSize.SetValue(value);
                 Row.SetField<double>(TextFontSizePropertyName, value);
                 RaisePropertyChanged(() => TextFontSize);
+                RaisePropertyChanged(() => IsDirty);
             }
         }
 
@@ -405,6 +390,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _textAngle.SetValue(value);
                 Row.SetField<double>(TextAnglePropertyName, value);
                 RaisePropertyChanged(() => TextAngle);
+                RaisePropertyChanged(() => IsDirty);
             }
         }
 
@@ -416,6 +402,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _textFontColor.SetValue(value);
                 Row.SetField<Color>(TextFontColorPropertyName, value);
                 RaisePropertyChanged(() => TextFontColor);
+                RaisePropertyChanged(() => IsDirty);
             }
         }
 
@@ -427,6 +414,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _textHorizontalAlignment.SetValue(value);
                 Row.SetField<CanvasHorizontalAlignment>(TextHorizontalAlignmentPropertyName, value);
                 RaisePropertyChanged(() => TextHorizontalAlignment);
+                RaisePropertyChanged(() => IsDirty);
             }
         }
 
@@ -438,6 +426,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _textVerticalAlignment.SetValue(value);
                 Row.SetField<CanvasVerticalAlignment>(TextVerticalAlignmentPropertyName, value);
                 RaisePropertyChanged(() => TextVerticalAlignment);
+                RaisePropertyChanged(() => IsDirty);
             }
         }
 
@@ -449,6 +438,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _valueFontSize.SetValue(value);
                 Row.SetField<double>(ValueFontSizePropertyName, value);
                 RaisePropertyChanged(() => ValueFontSize);
+                RaisePropertyChanged(() => IsDirty);
             }
         }
 
@@ -460,6 +450,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _unitsFontSize.SetValue(value);
                 Row.SetField<double>(UnitsFontSizePropertyName, value);
                 RaisePropertyChanged(() => UnitsFontSize);
+                RaisePropertyChanged(() => IsDirty);
             }
         }
 
@@ -471,6 +462,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _majorTicLength.SetValue(value);
                 Row.SetField<double>(MajorTicLengthPropertyName, value);
                 RaisePropertyChanged(() => MajorTicLength);
+                RaisePropertyChanged(() => IsDirty);
             }
         }
 
@@ -482,6 +474,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _mediumTicLength.SetValue(value);
                 Row.SetField<double>(MediumTicLengthPropertyName, value);
                 RaisePropertyChanged(() => MediumTicLength);
+                RaisePropertyChanged(() => IsDirty);
             }
         }
 
@@ -493,6 +486,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _minorTicLength.SetValue(value);
                 Row.SetField<double>(MinorTicLengthPropertyName, value);
                 RaisePropertyChanged(() => MinorTicLength);
+                RaisePropertyChanged(() => IsDirty);
             }
         }
 
@@ -504,6 +498,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 _units.SetValue(value);
                 Row.SetField<Units>(UnitsPropertyName, value);
                 RaisePropertyChanged(() => Units);
+                RaisePropertyChanged(() => IsDirty);
             }
         }
 
@@ -542,13 +537,13 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             {
                 this.Row.RejectChanges();
                 this.LoadPropertyBag();
-                NotifyOfPropertyChangeAll();
+                this.ReloadFromRow();
             }
         }
 
         public void NotifyOfPropertyChangeAll()
         {
-            foreach (ItemColumn column in App.BuildDBTables.GaugePageTable.Columns)
+            foreach (ItemColumn column in App.BuildDBTables.GaugeTable.Columns)
             {
                 RaisePropertyChanged(column.ColumnName);
             }
@@ -574,7 +569,11 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             get
             {
                 if (this.Row == null) return false;                             // We do not have any data
-                if (this.Row.RowState != ItemRowState.Unchanged) return true;   // No changes have been made
+                if (this.Row.RowState != ItemRowState.Unchanged)                // No changes have been made
+                {
+                    return true;
+                }
+
                 if (_propertyBag == null) return false;                         // We do not have a property blob
 
                 return this.PropertyBag.IsDirty;
@@ -600,6 +599,70 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                     Row.SetField<string>("PropertyBag", _propertyBag.JsonSerialize());
                 }
             }
+        }
+
+        private void LoadFromRow()
+        {
+            _changeDate = new UndoableProperty<DateTime>(this, ChangeDatePropertyName, this._context, this.Row.Field<DateTime>(ChangeDatePropertyName));
+            _divisions = new UndoableProperty<int>(this, DivisionsPropertyName, this._context, this.Row.Field<int>(DivisionsPropertyName));
+            _gaugeColor = new UndoableProperty<Color>(this, GaugeColorPropertyName, this._context, this.Row.Field<Color>(GaugeColorPropertyName));
+            _gaugeHeight = new UndoableProperty<double>(this, GaugeHeightPropertyName, this._context, this.Row.Field<double>(GaugeHeightPropertyName));
+            _gaugeLeft = new UndoableProperty<double>(this, GaugeLeftPropertyName, this._context, this.Row.Field<double>(GaugeLeftPropertyName));
+            _gaugeOutlineVisibility = new UndoableProperty<Windows.UI.Xaml.Visibility>(this, GaugeOutlineVisibilityPropertyName, this._context, this.Row.Field<Windows.UI.Xaml.Visibility>(GaugeOutlineVisibilityPropertyName));
+            _gaugeTop = new UndoableProperty<double>(this, GaugeTopPropertyName, this._context, this.Row.Field<double>(GaugeTopPropertyName));
+            _gaugeType = new UndoableProperty<GaugeTypeEnum>(this, GaugeTypePropertyName, this._context, this.Row.Field<GaugeTypeEnum>(GaugeTypePropertyName));
+            _gaugeWidth = new UndoableProperty<double>(this, GaugeWidthPropertyName, this._context, this.Row.Field<double>(GaugeWidthPropertyName));
+            _innerCircleDelta = new UndoableProperty<int>(this, InnerCircleDeltaPropertyName, this._context, this.Row.Field<int>(InnerCircleDeltaPropertyName));
+            _majorTicLength = new UndoableProperty<double>(this, MajorTicLengthPropertyName, this._context, this.Row.Field<double>(MajorTicLengthPropertyName));
+            _middleCircleDelta = new UndoableProperty<int>(this, MiddleCircleDeltaPropertyName, this._context, this.Row.Field<int>(MiddleCircleDeltaPropertyName));
+            _mediumTicLength = new UndoableProperty<double>(this, MediumTicLengthPropertyName, this._context, this.Row.Field<double>(MediumTicLengthPropertyName));
+            _mediumTicsPerMajorTic = new UndoableProperty<int>(this, MediumTicsPerMajorTicPropertyName, this._context, this.Row.Field<int>(MediumTicsPerMajorTicPropertyName));
+            _minorTicLength = new UndoableProperty<double>(this, MinorTicLengthPropertyName, this._context, this.Row.Field<double>(MinorTicLengthPropertyName));
+            _minorTicsPerMajorTic = new UndoableProperty<int>(this, MinorTicsPerMajorTicPropertyName, this._context, this.Row.Field<int>(MinorTicsPerMajorTicPropertyName));
+            _pageId = new UndoableProperty<Int64>(this, PageIdPropertyName, this._context, this.Row.Field<Int64>(PageIdPropertyName));
+            _resolution = new UndoableProperty<int>(this, ResolutionPropertyName, this._context, this.Row.Field<int>(ResolutionPropertyName));
+            _sensorId = new UndoableProperty<Int64>(this, SensorIdPropertyName, this._context, this.Row.Field<Int64>(SensorIdPropertyName));
+            _text = new UndoableProperty<string>(this, TextPropertyName, this._context, this.Row.Field<string>(TextPropertyName));
+            _textAngle = new UndoableProperty<double>(this, TextAnglePropertyName, this._context, this.Row.Field<double>(TextAnglePropertyName));
+            _textFontColor = new UndoableProperty<Color>(this, TextFontColorPropertyName, this._context, this.Row.Field<Color>(TextFontColorPropertyName));
+            _textFontSize = new UndoableProperty<double>(this, TextFontSizePropertyName, this._context, this.Row.Field<double>(TextFontSizePropertyName));
+            _textHorizontalAlignment = new UndoableProperty<CanvasHorizontalAlignment>(this, TextHorizontalAlignmentPropertyName, this._context, this.Row.Field<CanvasHorizontalAlignment>(TextHorizontalAlignmentPropertyName));
+            _textVerticalAlignment = new UndoableProperty<CanvasVerticalAlignment>(this, TextVerticalAlignmentPropertyName, this._context, this.Row.Field<CanvasVerticalAlignment>(TextVerticalAlignmentPropertyName));
+            _units = new UndoableProperty<Units>(this, UnitsPropertyName, this._context, this.Row.Field<Units>(UnitsPropertyName));
+            _unitsFontSize = new UndoableProperty<double>(this, UnitsFontSizePropertyName, this._context, this.Row.Field<double>(UnitsFontSizePropertyName));
+            _valueFontSize = new UndoableProperty<double>(this, ValueFontSizePropertyName, this._context, this.Row.Field<double>(ValueFontSizePropertyName));
+        }
+
+        private void ReloadFromRow()
+        {
+            this.ChangeDate = this.Row.Field<DateTime>(ChangeDatePropertyName);
+            this.Divisions = this.Row.Field<int>(DivisionsPropertyName);
+            this.GaugeColor = this.Row.Field<Color>(GaugeColorPropertyName);
+            this.GaugeHeight = this.Row.Field<double>(GaugeHeightPropertyName);
+            this.GaugeLeft = this.Row.Field<double>(GaugeLeftPropertyName);
+            this.GaugeOutlineVisibility = this.Row.Field<Windows.UI.Xaml.Visibility>(GaugeOutlineVisibilityPropertyName);
+            this.GaugeTop = this.Row.Field<double>(GaugeTopPropertyName);
+            this.GaugeType = this.Row.Field<GaugeTypeEnum>(GaugeTypePropertyName);
+            this.GaugeWidth = this.Row.Field<double>(GaugeWidthPropertyName);
+            this.InnerCircleDelta = this.Row.Field<int>(InnerCircleDeltaPropertyName);
+            this.MajorTicLength = this.Row.Field<double>(MajorTicLengthPropertyName);
+            this.MediumTicLength = this.Row.Field<double>(MediumTicLengthPropertyName);
+            this.MediumTicsPerMajorTic = this.Row.Field<int>(MediumTicsPerMajorTicPropertyName);
+            this.MiddleCircleDelta = this.Row.Field<int>(MiddleCircleDeltaPropertyName);
+            this.MinorTicLength = this.Row.Field<double>(MinorTicLengthPropertyName);
+            this.MinorTicsPerMajorTic = this.Row.Field<int>(MinorTicsPerMajorTicPropertyName);
+            this.PageId = this.Row.Field<Int64>(PageIdPropertyName);
+            this.Resolution = this.Row.Field<int>(ResolutionPropertyName);
+            this.SensorId = this.Row.Field<Int64>(SensorIdPropertyName);
+            this.Text = this.Row.Field<string>(TextPropertyName);
+            this.TextFontSize = this.Row.Field<double>(TextFontSizePropertyName);
+            this.TextAngle = this.Row.Field<double>(TextAnglePropertyName);
+            this.TextFontColor = this.Row.Field<Color>(TextFontColorPropertyName);
+            this.TextHorizontalAlignment = this.Row.Field<CanvasHorizontalAlignment>(TextHorizontalAlignmentPropertyName);
+            this.TextVerticalAlignment = this.Row.Field<CanvasVerticalAlignment>(TextVerticalAlignmentPropertyName);
+            this.Units = this.Row.Field<Units>(UnitsPropertyName);
+            this.UnitsFontSize = this.Row.Field<double>(UnitsFontSizePropertyName);
+            this.ValueFontSize = this.Row.Field<double>(ValueFontSizePropertyName);
         }
 
         private ItemRow Row { get; set; }

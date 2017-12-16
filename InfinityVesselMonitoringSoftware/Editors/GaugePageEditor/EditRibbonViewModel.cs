@@ -6,12 +6,13 @@
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Linq;
-using System.Collections.ObjectModel;
 
 namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
 {
@@ -31,12 +32,9 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
 
         private List<IGaugeItem> _gaugeItemList = null;
         private List<IGaugeItem> _gaugeItemSelectedList = null;
-        private bool _isEditMode = false;
 
-        public bool IsEditMode
+        public EditRibbonViewModel()
         {
-            get {  return _isEditMode; }
-            set { Set<bool>(() => IsEditMode, ref _isEditMode, value); }
         }
 
         public ICommand SaveCommand
@@ -55,7 +53,7 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
                         },
                         () =>
                         {
-                            return this.IsDirty;
+                            return true;
                         }
                        );
                 }
@@ -77,7 +75,7 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
                         },
                         () =>
                         {
-                            return this.IsDirty;
+                            return true;
                         }
                        );
                 }
@@ -339,20 +337,6 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
             return (query.Count<IGaugeItem>() > 0);
         }
 
-        /// <summary>
-        /// Do any of the gauge items have unsaved changes?
-        /// </summary>
-        private bool IsDirty
-        {
-            get
-            {
-                if (null == this.GaugeItemList) return false;
-                if (this.GaugeItemList.Count == 0) return false;
-
-                IEnumerable<IGaugeItem> query = this.GaugeItemList.Where((item) => item.IsDirty);
-                return (query.Count<IGaugeItem>() > 0);
-            }
-        }
 
         /// <summary>
         /// Save/commit any dirty gauge items to the sql database
