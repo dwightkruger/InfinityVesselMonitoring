@@ -5,8 +5,6 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Messaging;
-using InfinityGroup.VesselMonitoring.Interfaces;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Brushes;
 using Microsoft.Graphics.Canvas.Effects;
@@ -16,7 +14,6 @@ using Microsoft.Graphics.Canvas.UI;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using System;
 using System.Numerics;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -437,6 +434,16 @@ namespace InfinityGroup.VesselMonitoring.Controls
         override protected void RefreshTop(object oldValue, object newValue)
         {
             Canvas.SetTop(this.MainGrid, this.Top);
+        }
+
+        override protected void RefreshGaugeHeight(object oldValue, object newValue)
+        {
+            this.canvasControl.Height = Convert.ToDouble(newValue);
+        }
+
+        override protected void RefreshGaugeWidth(object oldValue, object newValue)
+        {
+            this.canvasControl.Width = Convert.ToDouble(newValue);
         }
 
         override protected void RefreshMaxValue(object oldValue, object newValue)

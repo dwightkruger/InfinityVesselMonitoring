@@ -17,7 +17,6 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
-using Microsoft.Toolkit.Uwp;
 
 namespace InfinityGroup.VesselMonitoring.Controls
 {
@@ -47,33 +46,51 @@ namespace InfinityGroup.VesselMonitoring.Controls
             {
                 Stroke = c_handleColor,
                 StrokeThickness = 4,
-                Height = _gaugeItem.GaugeHeight,
-                Width = _gaugeItem.GaugeWidth,
             };
-
             
             _grid.Children.Add(rectangle);
 
-            _nwHandle = CreateHandle(HorizontalAlignment.Left,   VerticalAlignment.Top,    new Point(1,1), CoreCursorType.SizeNorthwestSoutheast);
-            _nHandle  = CreateHandle(HorizontalAlignment.Center, VerticalAlignment.Top,    new Point(0,1), CoreCursorType.SizeNorthSouth);
-            _neHandle = CreateHandle(HorizontalAlignment.Right,  VerticalAlignment.Top,    new Point(1,1), CoreCursorType.SizeNortheastSouthwest);
-            _eHandle  = CreateHandle(HorizontalAlignment.Right,  VerticalAlignment.Center, new Point(1,0), CoreCursorType.SizeWestEast);
-            _seHandle = CreateHandle(HorizontalAlignment.Right,  VerticalAlignment.Bottom, new Point(1,1), CoreCursorType.SizeNorthwestSoutheast);
-            _sHandle  = CreateHandle(HorizontalAlignment.Center, VerticalAlignment.Bottom, new Point(0,1), CoreCursorType.SizeNorthSouth);
-            _swHandle = CreateHandle(HorizontalAlignment.Left,   VerticalAlignment.Bottom, new Point(1,1), CoreCursorType.SizeNortheastSouthwest);
-            _wHandle  = CreateHandle(HorizontalAlignment.Left,   VerticalAlignment.Center, new Point(1,0), CoreCursorType.SizeWestEast);
+            _nwHandle = CreateHandle(HorizontalAlignment.Left,   VerticalAlignment.Top,    new Point(-1,-1), CoreCursorType.SizeNorthwestSoutheast);
+            _nHandle  = CreateHandle(HorizontalAlignment.Center, VerticalAlignment.Top,    new Point(0,-1),  CoreCursorType.SizeNorthSouth);
+            _neHandle = CreateHandle(HorizontalAlignment.Right,  VerticalAlignment.Top,    new Point(1,-1),  CoreCursorType.SizeNortheastSouthwest);
+            _eHandle  = CreateHandle(HorizontalAlignment.Right,  VerticalAlignment.Center, new Point(1,0),   CoreCursorType.SizeWestEast);
+            _seHandle = CreateHandle(HorizontalAlignment.Right,  VerticalAlignment.Bottom, new Point(1,1),   CoreCursorType.SizeNorthwestSoutheast);
+            _sHandle  = CreateHandle(HorizontalAlignment.Center, VerticalAlignment.Bottom, new Point(0,1),   CoreCursorType.SizeNorthSouth);
+            _swHandle = CreateHandle(HorizontalAlignment.Left,   VerticalAlignment.Bottom, new Point(-1,1),  CoreCursorType.SizeNortheastSouthwest);
+            _wHandle  = CreateHandle(HorizontalAlignment.Left,   VerticalAlignment.Center, new Point(-1,0),  CoreCursorType.SizeWestEast);
 
             _popup.Child = _grid;
 
-            Binding gaugeLeftBinding = new Binding();
-            gaugeLeftBinding.Source = _gaugeItem;
-            gaugeLeftBinding.Path = new PropertyPath("GaugeLeft");
-            _popup.SetBinding(Popup.HorizontalOffsetProperty, gaugeLeftBinding);
+            Binding popupLeftBinding = new Binding();
+            popupLeftBinding.Source = _gaugeItem;
+            popupLeftBinding.Path = new PropertyPath("GaugeLeft");
+            _popup.SetBinding(Popup.HorizontalOffsetProperty, popupLeftBinding);
 
-            Binding gaugeTopBinding = new Binding();
-            gaugeTopBinding.Source = _gaugeItem;
-            gaugeTopBinding.Path = new PropertyPath("GaugeTop");
-            _popup.SetBinding(Popup.VerticalOffsetProperty, gaugeTopBinding);
+            Binding popupTopBinding = new Binding();
+            popupTopBinding.Source = _gaugeItem;
+            popupTopBinding.Path = new PropertyPath("GaugeTop");
+            _popup.SetBinding(Popup.VerticalOffsetProperty, popupTopBinding);
+
+            Binding popupHeightBinding = new Binding();
+            popupHeightBinding.Source = _gaugeItem;
+            popupHeightBinding.Path = new PropertyPath("GaugeHeight");
+            _popup.SetBinding(Popup.HeightProperty, popupHeightBinding);
+
+            Binding popupWidthBinding = new Binding();
+            popupWidthBinding.Source = _gaugeItem;
+            popupWidthBinding.Path = new PropertyPath("GaugeWidth");
+            _popup.SetBinding(Popup.WidthProperty, popupWidthBinding);
+
+
+            Binding rectangleHeightBinding = new Binding();
+            rectangleHeightBinding.Source = _gaugeItem;
+            rectangleHeightBinding.Path = new PropertyPath("GaugeHeight");
+            rectangle.SetBinding(Rectangle.HeightProperty, rectangleHeightBinding);
+
+            Binding rectangleWidthBinding = new Binding();
+            rectangleWidthBinding.Source = _gaugeItem;
+            rectangleWidthBinding.Path = new PropertyPath("GaugeWidth");
+            rectangle.SetBinding(Rectangle.WidthProperty, rectangleWidthBinding);
         }
 
         public bool IsOpen
@@ -126,16 +143,16 @@ namespace InfinityGroup.VesselMonitoring.Controls
             Rectangle handle = sender as Rectangle;         // Get the handle being moved
             Point allowedDeleta = (Point)handle.Tag;        // Get the allowed X/Y deltas for this handle
 
-            if (allowedDeleta.X > 0)
+            if (allowedDeleta.X != 0)
             {
                 _gaugeItem.GaugeLeft += e.Delta.Translation.X * e.Delta.Scale;
-                _gaugeItem.GaugeWidth += e.Delta.Translation.X * e.Delta.Scale;
+                _gaugeItem.GaugeWidth += e.Delta.Translation.X * e.Delta.Scale * allowedDeleta.X;
             }
 
-            if (allowedDeleta.Y > 0)
+            if (allowedDeleta.Y != 0)
             {
                 _gaugeItem.GaugeTop += e.Delta.Translation.Y * e.Delta.Scale;
-                _gaugeItem.GaugeHeight += e.Delta.Translation.Y * e.Delta.Scale;
+                _gaugeItem.GaugeHeight += e.Delta.Translation.Y * e.Delta.Scale * allowedDeleta.Y;
             }
         }
 

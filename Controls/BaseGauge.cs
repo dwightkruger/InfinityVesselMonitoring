@@ -44,8 +44,8 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             if (this.InEditMode)
             {
-                this.Left += e.Delta.Translation.X * e.Delta.Scale;
-                this.Top += e.Delta.Translation.Y * e.Delta.Scale;
+                _gaugeItem.GaugeLeft += e.Delta.Translation.X * e.Delta.Scale;
+                _gaugeItem.GaugeTop += e.Delta.Translation.Y * e.Delta.Scale;
             }
         }
 
@@ -143,6 +143,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
         protected static void OnGaugeHeightPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             BaseGauge g = d as BaseGauge;
+            g.RefreshGaugeHeight(e.OldValue, e.NewValue);
         }
         #endregion
 
@@ -161,6 +162,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
         protected static void OnGaugeWidthPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             BaseGauge g = d as BaseGauge;
+            g.RefreshGaugeWidth(e.OldValue, e.NewValue);
         }
         #endregion
 
@@ -1628,6 +1630,14 @@ namespace InfinityGroup.VesselMonitoring.Controls
         }
 
         virtual protected void RefreshUnitsFontSize(object oldValue, object newValue)
+        {
+        }
+
+        virtual protected void RefreshGaugeWidth(object oldValue, object newValue)
+        {
+        }
+
+        virtual protected void RefreshGaugeHeight(object oldValue, object newValue)
         {
         }
     }
