@@ -107,6 +107,8 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             {
                 await this.BeginCommit();
             }).Wait();
+
+            this.NotifyOfPropertyChangeAll();
         }
 
         /// <summary>
@@ -122,10 +124,16 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             this.RedoCommand = this._context.GetRedoCommand();
 
             this.LoadFromRow();
+            this.NotifyOfPropertyChangeAll();
         }
 
-        public ICommand UndoCommand { get; set; }
-        public ICommand RedoCommand { get; set; }
+        public void Update()
+        {
+            this.NotifyOfPropertyChangeAll();
+        }
+
+        public ICommand UndoCommand { get; private set; }
+        public ICommand RedoCommand { get; private set; }
 
         public DateTime ChangeDate
         {
@@ -461,7 +469,12 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             }
         }
 
-        public void NotifyOfPropertyChangeAll()
+        public UndoRedoContext UndoRedoContext
+        {
+            get { return _context; }
+        }
+
+        private void NotifyOfPropertyChangeAll()
         {
             foreach (ItemColumn column in App.BuildDBTables.GaugeTable.Columns)
             {

@@ -24,6 +24,9 @@
             <AppBarButton Icon="Save" Label="Save" ToolTipService.ToolTip="Save changes" Command="{Binding SaveCommand}"/>
             <AppBarButton Icon="Refresh" Label="Rollback" ToolTipService.ToolTip="Undo all changes" Command="{Binding RevertCommand}"/>
             <AppBarButton Icon="Stop" Label="Stop" ToolTipService.ToolTip="Stop editing and exit the editor" Command="{Binding ExitCommand}" />
+            <AppBarButton Icon="Undo" Label="Undo" ToolTipService.ToolTip="Undo (Ctrl+Z)" Command="{Binding UndoCommand}" />
+            <AppBarButton Icon="Redo" Label="Redo" ToolTipService.ToolTip="Redo (Ctrl+Y)" Command="{Binding RedoCommand}" />
+
             <AppBarSeparator/>
             <AppBarButton Icon="Font" Label="Font" ToolTipService.ToolTip="Text font"/>
             <AppBarButton Icon="FontSize" Label="Size" ToolTipService.ToolTip="Font size"/>

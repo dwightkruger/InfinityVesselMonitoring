@@ -6,6 +6,8 @@
 
 using System;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using InfinityGroup.VesselMonitoring.UndoRedoFramework.Props;
 using InfinityGroup.VesselMonitoring.Utilities;
 using Microsoft.Graphics.Canvas.Text;
 using Windows.UI;
@@ -58,5 +60,9 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         Task BeginCommit();
         Task BeginDelete();
         void Rollback();
+        ICommand UndoCommand { get; }
+        ICommand RedoCommand { get; }
+        UndoRedoContext UndoRedoContext { get; }
+        void Update();
     }
 }

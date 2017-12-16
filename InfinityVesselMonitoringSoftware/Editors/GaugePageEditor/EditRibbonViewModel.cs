@@ -8,6 +8,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using InfinityGroup.VesselMonitoring.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -29,6 +30,8 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
         private RelayCommand _leftAlignTextCommand;
         private RelayCommand _rightAlignTextCommand;
         private RelayCommand _centerAlignTextCommand;
+        private RelayCommand _undoCommand;
+        private RelayCommand _redoCommand;
 
         private List<IGaugeItem> _gaugeItemList = null;
         private List<IGaugeItem> _gaugeItemSelectedList = null;
@@ -294,6 +297,88 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
                 }
 
                 return _centerAlignTextCommand;
+            }
+        }
+
+        public ICommand UndoCommand
+        {
+            get
+            {
+                if (_undoCommand == null)
+                {
+                    _undoCommand = new RelayCommand(
+                        () =>
+                        {
+                            IEnumerable<IGaugeItem> query =
+                                from item in this.GaugeItemList
+                                orderby item.UndoRedoContext.LastModified descending
+                                select item;
+
+                            if (query.Count<IGaugeItem>() == 0) return;
+
+                            // There may be more then one item modified at this time. We want to undo all of them
+                            // with the same time.
+                            DateTime lastModifiedTime = query.First<IGaugeItem>().UndoRedoContext.LastModified;
+                            foreach (IGaugeItem item in query)
+                            {
+                                if (item.UndoRedoContext.LastModified == lastModifiedTime)
+                                {
+                                    item.UndoCommand.Execute(null);
+                                    item.Update();
+                                }
+                            }
+                        },
+                        () =>
+                        {
+                            if (null == this.GaugeItemList) return false;
+                            if (0 == this.GaugeItemList.Count) return false;
+                            return true;
+                        }
+                       );
+                }
+
+                return _undoCommand;
+            }
+        }
+
+        public ICommand RedoCommand
+        {
+            get
+            {
+                if (_redoCommand == null)
+                {
+                    _redoCommand = new RelayCommand(
+                        () =>
+                        {
+                            IEnumerable<IGaugeItem> query =
+                                from item in this.GaugeItemList
+                                orderby item.UndoRedoContext.LastModified descending
+                                select item;
+
+                            if (query.Count<IGaugeItem>() == 0) return;
+
+                            // There may be more then one item modified at this time. We want to undo all of them
+                            // with the same time.
+                            DateTime lastModifiedTime = query.First<IGaugeItem>().UndoRedoContext.LastModified;
+                            foreach (IGaugeItem item in query)
+                            {
+                                if (item.UndoRedoContext.LastModified == lastModifiedTime)
+                                {
+                                    item.RedoCommand.Execute(null);
+                                    item.Update();
+                                }
+                            }
+                        },
+                        () =>
+                        {
+                            if (null == this.GaugeItemList) return false;
+                            if (0 == this.GaugeItemList.Count) return false;
+                            return true;
+                        }
+                       );
+                }
+
+                return _redoCommand;
             }
         }
 
