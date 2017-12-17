@@ -11,12 +11,14 @@ using InfinityVesselMonitoringSoftware;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using VesselMonitoringSuite.ViewModels;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -38,6 +40,9 @@ namespace VesselMonitoringSuite.Views
         {
             this.InitializeComponent();
             this.PointerPressed += GaugePageView_PointerPressed;
+
+            this.KeyDown += MainCanvas_KeyDown;
+
             this.EditRibbon.ViewModel.SelectedGaugeItemList = _gaugeItemSelectedList;
 
             //for (int row = 0; row < 3; row++)
@@ -89,7 +94,16 @@ namespace VesselMonitoringSuite.Views
 
                 this.EditRibbon.ViewModel.GaugeItemList = gaugeItemList;
             });
+
+            Messenger.Default.Register<Tuple<int, KeyRoutedEventArgs>> (this, "MainPagePivot_KeyDown", (tp) =>
+            {
+                if (tp.Item1 == this.ViewModel.GaugePageItem.Position)
+                {
+                    MainCanvas_KeyDown(this, tp.Item2);
+                }
+            });
         }
+
 
         /// <summary>
         /// When an object on the screen is selected, put an an adorder with handles so the object can be
@@ -155,6 +169,7 @@ namespace VesselMonitoringSuite.Views
             adorner.IsOpen = false;
             _adornerList.RemoveAt(index);
             this.MainCanvas.Children.Remove(adorner.Popup);
+            adorner.Dispose();
         }
 
         private void AddAdorner(IGaugeItem gaugeItem)

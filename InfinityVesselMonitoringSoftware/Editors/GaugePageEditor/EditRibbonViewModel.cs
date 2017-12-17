@@ -8,7 +8,6 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using InfinityGroup.VesselMonitoring.Interfaces;
-using InfinityVesselMonitoringSoftware.Gauges;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -546,7 +545,6 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
                         item.Update();
                     }
                 }
-
             }
             else if ((lastDeletionTime > lastPropertyChangedTime) &&
                      (lastDeletionTime != DateTime.MinValue))

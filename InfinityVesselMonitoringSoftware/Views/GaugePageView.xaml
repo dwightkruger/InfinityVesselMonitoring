@@ -11,6 +11,7 @@
     xmlns:controls="using:InfinityGroup.VesselMonitoring.Controls"
     xmlns:converters="using:InfinityGroup.VesselMonitoring.Globals.Converters"
     x:Name="UserControl"
+    Background="Transparent"
     mc:Ignorable="d"
     d:DesignHeight="800"
     d:DesignWidth="1000">
@@ -21,14 +22,16 @@
     </UserControl.Resources>
 
     <Grid
-        KeyDown="MainCanvas_KeyDown" 
+        Background="Transparent"
         x:Name="MainGrid">
 
         <tools:AlignmentGrid 
+            x:Name="AlignmentGrid"
             Visibility="{Binding InEditMode, Converter={StaticResource BoolToVisibilityConverter}}"
             LineBrush = "White"
             HorizontalStep = "100"
             VerticalStep = "100"
+            Background="Transparent"
             Width = "{Binding Width, ElementName=MainGrid}" 
             Height="{Binding Height, ElementName=MainGrid}"           
             />
@@ -37,7 +40,6 @@
             x:Name="MainCanvas"
             Background="Transparent"
             Rows="{Binding Rows, ElementName=UserControl}"
-            KeyDown="MainCanvas_KeyDown"
             Columns="{Binding Columns, ElementName=UserControl}">
         </controls:CanvasGrid>
         

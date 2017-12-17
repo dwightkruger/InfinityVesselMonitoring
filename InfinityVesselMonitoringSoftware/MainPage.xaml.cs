@@ -15,6 +15,7 @@ using InfinityVesselMonitoringSoftware.Gauges;
 using Microsoft.Graphics.Canvas.Text;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using VesselMonitoringSuite.Devices;
 using VesselMonitoringSuite.Sensors;
@@ -27,6 +28,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -48,8 +50,8 @@ namespace VesselMonitoring
             const double titlebarHeight = 70;
             const double pivotHeaderHeight = 68;
 
-            this.MainGrid.Height = ds.Height - titlebarHeight - pivotHeaderHeight;
-            this.MainGrid.Width = ds.Width;
+            this.MainPageInnerGrid.Height = ds.Height - titlebarHeight - pivotHeaderHeight;
+            this.MainPageInnerGrid.Width = ds.Width;
 
             DispatcherHelper.Initialize();
 
@@ -545,7 +547,7 @@ namespace VesselMonitoring
             App.GaugeItemCollection.Clear();
             await App.GaugeItemCollection.BeginLoad();
 
-            this.MainPivot.Items.Clear();
+            this.MainPagePivot.Items.Clear();
 
             // For each gauge page, build the view and view model
             foreach (IGaugePageItem item in App.GaugePageCollection)
@@ -556,12 +558,12 @@ namespace VesselMonitoring
                 view.ViewModel.GaugePageItem = item; 
 
                 Binding widthBinding = new Binding();
-                widthBinding.Source = this.MainPivot;
+                widthBinding.Source = this.MainPagePivot;
                 widthBinding.Path = new PropertyPath("ActualWidth");
                 view.SetBinding(GaugePageView.WidthProperty, widthBinding);
 
                 Binding heightBinding = new Binding();
-                heightBinding.Source = this.MainPivot;
+                heightBinding.Source = this.MainPagePivot;
                 heightBinding.Path = new PropertyPath("ActualHeight");
                 view.SetBinding(GaugePageView.HeightProperty, heightBinding);
 
@@ -575,7 +577,7 @@ namespace VesselMonitoring
                 pivotItem.Content = canvas;
 
                 // Put the pivot item on the page
-                this.MainPivot.Items.Add(pivotItem);
+                this.MainPagePivot.Items.Add(pivotItem);
 
                 // Get all of the gauges for this page and tell the page to build itself.
                 List<IGaugeItem> gaugeItemList = await App.GaugeItemCollection.BeginFindAllByPageId(item.PageId);
@@ -583,6 +585,22 @@ namespace VesselMonitoring
                 {
                     Messenger.Default.Send<List<IGaugeItem>>(gaugeItemList, "BuildGaugeItemList");
                 }
+            }
+        }
+
+        /// <summary>
+        /// Pivot controls trap key presses that we need to route to various pages. Pass them through via
+        /// a message.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MainPagePivot_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            if (sender is Pivot)
+            {
+                Messenger.Default.Send<Tuple<int, KeyRoutedEventArgs>>(
+                    Tuple.Create<int, KeyRoutedEventArgs>(MainPagePivot.SelectedIndex, e), 
+                    "MainPagePivot_KeyDown");
             }
         }
     }

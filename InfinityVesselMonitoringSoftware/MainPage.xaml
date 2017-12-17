@@ -6,6 +6,7 @@
     xmlns:editors="using:InfinityVesselMonitoringSoftware.Editors.GaugePageEditor"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="MainPagePage"
     Loaded="Page_Loaded"
     mc:Ignorable="d">
     
@@ -151,7 +152,7 @@
         </Style>
     </Page.Resources>
 
-    <Grid>
+    <Grid x:Name="MainPageGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
@@ -164,9 +165,9 @@
             </LinearGradientBrush>
         </Grid.Background>
         
-        <Viewbox Stretch="Uniform" Grid.Column="1">
-            <Grid x:Name="MainGrid">
-                <Pivot x:Name="MainPivot">
+        <Viewbox x:Name="MainPageViewbox" Stretch="Uniform" Grid.Column="1">
+            <Grid x:Name="MainPageInnerGrid">
+                <Pivot x:Name="MainPagePivot" KeyDown="MainPagePivot_KeyDown">
                 </Pivot>
             </Grid>
         </Viewbox>
