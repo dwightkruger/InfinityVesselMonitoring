@@ -41,9 +41,9 @@
             <AppBarButton Icon="AlignCenter" Label="Center" ToolTipService.ToolTip="Center text" Command="{Binding CenterAlignTextCommand}"/>
             <AppBarButton Icon="Rotate" Label="Rotate" ToolTipService.ToolTip="Rotate text"/>
             <AppBarSeparator/>
-            <AppBarButton Icon="Copy" Label="Copy" ToolTipService.ToolTip="Copy"/>
-            <AppBarButton Icon="Paste" Label="Paste" ToolTipService.ToolTip="Paste"/>
-            <AppBarButton Icon="Delete" Label="Delete" ToolTipService.ToolTip="Delete"/>
+            <AppBarButton Icon="Copy" Label="Copy" ToolTipService.ToolTip="Copy" Command="{Binding CopyCommand}"/>
+            <AppBarButton Icon="Paste" Label="Paste" ToolTipService.ToolTip="Paste" Command="{Binding PasteCommand}"/>
+            <AppBarButton Icon="Delete" Label="Delete" ToolTipService.ToolTip="Delete" Command="{Binding DeleteCommand}"/>
         </CommandBar>
     </Grid>
 </UserControl>

@@ -20,7 +20,9 @@
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </UserControl.Resources>
 
-    <Grid x:Name="MainGrid">
+    <Grid
+        KeyDown="MainCanvas_KeyDown" 
+        x:Name="MainGrid">
 
         <tools:AlignmentGrid 
             Visibility="{Binding InEditMode, Converter={StaticResource BoolToVisibilityConverter}}"
@@ -35,11 +37,13 @@
             x:Name="MainCanvas"
             Background="Transparent"
             Rows="{Binding Rows, ElementName=UserControl}"
+            KeyDown="MainCanvas_KeyDown"
             Columns="{Binding Columns, ElementName=UserControl}">
         </controls:CanvasGrid>
         
         <editors:EditRibbonView 
             x:Name="EditRibbon"
+            KeyDown="MainCanvas_KeyDown" 
             Visibility="{Binding InEditMode, Converter={StaticResource BoolToVisibilityConverter}}"
             VerticalAlignment="Top"
             />

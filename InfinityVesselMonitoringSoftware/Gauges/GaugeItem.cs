@@ -127,6 +127,40 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             this.NotifyOfPropertyChangeAll();
         }
 
+        public IGaugeItem Copy()
+        {
+            IGaugeItem item = new GaugeItem(this.PageId);
+
+            item.GaugeHeight = this.GaugeHeight;
+            item.GaugeLeft = this.GaugeLeft;
+            item.GaugeTop = this.GaugeTop;
+            item.GaugeType = this.GaugeType;
+            item.GaugeWidth = this.GaugeWidth;
+            item.Divisions = this.Divisions;
+            item.GaugeColor = this.GaugeColor;
+            item.GaugeOutlineVisibility = this.GaugeOutlineVisibility;
+            item.InnerCircleDelta = this.InnerCircleDelta;
+            item.MajorTicLength = this.MajorTicLength;
+            item.MediumTicLength = this.MediumTicLength;
+            item.MediumTicsPerMajorTic = this.MediumTicsPerMajorTic;
+            item.MiddleCircleDelta = this.MiddleCircleDelta;
+            item.MinorTicLength = this.MinorTicLength;
+            item.MinorTicsPerMajorTic = this.MinorTicsPerMajorTic;
+            item.Resolution = this.Resolution;
+            //item.SensorId = this.SensorId;
+            item.Text = this.Text;
+            item.TextAngle = this.TextAngle;
+            item.TextFontColor = this.TextFontColor;
+            item.TextFontSize = this.TextFontSize;
+            item.TextHorizontalAlignment = this.TextHorizontalAlignment;
+            item.TextVerticalAlignment = this.TextVerticalAlignment;
+            item.Units = this.Units;
+            item.UnitsFontSize = this.UnitsFontSize;
+            item.ValueFontSize = this.ValueFontSize;
+
+            return item;
+        }
+
         public void Update()
         {
             this.NotifyOfPropertyChangeAll();

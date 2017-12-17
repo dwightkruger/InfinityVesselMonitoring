@@ -28,6 +28,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
     public interface IGaugeItem
     {
         DateTime ChangeDate { get; }
+        IGaugeItem Copy();
         int Divisions { get; set; }
         Int64 GaugeId { get; }
         double GaugeHeight { get; set; }

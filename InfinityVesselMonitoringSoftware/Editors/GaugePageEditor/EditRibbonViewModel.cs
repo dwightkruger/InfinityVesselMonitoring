@@ -8,6 +8,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using InfinityGroup.VesselMonitoring.Interfaces;
+using InfinityVesselMonitoringSoftware.Gauges;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,6 +23,9 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
         private RelayCommand _saveCommand;
         private RelayCommand _revertCommand;
         private RelayCommand _exitCommand;
+        private RelayCommand _copyCommand;
+        private RelayCommand _pasteCommand;
+        private RelayCommand _deleteCommand;
         private RelayCommand _fontSizeIncreaseCommand;
         private RelayCommand _fontSizeDecreaseCommand;
         private RelayCommand _boldFontCommand;
@@ -34,7 +38,8 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
         private RelayCommand _redoCommand;
 
         private List<IGaugeItem> _gaugeItemList = null;
-        private List<IGaugeItem> _gaugeItemSelectedList = null;
+        private ObservableCollection<IGaugeItem> _gaugeItemSelectedList = null;
+        private List<IGaugeItem> _gaugeItemCopyList = null;
 
         public EditRibbonViewModel()
         {
@@ -300,6 +305,107 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
             }
         }
 
+        public ICommand CopyCommand 
+        {
+            get
+            {
+                if (_copyCommand == null)
+                {
+                    _copyCommand = new RelayCommand(
+                        () =>
+                        {
+                            // Make a copy of the list of items selected.
+                            if (null != _gaugeItemList)
+                            {
+                                _gaugeItemCopyList = new List<IGaugeItem>();
+                                foreach (IGaugeItem item in this.SelectedGaugeItemList)
+                                {
+                                    IGaugeItem newItem = item.Copy();
+                                    _gaugeItemCopyList.Add(newItem);
+                                }
+                            }
+
+                            _pasteCommand.RaiseCanExecuteChanged();
+                        },
+                        () =>
+                        {
+                            if (null == this.SelectedGaugeItemList) return false;
+                            if (0 == this.SelectedGaugeItemList.Count) return false;
+                            return true;
+                        }
+                       );
+                }
+
+                return _copyCommand;
+            }
+        }
+
+        public ICommand PasteCommand
+        {
+            get
+            {
+                if (_pasteCommand == null)
+                {
+                    _pasteCommand = new RelayCommand(
+                        () =>
+                        {
+                            // Move the items a few pixels over.
+                            foreach (IGaugeItem item in _gaugeItemCopyList)
+                            {
+                                item.GaugeLeft += 80;
+                                item.GaugeTop += 80;
+
+                                this.GaugeItemList.Add(item.Copy());
+                            }
+
+                            // Send the list of gaugeItems to the page to rebuild itself.
+                            Messenger.Default.Send<List<IGaugeItem>>(this.GaugeItemList, "BuildGaugeItemList");
+                        },
+                        () =>
+                        {
+                            if (null == _gaugeItemCopyList) return false;
+                            if (0 == _gaugeItemCopyList.Count) return false;
+                            return true;
+                        }
+                       );
+                }
+
+                return _pasteCommand;
+            }
+        }
+
+        public ICommand DeleteCommand
+        {
+            get
+            {
+                if (_deleteCommand == null)
+                {
+                    _deleteCommand = new RelayCommand(
+                        () =>
+                        {
+                            foreach (IGaugeItem item in _gaugeItemSelectedList)
+                            {
+                                this.GaugeItemList.Remove(item);
+                            }
+
+                            _gaugeItemSelectedList.Clear();
+
+                            // Send the list of gaugeItems to the page to rebuild itself.
+                            Messenger.Default.Send<List<IGaugeItem>>(this.GaugeItemList, "BuildGaugeItemList");
+                        },
+                        () =>
+                        {
+                            if (null == _gaugeItemSelectedList) return false;
+                            if (0 == _gaugeItemSelectedList.Count) return false;
+                            return true;
+                        }
+                       );
+                }
+
+                return _deleteCommand;
+            }
+        }
+
         public ICommand UndoCommand
         {
             get
@@ -383,7 +489,7 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
         }
 
         /// <summary>
-        /// THe list of gauges that can be edited.
+        /// The list of gauges that can be edited.
         /// </summary>
         public List<IGaugeItem> GaugeItemList
         {
@@ -398,14 +504,20 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
         /// <summary>
         /// The current selected gauge
         /// </summary>
-        public List<IGaugeItem> SelectedGaugeItemList
+        public ObservableCollection<IGaugeItem> SelectedGaugeItemList
         {
             get { return _gaugeItemSelectedList; }
             set
             {
-                Set<List<IGaugeItem>>(() => SelectedGaugeItemList, ref _gaugeItemSelectedList, value);
+                Set<ObservableCollection<IGaugeItem>>(() => SelectedGaugeItemList, ref _gaugeItemSelectedList, value);
                 RaisePropertyChangedAll();
+                _gaugeItemSelectedList.CollectionChanged += GaugeItemSelectedList_CollectionChanged;
             }
+        }
+
+        private void GaugeItemSelectedList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            RaisePropertyChangedAll();
         }
 
         /// <summary>
@@ -464,6 +576,11 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
             _leftAlignTextCommand?.RaiseCanExecuteChanged();
             _rightAlignTextCommand?.RaiseCanExecuteChanged();
             _centerAlignTextCommand?.RaiseCanExecuteChanged();
+            _undoCommand?.RaiseCanExecuteChanged();
+            _redoCommand?.RaiseCanExecuteChanged();
+            _copyCommand?.RaiseCanExecuteChanged();
+            _pasteCommand?.RaiseCanExecuteChanged();
+            _deleteCommand?.RaiseCanExecuteChanged();
         }
     }
 }

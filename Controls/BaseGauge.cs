@@ -970,6 +970,8 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             set
             {
+                if (null == value) return;
+
                 Binding isOnlineBinding = new Binding();
                 isOnlineBinding.Source = value;
                 isOnlineBinding.Path = new PropertyPath("IsOnline");

@@ -8,7 +8,6 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
 using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
-using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Types;
 using InfinityVesselMonitoringSoftware;
 using InfinityVesselMonitoringSoftware.Gauges;

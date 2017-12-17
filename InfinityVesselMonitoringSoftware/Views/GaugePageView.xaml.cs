@@ -10,9 +10,12 @@ using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityVesselMonitoringSoftware;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using VesselMonitoringSuite.ViewModels;
+using Windows.System;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -30,7 +33,7 @@ namespace VesselMonitoringSuite.Views
         /// their change handlers.
         /// </summary>
         private bool _ignorePropertyChange;
-        private List<IGaugeItem> _gaugeItemSelectedList = new List<IGaugeItem>();
+        private ObservableCollection<IGaugeItem> _gaugeItemSelectedList = new ObservableCollection<IGaugeItem>();
         private List<Adorner> _adornerList = new List<Adorner>();
 
         public GaugePageView()
@@ -220,9 +223,9 @@ namespace VesselMonitoringSuite.Views
             {
                 sensor.IsOnline = true;
                 sensor.DemoMode = true;
-
-                constructor(sensor);
             }
+
+            constructor(sensor);
         }
 
         private void BuildTextControl(IGaugeItem gaugeItem)
@@ -308,6 +311,48 @@ namespace VesselMonitoringSuite.Views
 
             // The length properties affect measuring.
             source.InvalidateMeasure();
+        }
+
+        // Process the undo, redo, copy, paste keyboard commands
+        private void MainCanvas_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            var ctrlKey = Window.Current.CoreWindow.GetKeyState(VirtualKey.Control);
+            bool isCtrlKeyPressed = ctrlKey.HasFlag(CoreVirtualKeyStates.Down);
+
+            switch (e.Key)
+            {
+                case VirtualKey.C:       // CTRL+C = Copy
+                    if (isCtrlKeyPressed)
+                    {
+                        this.EditRibbon.ViewModel.CopyCommand.Execute(null);
+                        e.Handled = true;
+                    }
+                    break;
+
+                case VirtualKey.V:       // CTRL+V = Paste
+                    if (isCtrlKeyPressed)
+                    {
+                        this.EditRibbon.ViewModel.PasteCommand.Execute(null);
+                        e.Handled = true;
+                    }
+                    break;
+
+                case VirtualKey.Z:       // CTRL+Z = Undo
+                    if (isCtrlKeyPressed)
+                    {
+                        this.EditRibbon.ViewModel.UndoCommand.Execute(null);
+                        e.Handled = true;
+                    }
+                    break;
+
+                case VirtualKey.Y:      // CTRL+Y = Redo
+                    if (isCtrlKeyPressed)
+                    {
+                        this.EditRibbon.ViewModel.RedoCommand.Execute(null);
+                        e.Handled = true;
+                    }
+                    break;
+            }
         }
     }
 }
