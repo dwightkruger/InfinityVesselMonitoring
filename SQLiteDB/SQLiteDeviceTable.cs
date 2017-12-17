@@ -71,7 +71,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
 
         protected override void FillInsertItemStatement(ISQLiteStatement statement, ItemRow itemRow)
         {
-            itemRow.SetField<DateTime>("ChangeDate", DateTime.UtcNow);
+            itemRow.SetField<DateTime>("ChangeDate", DateTime.Now.ToUniversalTime());
 
             statement.Bind("@ChangeDate", SQLiteDB.Utilities.DateTimeSQLite(itemRow.Field<DateTime>("ChangeDate")));
             statement.Bind("@DeviceAddress", itemRow.Field<byte>("DeviceAddress"));
@@ -98,7 +98,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
 
         protected override void FillUpdateItemStatement(ISQLiteStatement statement, Int64 key, ItemRow itemRow)
         {
-            itemRow.SetField<DateTime>("ChangeDate", DateTime.UtcNow);
+            itemRow.SetField<DateTime>("ChangeDate", DateTime.Now.ToUniversalTime());
 
             statement.Bind("@" + PrimaryKeyName, itemRow.Field<Int64>(PrimaryKeyName));
             statement.Bind("@ChangeDate", SQLiteDB.Utilities.DateTimeSQLite(itemRow.Field<DateTime>("ChangeDate")));

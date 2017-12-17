@@ -5,7 +5,6 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Messaging;
 using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.Types;
@@ -23,14 +22,16 @@ namespace InfinityVesselMonitoringSoftware.Gauges
 {
     /// <summary>
     /// This class contains the information telling which page the gauge should contain this page (pageId), the
-    /// type of gauge (tank, text, arc, etc.) its location, height, width, sensorId, ...
+    /// type of gauge (tank, text, arc, etc.) its screen location, height, width, sensorId, ...
     /// </summary>
     public class GaugeItem : ObservableObject, IGaugeItem
     {
         protected UndoRedoContext _context;
         private PropertyBag _propertyBag;
 
-        private UndoableProperty<DateTime> _changeDate;
+        // All of the following properties are accessable via the user in the screen editor. As a result, we
+        // want them to be undo'able and redo'able.
+
         private UndoableProperty<GaugeTypeEnum> _gaugeType;
         private UndoableProperty<Int64> _pageId;
         private UndoableProperty<double> _gaugeHeight;
@@ -59,7 +60,6 @@ namespace InfinityVesselMonitoringSoftware.Gauges
         private UndoableProperty<Int64> _sensorId;
         private UndoableProperty<Units> _units;
 
-        public const string ChangeDatePropertyName = "ChangeDate";
         public const string GaugeTypePropertyName = "GaugeType";
         public const string PageIdPropertyName = "PageId";
         public const string SensorIdPropertyName = "SensorId";
@@ -137,12 +137,10 @@ namespace InfinityVesselMonitoringSoftware.Gauges
 
         public DateTime ChangeDate
         {
-            get { return _changeDate.GetValue(); }
-            set
+            get
             {
-                _changeDate.SetValue(value);
-                Row.SetField<DateTime>(ChangeDatePropertyName, value);
-                RaisePropertyChanged(() => ChangeDate);
+                if (null == this.Row) return DateTime.Now.ToUniversalTime();
+                return this.Row.Field<DateTime>("ChangeDate"); 
             }
         }
 
@@ -162,8 +160,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             {
                 if (null == Row) return -1;
 
-                Int64 value = Row.Field<Int64>("GaugeId");
-                return value;
+                return Row.Field<Int64>("GaugeId");
             }
         }
 
@@ -438,6 +435,8 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                     this.Row.SetField<string>("PropertyBag", this.PropertyBag.JsonSerialize());
                 }
 
+                SetRowPropertyValue<DateTime>(() => ChangeDate, DateTime.Now.ToUniversalTime());
+
                 await App.BuildDBTables.GaugeTable.BeginCommitRow(
                     Row,
                     () =>
@@ -469,11 +468,14 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             }
         }
 
-        public UndoRedoContext UndoRedoContext
+        public DateTime LastModifiedTime
         {
-            get { return _context; }
+            get { return _context.LastModified; }
         }
 
+        /// <summary>
+        /// Signal a INotifyPropertyChange event for all of the properties in this class.
+        /// </summary>
         private void NotifyOfPropertyChangeAll()
         {
             foreach (ItemColumn column in App.BuildDBTables.GaugeTable.Columns)
@@ -519,7 +521,10 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 if (_propertyBag == null)
                 {
                     _propertyBag = new PropertyBag();
+                    Row.SetField<string>("PropertyBag", _propertyBag.JsonSerialize());
+                    RaisePropertyChanged(() => IsDirty);
                 }
+
                 return _propertyBag;
             }
 
@@ -530,6 +535,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                     _propertyBag = value;
                     RaisePropertyChanged(() => PropertyBag);
                     Row.SetField<string>("PropertyBag", _propertyBag.JsonSerialize());
+                    RaisePropertyChanged(() => IsDirty);
                 }
             }
         }
@@ -574,7 +580,6 @@ namespace InfinityVesselMonitoringSoftware.Gauges
         /// </summary>
         private void LoadFromRow()
         {
-            _changeDate = new UndoableProperty<DateTime>(this, ChangeDatePropertyName, this._context, this.Row.Field<DateTime>(ChangeDatePropertyName));
             _divisions = new UndoableProperty<int>(this, DivisionsPropertyName, this._context, this.Row.Field<int>(DivisionsPropertyName));
             _gaugeColor = new UndoableProperty<Color>(this, GaugeColorPropertyName, this._context, this.Row.Field<Color>(GaugeColorPropertyName));
             _gaugeHeight = new UndoableProperty<double>(this, GaugeHeightPropertyName, this._context, this.Row.Field<double>(GaugeHeightPropertyName));
@@ -609,7 +614,6 @@ namespace InfinityVesselMonitoringSoftware.Gauges
         /// </summary>
         private void ReloadFromRow()
         {
-            this.ChangeDate = this.Row.Field<DateTime>(ChangeDatePropertyName);
             this.Divisions = this.Row.Field<int>(DivisionsPropertyName);
             this.GaugeColor = this.Row.Field<Color>(GaugeColorPropertyName);
             this.GaugeHeight = this.Row.Field<double>(GaugeHeightPropertyName);

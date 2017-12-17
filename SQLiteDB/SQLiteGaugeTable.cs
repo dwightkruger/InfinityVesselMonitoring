@@ -108,7 +108,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
 
         protected override void FillInsertItemStatement(ISQLiteStatement statement, ItemRow itemRow)
         {
-            itemRow.SetField<DateTime>("ChangeDate", DateTime.UtcNow);
+            itemRow.SetField<DateTime>("ChangeDate", DateTime.Now.ToUniversalTime());
 
             statement.Bind("@ChangeDate",              SQLiteDB.Utilities.DateTimeSQLite(itemRow.Field<DateTime>("ChangeDate")));
             statement.Bind("@GaugeType",               Convert.ToInt32(itemRow.Field<GaugeTypeEnum>("GaugeType")));
@@ -221,7 +221,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns.Add("Properties",              typeof(string));
 
             itemTable.Columns[PrimaryKeyName].DefaultValue            = -1L;
-            itemTable.Columns["ChangeDate"].DefaultValue              = DateTime.UtcNow;
+            itemTable.Columns["ChangeDate"].DefaultValue              = DateTime.Now.ToUniversalTime();
             itemTable.Columns["GaugeType"].DefaultValue               = GaugeTypeEnum.Unknown;
             itemTable.Columns["PageId"].DefaultValue                  = -1L;
             itemTable.Columns["SensorId"].DefaultValue                = -1L;

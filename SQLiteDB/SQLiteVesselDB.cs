@@ -35,7 +35,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     DirectoryInfo sourceDirinfo = new DirectoryInfo(sourceDir);     // Get all of the files in the source directory
                     FileInfo[] sourceFileInfoList = sourceDirinfo.GetFiles();
 
-                    DirectoryInfo destDirInfo = new DirectoryInfo(Path.Combine(sourceDir, DateTime.UtcNow.ToString("yyyy-MM-d-T-hh-mm-ss")));
+                    DirectoryInfo destDirInfo = new DirectoryInfo(Path.Combine(sourceDir, DateTime.Now.ToUniversalTime().ToString("yyyy-MM-d-T-hh-mm-ss")));
                     destDirInfo.Create();
 
                     foreach (FileInfo dbFileInfo in sourceFileInfoList)

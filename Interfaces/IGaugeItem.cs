@@ -27,7 +27,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
 
     public interface IGaugeItem
     {
-        DateTime ChangeDate { get; set; }
+        DateTime ChangeDate { get; }
         int Divisions { get; set; }
         Int64 GaugeId { get; }
         double GaugeHeight { get; set; }
@@ -62,7 +62,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         void Rollback();
         ICommand UndoCommand { get; }
         ICommand RedoCommand { get; }
-        UndoRedoContext UndoRedoContext { get; }
+        DateTime LastModifiedTime { get; }
         void Update();
     }
 }

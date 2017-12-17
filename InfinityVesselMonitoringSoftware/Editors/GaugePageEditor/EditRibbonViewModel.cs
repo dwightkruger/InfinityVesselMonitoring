@@ -311,17 +311,17 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
                         {
                             IEnumerable<IGaugeItem> query =
                                 from item in this.GaugeItemList
-                                orderby item.UndoRedoContext.LastModified descending
+                                orderby item.LastModifiedTime descending
                                 select item;
 
                             if (query.Count<IGaugeItem>() == 0) return;
 
                             // There may be more then one item modified at this time. We want to undo all of them
                             // with the same time.
-                            DateTime lastModifiedTime = query.First<IGaugeItem>().UndoRedoContext.LastModified;
+                            DateTime lastModifiedTime = query.First<IGaugeItem>().LastModifiedTime;
                             foreach (IGaugeItem item in query)
                             {
-                                if (item.UndoRedoContext.LastModified == lastModifiedTime)
+                                if (item.LastModifiedTime == lastModifiedTime)
                                 {
                                     item.UndoCommand.Execute(null);
                                     item.Update();
@@ -352,17 +352,17 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
                         {
                             IEnumerable<IGaugeItem> query =
                                 from item in this.GaugeItemList
-                                orderby item.UndoRedoContext.LastModified descending
+                                orderby item.LastModifiedTime descending
                                 select item;
 
                             if (query.Count<IGaugeItem>() == 0) return;
 
                             // There may be more then one item modified at this time. We want to undo all of them
                             // with the same time.
-                            DateTime lastModifiedTime = query.First<IGaugeItem>().UndoRedoContext.LastModified;
+                            DateTime lastModifiedTime = query.First<IGaugeItem>().LastModifiedTime;
                             foreach (IGaugeItem item in query)
                             {
-                                if (item.UndoRedoContext.LastModified == lastModifiedTime)
+                                if (item.LastModifiedTime == lastModifiedTime)
                                 {
                                     item.RedoCommand.Execute(null);
                                     item.Update();
