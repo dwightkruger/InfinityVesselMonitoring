@@ -469,7 +469,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                     this.Row.SetField<string>("PropertyBag", this.PropertyBag.JsonSerialize());
                 }
 
-                SetRowPropertyValue<DateTime>(() => ChangeDate, DateTime.Now.ToUniversalTime());
+                this.Row.SetField<DateTime>("ChangeDate", DateTime.Now.ToUniversalTime());
 
                 await App.BuildDBTables.GaugeTable.BeginCommitRow(
                     Row,
@@ -502,7 +502,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             }
         }
 
-        public DateTime LastModifiedTime
+        public DateTime PropertyChangedTime
         {
             get { return _context.LastModified; }
         }

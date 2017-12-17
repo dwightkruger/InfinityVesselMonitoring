@@ -63,7 +63,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         void Rollback();
         ICommand UndoCommand { get; }
         ICommand RedoCommand { get; }
-        DateTime LastModifiedTime { get; }
+        DateTime PropertyChangedTime { get; }
         void Update();
     }
 }

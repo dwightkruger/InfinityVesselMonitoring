@@ -40,6 +40,7 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
         private List<IGaugeItem> _gaugeItemList = null;
         private ObservableCollection<IGaugeItem> _gaugeItemSelectedList = null;
         private List<IGaugeItem> _gaugeItemCopyList = null;
+        private List<DeletionItem<IGaugeItem>> _gaugeDeletionList = new List<DeletionItem<IGaugeItem>>();
 
         public EditRibbonViewModel()
         {
@@ -386,6 +387,7 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
                             foreach (IGaugeItem item in _gaugeItemSelectedList)
                             {
                                 this.GaugeItemList.Remove(item);
+                                _gaugeDeletionList.Add(new DeletionItem<IGaugeItem>(item));
                             }
 
                             _gaugeItemSelectedList.Clear();
@@ -415,24 +417,7 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
                     _undoCommand = new RelayCommand(
                         () =>
                         {
-                            IEnumerable<IGaugeItem> query =
-                                from item in this.GaugeItemList
-                                orderby item.LastModifiedTime descending
-                                select item;
-
-                            if (query.Count<IGaugeItem>() == 0) return;
-
-                            // There may be more then one item modified at this time. We want to undo all of them
-                            // with the same time.
-                            DateTime lastModifiedTime = query.First<IGaugeItem>().LastModifiedTime;
-                            foreach (IGaugeItem item in query)
-                            {
-                                if (item.LastModifiedTime == lastModifiedTime)
-                                {
-                                    item.UndoCommand.Execute(null);
-                                    item.Update();
-                                }
-                            }
+                            this.UndoLastAction();
                         },
                         () =>
                         {
@@ -458,17 +443,17 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
                         {
                             IEnumerable<IGaugeItem> query =
                                 from item in this.GaugeItemList
-                                orderby item.LastModifiedTime descending
+                                orderby item.PropertyChangedTime descending
                                 select item;
 
                             if (query.Count<IGaugeItem>() == 0) return;
 
                             // There may be more then one item modified at this time. We want to undo all of them
                             // with the same time.
-                            DateTime lastModifiedTime = query.First<IGaugeItem>().LastModifiedTime;
+                            DateTime lastModifiedTime = query.First<IGaugeItem>().PropertyChangedTime;
                             foreach (IGaugeItem item in query)
                             {
-                                if (item.LastModifiedTime == lastModifiedTime)
+                                if (item.PropertyChangedTime == lastModifiedTime)
                                 {
                                     item.RedoCommand.Execute(null);
                                     item.Update();
@@ -520,6 +505,74 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
             RaisePropertyChangedAll();
         }
 
+        private void UndoLastAction()
+        {
+            // What is the most recent deletion?
+            DateTime lastDeletionTime = DateTime.MinValue;
+            IEnumerable<DeletionItem<IGaugeItem>> query1 = null;
+            if ((null != _gaugeDeletionList) && (0 != _gaugeDeletionList.Count))
+            {
+                query1 =
+                    from item in this._gaugeDeletionList
+                    orderby item.DeletionTime descending
+                    select item;
+
+                lastDeletionTime = query1.First<DeletionItem<IGaugeItem>>().DeletionTime;
+            }
+
+            // What is the most recent property change?
+            DateTime lastPropertyChangedTime = DateTime.MinValue;
+            IEnumerable<IGaugeItem> query2 = null;
+            if ((null != this.GaugeItemList) && (0 != this.GaugeItemList.Count))
+            {
+                query2 =
+                    from item in this.GaugeItemList
+                    orderby item.PropertyChangedTime descending
+                    select item;
+
+                lastPropertyChangedTime = query2.First<IGaugeItem>().PropertyChangedTime;
+            }
+
+            // Undo the most recent action choosing between a deletion and a property change.
+            if (lastPropertyChangedTime > lastDeletionTime)
+            {
+                // There may be more then one item modified at this time. We want to undo all of them
+                // with the same time.
+                foreach (IGaugeItem item in query2)
+                {
+                    if (item.PropertyChangedTime >= lastPropertyChangedTime)
+                    {
+                        item.UndoCommand.Execute(null);
+                        item.Update();
+                    }
+                }
+
+            }
+            else if ((lastDeletionTime > lastPropertyChangedTime) &&
+                     (lastDeletionTime != DateTime.MinValue))
+            {
+                // There may be more than one deletion at this time. We want to undo all of them
+                // with the same time.
+
+                int i = 0;
+                while (i < _gaugeDeletionList.Count)
+                {
+                    if (_gaugeDeletionList[i].DeletionTime >= lastDeletionTime)
+                    {
+                        this.GaugeItemList.Add(_gaugeDeletionList[i].Item);
+                        _gaugeDeletionList.RemoveAt(i);
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+
+                // Send the list of gaugeItems to the page to rebuild itself.
+                Messenger.Default.Send<List<IGaugeItem>>(this.GaugeItemList, "BuildGaugeItemList");
+            }
+        }
+
         /// <summary>
         /// Are one or more of the gauge items in the list of the type specified?
         /// </summary>
@@ -541,6 +594,12 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
         /// <returns></returns>
         async private Task BeginCommit()
         {
+            // Execute all of the gauge item deletion requests.
+            foreach (DeletionItem<IGaugeItem> item in _gaugeDeletionList)
+            {
+                await item.Item.BeginDelete();
+            }
+
             if (null == this.GaugeItemList) return;
             if (this.GaugeItemList.Count == 0) return;
 
@@ -552,6 +611,14 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
 
         private void Rollback()
         {
+            // Roll back all of the gauge item deletion reqests
+            foreach (DeletionItem<IGaugeItem> item in _gaugeDeletionList)
+            {
+                this.GaugeItemList.Add(item.Item);
+            }
+
+            _gaugeDeletionList.Clear();
+
             if (null == this.GaugeItemList) return;
             if (this.GaugeItemList.Count == 0) return;
 
@@ -582,5 +649,17 @@ namespace InfinityVesselMonitoringSoftware.Editors.GaugePageEditor
             _pasteCommand?.RaiseCanExecuteChanged();
             _deleteCommand?.RaiseCanExecuteChanged();
         }
+    }
+
+    public class DeletionItem<T>
+    {
+        public DeletionItem(T item)
+        {
+            this.Item = item;
+            this.DeletionTime = DateTime.Now.ToUniversalTime();
+        }
+
+        public T Item { get; private set; }
+        public DateTime DeletionTime { get; private set; }
     }
 }
