@@ -11,7 +11,6 @@
     xmlns:controls="using:InfinityGroup.VesselMonitoring.Controls"
     xmlns:converters="using:InfinityGroup.VesselMonitoring.Globals.Converters"
     x:Name="UserControl"
-    Background="Transparent"
     mc:Ignorable="d"
     d:DesignHeight="800"
     d:DesignWidth="1000">
@@ -22,7 +21,7 @@
     </UserControl.Resources>
 
     <Grid
-        Background="Transparent"
+        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
         x:Name="MainGrid">
 
         <tools:AlignmentGrid 

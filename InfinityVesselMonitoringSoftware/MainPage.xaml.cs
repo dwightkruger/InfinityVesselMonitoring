@@ -33,7 +33,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
-
+// Icons from https://www.flaticon.com
 namespace VesselMonitoring
 {
     /// <summary>
@@ -552,8 +552,10 @@ namespace VesselMonitoring
 
             VesselSettingsHomeView vesselSettingsHomeView = new VesselSettingsHomeView();
             PivotItem vsPivotItem = new PivotItem();
-            vsPivotItem.Header = "Vessel Settings";
-            vsPivotItem.Content = vesselSettingsHomeView;
+            vsPivotItem.Header = "Settings";
+            Canvas vscanvas = new Canvas();
+            vscanvas.Children.Add(vesselSettingsHomeView);
+            vsPivotItem.Content = vscanvas;
             this.MainPagePivot.Items.Add(vsPivotItem);
 
             // For each gauge page, build the view and view model
@@ -631,8 +633,6 @@ namespace VesselMonitoring
                     ViewSizePreference.Custom,
                     currentView.Id,
                     ViewSizePreference.UseMinimum);
-
-                //newAppView.TryResizeView(new Size { Width = 300, Height = 500 });
             });
         }
     }

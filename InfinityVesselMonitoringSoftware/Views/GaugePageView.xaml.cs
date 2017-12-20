@@ -11,7 +11,6 @@ using InfinityVesselMonitoringSoftware;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Globalization;
 using VesselMonitoringSuite.ViewModels;
 using Windows.System;

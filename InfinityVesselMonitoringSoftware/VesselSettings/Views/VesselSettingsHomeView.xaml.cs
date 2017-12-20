@@ -4,6 +4,7 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
+using InfinityVesselMonitoringSoftware.VesselSettings.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,6 +33,11 @@ namespace InfinityVesselMonitoringSoftware.VesselSettings.Views
         public VesselSettingsHomeView()
         {
             this.InitializeComponent();
+        }
+
+        public VesselSettingsHomeViewModel ViewModel
+        {
+            get { return this.VM; }
         }
     }
 }

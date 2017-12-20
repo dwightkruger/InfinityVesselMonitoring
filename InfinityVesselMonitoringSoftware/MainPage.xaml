@@ -153,10 +153,6 @@
     </Page.Resources>
 
     <Grid x:Name="MainPageGrid">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
 
         <Grid.Background>
             <LinearGradientBrush EndPoint="1,1" StartPoint="0,0">
