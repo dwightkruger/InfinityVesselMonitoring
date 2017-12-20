@@ -550,7 +550,11 @@ namespace VesselMonitoring
 
             this.MainPagePivot.Items.Clear();
 
-            VesselSettingsHomeView vesselSettingsHome = new VesselSettingsHomeView();
+            VesselSettingsHomeView vesselSettingsHomeView = new VesselSettingsHomeView();
+            PivotItem vsPivotItem = new PivotItem();
+            vsPivotItem.Header = "Vessel Settings";
+            vsPivotItem.Content = vesselSettingsHomeView;
+            this.MainPagePivot.Items.Add(vsPivotItem);
 
             // For each gauge page, build the view and view model
             foreach (IGaugePageItem item in App.GaugePageCollection)

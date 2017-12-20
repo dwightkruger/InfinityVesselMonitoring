@@ -145,15 +145,23 @@
     <Content Include="Graphics\battery-128x128.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Graphics\Database-dark.png" />
+    <Content Include="Graphics\Database-light.png" />
     <Content Include="Graphics\Germany Flag.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Graphics\Pages-dark.png" />
+    <Content Include="Graphics\Pages-light.png" />
     <Content Include="Graphics\Portugal Flag.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Graphics\Sailboat.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Graphics\Sensor-dark.png" />
+    <Content Include="Graphics\Sensor-light.png" />
+    <Content Include="Graphics\Ship-dark.png" />
+    <Content Include="Graphics\Ship-light.png" />
     <Content Include="Graphics\Spain Flag.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

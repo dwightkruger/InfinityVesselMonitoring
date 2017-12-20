@@ -7,7 +7,65 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <Style TargetType="TextBlock">
+            <Style.Setters>
+                <Setter Property="FontSize" Value="32"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="Foreground" Value="{ThemeResource ApplicationForegroundThemeBrush}"/>
+            </Style.Setters>
+        </Style>
+
+        <Style TargetType="StackPanel">
+            <Style.Setters>
+                <Setter Property="Orientation" Value="Vertical"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Padding" Value="24"/>
+            </Style.Setters>
+        </Style>
+
+        <Style TargetType="Image">
+            <Style.Setters>
+                <Setter Property="Margin" Value="100"/>
+            </Style.Setters>
+        </Style>
+    </Page.Resources>
+    <Grid
+        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel x:Name="VesselSettingsStackPanel" Grid.Row="0" Grid.Column="0" >
+            <Image x:Name="VesselSettingsImage" 
+                   Margin="100"
+                   Source="ms-appx:///Graphics/Ship-dark.png">
+            </Image>
+            <TextBlock Text="Vessel Settings" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="0" Grid.Column="1">
+            <Image x:Name="SensorImage" Source="ms-appx:///Graphics/Sensor-dark.png"/>
+            <TextBlock Text="Sensors"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="0" Grid.Column="2">
+            <Image x:Name="PagesImage" Source="ms-appx:///Graphics/Pages-dark.png"/>
+            <TextBlock Text="Pages"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Grid.Column="0">
+            <Image x:Name="DatabaseImage" Source="ms-appx:///Graphics/Database-dark.png"/>
+            <TextBlock Text="Database"/>
+        </StackPanel>
 
     </Grid>
 </Page>
