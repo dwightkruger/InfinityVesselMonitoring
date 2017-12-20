@@ -2,6 +2,7 @@
 using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityVesselMonitoringSoftware.Gauges;
+using InfinityVesselMonitoringSoftware.VesselSettings;
 using System;
 using System.Threading.Tasks;
 using VesselMonitoring;
@@ -121,7 +122,7 @@ namespace InfinityVesselMonitoringSoftware
         public static DeviceCollection DeviceCollection = new DeviceCollection();
         public static GaugePageCollection GaugePageCollection = new GaugePageCollection();
         public static GaugeItemCollection GaugeItemCollection = new GaugeItemCollection();
-        public static VesselSettings VesselSettings { get; set; }
+        public static VesselSettingsItem VesselSettings { get; set; }
         public static IContainer AutofacContainer { get; private set; }
     }
 }

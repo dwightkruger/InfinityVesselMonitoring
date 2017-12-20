@@ -12,25 +12,22 @@ using InfinityGroup.VesselMonitoring.Types;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 
-namespace InfinityVesselMonitoringSoftware
+namespace InfinityVesselMonitoringSoftware.VesselSettings
 {
-    public class VesselSettings : ObservableObject, IVesselSettings
+    public class VesselSettingsItem : ObservableObject, IVesselSettings
     {
         private const string c_imagePrefix = "image.";
 
-        public VesselSettings()
+        public VesselSettingsItem()
         {
         }
 
@@ -247,7 +244,7 @@ namespace InfinityVesselMonitoringSoftware
         {
             var propertyName = GetPropertyName(propertyExpression);
 
-            return GetPropertyRowValue<T>(propertyName); 
+            return GetPropertyRowValue<T>(propertyName);
         }
 
         /// <summary>

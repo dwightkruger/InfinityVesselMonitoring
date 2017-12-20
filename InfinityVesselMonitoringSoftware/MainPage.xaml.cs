@@ -12,10 +12,11 @@ using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Utilities;
 using InfinityVesselMonitoringSoftware;
 using InfinityVesselMonitoringSoftware.Gauges;
+using InfinityVesselMonitoringSoftware.VesselSettings;
+using InfinityVesselMonitoringSoftware.VesselSettings.Views;
 using Microsoft.Graphics.Canvas.Text;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using VesselMonitoringSuite.Devices;
 using VesselMonitoringSuite.Sensors;
@@ -121,7 +122,7 @@ namespace VesselMonitoring
 
             await App.BuildDBTables.VesselSettingsTable.BeginEmpty();
 
-            App.VesselSettings = new VesselSettings();
+            App.VesselSettings = new VesselSettingsItem();
             App.VesselSettings.VesselName = "MV Infinity";
             App.VesselSettings.FromEmailAddress = "";
             App.VesselSettings.FromEmailPassword = "";
@@ -548,6 +549,8 @@ namespace VesselMonitoring
             await App.GaugeItemCollection.BeginLoad();
 
             this.MainPagePivot.Items.Clear();
+
+            VesselSettingsHomeView vesselSettingsHome = new VesselSettingsHomeView();
 
             // For each gauge page, build the view and view model
             foreach (IGaugePageItem item in App.GaugePageCollection)

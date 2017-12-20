@@ -120,7 +120,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sensors\SensorCollection.cs" />
     <Compile Include="Sensors\SensorItem.cs" />
-    <Compile Include="VesselSettings.cs" />
+    <Compile Include="VesselSettings\VesselSettingsItem.cs" />
+    <Compile Include="VesselSettings\Views\VesselSettingsHomeView.xaml.cs">
+      <DependentUpon>VesselSettingsHomeView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\GaugePageViewModel.cs" />
     <Compile Include="Views\GaugePageView.xaml.cs">
       <DependentUpon>GaugePageView.xaml</DependentUpon>
@@ -185,6 +188,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="VesselSettings\Views\VesselSettingsHomeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\GaugePageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -247,6 +254,7 @@
   <ItemGroup>
     <Folder Include="Editors\GaugeEditor\" />
     <Folder Include="Editors\SensorEditor\" />
+    <Folder Include="VesselSettings\ViewModels\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
