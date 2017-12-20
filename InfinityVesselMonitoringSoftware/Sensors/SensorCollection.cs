@@ -100,7 +100,7 @@ namespace VesselMonitoringSuite.Sensors
         /// <summary>
         /// Loads the sensors from the SQL database table
         /// </summary>
-        async public Task BeginLoad()
+        public void Load()
         {
             try
             {

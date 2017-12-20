@@ -32,7 +32,7 @@ namespace VesselMonitoringSuite.Devices
         /// Do not call this function. Call await BeginAdd instead.
         /// </summary>
         /// <param name="item"></param>
-        public new void Add(IGaugePageItem item)
+        public void Add(IGaugePageItem item)
         {
             throw new NotImplementedException("Use BeginAdd");
         }
@@ -59,7 +59,7 @@ namespace VesselMonitoringSuite.Devices
             return deviceItem;
         }
 
-        new public void BeginClear()
+        public void BeginClear()
         {
             Task.Run(async () =>
             {

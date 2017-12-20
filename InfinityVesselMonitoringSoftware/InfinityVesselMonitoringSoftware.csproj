@@ -113,6 +113,7 @@
     <Compile Include="Gauges\GaugeItemCollection.cs" />
     <Compile Include="Gauges\GaugePageCollection.cs" />
     <Compile Include="Gauges\GaugePageItem.cs" />
+    <Compile Include="IPVideoCamera\IPVideoCamera.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -244,6 +245,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Editors\GaugeEditor\" />
     <Folder Include="Editors\SensorEditor\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

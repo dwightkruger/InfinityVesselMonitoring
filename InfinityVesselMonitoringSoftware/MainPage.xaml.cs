@@ -24,12 +24,12 @@ using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -279,7 +279,7 @@ namespace VesselMonitoring
             sensor.SensorUnitType = UnitType.VolumeFlow;
             sensor = await App.SensorCollection.BeginAdd(sensor);
 
-            for (int i=0; i<100; i++)
+            for (int i = 0; i < 100; i++)
             {
                 sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
                 sensor.SerialNumber = Guid.NewGuid().ToString();
@@ -289,7 +289,7 @@ namespace VesselMonitoring
             }
 
             App.SensorCollection.Clear();
-            await App.SensorCollection.BeginLoad();
+            App.SensorCollection.Load();
         }
 
         async Task PopulateDemoGaugeCollection()
@@ -537,7 +537,7 @@ namespace VesselMonitoring
 
             App.BuildDBTables.SensorTable.Load();
             App.SensorCollection.Clear();
-            await App.SensorCollection.BeginLoad();
+            App.SensorCollection.Load();
 
             App.BuildDBTables.GaugePageTable.Load();
             App.GaugePageCollection.Clear();
@@ -555,7 +555,7 @@ namespace VesselMonitoring
                 GaugePageView view = new GaugePageView();
                 view.Rows = 3;
                 view.Columns = 3;
-                view.ViewModel.GaugePageItem = item; 
+                view.ViewModel.GaugePageItem = item;
 
                 Binding widthBinding = new Binding();
                 widthBinding.Source = this.MainPagePivot;
@@ -599,9 +599,34 @@ namespace VesselMonitoring
             if (sender is Pivot)
             {
                 Messenger.Default.Send<Tuple<int, KeyRoutedEventArgs>>(
-                    Tuple.Create<int, KeyRoutedEventArgs>(MainPagePivot.SelectedIndex, e), 
+                    Tuple.Create<int, KeyRoutedEventArgs>(MainPagePivot.SelectedIndex, e),
                     "MainPagePivot_KeyDown");
             }
+        }
+
+        public static async Task BeginShowNewWindow<TView>()
+        {
+            ApplicationView currentView = ApplicationView.GetForCurrentView();
+            CoreApplicationView newView = CoreApplication.CreateNewView();
+            await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                Window newWindow = Window.Current;
+                ApplicationView newAppView = ApplicationView.GetForCurrentView();
+                newAppView.Title = "Sensor Editor";
+
+                Frame frame = new Frame();
+                frame.Navigate(typeof(TView), null);
+                newWindow.Content = frame;
+                newWindow.Activate();
+    
+                await ApplicationViewSwitcher.TryShowAsStandaloneAsync(
+                    newAppView.Id,
+                    ViewSizePreference.Custom,
+                    currentView.Id,
+                    ViewSizePreference.UseMinimum);
+
+                //newAppView.TryResizeView(new Size { Width = 300, Height = 500 });
+            });
         }
     }
 }

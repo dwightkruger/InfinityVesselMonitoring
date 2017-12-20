@@ -26,7 +26,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
         /// Do not call this function. Call await BeginAdd instead.
         /// </summary>
         /// <param name="sensorItem"></param>
-        new public void Add(ISensorItem sensorItem)
+        public void Add(ISensorItem sensorItem)
         {
             throw new NotImplementedException("Use BeginAdd instead");
         }
