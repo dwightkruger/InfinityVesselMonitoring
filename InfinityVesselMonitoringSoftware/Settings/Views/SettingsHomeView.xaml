@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:vm="using:InfinityVesselMonitoringSoftware.Settings.ViewModels"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="using:InfinityVesselMonitoringSoftware.Settings.Views"
     mc:Ignorable="d"
     d:DesignHeight="800"
     d:DesignWidth="1800">
@@ -56,11 +57,12 @@
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
@@ -73,7 +75,7 @@
             </Viewbox>
         </Button>
 
-        <Button x:Name="SensorsButton" Grid.Row="0" Grid.Column="1" Command="{Binding Path=SensorsCommand}">
+        <Button x:Name="SensorsButton" Grid.Row="1" Grid.Column="0" Command="{Binding Path=SensorsCommand}">
             <Viewbox>
                 <Grid>
                     <Image x:Name="SensorImage" Source="ms-appx:///Graphics/Sensor-dark.png"/>
@@ -82,7 +84,7 @@
             </Viewbox>
         </Button>
 
-        <Button x:Name="PagesButton" Grid.Row="0" Grid.Column="2" Command="{Binding Path=PagesCommand}">
+        <Button x:Name="PagesButton" Grid.Row="2" Grid.Column="0" Command="{Binding Path=PagesCommand}">
             <Viewbox>
                 <Grid>
                     <Image x:Name="PagesImage" Source="ms-appx:///Graphics/Pages-dark.png"/>
@@ -91,14 +93,16 @@
             </Viewbox>
         </Button>
 
-        <Button x:Name="DatabaseButton" Grid.Row="1" Grid.Column="0" Command="{Binding Path=DatabaseCommand}">
+        <Button x:Name="DatabaseButton" Grid.Row="3" Grid.Column="0" Command="{Binding Path=DatabaseCommand}">
             <Viewbox>
                 <Grid>
                     <Image x:Name="DatabaseImage" Source="ms-appx:///Graphics/Database-dark.png"/>
-                    <TextBlock Text="Database"/>
-                </Grid>
+                        <TextBlock Text="Database"/>
+                    </Grid>
             </Viewbox>
         </Button>
-    </Grid>
+
+            <views:VesselSettingsPage Grid.Row="0" Grid.Column="1" Grid.RowSpan="4"/>
+        </Grid>
 </Viewbox>        
 </Page>

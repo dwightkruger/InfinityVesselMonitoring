@@ -31,6 +31,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 // Icons from https://www.flaticon.com
@@ -130,7 +131,7 @@ namespace VesselMonitoring
             App.VesselSettings.SMTPServerName = "smtp-mail.outlook.com";
             App.VesselSettings.SMTPPort = 587;
             App.VesselSettings.SMTPEncryptionMethod = 2; // SmtpConnectType.ConnectSTARTTLS
-            App.VesselSettings.ThemeColor = Colors.CornflowerBlue;
+            App.VesselSettings.ThemeColor = ((SolidColorBrush) Application.Current.Resources["ApplicationForegroundThemeBrush"]).Color;
 
             //SendEmail.FromEmailAddress = App.VesselSettings.FromEmailAddress;
             //SendEmail.FromEmailPassword = App.VesselSettings.FromEmailPassword;
@@ -527,26 +528,26 @@ namespace VesselMonitoring
 
         async private void BuildDemoGaugePages()
         {
-            //await this.PopulateDemoDeviceCollection();
-            //await this.PopulateDemoSensorCollection();
-            //await this.PopulateDemoGaugePageCollection();
-            //await this.PopulateDemoGaugeCollection();
+            await this.PopulateDemoDeviceCollection();
+            await this.PopulateDemoSensorCollection();
+            await this.PopulateDemoGaugePageCollection();
+            await this.PopulateDemoGaugeCollection();
 
-            App.BuildDBTables.DeviceTable.Load();
-            App.DeviceCollection.Clear();
-            await App.DeviceCollection.BeginLoad();
+            //App.BuildDBTables.DeviceTable.Load();
+            //App.DeviceCollection.Clear();
+            //await App.DeviceCollection.BeginLoad();
 
-            App.BuildDBTables.SensorTable.Load();
-            App.SensorCollection.Clear();
-            App.SensorCollection.Load();
+            //App.BuildDBTables.SensorTable.Load();
+            //App.SensorCollection.Clear();
+            //App.SensorCollection.Load();
 
-            App.BuildDBTables.GaugePageTable.Load();
-            App.GaugePageCollection.Clear();
-            await App.GaugePageCollection.BeginLoad();
+            //App.BuildDBTables.GaugePageTable.Load();
+            //App.GaugePageCollection.Clear();
+            //await App.GaugePageCollection.BeginLoad();
 
-            App.BuildDBTables.GaugeTable.Load();
-            App.GaugeItemCollection.Clear();
-            await App.GaugeItemCollection.BeginLoad();
+            //App.BuildDBTables.GaugeTable.Load();
+            //App.GaugeItemCollection.Clear();
+            //await App.GaugeItemCollection.BeginLoad();
 
             this.MainPagePivot.Items.Clear();
 

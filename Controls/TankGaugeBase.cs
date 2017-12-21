@@ -12,7 +12,6 @@ using Microsoft.Graphics.Canvas.UI;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using System;
 using System.Numerics;
-using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -175,7 +174,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
             float X = (float)(OuterRectangle.X + outerRectangleThickness);
             float Y = (float)(OuterRectangle.Y + OuterRectangle.Height - height - outerRectangleThickness);
 
-            ds.FillRectangle(X, Y, width, height, TankBrush);
+            ds.FillRectangle(X, Y, width, height, this.TankBrush);
         }
 
         virtual protected void DrawTics(CanvasDrawEventArgs args, int totalTics, float ticLength)
@@ -190,7 +189,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
                 Vector2 from = new Vector2((float)OuterRectangle.X - outerRectangleThickness, Y);
                 Vector2 to = new Vector2((float)OuterRectangle.X - ticLength - outerRectangleThickness, Y);
-                ds.DrawLine(from, to, Colors.White, ticWidth);
+                ds.DrawLine(from, to, this.GaugeColor, ticWidth);
             }
         }
 
@@ -215,7 +214,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 })
                 {
                     string format = "{0:F" + string.Format("{0:F0}", Resolution) + "}";
-                    ds.DrawText(string.Format(format, MinValue + (MaxValue - (i * valueIncrement))), at, Colors.White, textFormat);
+                    ds.DrawText(string.Format(format, MinValue + (MaxValue - (i * valueIncrement))), at, this.GaugeColor, textFormat);
                 }
             }
         }

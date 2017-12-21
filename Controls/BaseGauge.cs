@@ -16,6 +16,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 
 namespace InfinityGroup.VesselMonitoring.Controls
 {
@@ -112,7 +113,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
             "GaugeLabelsColor",
             typeof(Color),
             typeof(BaseGauge),
-            new PropertyMetadata(Windows.UI.Colors.White,
+            new PropertyMetadata(((SolidColorBrush)Application.Current.Resources["ApplicationForegroundThemeBrush"]).Color,
                                  new PropertyChangedCallback(OnGaugeLabelsColorPropertyChanged)));
 
         public Color GaugeLabelsColor
@@ -1104,7 +1105,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
             "TextFontColor",
             typeof(Color),
             typeof(BaseGauge),
-            new PropertyMetadata(Colors.White,
+            new PropertyMetadata(((SolidColorBrush)Application.Current.Resources["ApplicationForegroundThemeBrush"]).Color,
                 new PropertyChangedCallback(OnTextFontColorPropertyChanged)));
 
         public Color TextFontColor
@@ -1226,7 +1227,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
             typeof(Color),
             typeof(BaseGauge),
             new PropertyMetadata(
-                Windows.UI.Colors.LightSkyBlue,
+                ((SolidColorBrush)Application.Current.Resources["ApplicationForegroundThemeBrush"]).Color,
                 new PropertyChangedCallback(OnTitleColorPropertyChanged)));
 
         public Color TitleColor
@@ -1312,7 +1313,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
             "ValueColor",
             typeof(Color),
             typeof(BaseGauge),
-            new PropertyMetadata(Windows.UI.Colors.White,
+            new PropertyMetadata(((SolidColorBrush)Application.Current.Resources["ApplicationForegroundThemeBrush"]).Color,
                 new PropertyChangedCallback(OnValueColorPropertyChanged)));
 
         public Color ValueColor

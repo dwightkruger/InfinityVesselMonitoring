@@ -1,0 +1,26 @@
+﻿<Page
+    x:Class="InfinityVesselMonitoringSoftware.Settings.Views.VesselSettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:InfinityVesselMonitoringSoftware.Settings.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:vm="using:InfinityVesselMonitoringSoftware.Settings.ViewModels"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <vm:VesselSettingsViewModel x:Key="VesselSettingsViewModel" x:Name="VM"/>
+    </Page.Resources>
+    
+    <Grid
+        DataContext="{StaticResource VesselSettingsViewModel}"
+        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+        <TextBlock 
+            Text="Vessel Settings" 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top" 
+            FontSize="48"
+            Foreground="{ThemeResource ApplicationForegroundThemeBrush}"/>
+    </Grid>
+</Page>

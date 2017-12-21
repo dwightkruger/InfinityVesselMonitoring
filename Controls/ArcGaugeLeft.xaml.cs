@@ -167,7 +167,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 float toY = (float)(Math.Sin(radian) * (radius + ticLength)) + Center.Y;
                 Vector2 to = new Vector2(toX, toY);
 
-                ds.DrawLine(from, to, Colors.White, ticWidth);
+                ds.DrawLine(from, to, this.GaugeColor, ticWidth);
 
                 degrees += increment;
             }
@@ -199,7 +199,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 })
                 {
                     string format = "{0:F" + string.Format("{0:F0}", Resolution) + "}";
-                    ds.DrawText(string.Format(format, MinValue + (i * valueIncrement)), at, Colors.White, textFormat);
+                    ds.DrawText(string.Format(format, MinValue + (i * valueIncrement)), at, this.GaugeColor, textFormat);
                 }
 
                 degrees += increment;
@@ -248,7 +248,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 float atY = Center.Y + InnerCircleRadius + ((float)(bounds.Height / 2));
                 Vector2 at = new Vector2(atX, atY);
 
-                ds.DrawText(units, at, Colors.White, textFormat);
+                ds.DrawText(units, at, this.GaugeColor, textFormat);
             }
         }
 

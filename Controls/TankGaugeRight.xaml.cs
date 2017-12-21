@@ -108,7 +108,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
                 Vector2 from = new Vector2(X1, Y);
                 Vector2 to = new Vector2(X2, Y);
-                ds.DrawLine(from, to, Colors.White, ticWidth);
+                ds.DrawLine(from, to, this.GaugeColor, ticWidth);
             }
         }
 
@@ -134,7 +134,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 })
                 {
                     string format = "{0:F" + string.Format("{0:F0}", Resolution) + "}";
-                    ds.DrawText(string.Format(format, MinValue + (MaxValue - (i * valueIncrement))), at, Colors.White, textFormat);
+                    ds.DrawText(string.Format(format, MinValue + (MaxValue - (i * valueIncrement))), at, this.GaugeColor, textFormat);
                 }
             }
         }

@@ -27,7 +27,7 @@
         <tools:AlignmentGrid 
             x:Name="AlignmentGrid"
             Visibility="{Binding InEditMode, Converter={StaticResource BoolToVisibilityConverter}}"
-            LineBrush = "White"
+            LineBrush = "{ThemeResource ApplicationForegroundThemeBrush}"
             HorizontalStep = "100"
             VerticalStep = "100"
             Background="Transparent"

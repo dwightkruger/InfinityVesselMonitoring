@@ -1,6 +1,6 @@
 ﻿//////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                                  //
-// Copyright (c) 2017 Dwight Kruger and Infinity Group, All rights reserved.                        //
+// Copyright (c) 2017 Dwight Kruger and Infinity Group LLC, All rights reserved.                    //
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
@@ -11,16 +11,17 @@ using Windows.UI.Xaml.Controls;
 
 namespace InfinityVesselMonitoringSoftware.Settings.Views
 {
-    public sealed partial class SettingsHomeView : Page
+    public sealed partial class VesselSettingsPage : Page
     {
-        public SettingsHomeView()
+        public VesselSettingsPage()
         {
             this.InitializeComponent();
         }
 
-        public SettingsHomeViewModel ViewModel
+        public VesselSettingsViewModel ViewModel
         {
             get { return this.VM; }
         }
+
     }
 }

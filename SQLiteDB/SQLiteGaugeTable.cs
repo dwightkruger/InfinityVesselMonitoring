@@ -13,6 +13,8 @@ using SQLitePCL;
 using System;
 using System.Threading.Tasks;
 using Windows.UI;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media;
 
 namespace InfinityGroup.VesselMonitoring.SQLiteDB
 {
@@ -229,7 +231,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns["GaugeTop"].DefaultValue                = 0D;
             itemTable.Columns["GaugeHeight"].DefaultValue             = 300D;
             itemTable.Columns["GaugeWidth"].DefaultValue              = 200D;
-            itemTable.Columns["GaugeColor"].DefaultValue              = Colors.White;
+            itemTable.Columns["GaugeColor"].DefaultValue              = ((SolidColorBrush)Application.Current.Resources["ApplicationForegroundThemeBrush"]).Color;
             itemTable.Columns["Divisions"].DefaultValue               = 7;
             itemTable.Columns["MinorTicsPerMajorTic"].DefaultValue    = 3;
             itemTable.Columns["MediumTicsPerMajorTic"].DefaultValue   = 6;

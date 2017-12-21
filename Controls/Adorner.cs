@@ -22,7 +22,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
 {
     public class Adorner : IDisposable
     {
-        private static Brush c_handleColor = new SolidColorBrush(Colors.White);
+        private Brush _handleColor = (SolidColorBrush)Application.Current.Resources["ApplicationForegroundThemeBrush"];
         private static Brush c_transparentColor = new SolidColorBrush(Colors.Transparent);
         private Popup _popup = new Popup();
         private Grid _grid = new Grid();
@@ -44,7 +44,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
             Rectangle rectangle = new Rectangle()
             {
-                Stroke = c_handleColor,
+                Stroke = _handleColor,
                 StrokeThickness = 4,
             };
             
@@ -112,8 +112,8 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             Rectangle handle = new Rectangle()
             {
-                Fill = c_handleColor,
-                Stroke = c_handleColor,
+                Fill = _handleColor,
+                Stroke = _handleColor,
                 StrokeThickness = 1,
                 Height = c_handleHeight,
                 Width = c_handleHeight,
