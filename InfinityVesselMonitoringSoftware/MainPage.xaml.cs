@@ -12,8 +12,8 @@ using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Utilities;
 using InfinityVesselMonitoringSoftware;
 using InfinityVesselMonitoringSoftware.Gauges;
-using InfinityVesselMonitoringSoftware.VesselSettings;
-using InfinityVesselMonitoringSoftware.VesselSettings.Views;
+using InfinityVesselMonitoringSoftware.Settings;
+using InfinityVesselMonitoringSoftware.Settings.Views;
 using Microsoft.Graphics.Canvas.Text;
 using System;
 using System.Collections.Generic;
@@ -550,7 +550,7 @@ namespace VesselMonitoring
 
             this.MainPagePivot.Items.Clear();
 
-            VesselSettingsHomeView vesselSettingsHomeView = new VesselSettingsHomeView();
+            SettingsHomeView vesselSettingsHomeView = new SettingsHomeView();
             PivotItem vsPivotItem = new PivotItem();
             vsPivotItem.Header = "Settings";
             Canvas vscanvas = new Canvas();

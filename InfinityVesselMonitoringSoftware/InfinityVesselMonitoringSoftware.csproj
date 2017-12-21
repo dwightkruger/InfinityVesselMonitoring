@@ -120,10 +120,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sensors\SensorCollection.cs" />
     <Compile Include="Sensors\SensorItem.cs" />
-    <Compile Include="VesselSettings\VesselSettingsItem.cs" />
-    <Compile Include="VesselSettings\ViewModels\VesselSettingsHomeViewModel.cs" />
-    <Compile Include="VesselSettings\Views\VesselSettingsHomeView.xaml.cs">
-      <DependentUpon>VesselSettingsHomeView.xaml</DependentUpon>
+    <Compile Include="Settings\VesselSettingsItem.cs" />
+    <Compile Include="Settings\ViewModels\SettingsHomeViewModel.cs" />
+    <Compile Include="Settings\Views\SettingsHomeView.xaml.cs">
+      <DependentUpon>SettingsHomeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\GaugePageViewModel.cs" />
     <Compile Include="Views\GaugePageView.xaml.cs">
@@ -197,7 +197,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="VesselSettings\Views\VesselSettingsHomeView.xaml">
+    <Page Include="Settings\Views\SettingsHomeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

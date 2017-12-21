@@ -6,23 +6,18 @@
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace InfinityVesselMonitoringSoftware.VesselSettings.ViewModels
+namespace InfinityVesselMonitoringSoftware.Settings.ViewModels
 {
-    public class VesselSettingsHomeViewModel : ObservableObject
+    public class SettingsHomeViewModel : ObservableObject
     {
         private RelayCommand _vesselSettingsCommand;
         private RelayCommand _sensorsCommand;
         private RelayCommand _pagesCommand;
         private RelayCommand _databaseCommand;
 
-        public VesselSettingsHomeViewModel()
+        public SettingsHomeViewModel()
         {
         }
 

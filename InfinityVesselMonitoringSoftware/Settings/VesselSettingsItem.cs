@@ -21,7 +21,7 @@ using Windows.Storage.Streams;
 using Windows.UI;
 using Windows.UI.Xaml.Media.Imaging;
 
-namespace InfinityVesselMonitoringSoftware.VesselSettings
+namespace InfinityVesselMonitoringSoftware.Settings
 {
     public class VesselSettingsItem : ObservableObject, IVesselSettings
     {

@@ -2,7 +2,7 @@
 using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityVesselMonitoringSoftware.Gauges;
-using InfinityVesselMonitoringSoftware.VesselSettings;
+using InfinityVesselMonitoringSoftware.Settings;
 using System;
 using System.Threading.Tasks;
 using VesselMonitoring;
