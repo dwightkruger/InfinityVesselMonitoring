@@ -166,17 +166,32 @@ namespace InfinityVesselMonitoringSoftware.Settings
             get { return GetPropertyRowValue<string>(() => SMTPServerName); }
             set { SetPropertyRowValue<string>(() => SMTPServerName, value); }
         }
-        public Color ThemeColor
+
+        public Color ThemeBackgroundColor
         {
             get
             {
-                Int64 i64Color = GetPropertyRowValue<Int64>("ThemeColor");
+                Int64 i64Color = GetPropertyRowValue<Int64>("ThemeBackgroundColor");
                 return Utilities.ColorFromI64(i64Color);
             }
             set
             {
                 Int64 i64Color = Utilities.ColorToI64(value);
-                SetPropertyRowValue<Int64>("ThemeColor", i64Color);
+                SetPropertyRowValue<Int64>("ThemeBackgroundColor", i64Color);
+            }
+        }
+
+        public Color ThemeForegroundColor
+        {
+            get
+            {
+                Int64 i64Color = GetPropertyRowValue<Int64>("ThemeForegroundColor");
+                return Utilities.ColorFromI64(i64Color);
+            }
+            set
+            {
+                Int64 i64Color = Utilities.ColorToI64(value);
+                SetPropertyRowValue<Int64>("ThemeForegroundColor", i64Color);
             }
         }
 

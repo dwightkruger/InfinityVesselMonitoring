@@ -351,22 +351,15 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
         protected void CreateInnerCircleBrush(CanvasControl sender)
         {
-            Color step1Color = new Color();
-            step1Color.A = 0xFF;
-            step1Color.R = 0x01;
-            step1Color.G = 0x10;
-            step1Color.B = 0x18;
-
-            // #FF01415C
-            Color step2Color = new Color();
-            step2Color.A = 0xFF;
-            step2Color.R = 0x01;
-            step2Color.G = 0x41;
-            step2Color.B = 0x5C;
+            Color step1Color = this.GaugeColor;
+            Color step2Color = ColorHelper.FromArgb(step1Color.A,
+                                                    Convert.ToByte(~step1Color.R & 0xFF),
+                                                    Convert.ToByte(~step1Color.G & 0xFF),
+                                                    Convert.ToByte(~step1Color.B & 0xFF));
 
             var stops = new CanvasGradientStop[]
             {
-                new CanvasGradientStop() { Color=Colors.Black, Position = -0.2f },
+                new CanvasGradientStop() { Color=step1Color, Position = -0.2f },
                 new CanvasGradientStop() { Color=step2Color,   Position = 1.0f },
             };
 
@@ -406,6 +399,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
             _needsResourceRecreation = false;
         }
+
         protected CanvasLinearGradientBrush InnerCircleBrush { get; set; }
 
         protected Vector2 Center { get; set; }

@@ -26,7 +26,8 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         int SMTPEncryptionMethod { get; set; }
         int SMTPPort { get; set; }
         string SMTPServerName { get; set; }
-        Color ThemeColor { get; set; }
+        Color ThemeForegroundColor { get; set; }
+        Color ThemeBackgroundColor { get; set; }
         string ToEmailAddress { get; set; }
         string VesselImageName { get; set; }
         string VesselName { get; set; }

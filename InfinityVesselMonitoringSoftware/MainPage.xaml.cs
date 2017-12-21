@@ -131,7 +131,8 @@ namespace VesselMonitoring
             App.VesselSettings.SMTPServerName = "smtp-mail.outlook.com";
             App.VesselSettings.SMTPPort = 587;
             App.VesselSettings.SMTPEncryptionMethod = 2; // SmtpConnectType.ConnectSTARTTLS
-            App.VesselSettings.ThemeColor = ((SolidColorBrush) Application.Current.Resources["ApplicationForegroundThemeBrush"]).Color;
+            App.VesselSettings.ThemeForegroundColor = ((SolidColorBrush) Application.Current.Resources["ApplicationForegroundThemeBrush"]).Color;
+            App.VesselSettings.ThemeBackgroundColor = ((SolidColorBrush)Application.Current.Resources["ApplicationPageBackgroundThemeBrush"]).Color;
 
             //SendEmail.FromEmailAddress = App.VesselSettings.FromEmailAddress;
             //SendEmail.FromEmailPassword = App.VesselSettings.FromEmailPassword;
@@ -307,7 +308,7 @@ namespace VesselMonitoring
             gaugeItem.GaugeLeft = 0;
             gaugeItem.GaugeHeight = 380;
             gaugeItem.GaugeWidth = 380;
-            gaugeItem.GaugeColor = App.VesselSettings.ThemeColor;
+            gaugeItem.GaugeColor = App.VesselSettings.ThemeForegroundColor;
             gaugeItem.Divisions = 7;
             gaugeItem.MinorTicsPerMajorTic = 5;
             gaugeItem.MediumTicsPerMajorTic = 0;
@@ -324,7 +325,7 @@ namespace VesselMonitoring
             gaugeItem.GaugeLeft = 364;
             gaugeItem.GaugeHeight = 190;
             gaugeItem.GaugeWidth = 190;
-            gaugeItem.GaugeColor = App.VesselSettings.ThemeColor;
+            gaugeItem.GaugeColor = App.VesselSettings.ThemeForegroundColor;
             gaugeItem.Divisions = 4;
             gaugeItem.MinorTicsPerMajorTic = 10;
             gaugeItem.MediumTicsPerMajorTic = 0;
@@ -344,7 +345,7 @@ namespace VesselMonitoring
             gaugeItem.GaugeLeft = 346;
             gaugeItem.GaugeHeight = 190;
             gaugeItem.GaugeWidth = 190;
-            gaugeItem.GaugeColor = App.VesselSettings.ThemeColor;
+            gaugeItem.GaugeColor = App.VesselSettings.ThemeForegroundColor;
             gaugeItem.Divisions = 4;
             gaugeItem.MinorTicsPerMajorTic = 10;
             gaugeItem.MediumTicsPerMajorTic = 0;
@@ -364,7 +365,7 @@ namespace VesselMonitoring
             gaugeItem.GaugeLeft = 1199;
             gaugeItem.GaugeHeight = 380;
             gaugeItem.GaugeWidth = 380;
-            gaugeItem.GaugeColor = App.VesselSettings.ThemeColor;
+            gaugeItem.GaugeColor = App.VesselSettings.ThemeForegroundColor;
             gaugeItem.Divisions = 7;
             gaugeItem.MinorTicsPerMajorTic = 5;
             gaugeItem.MediumTicsPerMajorTic = 0;
@@ -381,7 +382,7 @@ namespace VesselMonitoring
             gaugeItem.GaugeLeft = 1025;
             gaugeItem.GaugeHeight = 190;
             gaugeItem.GaugeWidth = 190;
-            gaugeItem.GaugeColor = App.VesselSettings.ThemeColor;
+            gaugeItem.GaugeColor = App.VesselSettings.ThemeForegroundColor;
             gaugeItem.Divisions = 4;
             gaugeItem.MinorTicsPerMajorTic = 10;
             gaugeItem.MediumTicsPerMajorTic = 0;
@@ -401,7 +402,7 @@ namespace VesselMonitoring
             gaugeItem.GaugeLeft = 1042;
             gaugeItem.GaugeHeight = 190;
             gaugeItem.GaugeWidth = 190;
-            gaugeItem.GaugeColor = App.VesselSettings.ThemeColor;
+            gaugeItem.GaugeColor = App.VesselSettings.ThemeForegroundColor;
             gaugeItem.Divisions = 4;
             gaugeItem.MinorTicsPerMajorTic = 10;
             gaugeItem.MediumTicsPerMajorTic = 0;
@@ -421,7 +422,7 @@ namespace VesselMonitoring
             gaugeItem.GaugeLeft = 540;
             gaugeItem.GaugeHeight = 330;
             gaugeItem.GaugeWidth = 140;
-            gaugeItem.GaugeColor = App.VesselSettings.ThemeColor;
+            gaugeItem.GaugeColor = App.VesselSettings.ThemeForegroundColor;
             gaugeItem.Units = Units.CubicMetersPerHr;
             gaugeItem.Resolution = 0;
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
@@ -434,7 +435,7 @@ namespace VesselMonitoring
             gaugeItem.GaugeLeft = 680;
             gaugeItem.GaugeHeight = 330;
             gaugeItem.GaugeWidth = 140;
-            gaugeItem.GaugeColor = App.VesselSettings.ThemeColor;
+            gaugeItem.GaugeColor = App.VesselSettings.ThemeForegroundColor;
             gaugeItem.Units = Units.CubicMetersPerHr;
             gaugeItem.Resolution = 0;
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
@@ -447,7 +448,7 @@ namespace VesselMonitoring
             gaugeItem.GaugeLeft = 760;
             gaugeItem.GaugeHeight = 330;
             gaugeItem.GaugeWidth = 140;
-            gaugeItem.GaugeColor = App.VesselSettings.ThemeColor;
+            gaugeItem.GaugeColor = App.VesselSettings.ThemeForegroundColor;
             gaugeItem.Units = Units.CubicMetersPerHr;
             gaugeItem.Resolution = 0;
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
@@ -460,7 +461,7 @@ namespace VesselMonitoring
             gaugeItem.GaugeLeft = 870;
             gaugeItem.GaugeHeight = 330;
             gaugeItem.GaugeWidth = 140;
-            gaugeItem.GaugeColor = App.VesselSettings.ThemeColor;
+            gaugeItem.GaugeColor = App.VesselSettings.ThemeForegroundColor;
             gaugeItem.Units = Units.CubicMetersPerHr;
             gaugeItem.Resolution = 0;
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
@@ -474,7 +475,7 @@ namespace VesselMonitoring
             gaugeItem.GaugeHeight = 60;
             gaugeItem.GaugeWidth = 60;
             gaugeItem.TextFontSize = 13;
-            gaugeItem.TextFontColor = App.VesselSettings.ThemeColor;
+            gaugeItem.TextFontColor = App.VesselSettings.ThemeForegroundColor;
             gaugeItem.TextHorizontalAlignment = CanvasHorizontalAlignment.Left;
             gaugeItem.TextVerticalAlignment = CanvasVerticalAlignment.Top;
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
@@ -488,7 +489,7 @@ namespace VesselMonitoring
             gaugeItem.GaugeHeight = 60;
             gaugeItem.GaugeWidth = 60;
             gaugeItem.TextFontSize = 13;
-            gaugeItem.TextFontColor = App.VesselSettings.ThemeColor;
+            gaugeItem.TextFontColor = App.VesselSettings.ThemeForegroundColor;
             gaugeItem.TextHorizontalAlignment = CanvasHorizontalAlignment.Left;
             gaugeItem.TextVerticalAlignment = CanvasVerticalAlignment.Top;
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
@@ -502,7 +503,7 @@ namespace VesselMonitoring
             gaugeItem.GaugeHeight = 60;
             gaugeItem.GaugeWidth = 60;
             gaugeItem.TextFontSize = 13;
-            gaugeItem.TextFontColor = App.VesselSettings.ThemeColor;
+            gaugeItem.TextFontColor = App.VesselSettings.ThemeForegroundColor;
             gaugeItem.TextHorizontalAlignment = CanvasHorizontalAlignment.Left;
             gaugeItem.TextVerticalAlignment = CanvasVerticalAlignment.Top;
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
@@ -516,7 +517,7 @@ namespace VesselMonitoring
             gaugeItem.GaugeHeight = 60;
             gaugeItem.GaugeWidth = 60;
             gaugeItem.TextFontSize = 13;
-            gaugeItem.TextFontColor = App.VesselSettings.ThemeColor;
+            gaugeItem.TextFontColor = App.VesselSettings.ThemeForegroundColor;
             gaugeItem.TextHorizontalAlignment = CanvasHorizontalAlignment.Left;
             gaugeItem.TextVerticalAlignment = CanvasVerticalAlignment.Top;
             await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
@@ -528,26 +529,26 @@ namespace VesselMonitoring
 
         async private void BuildDemoGaugePages()
         {
-            await this.PopulateDemoDeviceCollection();
-            await this.PopulateDemoSensorCollection();
-            await this.PopulateDemoGaugePageCollection();
-            await this.PopulateDemoGaugeCollection();
+            //await this.PopulateDemoDeviceCollection();
+            //await this.PopulateDemoSensorCollection();
+            //await this.PopulateDemoGaugePageCollection();
+            //await this.PopulateDemoGaugeCollection();
 
-            //App.BuildDBTables.DeviceTable.Load();
-            //App.DeviceCollection.Clear();
-            //await App.DeviceCollection.BeginLoad();
+            App.BuildDBTables.DeviceTable.Load();
+            App.DeviceCollection.Clear();
+            await App.DeviceCollection.BeginLoad();
 
-            //App.BuildDBTables.SensorTable.Load();
-            //App.SensorCollection.Clear();
-            //App.SensorCollection.Load();
+            App.BuildDBTables.SensorTable.Load();
+            App.SensorCollection.Clear();
+            App.SensorCollection.Load();
 
-            //App.BuildDBTables.GaugePageTable.Load();
-            //App.GaugePageCollection.Clear();
-            //await App.GaugePageCollection.BeginLoad();
+            App.BuildDBTables.GaugePageTable.Load();
+            App.GaugePageCollection.Clear();
+            await App.GaugePageCollection.BeginLoad();
 
-            //App.BuildDBTables.GaugeTable.Load();
-            //App.GaugeItemCollection.Clear();
-            //await App.GaugeItemCollection.BeginLoad();
+            App.BuildDBTables.GaugeTable.Load();
+            App.GaugeItemCollection.Clear();
+            await App.GaugeItemCollection.BeginLoad();
 
             this.MainPagePivot.Items.Clear();
 
