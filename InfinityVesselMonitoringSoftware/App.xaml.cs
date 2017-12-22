@@ -1,5 +1,4 @@
-﻿using Autofac;
-using InfinityGroup.VesselMonitoring.Globals;
+﻿using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityVesselMonitoringSoftware.Gauges;
 using InfinityVesselMonitoringSoftware.Settings;
@@ -53,9 +52,6 @@ namespace InfinityVesselMonitoringSoftware
                 {
                     //TODO: Load state from previously suspended application
                 }
-
-                Autofac.ContainerBuilder autofacBuilder = new ContainerBuilder();
-                AutofacContainer = autofacBuilder.Build();
 
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
@@ -123,6 +119,5 @@ namespace InfinityVesselMonitoringSoftware
         public static GaugePageCollection GaugePageCollection = new GaugePageCollection();
         public static GaugeItemCollection GaugeItemCollection = new GaugeItemCollection();
         public static VesselSettingsItem VesselSettings { get; set; }
-        public static IContainer AutofacContainer { get; private set; }
     }
 }

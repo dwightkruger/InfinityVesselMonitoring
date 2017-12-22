@@ -4,23 +4,26 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:InfinityVesselMonitoringSoftware.Settings.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:converter="using:InfinityGroup.VesselMonitoring.Controls.Converters"
     xmlns:vm="using:InfinityVesselMonitoringSoftware.Settings.ViewModels"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
     <Page.Resources>
         <vm:VesselSettingsViewModel x:Key="VesselSettingsViewModel" x:Name="VM"/>
+        <converter:ColorToSolidColorBrushConverter x:Key="ColorToSolidColorBrushConverter"/>
     </Page.Resources>
     
-    <Grid
-        DataContext="{StaticResource VesselSettingsViewModel}"
-        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid x:Name="MainGrid"
+        Background="{Binding VesselSettings.ThemeBackgroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}}"
+        DataContext="{StaticResource VesselSettingsViewModel}">
 
         <TextBlock 
+            x:Name="TitleTextBlock"
             Text="Vessel Settings" 
+            Foreground="{Binding VesselSettings.ThemeForegroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}}"
             HorizontalAlignment="Center" 
             VerticalAlignment="Top" 
-            FontSize="48"
-            Foreground="{ThemeResource ApplicationForegroundThemeBrush}"/>
+            FontSize="48"/>
     </Grid>
 </Page>

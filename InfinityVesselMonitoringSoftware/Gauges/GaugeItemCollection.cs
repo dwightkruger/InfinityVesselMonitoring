@@ -5,13 +5,13 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
 using InfinityGroup.VesselMonitoring.Interfaces;
-using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Types;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+
 namespace InfinityVesselMonitoringSoftware.Gauges
 {
     public class GaugeItemCollection : ObservableCollection<IGaugeItem>
@@ -103,6 +103,9 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 foreach (ItemRow row in App.BuildDBTables.GaugeTable.Rows)
                 {
                     IGaugeItem gaugeItem = new GaugeItem(row);
+
+                    gaugeItem.TextFontColor = App.VesselSettings.ThemeForegroundColor;
+                    gaugeItem.GaugeColor = App.VesselSettings.ThemeForegroundColor;
 
                     this.Add(gaugeItem);
                 }

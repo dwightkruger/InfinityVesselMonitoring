@@ -6,6 +6,7 @@
 
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
+using InfinityGroup.VesselMonitoring.Controls.Converters;
 using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.SQLiteDB;
@@ -37,12 +38,10 @@ using Windows.UI.Xaml.Media;
 // Icons from https://www.flaticon.com
 namespace VesselMonitoring
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class MainPage : Page
     {
         private System.Threading.Semaphore _semaphore;
+        private static ColorToSolidColorBrushConverter c_ctscbc = new ColorToSolidColorBrushConverter();
 
         public MainPage()
         {
@@ -119,8 +118,6 @@ namespace VesselMonitoring
             App.BuildDBTables.DatabaseName = "InfinityGroupVesselMonitoring";
             await App.BuildDBTables.Build();
 
-            this.BuildDemoGaugePages();
-
             await App.BuildDBTables.VesselSettingsTable.BeginEmpty();
 
             App.VesselSettings = new VesselSettingsItem();
@@ -133,6 +130,7 @@ namespace VesselMonitoring
             App.VesselSettings.SMTPEncryptionMethod = 2; // SmtpConnectType.ConnectSTARTTLS
             App.VesselSettings.ThemeForegroundColor = ((SolidColorBrush) Application.Current.Resources["ApplicationForegroundThemeBrush"]).Color;
             App.VesselSettings.ThemeBackgroundColor = ((SolidColorBrush)Application.Current.Resources["ApplicationPageBackgroundThemeBrush"]).Color;
+            await App.VesselSettings.BeginCommit();
 
             //SendEmail.FromEmailAddress = App.VesselSettings.FromEmailAddress;
             //SendEmail.FromEmailPassword = App.VesselSettings.FromEmailPassword;
@@ -145,6 +143,16 @@ namespace VesselMonitoring
             //               "Test Email",
             //               "This is a test",
             //               "");
+
+            this.BuildDemoGaugePages();
+
+            Binding mainGridBackgroundBinding = new Binding();
+            mainGridBackgroundBinding.Path = new PropertyPath("ThemeBackgroundColor");
+            mainGridBackgroundBinding.Source = App.VesselSettings;
+            mainGridBackgroundBinding.Converter = c_ctscbc;
+            mainGridBackgroundBinding.Mode = BindingMode.OneWay;
+            //this.MainPageGrid.SetBinding(BackgroundProperty, mainGridBackgroundBinding);
+            this.MainPageGrid.Background = new SolidColorBrush(App.VesselSettings.ThemeBackgroundColor);
         }
 
         async Task PopulateDemoGaugePageCollection()

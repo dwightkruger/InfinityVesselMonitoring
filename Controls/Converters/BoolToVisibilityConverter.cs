@@ -9,7 +9,7 @@ using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
-namespace InfinityGroup.VesselMonitoring.Globals.Converters
+namespace InfinityGroup.VesselMonitoring.Controls.Converters
 {
     public sealed class BoolToVisibilityConverter : IValueConverter
     {

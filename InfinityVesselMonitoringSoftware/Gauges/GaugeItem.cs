@@ -5,6 +5,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Messaging;
 using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.Types;
@@ -109,6 +110,11 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             }).Wait();
 
             this.NotifyOfPropertyChangeAll();
+
+            Messenger.Default.Register<Color>(this, "OnForegroundColorChanged", (color) => 
+            {
+                this.GaugeColor = color;
+            });
         }
 
         /// <summary>
@@ -125,6 +131,11 @@ namespace InfinityVesselMonitoringSoftware.Gauges
 
             this.LoadFromRow();
             this.NotifyOfPropertyChangeAll();
+
+            Messenger.Default.Register<Color>(this, "OnForegroundColorChanged", (color) =>
+            {
+                this.GaugeColor = color;
+            });
         }
 
         public IGaugeItem Copy()

@@ -4,23 +4,24 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using InfinityGroup.VesselMonitoring.Interfaces;
-using System.Windows.Input;
+using System;
+using Windows.UI;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media;
 
-namespace InfinityVesselMonitoringSoftware.Settings.ViewModels
+namespace InfinityGroup.VesselMonitoring.Controls.Converters
 {
-    public class VesselSettingsViewModel : ObservableObject
+    public class ColorToSolidColorBrushConverter : IValueConverter
     {
-        public VesselSettingsViewModel()
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
+            Color color = (Color) value;
+            return new SolidColorBrush(color);
         }
 
-        public IVesselSettings VesselSettings
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            get { return App.VesselSettings; }
+            throw new NotImplementedException();
         }
-
     }
 }

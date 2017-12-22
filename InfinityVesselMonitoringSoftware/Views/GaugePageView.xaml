@@ -9,7 +9,7 @@
     xmlns:tools="using:Microsoft.Toolkit.Uwp.DeveloperTools"
     xmlns:editors="using:InfinityVesselMonitoringSoftware.Editors.GaugePageEditor"
     xmlns:controls="using:InfinityGroup.VesselMonitoring.Controls"
-    xmlns:converters="using:InfinityGroup.VesselMonitoring.Globals.Converters"
+    xmlns:converters="using:InfinityGroup.VesselMonitoring.Controls.Converters"
     x:Name="UserControl"
     mc:Ignorable="d"
     d:DesignHeight="800"
@@ -18,11 +18,12 @@
     <UserControl.Resources>
         <vm:GaugePageViewModel x:Key="VMKey" x:Name="VM"/>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converters:ColorToSolidColorBrushConverter x:Key="ColorToSolidColorBrushConverter"/>
     </UserControl.Resources>
 
     <Grid
-        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-        x:Name="MainGrid">
+        x:Name="MainGrid"
+        Background="{Binding VesselSettings.ThemeBackgroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}}">
 
         <tools:AlignmentGrid 
             x:Name="AlignmentGrid"

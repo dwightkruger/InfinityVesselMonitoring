@@ -6,6 +6,7 @@
 
 using GalaSoft.MvvmLight.Messaging;
 using InfinityGroup.VesselMonitoring.Controls;
+using InfinityGroup.VesselMonitoring.Controls.Converters;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityVesselMonitoringSoftware;
 using System;
@@ -34,10 +35,12 @@ namespace VesselMonitoringSuite.Views
         private bool _ignorePropertyChange;
         private ObservableCollection<IGaugeItem> _gaugeItemSelectedList = new ObservableCollection<IGaugeItem>();
         private List<Adorner> _adornerList = new List<Adorner>();
+        private static ColorToSolidColorBrushConverter c_ctscbc = new ColorToSolidColorBrushConverter();
 
         public GaugePageView()
         {
             this.InitializeComponent();
+            this.Loaded += GaugePageView_Loaded;
             this.PointerPressed += GaugePageView_PointerPressed;
 
             this.KeyDown += MainCanvas_KeyDown;
@@ -93,8 +96,11 @@ namespace VesselMonitoringSuite.Views
 
                 this.EditRibbon.ViewModel.GaugeItemList = gaugeItemList;
             });
+        }
 
-            Messenger.Default.Register<Tuple<int, KeyRoutedEventArgs>> (this, "MainPagePivot_KeyDown", (tp) =>
+        private void GaugePageView_Loaded(object sender, RoutedEventArgs e)
+        {
+            Messenger.Default.Register<Tuple<int, KeyRoutedEventArgs>>(this, "MainPagePivot_KeyDown", (tp) =>
             {
                 if (tp.Item1 == this.ViewModel.GaugePageItem.Position)
                 {
@@ -103,9 +109,8 @@ namespace VesselMonitoringSuite.Views
             });
         }
 
-
         /// <summary>
-        /// When an object on the screen is selected, put an an adorder with handles so the object can be
+        /// When an object on the screen is selected, put an an adorner with handles so the object can be
         /// resized, rotated, moved, etc.
         /// </summary>
         /// <param name="sender"></param>

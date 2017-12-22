@@ -14,9 +14,8 @@
     </Page.Resources>
 
     <Grid 
-        x:Name="MainPageGrid"
-        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
- 
+        x:Name="MainPageGrid">
+
         <Viewbox x:Name="MainPageViewbox" Stretch="Uniform" Grid.Column="1">
             <Grid x:Name="MainPageInnerGrid">
                 <Pivot x:Name="MainPagePivot" KeyDown="MainPagePivot_KeyDown">

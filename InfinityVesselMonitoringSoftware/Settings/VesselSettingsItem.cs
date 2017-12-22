@@ -19,10 +19,35 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace InfinityVesselMonitoringSoftware.Settings
 {
+    public class VesselSettingsTest : ObservableObject
+    {
+        private SolidColorBrush _themeBackgroundColor;
+        private SolidColorBrush _themeForegroundColor;
+
+        public SolidColorBrush ThemeBackgroundColor
+        {
+            get { return _themeBackgroundColor; }
+            set
+            {
+                Set<SolidColorBrush>(() => ThemeBackgroundColor, ref _themeBackgroundColor, value);
+            }
+        }
+
+        public SolidColorBrush ThemeForegroundColor
+        {
+            get { return _themeForegroundColor; }
+            set
+            {
+                Set<SolidColorBrush>(() => ThemeForegroundColor, ref _themeForegroundColor, value);
+            }
+        }
+    }
+
     public class VesselSettingsItem : ObservableObject, IVesselSettings
     {
         private const string c_imagePrefix = "image.";
@@ -287,7 +312,7 @@ namespace InfinityVesselMonitoringSoftware.Settings
                 // Iterate through each of the rows looking for the property name
                 foreach (ItemRow row in App.BuildDBTables.VesselSettingsTable.Rows)
                 {
-                    if (row.Field<string>("Property").ToLowerInvariant() == propertyName)
+                    if (row.Field<string>("Property") == propertyName)
                     {
                         this.SetPropertyValue<T>(row, value);
                         return true;

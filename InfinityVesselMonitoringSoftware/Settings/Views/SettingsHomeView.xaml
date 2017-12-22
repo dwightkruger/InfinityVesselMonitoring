@@ -7,6 +7,7 @@
     xmlns:vm="using:InfinityVesselMonitoringSoftware.Settings.ViewModels"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="using:InfinityVesselMonitoringSoftware.Settings.Views"
+    xmlns:converter="using:InfinityGroup.VesselMonitoring.Controls.Converters"
     mc:Ignorable="d"
     d:DesignHeight="800"
     d:DesignWidth="1800">
@@ -14,7 +15,8 @@
     <Page.Resources>
 
         <vm:SettingsHomeViewModel x:Key="SettingsHomeViewModel" x:Name="VM"/>
-        
+        <converter:ColorToSolidColorBrushConverter x:Key="ColorToSolidColorBrushConverter"/>
+
         <Style TargetType="TextBlock">
             <Style.Setters>
                 <Setter Property="FontSize" Value="32"/>
@@ -47,12 +49,12 @@
     <Viewbox Stretch="Uniform">
         <Grid 
             x:Name="MainGrid"
+            Background="{Binding VesselSettings.ThemeBackgroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}}"
             Width="1800"
             Height="800"
             VerticalAlignment="Center"
             HorizontalAlignment="Center"
-            DataContext="{StaticResource SettingsHomeViewModel}"
-            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            DataContext="{StaticResource SettingsHomeViewModel}">
         
         <Grid.RowDefinitions>
             <RowDefinition/>

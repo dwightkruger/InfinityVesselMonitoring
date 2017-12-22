@@ -27,6 +27,10 @@ namespace VesselMonitoringSuite.ViewModels
             this.InEditMode = true;
         }
 
+        public IVesselSettings VesselSettings
+        {
+            get { return App.VesselSettings; }
+        }
         public IGaugePageItem GaugePageItem
         {
             get { return _gaugePageItem; }
