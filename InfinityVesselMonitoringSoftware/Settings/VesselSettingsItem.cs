@@ -12,6 +12,7 @@ using InfinityGroup.VesselMonitoring.Types;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -24,30 +25,6 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace InfinityVesselMonitoringSoftware.Settings
 {
-    public class VesselSettingsTest : ObservableObject
-    {
-        private SolidColorBrush _themeBackgroundColor;
-        private SolidColorBrush _themeForegroundColor;
-
-        public SolidColorBrush ThemeBackgroundColor
-        {
-            get { return _themeBackgroundColor; }
-            set
-            {
-                Set<SolidColorBrush>(() => ThemeBackgroundColor, ref _themeBackgroundColor, value);
-            }
-        }
-
-        public SolidColorBrush ThemeForegroundColor
-        {
-            get { return _themeForegroundColor; }
-            set
-            {
-                Set<SolidColorBrush>(() => ThemeForegroundColor, ref _themeForegroundColor, value);
-            }
-        }
-    }
-
     public class VesselSettingsItem : ObservableObject, IVesselSettings
     {
         private const string c_imagePrefix = "image.";
@@ -197,6 +174,7 @@ namespace InfinityVesselMonitoringSoftware.Settings
             get
             {
                 Int64 i64Color = GetPropertyRowValue<Int64>("ThemeBackgroundColor");
+                Debug.WriteLine("Color = ", i64Color.ToString());
                 return Utilities.ColorFromI64(i64Color);
             }
             set
@@ -360,6 +338,8 @@ namespace InfinityVesselMonitoringSoftware.Settings
                         };
 
             @switch[typeof(T)]();
+
+            RaisePropertyChanged(row.Field<string>("Property"));
         }
 
         #endregion

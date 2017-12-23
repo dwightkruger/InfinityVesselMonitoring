@@ -357,6 +357,11 @@ namespace InfinityGroup.VesselMonitoring.Controls
             this.CanvasControl.Invalidate();
         }
 
+        override protected void RefreshGaugeColor(object oldValue, object newValue)
+        {
+            this.CanvasControl?.Invalidate();
+        }
+
         protected CanvasControl CanvasControl { get; set; }
         protected bool IsLoaded { get; set; }
         protected Rect OuterRectangle { get; set; }

@@ -24,7 +24,7 @@ namespace VesselMonitoringSuite.ViewModels
         public GaugePageViewModel()
         {
             _gaugeItemList = new List<IGaugeItem>();
-            this.InEditMode = true;
+            //this.InEditMode = true;
         }
 
         public IVesselSettings VesselSettings

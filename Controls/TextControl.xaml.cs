@@ -84,6 +84,16 @@ namespace InfinityGroup.VesselMonitoring.Controls
             this.CanvasControl?.Invalidate();
         }
 
+        override protected void RefreshGaugeColor(object oldValue, object newValue)
+        {
+            this.CanvasControl?.Invalidate();
+        }
+
+        override protected void RefreshTextFontColor(object oldValue, object newValue)
+        {
+            this.CanvasControl?.Invalidate();
+        }
+
         private void canvasControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             _needsResourceRecreation = true;

@@ -4,7 +4,6 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
-using InfinityGroup.VesselMonitoring.Controls.Converters;
 using InfinityVesselMonitoringSoftware.Settings.ViewModels;
 using Windows.UI.Xaml.Controls;
 
@@ -12,11 +11,9 @@ using Windows.UI.Xaml.Controls;
 
 namespace InfinityVesselMonitoringSoftware.Settings.Views
 {
-    public sealed partial class VesselSettingsPage : Page
+    public sealed partial class VesselSettingsView : UserControl
     {
-        private static ColorToSolidColorBrushConverter c_ctscbc = new ColorToSolidColorBrushConverter();
-
-        public VesselSettingsPage()
+        public VesselSettingsView()
         {
             this.InitializeComponent();
         }

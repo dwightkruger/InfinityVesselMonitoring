@@ -16,13 +16,14 @@
     d:DesignWidth="1000">
 
     <UserControl.Resources>
-        <vm:GaugePageViewModel x:Key="VMKey" x:Name="VM"/>
+        <vm:GaugePageViewModel x:Key="GaugePageViewModel" x:Name="VM"/>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <converters:ColorToSolidColorBrushConverter x:Key="ColorToSolidColorBrushConverter"/>
     </UserControl.Resources>
 
     <Grid
         x:Name="MainGrid"
+        DataContext="{StaticResource GaugePageViewModel}"
         Background="{Binding VesselSettings.ThemeBackgroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}}">
 
         <tools:AlignmentGrid 

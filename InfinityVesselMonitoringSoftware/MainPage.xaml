@@ -15,12 +15,23 @@
 
     <Grid 
         x:Name="MainPageGrid">
-
-        <Viewbox x:Name="MainPageViewbox" Stretch="Uniform" Grid.Column="1">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <Viewbox x:Name="MainPageViewbox" Stretch="Uniform" Grid.Row="0">
             <Grid x:Name="MainPageInnerGrid">
                 <Pivot x:Name="MainPagePivot" KeyDown="MainPagePivot_KeyDown">
                 </Pivot>
             </Grid>
         </Viewbox>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="1">
+            <Button x:Name="LightButton" Content="Light" Click="Light_Click" Margin="10,0,10,0"/>
+            <Button x:Name="DarkButton" Content="Dark" Click="Dark_Click" Margin="10,0,10,0"/>
+            <Button x:Name="HighContrastButton" Content="High Contrast" Click="HighContrast_Click" Margin="10,0,10,0"/>
+            <Button x:Name="NightButton" Content="Night" Click="Night_Click" Margin="10,0,10,0"/>
+        </StackPanel>
     </Grid>        
 </Page>

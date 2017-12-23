@@ -645,5 +645,56 @@ namespace VesselMonitoring
                     ViewSizePreference.UseMinimum);
             });
         }
+
+        private void Light_Click(object sender, RoutedEventArgs e)
+        {
+            App.VesselSettings.ThemeBackgroundColor = Colors.White;
+            App.VesselSettings.ThemeForegroundColor = Colors.Black;
+            this.Restyle();
+        }
+
+        private void Dark_Click(object sender, RoutedEventArgs e)
+        {
+            App.VesselSettings.ThemeBackgroundColor = Colors.Black;
+            App.VesselSettings.ThemeForegroundColor = Colors.White;
+            this.Restyle();
+        }
+
+        private void HighContrast_Click(object sender, RoutedEventArgs e)
+        {
+            App.VesselSettings.ThemeBackgroundColor = Colors.Black;
+            App.VesselSettings.ThemeForegroundColor = Colors.White;
+            this.Restyle();
+        }
+
+        private void Night_Click(object sender, RoutedEventArgs e)
+        {
+            App.VesselSettings.ThemeBackgroundColor = Colors.Black;
+            App.VesselSettings.ThemeForegroundColor = Colors.Red;
+            this.Restyle();
+        }
+
+        private void Restyle()
+        {
+            foreach (IGaugeItem gaugeItem in App.GaugeItemCollection)
+            {
+                gaugeItem.TextFontColor = App.VesselSettings.ThemeForegroundColor;
+                gaugeItem.GaugeColor = App.VesselSettings.ThemeForegroundColor;
+            }
+
+            this.MainPageGrid.Background = new SolidColorBrush(App.VesselSettings.ThemeBackgroundColor);
+
+            this.LightButton.Foreground = new SolidColorBrush(App.VesselSettings.ThemeForegroundColor);
+            this.LightButton.Background = new SolidColorBrush(App.VesselSettings.ThemeBackgroundColor);
+            this.DarkButton.Foreground = this.LightButton.Foreground;
+            this.DarkButton.Background = this.LightButton.Background;
+            this.HighContrastButton.Foreground = this.LightButton.Foreground;
+            this.HighContrastButton.Background = this.LightButton.Background;
+            this.NightButton.Foreground = this.LightButton.Foreground;
+            this.NightButton.Background = this.LightButton.Background;
+
+            Messenger.Default.Send<Color>(App.VesselSettings.ThemeForegroundColor, "OnThemeColorsChanged");
+
+        }
     }
 }

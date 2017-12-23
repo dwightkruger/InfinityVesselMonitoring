@@ -356,6 +356,10 @@ namespace InfinityGroup.VesselMonitoring.Controls
                                                     Convert.ToByte(~step1Color.R & 0xFF),
                                                     Convert.ToByte(~step1Color.G & 0xFF),
                                                     Convert.ToByte(~step1Color.B & 0xFF));
+            if (step1Color == Colors.Red)
+            {
+                step2Color = Colors.Black;
+            }
 
             var stops = new CanvasGradientStop[]
             {
@@ -488,6 +492,11 @@ namespace InfinityGroup.VesselMonitoring.Controls
         private void canvasControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             _needsResourceRecreation = true;
+        }
+
+        override protected void RefreshGaugeColor(object oldValue, object newValue)
+        {
+            this.canvasControl?.Invalidate();
         }
     }
 }

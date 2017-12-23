@@ -126,8 +126,8 @@
     <Compile Include="Settings\Views\SettingsHomeView.xaml.cs">
       <DependentUpon>SettingsHomeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Views\VesselSettingsPage.xaml.cs">
-      <DependentUpon>VesselSettingsPage.xaml</DependentUpon>
+    <Compile Include="Settings\Views\VesselSettingsView.xaml.cs">
+      <DependentUpon>VesselSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\GaugePageViewModel.cs" />
     <Compile Include="Views\GaugePageView.xaml.cs">
@@ -205,7 +205,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Settings\Views\VesselSettingsPage.xaml">
+    <Page Include="Settings\Views\VesselSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

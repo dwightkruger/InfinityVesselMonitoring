@@ -5,9 +5,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
 using InfinityGroup.VesselMonitoring.Interfaces;
-using System.Windows.Input;
 
 namespace InfinityVesselMonitoringSoftware.Settings.ViewModels
 {
@@ -21,6 +19,5 @@ namespace InfinityVesselMonitoringSoftware.Settings.ViewModels
         {
             get { return App.VesselSettings; }
         }
-
     }
 }

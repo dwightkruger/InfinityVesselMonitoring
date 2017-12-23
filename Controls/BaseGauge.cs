@@ -104,6 +104,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
         protected static void OnGaugeColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             BaseGauge g = d as BaseGauge;
+            g.RefreshGaugeColor(d, e);
         }
 
         #endregion
@@ -1117,6 +1118,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
         protected static void OnTextFontColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             BaseGauge g = d as BaseGauge;
+            g.RefreshTextFontColor(d, e);
         }
         #endregion
 
@@ -1641,6 +1643,14 @@ namespace InfinityGroup.VesselMonitoring.Controls
         }
 
         virtual protected void RefreshGaugeHeight(object oldValue, object newValue)
+        {
+        }
+
+        virtual protected void RefreshTextFontColor(object oldValue, object newValue)
+        {
+        }
+
+        virtual protected void RefreshGaugeColor(object oldValue, object newValue)
         {
         }
     }

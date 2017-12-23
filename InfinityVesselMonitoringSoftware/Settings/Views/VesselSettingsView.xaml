@@ -1,5 +1,5 @@
-﻿<Page
-    x:Class="InfinityVesselMonitoringSoftware.Settings.Views.VesselSettingsPage"
+﻿<UserControl
+    x:Class="InfinityVesselMonitoringSoftware.Settings.Views.VesselSettingsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:InfinityVesselMonitoringSoftware.Settings.Views"
@@ -9,21 +9,21 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Page.Resources>
+    <UserControl.Resources>
         <vm:VesselSettingsViewModel x:Key="VesselSettingsViewModel" x:Name="VM"/>
         <converter:ColorToSolidColorBrushConverter x:Key="ColorToSolidColorBrushConverter"/>
-    </Page.Resources>
-    
+    </UserControl.Resources>
+
     <Grid x:Name="MainGrid"
-        Background="{Binding VesselSettings.ThemeBackgroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}}"
+        Background="{x:Bind Path=VM.VesselSettings.ThemeBackgroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}}"
         DataContext="{StaticResource VesselSettingsViewModel}">
 
         <TextBlock 
             x:Name="TitleTextBlock"
             Text="Vessel Settings" 
-            Foreground="{Binding VesselSettings.ThemeForegroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}}"
+            Foreground="{x:Bind Path=VM.VesselSettings.ThemeForegroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}}"
             HorizontalAlignment="Center" 
             VerticalAlignment="Top" 
             FontSize="48"/>
     </Grid>
-</Page>
+</UserControl>

@@ -21,14 +21,14 @@ namespace InfinityVesselMonitoringSoftware.Settings.Views
 {
     public sealed partial class SettingsHomeView : Page
     {
-        private static Image c_shipDark;
-        private static Image c_shipLight;
-        private static Image c_databaseDark;
-        private static Image c_databaseLight;
-        private static Image c_pagesDark;
-        private static Image c_pagesLight;
-        private static Image c_sensorDark;
-        private static Image c_sensorLight;
+        private static BitmapImage c_shipDark;
+        private static BitmapImage c_shipLight;
+        private static BitmapImage c_databaseDark;
+        private static BitmapImage c_databaseLight;
+        private static BitmapImage c_pagesDark;
+        private static BitmapImage c_pagesLight;
+        private static BitmapImage c_sensorDark;
+        private static BitmapImage c_sensorLight;
         private static ColorToSolidColorBrushConverter c_ctscbc = new ColorToSolidColorBrushConverter();
 
         static SettingsHomeView()
@@ -43,15 +43,13 @@ namespace InfinityVesselMonitoringSoftware.Settings.Views
             c_sensorLight   = ImageFromUri("ms-appx:///Graphics/Sensor-light.png");
         }
 
-        private static Image ImageFromUri(string uriString)
+        private static BitmapImage ImageFromUri(string uriString)
         {
             Uri uri = new Uri(uriString);
             BitmapImage bitmapImage = new BitmapImage();
             bitmapImage.UriSource = uri;
-            Image image = new Image();
-            image.Source = bitmapImage;
 
-            return image;
+            return bitmapImage;
         }
 
         public SettingsHomeView()
@@ -63,8 +61,22 @@ namespace InfinityVesselMonitoringSoftware.Settings.Views
         private void SettingsHomeView_Loaded(object sender, RoutedEventArgs e)
         {
             // If the theme colors change, we need to update the bitmaps.
-            Messenger.Default.Register<int>(this, "OnThemeColorsChanged", (newTheme) =>
+            Messenger.Default.Register<Color>(this, "OnThemeColorsChanged", (newColor) =>
             {
+                if ((newColor == Colors.Red) || (newColor == Colors.White))
+                {
+                    VesselSettingsImage.Source = c_shipDark;
+                    SensorImage.Source         = c_sensorDark;
+                    PagesImage.Source          = c_pagesDark;
+                    DatabaseImage.Source       = c_databaseDark;
+                }
+                else
+                {
+                    VesselSettingsImage.Source = c_shipLight;
+                    SensorImage.Source         = c_sensorLight;
+                    PagesImage.Source          = c_pagesLight;
+                    DatabaseImage.Source       = c_databaseLight;
+                }
             });
         }
 

@@ -13,7 +13,6 @@
     d:DesignWidth="1800">
 
     <Page.Resources>
-
         <vm:SettingsHomeViewModel x:Key="SettingsHomeViewModel" x:Name="VM"/>
         <converter:ColorToSolidColorBrushConverter x:Key="ColorToSolidColorBrushConverter"/>
 
@@ -49,62 +48,67 @@
     <Viewbox Stretch="Uniform">
         <Grid 
             x:Name="MainGrid"
-            Background="{Binding VesselSettings.ThemeBackgroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}}"
             Width="1800"
             Height="800"
             VerticalAlignment="Center"
-            HorizontalAlignment="Center"
-            DataContext="{StaticResource SettingsHomeViewModel}">
-        
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
+            HorizontalAlignment="Center">
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+    
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
 
-        <Button x:Name="VesselSettingsButton" Grid.Row="0" Grid.Column="0" Command="{Binding Path=VesselSettingsCommand}">
-            <Viewbox>
-                <Grid>
-                    <Image x:Name="VesselSettingsImage" Source="ms-appx:///Graphics/Ship-dark.png"/>
-                    <TextBlock Text="Vessel Settings" />
-                </Grid>                    
-            </Viewbox>
-        </Button>
+            <Button x:Name="VesselSettingsButton" Grid.Row="0" Grid.Column="0" Command="{x:Bind Path=VM.VesselSettingsCommand}">
+                <Viewbox>
+                    <Grid>
+                        <Image x:Name="VesselSettingsImage" Source="ms-appx:///Graphics/Ship-light.png"/>
+                        <TextBlock 
+                            Text="Vessel Settings" 
+                            Foreground="{x:Bind Path=VM.VesselSettings.ThemeForegroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}}"/>
+                    </Grid>                    
+                </Viewbox>
+            </Button>
 
-        <Button x:Name="SensorsButton" Grid.Row="1" Grid.Column="0" Command="{Binding Path=SensorsCommand}">
-            <Viewbox>
-                <Grid>
-                    <Image x:Name="SensorImage" Source="ms-appx:///Graphics/Sensor-dark.png"/>
-                    <TextBlock Text="Sensors"/>
-                </Grid>
-            </Viewbox>
-        </Button>
+            <Button x:Name="SensorsButton" Grid.Row="1" Grid.Column="0" Command="{x:Bind Path=VM.SensorsCommand}">
+                <Viewbox>
+                    <Grid>
+                        <Image x:Name="SensorImage" Source="ms-appx:///Graphics/Sensor-light.png"/>
+                            <TextBlock 
+                                Text="Sensors"
+                                Foreground="{x:Bind Path=VM.VesselSettings.ThemeForegroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}}"/>
+                        </Grid>
+                </Viewbox>
+            </Button>
 
-        <Button x:Name="PagesButton" Grid.Row="2" Grid.Column="0" Command="{Binding Path=PagesCommand}">
-            <Viewbox>
-                <Grid>
-                    <Image x:Name="PagesImage" Source="ms-appx:///Graphics/Pages-dark.png"/>
-                    <TextBlock Text="Pages"/>
-                </Grid>
-            </Viewbox>
-        </Button>
+            <Button x:Name="PagesButton" Grid.Row="2" Grid.Column="0" Command="{x:Bind Path=VM.PagesCommand}">
+                <Viewbox>
+                    <Grid>
+                        <Image x:Name="PagesImage" Source="ms-appx:///Graphics/Pages-light.png"/>
+                            <TextBlock 
+                            Text="Pages"
+                            Foreground="{x:Bind Path=VM.VesselSettings.ThemeForegroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}}"/>
+                        </Grid>
+                </Viewbox>
+            </Button>
 
-        <Button x:Name="DatabaseButton" Grid.Row="3" Grid.Column="0" Command="{Binding Path=DatabaseCommand}">
-            <Viewbox>
-                <Grid>
-                    <Image x:Name="DatabaseImage" Source="ms-appx:///Graphics/Database-dark.png"/>
-                        <TextBlock Text="Database"/>
-                    </Grid>
-            </Viewbox>
-        </Button>
+            <Button x:Name="DatabaseButton" Grid.Row="3" Grid.Column="0" Command="{x:Bind Path=VM.DatabaseCommand}">
+                <Viewbox>
+                    <Grid>
+                        <Image x:Name="DatabaseImage" Source="ms-appx:///Graphics/Database-light.png"/>
+                            <TextBlock Text="Database"
+                            Foreground="{x:Bind Path=VM.VesselSettings.ThemeForegroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}}" Margin="63,0,65,-20"/>
+                        </Grid>
+                </Viewbox>
+            </Button>
 
-            <views:VesselSettingsPage Grid.Row="0" Grid.Column="1" Grid.RowSpan="4"/>
+            <!--<views:VesselSettingsView Grid.Row="0" Grid.Column="1" Grid.RowSpan="4"/>-->
         </Grid>
-</Viewbox>        
+    </Viewbox>        
 </Page>
