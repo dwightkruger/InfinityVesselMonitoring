@@ -21,7 +21,6 @@
         <TextBlock 
             x:Name="TitleTextBlock"
             Text="Vessel Settings" 
-            Foreground="{x:Bind Path=VM.VesselSettings.ThemeForegroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}}"
             HorizontalAlignment="Center" 
             VerticalAlignment="Top" 
             FontSize="48"/>

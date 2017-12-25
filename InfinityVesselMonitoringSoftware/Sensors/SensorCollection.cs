@@ -213,13 +213,16 @@ namespace VesselMonitoringSuite.Sensors
         /// <param name="stateInfo"></param>
         async private void SensorObservationFlushTimerTic(object stateInfo)
         {
-            await App.BuildDBTables.SensorDataTable.BeginCommitAllAndClear(() =>
+            if (null != App.BuildDBTables.SensorDataTable)
             {
-            },
-            (ex)=>
-            {
-                Telemetry.TrackException(ex);
-            });
+                await App.BuildDBTables.SensorDataTable.BeginCommitAllAndClear(() =>
+                {
+                },
+                (ex) =>
+                {
+                    Telemetry.TrackException(ex);
+                });
+            }
         }
 
         #region INotifyPropertyChanged

@@ -6,6 +6,7 @@
     xmlns:editors="using:InfinityVesselMonitoringSoftware.Editors.GaugePageEditor"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:settingsHome="using:InfinityVesselMonitoringSoftware.Settings.Views"
     x:Name="MainPagePage"
     Loaded="Page_Loaded"
     mc:Ignorable="d">
@@ -23,6 +24,9 @@
         <Viewbox x:Name="MainPageViewbox" Stretch="Uniform" Grid.Row="0">
             <Grid x:Name="MainPageInnerGrid">
                 <Pivot x:Name="MainPagePivot" KeyDown="MainPagePivot_KeyDown">
+                    <PivotItem Header="Settings">
+                        <settingsHome:SettingsHomeView/>
+                    </PivotItem>                        
                 </Pivot>
             </Grid>
         </Viewbox>

@@ -20,7 +20,6 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace InfinityVesselMonitoringSoftware.Settings
@@ -174,7 +173,6 @@ namespace InfinityVesselMonitoringSoftware.Settings
             get
             {
                 Int64 i64Color = GetPropertyRowValue<Int64>("ThemeBackgroundColor");
-                Debug.WriteLine("Color = ", i64Color.ToString());
                 return Utilities.ColorFromI64(i64Color);
             }
             set
@@ -225,6 +223,9 @@ namespace InfinityVesselMonitoringSoftware.Settings
         private T GetPropertyRowValue<T>(string propertyName)
         {
             T value = default(T);
+
+            if (null == App.BuildDBTables) return value;
+            if (null == App.BuildDBTables.VesselSettingsTable) return value;
 
             // Iterate through each of the rows looking for the property name
             foreach (ItemRow row in App.BuildDBTables.VesselSettingsTable.Rows)

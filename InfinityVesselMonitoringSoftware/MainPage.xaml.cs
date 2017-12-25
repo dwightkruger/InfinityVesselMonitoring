@@ -120,7 +120,6 @@ namespace VesselMonitoring
 
             await App.BuildDBTables.VesselSettingsTable.BeginEmpty();
 
-            App.VesselSettings = new VesselSettingsItem();
             App.VesselSettings.VesselName = "MV Infinity";
             App.VesselSettings.FromEmailAddress = "";
             App.VesselSettings.FromEmailPassword = "";
@@ -144,7 +143,7 @@ namespace VesselMonitoring
             //               "This is a test",
             //               "");
 
-            this.BuildDemoGaugePages();
+            //this.BuildDemoGaugePages();
 
             Binding mainGridBackgroundBinding = new Binding();
             mainGridBackgroundBinding.Path = new PropertyPath("ThemeBackgroundColor");
@@ -650,41 +649,41 @@ namespace VesselMonitoring
         {
             App.VesselSettings.ThemeBackgroundColor = Colors.White;
             App.VesselSettings.ThemeForegroundColor = Colors.Black;
-            this.Restyle();
+            this.Restyle(Colors.Black);
         }
 
         private void Dark_Click(object sender, RoutedEventArgs e)
         {
             App.VesselSettings.ThemeBackgroundColor = Colors.Black;
             App.VesselSettings.ThemeForegroundColor = Colors.White;
-            this.Restyle();
+            this.Restyle(Colors.White);
         }
 
         private void HighContrast_Click(object sender, RoutedEventArgs e)
         {
             App.VesselSettings.ThemeBackgroundColor = Colors.Black;
             App.VesselSettings.ThemeForegroundColor = Colors.White;
-            this.Restyle();
+            this.Restyle(Colors.White);
         }
 
         private void Night_Click(object sender, RoutedEventArgs e)
         {
             App.VesselSettings.ThemeBackgroundColor = Colors.Black;
             App.VesselSettings.ThemeForegroundColor = Colors.Red;
-            this.Restyle();
+            this.Restyle(Colors.Red);
         }
 
-        private void Restyle()
+        private void Restyle(Color foregroundColor)
         {
             foreach (IGaugeItem gaugeItem in App.GaugeItemCollection)
             {
                 gaugeItem.TextFontColor = App.VesselSettings.ThemeForegroundColor;
-                gaugeItem.GaugeColor = App.VesselSettings.ThemeForegroundColor;
+                gaugeItem.GaugeColor = foregroundColor;
             }
 
             this.MainPageGrid.Background = new SolidColorBrush(App.VesselSettings.ThemeBackgroundColor);
 
-            this.LightButton.Foreground = new SolidColorBrush(App.VesselSettings.ThemeForegroundColor);
+            this.LightButton.Foreground = new SolidColorBrush(foregroundColor);
             this.LightButton.Background = new SolidColorBrush(App.VesselSettings.ThemeBackgroundColor);
             this.DarkButton.Foreground = this.LightButton.Foreground;
             this.DarkButton.Background = this.LightButton.Background;
@@ -693,7 +692,7 @@ namespace VesselMonitoring
             this.NightButton.Foreground = this.LightButton.Foreground;
             this.NightButton.Background = this.LightButton.Background;
 
-            Messenger.Default.Send<Color>(App.VesselSettings.ThemeForegroundColor, "OnThemeColorsChanged");
+            Messenger.Default.Send<Color>(foregroundColor, "OnThemeColorsChanged");
 
         }
     }

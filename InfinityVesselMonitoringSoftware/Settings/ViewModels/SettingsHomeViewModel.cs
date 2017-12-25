@@ -22,7 +22,7 @@ namespace InfinityVesselMonitoringSoftware.Settings.ViewModels
         {
         }
 
-        public VesselSettingsItem VesselSettings
+        public IVesselSettings VesselSettings
         {
             get { return App.VesselSettings; }
         }
