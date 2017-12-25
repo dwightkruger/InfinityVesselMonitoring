@@ -15,12 +15,12 @@
     </UserControl.Resources>
 
     <Grid x:Name="MainGrid"
-        Background="{x:Bind Path=VM.VesselSettings.ThemeBackgroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}}"
+        Background="Transparent"
         DataContext="{StaticResource VesselSettingsViewModel}">
 
         <TextBlock 
             x:Name="TitleTextBlock"
-            Text="Vessel Settings" 
+            x:Uid="VesselSettings"
             HorizontalAlignment="Center" 
             VerticalAlignment="Top" 
             FontSize="48"/>

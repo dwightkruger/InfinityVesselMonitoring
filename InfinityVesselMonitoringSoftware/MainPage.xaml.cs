@@ -13,7 +13,6 @@ using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Utilities;
 using InfinityVesselMonitoringSoftware;
 using InfinityVesselMonitoringSoftware.Gauges;
-using InfinityVesselMonitoringSoftware.Settings;
 using InfinityVesselMonitoringSoftware.Settings.Views;
 using Microsoft.Graphics.Canvas.Text;
 using System;
@@ -45,6 +44,31 @@ namespace VesselMonitoring
 
         public MainPage()
         {
+            // BUGBUG - change thit minimally build and load the vessel settings table
+
+            // Connect to the SQL database
+            App.BuildDBTables = new SQLiteBuildDBTables();
+            App.BuildDBTables.Directory = ApplicationData.Current.LocalFolder.Path + @"\" + typeof(App).ToString();
+            InfinityGroup.VesselMonitoring.SQLiteDB.Utilities.CreateDirectory(App.BuildDBTables.Directory);
+            App.BuildDBTables.DatabaseName = "InfinityGroupVesselMonitoring";
+
+            Task.Run(async () => 
+            { 
+                await App.BuildDBTables.BuildVesselSettings();
+                await App.BuildDBTables.VesselSettingsTable.BeginEmpty();
+
+                App.VesselSettings.VesselName = "MV Infinity";
+                App.VesselSettings.FromEmailAddress = "";
+                App.VesselSettings.FromEmailPassword = "";
+                App.VesselSettings.ToEmailAddress = "dwightkruger@mvinfinity.com";
+                App.VesselSettings.SMTPServerName = "smtp-mail.outlook.com";
+                App.VesselSettings.SMTPPort = 587;
+                App.VesselSettings.SMTPEncryptionMethod = 2; // SmtpConnectType.ConnectSTARTTLS
+                App.VesselSettings.ThemeForegroundColor = Colors.White;
+                App.VesselSettings.ThemeBackgroundColor = Colors.Black;
+                await App.VesselSettings.BeginCommit();
+            }).Wait();
+
             this.InitializeComponent();
             Size ds = DisplaySize.GetCurrentDisplaySize();
 
@@ -98,11 +122,12 @@ namespace VesselMonitoring
             _semaphore = new System.Threading.Semaphore(1, 1, typeof(App).ToString(), out isSemaphoneCreated);
             if (!isSemaphoneCreated)
             {
+                // BUGBUG set color so that the text is visible.
                 ContentDialog dialog = new ContentDialog()
                 {
-                    Title = "Duplicate Instance",
-                    Content = "An instance of this program is already running.",
-                    CloseButtonText = "Close Application"
+                    Title = Globals.ResourceLoader.GetString("DuplicateInstance"),
+                    Content = Globals.ResourceLoader.GetString("DuplicateApplicationMessage"),
+                    CloseButtonText = Globals.ResourceLoader.GetString("CloseApplication"),
                 };
 
                 await dialog.ShowAsync();
@@ -111,25 +136,7 @@ namespace VesselMonitoring
                 return;
             }
 
-            // Connect to the SQL database
-            App.BuildDBTables = new SQLiteBuildDBTables();
-            App.BuildDBTables.Directory = ApplicationData.Current.LocalFolder.Path + @"\" + typeof(App).ToString();
-            InfinityGroup.VesselMonitoring.SQLiteDB.Utilities.CreateDirectory(App.BuildDBTables.Directory);
-            App.BuildDBTables.DatabaseName = "InfinityGroupVesselMonitoring";
             await App.BuildDBTables.Build();
-
-            await App.BuildDBTables.VesselSettingsTable.BeginEmpty();
-
-            App.VesselSettings.VesselName = "MV Infinity";
-            App.VesselSettings.FromEmailAddress = "";
-            App.VesselSettings.FromEmailPassword = "";
-            App.VesselSettings.ToEmailAddress = "dwightkruger@mvinfinity.com";
-            App.VesselSettings.SMTPServerName = "smtp-mail.outlook.com";
-            App.VesselSettings.SMTPPort = 587;
-            App.VesselSettings.SMTPEncryptionMethod = 2; // SmtpConnectType.ConnectSTARTTLS
-            App.VesselSettings.ThemeForegroundColor = ((SolidColorBrush) Application.Current.Resources["ApplicationForegroundThemeBrush"]).Color;
-            App.VesselSettings.ThemeBackgroundColor = ((SolidColorBrush)Application.Current.Resources["ApplicationPageBackgroundThemeBrush"]).Color;
-            await App.VesselSettings.BeginCommit();
 
             //SendEmail.FromEmailAddress = App.VesselSettings.FromEmailAddress;
             //SendEmail.FromEmailPassword = App.VesselSettings.FromEmailPassword;
@@ -143,7 +150,7 @@ namespace VesselMonitoring
             //               "This is a test",
             //               "");
 
-            //this.BuildDemoGaugePages();
+            this.BuildDemoGaugePages();
 
             Binding mainGridBackgroundBinding = new Binding();
             mainGridBackgroundBinding.Path = new PropertyPath("ThemeBackgroundColor");
@@ -152,6 +159,9 @@ namespace VesselMonitoring
             mainGridBackgroundBinding.Mode = BindingMode.OneWay;
             //this.MainPageGrid.SetBinding(BackgroundProperty, mainGridBackgroundBinding);
             this.MainPageGrid.Background = new SolidColorBrush(App.VesselSettings.ThemeBackgroundColor);
+
+            this.Light_Click(this, null);
+            this.SettingsHomeView.Visibility = Visibility.Visible;
         }
 
         async Task PopulateDemoGaugePageCollection()
@@ -659,13 +669,6 @@ namespace VesselMonitoring
             this.Restyle(Colors.White);
         }
 
-        private void HighContrast_Click(object sender, RoutedEventArgs e)
-        {
-            App.VesselSettings.ThemeBackgroundColor = Colors.Black;
-            App.VesselSettings.ThemeForegroundColor = Colors.White;
-            this.Restyle(Colors.White);
-        }
-
         private void Night_Click(object sender, RoutedEventArgs e)
         {
             App.VesselSettings.ThemeBackgroundColor = Colors.Black;
@@ -687,13 +690,10 @@ namespace VesselMonitoring
             this.LightButton.Background = new SolidColorBrush(App.VesselSettings.ThemeBackgroundColor);
             this.DarkButton.Foreground = this.LightButton.Foreground;
             this.DarkButton.Background = this.LightButton.Background;
-            this.HighContrastButton.Foreground = this.LightButton.Foreground;
-            this.HighContrastButton.Background = this.LightButton.Background;
             this.NightButton.Foreground = this.LightButton.Foreground;
             this.NightButton.Background = this.LightButton.Background;
 
             Messenger.Default.Send<Color>(foregroundColor, "OnThemeColorsChanged");
-
         }
     }
 }

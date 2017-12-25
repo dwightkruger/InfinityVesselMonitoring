@@ -4,9 +4,7 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
-using Autofac;
 using InfinityGroup.VesselMonitoring.Interfaces;
-using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -14,66 +12,46 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
 {
     public class SQLiteBuildDBTables : IBuildDBTables
     {
+        async public Task BuildVesselSettings()
+        {
+            this.VesselDB = new SQLiteVesselDB();
+            this.VesselDB.DatabaseFileName = Path.Combine(Directory, DatabaseName + ".db");
+            this.VesselDB.Create();
+
+            this.VesselSettingsTable = new SQLiteVesselSettingsTable(this.VesselDB);
+            await VesselSettingsTable.BeginCreateTable(() => { }, (ex) => { });
+            this.VesselSettingsTable.Load();
+        }
+
         async public Task Build()
-        { 
-            var builder = new ContainerBuilder();
-            builder.RegisterType<SQLiteVesselDB>().As<IVesselDB>().SingleInstance();
-
-            builder.RegisterType<SQLiteAISTable>().As<IAISTable>().SingleInstance();
-            builder.RegisterType<SQLiteDeviceTable>().As<IDeviceTable>().SingleInstance();
-            builder.RegisterType<SQLiteEventsTable>().As<IEventsTable>().SingleInstance();
-            builder.RegisterType<SQLiteGaugePageTable>().As<IGaugePageTable>().SingleInstance();
-            builder.RegisterType<SQLiteGaugeTable>().As<IGaugeTable>().SingleInstance();
-            builder.RegisterType<SQLiteSensorDataTable>().As<ISensorDataTable>().SingleInstance();
-            builder.RegisterType<SQLiteSensorTable>().As<ISensorTable>().SingleInstance();
-            builder.RegisterType<SQLiteVesselSettingsTable>().As<IVesselSettingsTable>().SingleInstance();
-
-            Container = builder.Build();
-
-            VesselDB = Container.Resolve<IVesselDB>();
-            VesselDB.DatabaseFileName = Path.Combine(Directory, DatabaseName + ".db");
-            VesselDB.Create();
-            builder.RegisterInstance<IVesselDB>(VesselDB).SingleInstance();
-
-            AISTable = Container.Resolve<IAISTable>();
+        {
+            this.AISTable = new SQLiteAISTable(this.VesselDB);
             await AISTable.BeginCreateTable(() => { }, (ex) => { });
-            AISTable.Load();
-            builder.RegisterInstance<IAISTable>(AISTable).SingleInstance();
+            this.AISTable.Load();
 
-            DeviceTable = Container.Resolve<IDeviceTable>();
+            this.DeviceTable = new SQLiteDeviceTable(this.VesselDB);
             await DeviceTable.BeginCreateTable(() => { }, (ex) => { });
-            DeviceTable.Load();
-            builder.RegisterInstance<IDeviceTable>(DeviceTable).SingleInstance();
+            this.DeviceTable.Load();
 
-            EventsTable = Container.Resolve<IEventsTable>();
+            this.EventsTable = new SQLiteEventsTable(this.VesselDB);
             await EventsTable.BeginCreateTable(()=> { },(ex)=> { });
-            EventsTable.Load();
-            builder.RegisterInstance<IEventsTable>(EventsTable).SingleInstance();
+            this.EventsTable.Load();
 
-            GaugeTable = Container.Resolve<IGaugeTable>();
-            await GaugeTable.BeginCreateTable(() => { }, (ex) => { });
-            GaugeTable.Load();
-            builder.RegisterInstance<IGaugeTable>(GaugeTable).SingleInstance();
-
-            GaugePageTable = Container.Resolve<IGaugePageTable>();
+            this.GaugePageTable = new SQLiteGaugePageTable(this.VesselDB);
             await GaugePageTable.BeginCreateTable(() => { }, (ex) => { });
-            GaugePageTable.Load();
-            builder.RegisterInstance<IGaugePageTable>(GaugePageTable).SingleInstance();
+            this.GaugePageTable.Load();
 
-            SensorTable = Container.Resolve<ISensorTable>();
+            this.GaugeTable = new SQLiteGaugeTable(this.VesselDB);
+            await GaugeTable.BeginCreateTable(() => { }, (ex) => { });
+            this.GaugeTable.Load();
+
+            this.SensorTable = new SQLiteSensorTable(this.VesselDB);
             await SensorTable.BeginCreateTable(() => { }, (ex) => { });
             SensorTable.Load();
-            builder.RegisterInstance<ISensorTable>(SensorTable).SingleInstance();
 
-            SensorDataTable = Container.Resolve<ISensorDataTable>();
+            this.SensorDataTable = new SQLiteSensorDataTable(this.VesselDB);
             await SensorDataTable.BeginCreateTable(() => { }, (ex) => { });
-            SensorDataTable.Load();
-            builder.RegisterInstance<ISensorDataTable>(SensorDataTable).SingleInstance();
-
-            VesselSettingsTable = Container.Resolve<IVesselSettingsTable>();
-            await VesselSettingsTable.BeginCreateTable(() => { }, (ex) => { });
-            VesselSettingsTable.Load();
-            builder.RegisterInstance<IVesselSettingsTable>(VesselSettingsTable).SingleInstance();
+            this.SensorDataTable.Load();
         }
 
         public string Directory { get; set; }
@@ -87,7 +65,5 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
         public ISensorDataTable SensorDataTable { get; private set; }
         public IVesselDB VesselDB { get; private set; }
         public IVesselSettingsTable VesselSettingsTable { get; private set; }
-
-        public IContainer Container { get; set; }
     }
 }

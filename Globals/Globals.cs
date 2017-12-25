@@ -5,11 +5,12 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////    
 
 using Autofac;
+using Windows.ApplicationModel.Resources;
 
 namespace InfinityGroup.VesselMonitoring.Globals
 {
     public class Globals
     {
-        public static IContainer Container { get; set; }
+        public static ResourceLoader ResourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
     }
 }

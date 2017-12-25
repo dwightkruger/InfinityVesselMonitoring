@@ -6,13 +6,41 @@
     </header>
     <body>
       <group id="INFINITYVESSELMONITORINGSOFTWARE/STRINGS/EN-US/RESOURCES.RESW" datatype="resx">
-        <trans-unit id="Cancel.Text" translate="yes" xml:space="preserve">
-          <source>Cancel</source>
-          <target state="needs-review-translation" state-qualifier="tm-suggestion">Annuler</target>
+        <trans-unit id="VesselSettings.Text" translate="yes" xml:space="preserve">
+          <source>Vessel Settings</source>
+          <target state="new">Vessel Settings</target>
         </trans-unit>
-        <trans-unit id="Ok.Text" translate="yes" xml:space="preserve">
+        <trans-unit id="Cancel.Content" translate="yes" xml:space="preserve">
+          <source>Cancel</source>
+          <target state="new">Cancel</target>
+        </trans-unit>
+        <trans-unit id="Ok.Content" translate="yes" xml:space="preserve">
           <source>Ok</source>
-          <target state="needs-review-translation" state-qualifier="tm-suggestion">OK</target>
+          <target state="new">Ok</target>
+        </trans-unit>
+        <trans-unit id="Database.Text" translate="yes" xml:space="preserve">
+          <source>Database</source>
+          <target state="new">Database</target>
+        </trans-unit>
+        <trans-unit id="Sensors.Text" translate="yes" xml:space="preserve">
+          <source>Sensors</source>
+          <target state="new">Sensors</target>
+        </trans-unit>
+        <trans-unit id="Pages.Text" translate="yes" xml:space="preserve">
+          <source>Pages</source>
+          <target state="new">Pages</target>
+        </trans-unit>
+        <trans-unit id="CloseApplication.Content" translate="yes" xml:space="preserve">
+          <source>Close Application</source>
+          <target state="new">Close Application</target>
+        </trans-unit>
+        <trans-unit id="DuplicateApplicationMessage.Text" translate="yes" xml:space="preserve">
+          <source>An instance of this program is already running.</source>
+          <target state="new">An instance of this program is already running.</target>
+        </trans-unit>
+        <trans-unit id="DuplicateInstance.Text" translate="yes" xml:space="preserve">
+          <source>Duplicate Instance</source>
+          <target state="new">Duplicate Instance</target>
         </trans-unit>
       </group>
     </body>

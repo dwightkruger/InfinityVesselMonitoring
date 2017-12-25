@@ -99,13 +99,16 @@ namespace InfinityVesselMonitoringSoftware
             // Flush all of the records to the database
             Task.Run(async () =>
             {
-                await App.BuildDBTables.SensorDataTable.BeginCommitAll(() =>
+                if ((null != App.BuildDBTables) && (null != App.BuildDBTables.SensorDataTable))
                 {
-                },
-                (ex) =>
-                {
-                    Telemetry.TrackException(ex);
-                });
+                    await App.BuildDBTables.SensorDataTable.BeginCommitAll(() =>
+                    {
+                    },
+                    (ex) =>
+                    {
+                        Telemetry.TrackException(ex);
+                    });
+                }
             }).Wait();
 
             var deferral = e.SuspendingOperation.GetDeferral();

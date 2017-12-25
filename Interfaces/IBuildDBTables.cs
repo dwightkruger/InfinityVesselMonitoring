@@ -11,6 +11,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
 {
     public interface IBuildDBTables
     {
+        Task BuildVesselSettings();
         Task Build();
         string Directory { get; set; }
         string DatabaseName { get; set; }
@@ -23,8 +24,5 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         ISensorDataTable SensorDataTable { get; }
         IVesselDB VesselDB { get; }
         IVesselSettingsTable VesselSettingsTable { get; }
-
-        IContainer Container { get; set; }
-
     }
 }

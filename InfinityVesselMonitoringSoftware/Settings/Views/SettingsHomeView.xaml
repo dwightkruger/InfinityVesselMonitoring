@@ -49,6 +49,7 @@
             x:Name="MainGrid"
             Width="1800"
             Height="800"
+            Background="Transparent"
             VerticalAlignment="Center"
             HorizontalAlignment="Center">
 
@@ -68,7 +69,7 @@
                 <Viewbox>
                     <Grid>
                         <Image x:Name="VesselSettingsImage" Source="ms-appx:///Graphics/Ship-light.png"/>
-                        <TextBlock x:Name="VesselSettingsTextBlock" Text="Vessel Settings"/>
+                        <TextBlock x:Name="VesselSettingsTextBlock" x:Uid="VesselSettings"/>
                     </Grid>                    
                 </Viewbox>
             </Button>
@@ -77,7 +78,7 @@
                 <Viewbox>
                     <Grid>
                         <Image x:Name="SensorImage" Source="ms-appx:///Graphics/Sensor-light.png"/>
-                        <TextBlock x:Name="SensorsTextBlock" Text="Sensors"/>
+                        <TextBlock x:Name="SensorsTextBlock" x:Uid="Sensors"/>
                         </Grid>
                 </Viewbox>
             </Button>
@@ -86,7 +87,7 @@
                 <Viewbox>
                     <Grid>
                         <Image x:Name="PagesImage" Source="ms-appx:///Graphics/Pages-light.png"/>
-                            <TextBlock Text="Pages" x:Name="PagesTextBlock"/>
+                            <TextBlock x:Name="PagesTextBlock" x:Uid="Pages"/>
                         </Grid>
                 </Viewbox>
             </Button>
@@ -95,7 +96,7 @@
                 <Viewbox>
                     <Grid>
                         <Image x:Name="DatabaseImage" Source="ms-appx:///Graphics/Database-light.png"/>
-                        <TextBlock Text="Database" x:Name="DatabaseTextBlock"/>
+                        <TextBlock x:Uid="Database" x:Name="DatabaseTextBlock"/>
                         </Grid>
                 </Viewbox>
             </Button>
