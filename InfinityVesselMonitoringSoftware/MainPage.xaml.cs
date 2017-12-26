@@ -33,7 +33,6 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 // Icons from https://www.flaticon.com
 namespace VesselMonitoring
 {
@@ -44,9 +43,8 @@ namespace VesselMonitoring
 
         public MainPage()
         {
-            // BUGBUG - change thit minimally build and load the vessel settings table
-
-            // Connect to the SQL database
+            // Connect to the SQL database and load the vessel settings table so that UI customizations can
+            // be applied at program startup time.
             App.BuildDBTables = new SQLiteBuildDBTables();
             App.BuildDBTables.Directory = ApplicationData.Current.LocalFolder.Path + @"\" + typeof(App).ToString();
             InfinityGroup.VesselMonitoring.SQLiteDB.Utilities.CreateDirectory(App.BuildDBTables.Directory);
@@ -55,18 +53,18 @@ namespace VesselMonitoring
             Task.Run(async () => 
             { 
                 await App.BuildDBTables.BuildVesselSettings();
-                await App.BuildDBTables.VesselSettingsTable.BeginEmpty();
+                //await App.BuildDBTables.VesselSettingsTable.BeginEmpty();
 
-                App.VesselSettings.VesselName = "MV Infinity";
-                App.VesselSettings.FromEmailAddress = "";
-                App.VesselSettings.FromEmailPassword = "";
-                App.VesselSettings.ToEmailAddress = "dwightkruger@mvinfinity.com";
-                App.VesselSettings.SMTPServerName = "smtp-mail.outlook.com";
-                App.VesselSettings.SMTPPort = 587;
-                App.VesselSettings.SMTPEncryptionMethod = 2; // SmtpConnectType.ConnectSTARTTLS
-                App.VesselSettings.ThemeForegroundColor = Colors.White;
-                App.VesselSettings.ThemeBackgroundColor = Colors.Black;
-                await App.VesselSettings.BeginCommit();
+                //App.VesselSettings.VesselName = "MV Infinity";
+                //App.VesselSettings.FromEmailAddress = "";
+                //App.VesselSettings.FromEmailPassword = "";
+                //App.VesselSettings.ToEmailAddress = "dwightkruger@mvinfinity.com";
+                //App.VesselSettings.SMTPServerName = "smtp-mail.outlook.com";
+                //App.VesselSettings.SMTPPort = 587;
+                //App.VesselSettings.SMTPEncryptionMethod = 2; // SmtpConnectType.ConnectSTARTTLS
+                //App.VesselSettings.ThemeForegroundColor = Colors.White;
+                //App.VesselSettings.ThemeBackgroundColor = Colors.Black;
+                //await App.VesselSettings.BeginCommit();
             }).Wait();
 
             this.InitializeComponent();
@@ -152,16 +150,17 @@ namespace VesselMonitoring
 
             this.BuildDemoGaugePages();
 
-            Binding mainGridBackgroundBinding = new Binding();
-            mainGridBackgroundBinding.Path = new PropertyPath("ThemeBackgroundColor");
-            mainGridBackgroundBinding.Source = App.VesselSettings;
-            mainGridBackgroundBinding.Converter = c_ctscbc;
-            mainGridBackgroundBinding.Mode = BindingMode.OneWay;
+            //Binding mainGridBackgroundBinding = new Binding();
+            //mainGridBackgroundBinding.Path = new PropertyPath("ThemeBackgroundColor");
+            //mainGridBackgroundBinding.Source = App.VesselSettings;
+            //mainGridBackgroundBinding.Converter = c_ctscbc;
+            //mainGridBackgroundBinding.Mode = BindingMode.OneWay;
             //this.MainPageGrid.SetBinding(BackgroundProperty, mainGridBackgroundBinding);
-            this.MainPageGrid.Background = new SolidColorBrush(App.VesselSettings.ThemeBackgroundColor);
+            //this.MainPageGrid.Background = new SolidColorBrush(App.VesselSettings.ThemeBackgroundColor);
 
-            this.Light_Click(this, null);
-            this.SettingsHomeView.Visibility = Visibility.Visible;
+            if (App.VesselSettings.ThemeForegroundColor == Colors.Black) this.Light_Click(this, null);
+            else if (App.VesselSettings.ThemeForegroundColor == Colors.White) this.Dark_Click(this, null);
+            else if (App.VesselSettings.ThemeForegroundColor == Colors.Red) this.Night_Click(this, null);
         }
 
         async Task PopulateDemoGaugePageCollection()
@@ -569,13 +568,8 @@ namespace VesselMonitoring
 
             this.MainPagePivot.Items.Clear();
 
-            SettingsHomeView vesselSettingsHomeView = new SettingsHomeView();
-            PivotItem vsPivotItem = new PivotItem();
-            vsPivotItem.Header = "Settings";
-            Canvas vscanvas = new Canvas();
-            vscanvas.Children.Add(vesselSettingsHomeView);
-            vsPivotItem.Content = vscanvas;
-            this.MainPagePivot.Items.Add(vsPivotItem);
+            Canvas canvas;
+            PivotItem pivotItem;
 
             // For each gauge page, build the view and view model
             foreach (IGaugePageItem item in App.GaugePageCollection)
@@ -596,11 +590,11 @@ namespace VesselMonitoring
                 view.SetBinding(GaugePageView.HeightProperty, heightBinding);
 
                 // Put the view into a Canvas
-                Canvas canvas = new Canvas();
+                canvas = new Canvas();
                 canvas.Children.Add(view);
 
                 // Put the canvas into a PivotItem
-                PivotItem pivotItem = new PivotItem();
+                pivotItem = new PivotItem();
                 pivotItem.Header = item.PageName;
                 pivotItem.Content = canvas;
 
@@ -614,6 +608,18 @@ namespace VesselMonitoring
                     Messenger.Default.Send<List<IGaugeItem>>(gaugeItemList, "BuildGaugeItemList");
                 }
             }
+
+            SettingsHomeView settingsHomeView = new SettingsHomeView();
+
+            // Put the view into a Canvas
+            canvas = new Canvas();
+            canvas.Children.Add(settingsHomeView);
+
+            pivotItem = new PivotItem();
+            pivotItem.Header = "Settings";
+            pivotItem.Content = canvas;
+
+            this.MainPagePivot.Items.Add(pivotItem);
         }
 
         /// <summary>
@@ -694,6 +700,7 @@ namespace VesselMonitoring
             this.NightButton.Background = this.LightButton.Background;
 
             Messenger.Default.Send<Color>(foregroundColor, "OnThemeColorsChanged");
+            Task.Run(async () => { await App.VesselSettings.BeginCommit(); }).Wait();
         }
     }
 }
