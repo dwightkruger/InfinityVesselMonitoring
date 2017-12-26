@@ -16,6 +16,7 @@
     <UserControl.Resources>
         <vm:SettingsHomeViewModel x:Key="SettingsHomeViewModel" x:Name="VM"/>
         <converter:ColorToSolidColorBrushConverter x:Key="ColorToSolidColorBrushConverter"/>
+        <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
 
         <Style TargetType="TextBlock">
             <Style.Setters>
@@ -102,7 +103,22 @@
                 Source="ms-appx:///Graphics/Database-light.png"
                 x:Uid="Database"/>
 
-            <views:VesselSettingsView Grid.Row="0" Grid.Column="1" Grid.RowSpan="4"/>
+            <views:VesselSettingsView 
+                x:Name="VesselSettingsView"
+                Visibility="{x:Bind VM.IsVesselSettingsCommandChecked, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}}"
+                Grid.Row="0" Grid.Column="1" Grid.RowSpan="4"/>
+            <views:PagesView    
+                x:Name="PagesView"    
+                Visibility="{x:Bind VM.IsPagesCommandChecked, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}}"
+                Grid.Row="0" Grid.Column="1" Grid.RowSpan="4"/>
+            <views:SensorsView  
+                x:Name="SensorsView"  
+                Visibility="{x:Bind VM.IsSensorsCommandChecked, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}}"
+                Grid.Row="0" Grid.Column="1" Grid.RowSpan="4"/>
+            <views:DatabaseView 
+                x:Name="DatabaseView" 
+                Visibility="{x:Bind VM.IsDatabaseCommandChecked, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}}"
+                Grid.Row="0" Grid.Column="1" Grid.RowSpan="4"/>
         </Grid>
     </Viewbox>        
 </UserControl>

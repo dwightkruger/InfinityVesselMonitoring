@@ -42,6 +42,10 @@ namespace InfinityGroup.VesselMonitoring.Controls.Converters
             {
                 visibility = (bool)value ? Visibility.Visible : OffVisibility;
             }
+            else if (value is Nullable<bool>)
+            {
+                visibility = ((Nullable<bool>)value).Value ? Visibility.Visible : OffVisibility;
+            }
             //else if (value is double)
             //{
             //    visibility = ((double)value > 0.0) ? Visibility.Visible : OffVisibility;

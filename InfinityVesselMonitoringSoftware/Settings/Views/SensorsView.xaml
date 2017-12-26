@@ -15,7 +15,16 @@
     </UserControl.Resources>
 
 
-    <Grid>
+    <Grid x:Name="MainGrid"
+        Background="Transparent"
+        DataContext="{StaticResource SensorsViewModel}">
 
+        <TextBlock 
+            x:Name="TitleTextBlock"
+            x:Uid="SensorsEditor"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top" 
+            FontSize="48"/>
     </Grid>
+
 </UserControl>

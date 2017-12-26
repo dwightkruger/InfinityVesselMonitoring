@@ -126,6 +126,9 @@
   <data name="Database.Text" xml:space="preserve">
     <value>Database</value>
   </data>
+  <data name="DatabaseEditor.Text" xml:space="preserve">
+    <value>Database</value>
+  </data>
   <data name="DuplicateApplicationMessage.Text" xml:space="preserve">
     <value>An instance of this program is already running.</value>
   </data>
@@ -138,10 +141,16 @@
   <data name="Pages.Text" xml:space="preserve">
     <value>Pages</value>
   </data>
+  <data name="PagesEditor.Text" xml:space="preserve">
+    <value>Pages</value>
+  </data>
   <data name="Sensors.Text" xml:space="preserve">
     <value>Sensors</value>
   </data>
-  <data name="VesselSettings.Text" xml:space="preserve">
+  <data name="SensorsEditor.Text" xml:space="preserve">
+    <value>Sensors</value>
+  </data>
+  <data name="VesselSettingsEditor.Text" xml:space="preserve">
     <value>Vessel Settings</value>
   </data>
 </root>

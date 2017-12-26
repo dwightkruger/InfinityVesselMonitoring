@@ -6,10 +6,6 @@
     </header>
     <body>
       <group id="INFINITYVESSELMONITORINGSOFTWARE/STRINGS/EN-US/RESOURCES.RESW" datatype="resx">
-        <trans-unit id="VesselSettings.Text" translate="yes" xml:space="preserve">
-          <source>Vessel Settings</source>
-          <target state="new">Vessel Settings</target>
-        </trans-unit>
         <trans-unit id="Cancel.Content" translate="yes" xml:space="preserve">
           <source>Cancel</source>
           <target state="new">Cancel</target>
@@ -41,6 +37,22 @@
         <trans-unit id="DuplicateInstance.Text" translate="yes" xml:space="preserve">
           <source>Duplicate Instance</source>
           <target state="new">Duplicate Instance</target>
+        </trans-unit>
+        <trans-unit id="DatabaseEditor.Text" translate="yes" xml:space="preserve">
+          <source>Database</source>
+          <target state="new">Database</target>
+        </trans-unit>
+        <trans-unit id="PagesEditor.Text" translate="yes" xml:space="preserve">
+          <source>Pages</source>
+          <target state="new">Pages</target>
+        </trans-unit>
+        <trans-unit id="SensorsEditor.Text" translate="yes" xml:space="preserve">
+          <source>Sensors</source>
+          <target state="new">Sensors</target>
+        </trans-unit>
+        <trans-unit id="VesselSettingsEditor.Text" translate="yes" xml:space="preserve">
+          <source>Vessel Settings</source>
+          <target state="new">Vessel Settings</target>
         </trans-unit>
       </group>
     </body>

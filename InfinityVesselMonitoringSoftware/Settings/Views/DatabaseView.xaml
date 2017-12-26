@@ -13,7 +13,16 @@
     <UserControl.Resources>
         <vm:DatabaseViewModel x:Key="DatabaseViewModel" x:Name="VM"/>
     </UserControl.Resources>
-    <Grid>
 
+    <Grid x:Name="MainGrid"
+        Background="Transparent"
+        DataContext="{StaticResource DatabaseViewModel}">
+
+        <TextBlock 
+            x:Name="TitleTextBlock"
+            x:Uid="DatabaseEditor"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top" 
+            FontSize="48"/>
     </Grid>
 </UserControl>

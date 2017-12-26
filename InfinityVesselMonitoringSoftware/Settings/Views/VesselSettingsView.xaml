@@ -20,7 +20,7 @@
 
         <TextBlock 
             x:Name="TitleTextBlock"
-            x:Uid="VesselSettings"
+            x:Uid="VesselSettingsEditor"
             HorizontalAlignment="Center" 
             VerticalAlignment="Top" 
             FontSize="48"/>

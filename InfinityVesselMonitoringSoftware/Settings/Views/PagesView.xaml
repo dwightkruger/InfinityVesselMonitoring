@@ -14,8 +14,16 @@
         <vm:PagesViewModel x:Key="PagesViewModel" x:Name="VM"/>
     </UserControl.Resources>
 
-    <Grid>
+    <Grid x:Name="MainGrid"
+        Background="Transparent"
+        DataContext="{StaticResource PagesViewModel}">
 
-
+        <TextBlock 
+            x:Name="TitleTextBlock"
+            x:Uid="PagesEditor"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top" 
+            FontSize="48"/>
     </Grid>
+
 </UserControl>

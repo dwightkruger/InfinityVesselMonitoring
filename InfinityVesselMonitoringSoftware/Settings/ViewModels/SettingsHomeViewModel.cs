@@ -25,6 +25,10 @@ namespace InfinityVesselMonitoringSoftware.Settings.ViewModels
 
         public SettingsHomeViewModel()
         {
+            this.IsVesselSettingsCommandChecked = true;
+            this.IsPagesCommandChecked = false;
+            this.IsSensorsCommandChecked = false;
+            this.IsDatabaseCommandChecked = false;
         }
 
         public IVesselSettings VesselSettings
