@@ -545,10 +545,10 @@ namespace VesselMonitoring
 
         async private void BuildDemoGaugePages()
         {
-            //await this.PopulateDemoDeviceCollection();
-            //await this.PopulateDemoSensorCollection();
-            //await this.PopulateDemoGaugePageCollection();
-            //await this.PopulateDemoGaugeCollection();
+            await this.PopulateDemoDeviceCollection();
+            await this.PopulateDemoSensorCollection();
+            await this.PopulateDemoGaugePageCollection();
+            await this.PopulateDemoGaugeCollection();
 
             App.BuildDBTables.DeviceTable.Load();
             App.DeviceCollection.Clear();

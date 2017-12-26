@@ -12,7 +12,6 @@ using InfinityGroup.VesselMonitoring.Types;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -71,7 +70,7 @@ namespace InfinityVesselMonitoringSoftware.Settings
         }
 
         /// <summary>
-        /// Get the BitmapImage from the database given the iamgeName provided.
+        /// Get the BitmapImage from the database given the imageName provided.
         /// </summary>
         /// <param name="imageName"></param>
         /// <returns></returns>
