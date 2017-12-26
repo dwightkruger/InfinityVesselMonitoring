@@ -12,6 +12,7 @@ using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -20,18 +21,20 @@ namespace InfinityVesselMonitoringSoftware.Settings.Views
 {
     public sealed partial class SettingsHomeView : UserControl
     {
-        private static BitmapImage c_shipDark;
-        private static BitmapImage c_shipLight;
-        private static BitmapImage c_shipRed;
-        private static BitmapImage c_databaseDark;
-        private static BitmapImage c_databaseLight;
-        private static BitmapImage c_databaseRed;
-        private static BitmapImage c_pagesDark;
-        private static BitmapImage c_pagesLight;
-        private static BitmapImage c_pagesRed;
-        private static BitmapImage c_sensorDark;
-        private static BitmapImage c_sensorLight;
-        private static BitmapImage c_sensorRed;
+        private static ImageSource c_shipDark;
+        private static ImageSource c_shipLight;        private static ImageSource c_shipRed;
+        private static ImageSource c_databaseDark;
+        private static ImageSource c_databaseLight;
+        private static ImageSource c_databaseRed;
+        private static ImageSource c_pagesDark;
+        private static ImageSource c_pagesLight;
+        private static ImageSource c_pagesRed;
+        private static ImageSource c_sensorDark;
+        private static ImageSource c_sensorLight;
+        private static ImageSource c_sensorRed;
+        private static SolidColorBrush c_LightBrush;
+        private static SolidColorBrush c_DarkBrush;
+        private static SolidColorBrush c_NightBrush;
         private static ColorToSolidColorBrushConverter c_ctscbc = new ColorToSolidColorBrushConverter();
 
         static SettingsHomeView()
@@ -48,6 +51,10 @@ namespace InfinityVesselMonitoringSoftware.Settings.Views
             c_sensorDark    = ImageFromUri("ms-appx:///Graphics/Sensor-dark.png");
             c_sensorLight   = ImageFromUri("ms-appx:///Graphics/Sensor-light.png");
             c_sensorRed     = ImageFromUri("ms-appx:///Graphics/Sensor-red.png");
+
+            c_LightBrush = new SolidColorBrush(Colors.LightGray);
+            c_DarkBrush = new SolidColorBrush(Colors.DarkGray);
+            c_NightBrush = new SolidColorBrush(Colors.DarkRed);
         }
 
         private static BitmapImage ImageFromUri(string uriString)
@@ -72,36 +79,51 @@ namespace InfinityVesselMonitoringSoftware.Settings.Views
             {
                 if (newColor == Colors.White)
                 {
-                    VesselSettingsImage.Source = c_shipDark;
-                    SensorImage.Source         = c_sensorDark;
-                    PagesImage.Source          = c_pagesDark;
-                    DatabaseImage.Source       = c_databaseDark;
+                    VesselSettingsButton.Source = c_shipDark;
+                    SensorsButton.Source        = c_sensorDark;
+                    PagesButton.Source          = c_pagesDark;
+                    DatabaseButton.Source       = c_databaseDark;
+
+                    VesselSettingsButton.IsSelectedColor = c_DarkBrush;
+                    SensorsButton.IsSelectedColor = c_DarkBrush;
+                    PagesButton.IsSelectedColor = c_DarkBrush;
+                    DatabaseButton.IsSelectedColor = c_DarkBrush;
                 }
                 else if (newColor == Colors.Red)
                 {
-                    VesselSettingsImage.Source = c_shipRed;
-                    SensorImage.Source         = c_sensorRed;
-                    PagesImage.Source          = c_pagesRed;
-                    DatabaseImage.Source       = c_databaseRed;
+                    VesselSettingsButton.Source = c_shipRed;
+                    SensorsButton.Source        = c_sensorRed;
+                    PagesButton.Source          = c_pagesRed;
+                    DatabaseButton.Source       = c_databaseRed;
+
+                    VesselSettingsButton.IsSelectedColor = c_NightBrush;
+                    SensorsButton.IsSelectedColor = c_NightBrush;
+                    PagesButton.IsSelectedColor = c_NightBrush;
+                    DatabaseButton.IsSelectedColor = c_NightBrush;
                 }
                 else
                 {
-                    VesselSettingsImage.Source = c_shipLight;
-                    SensorImage.Source         = c_sensorLight;
-                    PagesImage.Source          = c_pagesLight;
-                    DatabaseImage.Source       = c_databaseLight;
+                    VesselSettingsButton.Source = c_shipLight;
+                    SensorsButton.Source        = c_sensorLight;
+                    PagesButton.Source          = c_pagesLight;
+                    DatabaseButton.Source       = c_databaseLight;
+
+                    VesselSettingsButton.IsSelectedColor = c_LightBrush;
+                    SensorsButton.IsSelectedColor = c_LightBrush;
+                    PagesButton.IsSelectedColor = c_LightBrush;
+                    DatabaseButton.IsSelectedColor = c_LightBrush;
                 }
             });
 
-            Binding tb = new Binding();
-            tb.Source = App.VesselSettings;
-            tb.Path = new PropertyPath("ThemeForegroundColor");
-            tb.Converter = new ColorToSolidColorBrushConverter();
+            Binding textBlockBinding = new Binding();
+            textBlockBinding.Source = App.VesselSettings;
+            textBlockBinding.Path = new PropertyPath("ThemeForegroundColor");
+            textBlockBinding.Converter = new ColorToSolidColorBrushConverter();
 
-            this.VesselSettingsTextBlock.SetBinding(TextBlock.ForegroundProperty, tb);
-            this.SensorsTextBlock.SetBinding(TextBlock.ForegroundProperty, tb);
-            this.PagesTextBlock.SetBinding(TextBlock.ForegroundProperty, tb);
-            this.DatabaseTextBlock.SetBinding(TextBlock.ForegroundProperty, tb);
+            this.VesselSettingsButton.SetBinding(TextBlock.ForegroundProperty, textBlockBinding);
+            this.SensorsButton.SetBinding(TextBlock.ForegroundProperty, textBlockBinding);
+            this.PagesButton.SetBinding(TextBlock.ForegroundProperty, textBlockBinding);
+            this.DatabaseButton.SetBinding(TextBlock.ForegroundProperty, textBlockBinding);
         }
 
         public SettingsHomeViewModel ViewModel

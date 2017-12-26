@@ -7,6 +7,7 @@
     xmlns:vm="using:InfinityVesselMonitoringSoftware.Settings.ViewModels"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="using:InfinityVesselMonitoringSoftware.Settings.Views"
+    xmlns:controls="using:InfinityGroup.VesselMonitoring.Controls"
     xmlns:converter="using:InfinityGroup.VesselMonitoring.Controls.Converters"
     mc:Ignorable="d"
     d:DesignHeight="800"
@@ -65,41 +66,41 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="VesselSettingsButton" Grid.Row="0" Grid.Column="0" Command="{x:Bind Path=VM.VesselSettingsCommand}">
-                <Viewbox>
-                    <Grid>
-                        <Image x:Name="VesselSettingsImage" Source="ms-appx:///Graphics/Ship-light.png"/>
-                        <TextBlock x:Name="VesselSettingsTextBlock" x:Uid="VesselSettings"/>
-                    </Grid>                    
-                </Viewbox>
-            </Button>
+            <controls:ImageToggleButton 
+                x:Name="VesselSettingsButton"
+                Grid.Row="0" 
+                Grid.Column="0" 
+                IsSelected="{x:Bind VM.IsVesselSettingsCommandChecked, Mode=TwoWay}"
+                Command="{x:Bind Path=VM.VesselSettingsCommand}"
+                Source="ms-appx:///Graphics/Ship-light.png"
+                x:Uid="VesselSettings"/>
 
-            <Button x:Name="SensorsButton" Grid.Row="1" Grid.Column="0" Command="{x:Bind Path=VM.SensorsCommand}">
-                <Viewbox>
-                    <Grid>
-                        <Image x:Name="SensorImage" Source="ms-appx:///Graphics/Sensor-light.png"/>
-                        <TextBlock x:Name="SensorsTextBlock" x:Uid="Sensors"/>
-                        </Grid>
-                </Viewbox>
-            </Button>
+            <controls:ImageToggleButton 
+                x:Name="SensorsButton" 
+                Grid.Row="1" 
+                Grid.Column="0" 
+                IsSelected="{x:Bind VM.IsSensorsCommandChecked, Mode=TwoWay}"
+                Command="{x:Bind Path=VM.SensorsCommand}"
+                Source="ms-appx:///Graphics/Sensor-light.png"                
+                x:Uid="Sensors"/>
 
-            <Button x:Name="PagesButton" Grid.Row="2" Grid.Column="0" Command="{x:Bind Path=VM.PagesCommand}">
-                <Viewbox>
-                    <Grid>
-                        <Image x:Name="PagesImage" Source="ms-appx:///Graphics/Pages-light.png"/>
-                            <TextBlock x:Name="PagesTextBlock" x:Uid="Pages"/>
-                        </Grid>
-                </Viewbox>
-            </Button>
+            <controls:ImageToggleButton  
+                x:Name="PagesButton" 
+                Grid.Row="2" 
+                Grid.Column="0" 
+                IsSelected="{x:Bind VM.IsPagesCommandChecked, Mode=TwoWay}"
+                Command="{x:Bind Path=VM.PagesCommand}"
+                Source="ms-appx:///Graphics/Pages-light.png"
+                x:Uid="Pages"/>
 
-            <Button x:Name="DatabaseButton" Grid.Row="3" Grid.Column="0" Command="{x:Bind Path=VM.DatabaseCommand}">
-                <Viewbox>
-                    <Grid>
-                        <Image x:Name="DatabaseImage" Source="ms-appx:///Graphics/Database-light.png"/>
-                        <TextBlock x:Uid="Database" x:Name="DatabaseTextBlock"/>
-                        </Grid>
-                </Viewbox>
-            </Button>
+            <controls:ImageToggleButton   
+                x:Name="DatabaseButton" 
+                Grid.Row="3" 
+                Grid.Column="0" 
+                IsSelected="{x:Bind VM.IsDatabaseCommandChecked, Mode=TwoWay}"
+                Command="{x:Bind Path=VM.DatabaseCommand}"
+                Source="ms-appx:///Graphics/Database-light.png"
+                x:Uid="Database"/>
 
             <views:VesselSettingsView Grid.Row="0" Grid.Column="1" Grid.RowSpan="4"/>
         </Grid>

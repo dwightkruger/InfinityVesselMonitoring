@@ -7,6 +7,7 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using InfinityGroup.VesselMonitoring.Interfaces;
+using System;
 using System.Windows.Input;
 
 namespace InfinityVesselMonitoringSoftware.Settings.ViewModels
@@ -17,6 +18,10 @@ namespace InfinityVesselMonitoringSoftware.Settings.ViewModels
         private RelayCommand _sensorsCommand;
         private RelayCommand _pagesCommand;
         private RelayCommand _databaseCommand;
+        private Nullable<bool> _isVesselSettingsCommandChecked;
+        private Nullable<bool> _isSensorsCommandChecked;
+        private Nullable<bool> _isPagesCommandChecked;
+        private Nullable<bool> _isDatabaseCommandChecked;
 
         public SettingsHomeViewModel()
         {
@@ -36,6 +41,10 @@ namespace InfinityVesselMonitoringSoftware.Settings.ViewModels
                     _vesselSettingsCommand = new RelayCommand(
                         () =>
                         {
+                            this.IsVesselSettingsCommandChecked = true;
+                            this.IsSensorsCommandChecked = false;
+                            this.IsPagesCommandChecked = false;
+                            this.IsDatabaseCommandChecked = false;
                         },
                         () =>
                         {
@@ -57,6 +66,10 @@ namespace InfinityVesselMonitoringSoftware.Settings.ViewModels
                     _sensorsCommand = new RelayCommand(
                         () =>
                         {
+                            this.IsVesselSettingsCommandChecked = false;
+                            this.IsSensorsCommandChecked = true;
+                            this.IsPagesCommandChecked = false;
+                            this.IsDatabaseCommandChecked = false;
                         },
                         () =>
                         {
@@ -78,6 +91,10 @@ namespace InfinityVesselMonitoringSoftware.Settings.ViewModels
                     _pagesCommand = new RelayCommand(
                         () =>
                         {
+                            this.IsVesselSettingsCommandChecked = false;
+                            this.IsSensorsCommandChecked = false;
+                            this.IsPagesCommandChecked = true;
+                            this.IsDatabaseCommandChecked = false;
                         },
                         () =>
                         {
@@ -99,6 +116,10 @@ namespace InfinityVesselMonitoringSoftware.Settings.ViewModels
                     _databaseCommand = new RelayCommand(
                         () =>
                         {
+                            this.IsVesselSettingsCommandChecked = false;
+                            this.IsSensorsCommandChecked = false;
+                            this.IsPagesCommandChecked = false;
+                            this.IsDatabaseCommandChecked = true;
                         },
                         () =>
                         {
@@ -111,5 +132,28 @@ namespace InfinityVesselMonitoringSoftware.Settings.ViewModels
             }
         }
 
+        public Nullable<bool> IsVesselSettingsCommandChecked
+        {
+            get { return _isVesselSettingsCommandChecked; }
+            set { Set<Nullable<bool>>(() => IsVesselSettingsCommandChecked, ref _isVesselSettingsCommandChecked, value); }
+        }
+
+        public Nullable<bool> IsSensorsCommandChecked
+        {
+            get { return _isSensorsCommandChecked; }
+            set { Set<Nullable<bool>>(() => IsSensorsCommandChecked, ref _isSensorsCommandChecked, value); }
+        }
+
+        public Nullable<bool> IsPagesCommandChecked
+        {
+            get { return _isPagesCommandChecked; }
+            set { Set<Nullable<bool>>(() => IsPagesCommandChecked, ref _isPagesCommandChecked, value); }
+        }
+
+        public Nullable<bool> IsDatabaseCommandChecked
+        {
+            get { return _isDatabaseCommandChecked; }
+            set { Set<Nullable<bool>>(() => IsDatabaseCommandChecked, ref _isDatabaseCommandChecked, value); }
+        }
     }
 }
