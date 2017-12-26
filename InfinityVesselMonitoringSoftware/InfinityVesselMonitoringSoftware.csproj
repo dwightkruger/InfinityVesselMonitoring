@@ -121,8 +121,20 @@
     <Compile Include="Sensors\SensorCollection.cs" />
     <Compile Include="Sensors\SensorItem.cs" />
     <Compile Include="Settings\VesselSettingsItem.cs" />
+    <Compile Include="Settings\ViewModels\DatabaseViewModel.cs" />
+    <Compile Include="Settings\ViewModels\PagesViewModel.cs" />
+    <Compile Include="Settings\ViewModels\SensorsViewModel.cs" />
     <Compile Include="Settings\ViewModels\SettingsHomeViewModel.cs" />
     <Compile Include="Settings\ViewModels\VesselSettingsViewModel.cs" />
+    <Compile Include="Settings\Views\DatabaseView.xaml.cs">
+      <DependentUpon>DatabaseView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Views\PagesView.xaml.cs">
+      <DependentUpon>PagesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Views\SensorsView.xaml.cs">
+      <DependentUpon>SensorsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Views\SettingsHomeView.xaml.cs">
       <DependentUpon>SettingsHomeView.xaml</DependentUpon>
     </Compile>
@@ -204,6 +216,18 @@
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\Views\DatabaseView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Views\PagesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Views\SensorsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Views\SettingsHomeView.xaml">
       <SubType>Designer</SubType>
