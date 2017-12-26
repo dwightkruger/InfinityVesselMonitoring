@@ -5,8 +5,10 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
 using GalaSoft.MvvmLight.Messaging;
+using InfinityGroup.VesselMonitoring.Controls;
 using InfinityGroup.VesselMonitoring.Controls.Converters;
 using InfinityVesselMonitoringSoftware.Settings.ViewModels;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -19,10 +21,11 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace InfinityVesselMonitoringSoftware.Settings.Views
 {
-    public sealed partial class SettingsHomeView : UserControl
+    public partial class SettingsHomeView : UserControl
     {
         private static ImageSource c_shipDark;
-        private static ImageSource c_shipLight;        private static ImageSource c_shipRed;
+        private static ImageSource c_shipLight;
+        private static ImageSource c_shipRed;
         private static ImageSource c_databaseDark;
         private static ImageSource c_databaseLight;
         private static ImageSource c_databaseRed;
@@ -39,6 +42,7 @@ namespace InfinityVesselMonitoringSoftware.Settings.Views
 
         static SettingsHomeView()
         {
+            // BUGBUG - we should figure out how to recolor an image on the fly.
             c_shipDark      = ImageFromUri("ms-appx:///Graphics/Ship-dark.png");
             c_shipLight     = ImageFromUri("ms-appx:///Graphics/Ship-light.png");
             c_shipRed       = ImageFromUri("ms-appx:///Graphics/Ship-red.png");
@@ -53,7 +57,7 @@ namespace InfinityVesselMonitoringSoftware.Settings.Views
             c_sensorRed     = ImageFromUri("ms-appx:///Graphics/Sensor-red.png");
 
             c_LightBrush = new SolidColorBrush(Colors.LightGray);
-            c_DarkBrush = new SolidColorBrush(Colors.DarkGray);
+            c_DarkBrush  = new SolidColorBrush(Colors.DarkGray);
             c_NightBrush = new SolidColorBrush(Colors.DarkRed);
         }
 
@@ -74,7 +78,8 @@ namespace InfinityVesselMonitoringSoftware.Settings.Views
 
         private void SettingsHomeView_Loaded(object sender, RoutedEventArgs e)
         {
-            // If the theme colors change, we need to update the bitmaps.
+            // If the theme colors change, we need to update the bitmaps and the backgrounds on the menu items.
+            // BUGBUG we shold determine how to recolor images and not keep a copy of each color combination.
             Messenger.Default.Register<Color>(this, "OnThemeColorsChanged", (newColor) =>
             {
                 if (newColor == Colors.White)
@@ -84,10 +89,7 @@ namespace InfinityVesselMonitoringSoftware.Settings.Views
                     PagesButton.Source          = c_pagesDark;
                     DatabaseButton.Source       = c_databaseDark;
 
-                    VesselSettingsButton.IsSelectedColor = c_DarkBrush;
-                    SensorsButton.IsSelectedColor = c_DarkBrush;
-                    PagesButton.IsSelectedColor = c_DarkBrush;
-                    DatabaseButton.IsSelectedColor = c_DarkBrush;
+                    this.IsSelectedColor        = c_DarkBrush;
                 }
                 else if (newColor == Colors.Red)
                 {
@@ -96,10 +98,7 @@ namespace InfinityVesselMonitoringSoftware.Settings.Views
                     PagesButton.Source          = c_pagesRed;
                     DatabaseButton.Source       = c_databaseRed;
 
-                    VesselSettingsButton.IsSelectedColor = c_NightBrush;
-                    SensorsButton.IsSelectedColor = c_NightBrush;
-                    PagesButton.IsSelectedColor = c_NightBrush;
-                    DatabaseButton.IsSelectedColor = c_NightBrush;
+                    this.IsSelectedColor        = c_NightBrush;
                 }
                 else
                 {
@@ -108,27 +107,57 @@ namespace InfinityVesselMonitoringSoftware.Settings.Views
                     PagesButton.Source          = c_pagesLight;
                     DatabaseButton.Source       = c_databaseLight;
 
-                    VesselSettingsButton.IsSelectedColor = c_LightBrush;
-                    SensorsButton.IsSelectedColor = c_LightBrush;
-                    PagesButton.IsSelectedColor = c_LightBrush;
-                    DatabaseButton.IsSelectedColor = c_LightBrush;
+                    this.IsSelectedColor       = c_LightBrush;
                 }
             });
 
+            // Bind each of the TextBlock forground colors so that when someone moves between dark/light/night
+            // moded the text blocks automatically update/
             Binding textBlockBinding = new Binding();
             textBlockBinding.Source = App.VesselSettings;
             textBlockBinding.Path = new PropertyPath("ThemeForegroundColor");
-            textBlockBinding.Converter = new ColorToSolidColorBrushConverter();
+            textBlockBinding.Converter = c_ctscbc;
 
-            this.VesselSettingsButton.SetBinding(TextBlock.ForegroundProperty, textBlockBinding);
-            this.SensorsButton.SetBinding(TextBlock.ForegroundProperty, textBlockBinding);
-            this.PagesButton.SetBinding(TextBlock.ForegroundProperty, textBlockBinding);
-            this.DatabaseButton.SetBinding(TextBlock.ForegroundProperty, textBlockBinding);
+            foreach (var child in MainViewbox.FindDescendants<TextBlock>())
+            {
+                child.SetBinding(TextBlock.ForegroundProperty, textBlockBinding);
+            }
+
+            // Same for the background of the toggle buttons
+            Binding isSelectedColorBinding = new Binding();
+            isSelectedColorBinding.Source = this;
+            isSelectedColorBinding.Path = new PropertyPath("IsSelectedColor");
+
+            foreach (var child in MainViewbox.FindDescendants<ImageToggleButton>())
+            {
+                child.SetBinding(ImageToggleButton.IsSelectedColorProperty, isSelectedColorBinding);
+            }
         }
 
         public SettingsHomeViewModel ViewModel
         {
             get { return this.VM; }
         }
+
+        #region IsSelectedColor
+        public static readonly DependencyProperty IsSelectedColorProperty = DependencyProperty.Register(
+            "IsSelectedColor",
+            typeof(SolidColorBrush),
+            typeof(SettingsHomeView),
+            new PropertyMetadata(new SolidColorBrush(Colors.Magenta),
+                                 new PropertyChangedCallback(OnIsSelectedColorPropertyChanged)));
+
+        public SolidColorBrush IsSelectedColor
+        {
+            get { return (SolidColorBrush)this.GetValue(IsSelectedColorProperty); }
+            set { this.SetValue(IsSelectedColorProperty, value); }
+        }
+
+        protected static void OnIsSelectedColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            SettingsHomeView g = d as SettingsHomeView;
+        }
+        #endregion
+
     }
 }

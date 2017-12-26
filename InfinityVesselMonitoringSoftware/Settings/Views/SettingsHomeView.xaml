@@ -45,7 +45,7 @@
         </Style>
     </UserControl.Resources>
 
-    <Viewbox Stretch="Uniform">
+    <Viewbox x:Name="MainViewbox" Stretch="Uniform">
         <Grid 
             x:Name="MainGrid"
             Width="1800"
