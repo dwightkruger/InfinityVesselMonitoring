@@ -6,6 +6,7 @@
 
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.Utilities;
+using InfinityVesselMonitoringSoftware.Gauges;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,6 +21,8 @@ namespace InfinityVesselMonitoringSoftware.MockNMEA
     public class XMLParser
     {
         private List<IDeviceItem> _deviceItemList;
+        private List<IGaugePageItem> _gaugePageItemList;
+
         public XMLParser(string xmlUrl)
         {
             this.XmlUrl = xmlUrl;
@@ -43,6 +46,18 @@ namespace InfinityVesselMonitoringSoftware.MockNMEA
             foreach (ISensorItem sensorItem in sensorItemList)
             {
                 await App.SensorCollection.BeginAdd(sensorItem);
+            }
+
+            _gaugePageItemList = this.ParseGaugePages(xmlDocument);
+            foreach (IGaugePageItem gaugePageItem in _gaugePageItemList)
+            {
+                await App.GaugePageCollection.BeginAdd(gaugePageItem);
+            }
+
+            List<IGaugeItem> gaugeItemlist = this.ParseGauges(xmlDocument);
+            foreach (IGaugeItem gaugeItem in gaugeItemlist)
+            {
+                await App.GaugeItemCollection.BeginAdd(gaugeItem);
             }
         }
 
@@ -126,6 +141,51 @@ namespace InfinityVesselMonitoringSoftware.MockNMEA
 
             return sensorItemList;
         }
+
+        private List<IGaugePageItem> ParseGaugePages(XmlDocument xmlDocument)
+        {
+            List<IGaugePageItem> gaugePageItemList = new List<IGaugePageItem>();
+
+            XmlNodeList gaugePageItemListNode = xmlDocument.GetElementsByTagName("GaugePage");
+            foreach (XmlNode node in gaugePageItemListNode)
+            {
+                XmlElement element = (XmlElement)node;
+
+                IGaugePageItem gaugePageItem = new GaugePageItem()
+                {
+                    IsVisible = Convert.ToBoolean(element["IsVisible"].InnerText),
+                    PageName = element["PageName"].InnerText,
+                    Position = Convert.ToInt32(element["Position"].InnerText),
+                };
+
+                gaugePageItemList.Add(gaugePageItem);
+            }
+
+            return gaugePageItemList;
+        }
+
+        private List<IGaugeItem> ParseGauges(XmlDocument xmlDocument)
+        {
+            List<IGaugeItem> gaugeItemList = new List<IGaugeItem>();
+
+            XmlNodeList gaugeListNode = xmlDocument.GetElementsByTagName("Gauge");
+            foreach (XmlNode node in gaugeListNode)
+            {
+                XmlElement element = (XmlElement)node;
+
+                int gaugePageIndex = Convert.ToInt32(element["GaugePageIndex"].InnerText);
+
+                IGaugeItem gaugeItem = new GaugeItem(_gaugePageItemList[gaugePageIndex].PageId)
+                {
+
+                };
+
+                gaugeItemList.Add(gaugeItem);
+            }
+
+            return gaugeItemList;
+        }
+
 
         private string XmlUrl { get; set;}
     }

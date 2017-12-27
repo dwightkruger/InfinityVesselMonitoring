@@ -15,6 +15,7 @@
     <SerialNumber>SerialNumber</SerialNumber>
     <SoftwareVersion>SoftwareVersion</SoftwareVersion> 
   </Device>
+
   <Sensor>
     <Description>Description</Description>
     <DeviceIndex>0</DeviceIndex>
@@ -46,4 +47,22 @@
     <SerialNumber>SerialNumber</SerialNumber>
     <ShowNominalValue>False</ShowNominalValue>
   </Sensor>
+
+  <GaugePage>
+    <IsVisible>True</IsVisible>
+    <PageName>Engines</PageName>
+    <Position>1</Position>
+  </GaugePage>
+  <GaugePage>
+    <IsVisible>True</IsVisible>
+    <PageName>Tanks</PageName>
+    <Position>2</Position>
+  </GaugePage>
+  <GaugePage>
+    <IsVisible>True</IsVisible>
+    <PageName>Navgation</PageName>
+    <Position>3</Position>
+  </GaugePage>
+  
+  
 </Simple>

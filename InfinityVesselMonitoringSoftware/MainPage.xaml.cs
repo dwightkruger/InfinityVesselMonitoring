@@ -338,7 +338,7 @@ namespace VesselMonitoring
             gaugeItem.ValueFontSize = 18;
             gaugeItem.UnitsFontSize = 14;
             gaugeItem.Units = Units.AmpHrs;
-            await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            await App.GaugeItemCollection.BeginAdd(gaugeItem);
 
             // gauge 1
             gaugeItem = new GaugeItem(App.GaugePageCollection[0].PageId);
@@ -358,7 +358,7 @@ namespace VesselMonitoring
             gaugeItem.MiddleCircleDelta = 45;
             gaugeItem.InnerCircleDelta = 20;
             gaugeItem.Units = Units.Amps;
-            await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            await App.GaugeItemCollection.BeginAdd(gaugeItem);
 
             // gauge 2
             gaugeItem = new GaugeItem(App.GaugePageCollection[0].PageId);
@@ -378,7 +378,7 @@ namespace VesselMonitoring
             gaugeItem.MiddleCircleDelta = 45;
             gaugeItem.InnerCircleDelta = 20;
             gaugeItem.Units = Units.Bar;
-            await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            await App.GaugeItemCollection.BeginAdd(gaugeItem);
 
             // gauge 3
             gaugeItem = new GaugeItem(App.GaugePageCollection[0].PageId);
@@ -395,7 +395,7 @@ namespace VesselMonitoring
             gaugeItem.ValueFontSize = 18;
             gaugeItem.UnitsFontSize = 14;
             gaugeItem.Units = Units.Celsius;
-            await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            await App.GaugeItemCollection.BeginAdd(gaugeItem);
 
             // gauge 4
             gaugeItem = new GaugeItem(App.GaugePageCollection[0].PageId);
@@ -415,7 +415,7 @@ namespace VesselMonitoring
             gaugeItem.MiddleCircleDelta = 45;
             gaugeItem.InnerCircleDelta = 20;
             gaugeItem.Units = Units.CubicMeters;
-            await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            await App.GaugeItemCollection.BeginAdd(gaugeItem);
 
             // gauge 5
             gaugeItem = new GaugeItem(App.GaugePageCollection[0].PageId);
@@ -435,7 +435,7 @@ namespace VesselMonitoring
             gaugeItem.MiddleCircleDelta = 45;
             gaugeItem.InnerCircleDelta = 20;
             gaugeItem.Units = Units.CubicMetersPerHr;
-            await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            await App.GaugeItemCollection.BeginAdd(gaugeItem);
 
             // tank gauge 0
             gaugeItem = new GaugeItem(App.GaugePageCollection[1].PageId);
@@ -448,7 +448,7 @@ namespace VesselMonitoring
             gaugeItem.GaugeColor = App.VesselSettings.ThemeForegroundColor;
             gaugeItem.Units = Units.CubicMetersPerHr;
             gaugeItem.Resolution = 0;
-            await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            await App.GaugeItemCollection.BeginAdd(gaugeItem);
 
             // tank gauge 1
             gaugeItem = new GaugeItem(App.GaugePageCollection[1].PageId);
@@ -461,7 +461,7 @@ namespace VesselMonitoring
             gaugeItem.GaugeColor = App.VesselSettings.ThemeForegroundColor;
             gaugeItem.Units = Units.CubicMetersPerHr;
             gaugeItem.Resolution = 0;
-            await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            await App.GaugeItemCollection.BeginAdd(gaugeItem);
 
             // tank gauge 2
             gaugeItem = new GaugeItem(App.GaugePageCollection[1].PageId);
@@ -474,7 +474,7 @@ namespace VesselMonitoring
             gaugeItem.GaugeColor = App.VesselSettings.ThemeForegroundColor;
             gaugeItem.Units = Units.CubicMetersPerHr;
             gaugeItem.Resolution = 0;
-            await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            await App.GaugeItemCollection.BeginAdd(gaugeItem);
 
             // tank gauge 3
             gaugeItem = new GaugeItem(App.GaugePageCollection[1].PageId);
@@ -487,7 +487,7 @@ namespace VesselMonitoring
             gaugeItem.GaugeColor = App.VesselSettings.ThemeForegroundColor;
             gaugeItem.Units = Units.CubicMetersPerHr;
             gaugeItem.Resolution = 0;
-            await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            await App.GaugeItemCollection.BeginAdd(gaugeItem);
 
             // text control 0
             gaugeItem = new GaugeItem(App.GaugePageCollection[1].PageId);
@@ -501,7 +501,7 @@ namespace VesselMonitoring
             gaugeItem.TextFontColor = App.VesselSettings.ThemeForegroundColor;
             gaugeItem.TextHorizontalAlignment = CanvasHorizontalAlignment.Left;
             gaugeItem.TextVerticalAlignment = CanvasVerticalAlignment.Top;
-            await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            await App.GaugeItemCollection.BeginAdd(gaugeItem);
 
             // text control 1
             gaugeItem = new GaugeItem(App.GaugePageCollection[1].PageId);
@@ -515,7 +515,7 @@ namespace VesselMonitoring
             gaugeItem.TextFontColor = App.VesselSettings.ThemeForegroundColor;
             gaugeItem.TextHorizontalAlignment = CanvasHorizontalAlignment.Left;
             gaugeItem.TextVerticalAlignment = CanvasVerticalAlignment.Top;
-            await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            await App.GaugeItemCollection.BeginAdd(gaugeItem);
 
             // text control 2
             gaugeItem = new GaugeItem(App.GaugePageCollection[1].PageId);
@@ -529,7 +529,7 @@ namespace VesselMonitoring
             gaugeItem.TextFontColor = App.VesselSettings.ThemeForegroundColor;
             gaugeItem.TextHorizontalAlignment = CanvasHorizontalAlignment.Left;
             gaugeItem.TextVerticalAlignment = CanvasVerticalAlignment.Top;
-            await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            await App.GaugeItemCollection.BeginAdd(gaugeItem);
 
             // text control 3
             gaugeItem = new GaugeItem(App.GaugePageCollection[1].PageId);
@@ -543,7 +543,7 @@ namespace VesselMonitoring
             gaugeItem.TextFontColor = App.VesselSettings.ThemeForegroundColor;
             gaugeItem.TextHorizontalAlignment = CanvasHorizontalAlignment.Left;
             gaugeItem.TextVerticalAlignment = CanvasVerticalAlignment.Top;
-            await App.GaugeItemCollection.BeginAddGauge(gaugeItem);
+            await App.GaugeItemCollection.BeginAdd(gaugeItem);
 
             App.BuildDBTables.GaugeTable.Load();
             App.GaugeItemCollection = new GaugeItemCollection();

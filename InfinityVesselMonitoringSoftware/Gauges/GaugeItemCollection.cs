@@ -32,7 +32,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
         }
 
 
-        async public Task<IGaugeItem> BeginAddGauge(IGaugeItem item)
+        async public Task<IGaugeItem> BeginAdd(IGaugeItem item)
         {
             IGaugeItem newGaugeItem = null;
 
