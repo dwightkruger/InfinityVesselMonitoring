@@ -133,8 +133,12 @@ namespace InfinityGroup.VesselMonitoring.Types
                         Guid result = Guid.Parse((string)PropertyBlob[index]);
                         PropertyBlob[index] = result;
                     }
+                    else if ((typeof(T) == typeof(uint)) && (PropertyBlob[index] is Int32))
+                    {
+                        uint result = Convert.ToUInt32(PropertyBlob[index]);
+                        PropertyBlob[index] = result;
+                    }
 
-                    var foo = this.PropertyBlob[index];
                     value = (T)this.PropertyBlob[index];
                 }
             }

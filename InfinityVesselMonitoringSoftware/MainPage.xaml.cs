@@ -13,6 +13,7 @@ using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Utilities;
 using InfinityVesselMonitoringSoftware;
 using InfinityVesselMonitoringSoftware.Gauges;
+using InfinityVesselMonitoringSoftware.MockNMEA;
 using InfinityVesselMonitoringSoftware.Settings.Views;
 using Microsoft.Graphics.Canvas.Text;
 using System;
@@ -135,6 +136,12 @@ namespace VesselMonitoring
             }
 
             await App.BuildDBTables.Build();
+
+            XMLParser xmlParser = new XMLParser("ms-appx:///MockNMEA/Simple.xml");
+            Task.Run(async () =>
+            {
+                await xmlParser.BeginParse();
+            }).Wait();
 
             //SendEmail.FromEmailAddress = App.VesselSettings.FromEmailAddress;
             //SendEmail.FromEmailPassword = App.VesselSettings.FromEmailPassword;

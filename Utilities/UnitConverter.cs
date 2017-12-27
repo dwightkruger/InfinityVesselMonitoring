@@ -14,30 +14,29 @@ namespace InfinityGroup.VesselMonitoring.Utilities
     public enum UnitType
     {
         Uninitialized = 0,
-        Frequency,
-        Voltage,
-        Current,
         Angle,
+        AngularRate,
+        Current,
+        Date,
+        Density,
+        ElectricCharge,
+        Frequency,
         Length,
-        Temperature,
-        Volume,
-        Speed,
-        Pressure,
-        Rotation,
-        Time,
+        Mass,
+        Mileage,
+        Null,
         Percent,
         Power,
-        Date,
-        AngularRate,
-        Mileage,
-        VolumeFlow,
+        Pressure,
+        Rotation,
+        Speed,
+        Switch,
         State,
-        ElectricCharge,
-        Null,
-        Mass,
-        Density,
-        MassFlow,
-        Switch
+        Temperature,
+        Time,
+        Volume,
+        Voltage,
+        VolumeFlow,
     }
 
     public enum Units
@@ -466,9 +465,6 @@ namespace InfinityGroup.VesselMonitoring.Utilities
         private static UnitItem LitersPerHour = new UnitItem(Units.LitersPerHr, UnitType.VolumeFlow, 1000.0, 0);
         private static UnitItem LitersPerMinute = new UnitItem(Units.LitersPerMinute, UnitType.VolumeFlow, 1000.0 / 60.0, 0);
 
-        private static UnitItem KilogramsPerHour = new UnitItem(Units.KgPerHour, UnitType.MassFlow, 1, 0);
-        private static UnitItem PoundsPerHour = new UnitItem(Units.PoundsPerHour, UnitType.MassFlow, 2.20462, 0);
-
         private static UnitItem Hours = new UnitItem(Units.Hours, UnitType.Time, 1.0 / (60.0 * 60.0), 0);
         private static UnitItem Minutes = new UnitItem(Units.Minutes, UnitType.Time, 1.0 / 60.0, 0);
         private static UnitItem Seconds = new UnitItem(Units.Seconds, UnitType.Time, 1.0, 0);
@@ -553,9 +549,6 @@ namespace InfinityGroup.VesselMonitoring.Utilities
             _completeList.Add(Units.GallonsUKPerMinute, GallonsUKPerMinute);
             _completeList.Add(Units.LitersPerHr, LitersPerHour);
             _completeList.Add(Units.LitersPerMinute, LitersPerMinute);
-
-            _completeList.Add(Units.KgPerHour, KilogramsPerHour);
-            _completeList.Add(Units.PoundsPerHour, PoundsPerHour);
 
             _completeList.Add(Units.Hours, Hours);
             _completeList.Add(Units.Minutes, Minutes);
