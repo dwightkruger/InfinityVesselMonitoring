@@ -53,16 +53,35 @@
     <PageName>Engines</PageName>
     <Position>1</Position>
   </GaugePage>
-  <GaugePage>
-    <IsVisible>True</IsVisible>
-    <PageName>Tanks</PageName>
-    <Position>2</Position>
-  </GaugePage>
-  <GaugePage>
-    <IsVisible>True</IsVisible>
-    <PageName>Navgation</PageName>
-    <Position>3</Position>
-  </GaugePage>
-  
+
+<Gauge>
+  <Divisions>7</Divisions>
+  <GaugeColor>Magenta</GaugeColor>
+  <GaugePageIndex>0</GaugePageIndex>
+  <GaugeHeight>400</GaugeHeight>
+  <GaugeOutlineVisibility>Collapsed</GaugeOutlineVisibility>
+  <GaugeLeft>400</GaugeLeft>
+  <GaugeTop>400</GaugeTop>
+  <GaugeType>LeftArcGauge</GaugeType>
+  <GaugeWidth>400</GaugeWidth>
+  <InnerCircleDelta>30</InnerCircleDelta>
+  <MajorTicLength>18</MajorTicLength>
+  <MediumTicLength>12</MediumTicLength>
+  <MediumTicsPerMajorTic>0</MediumTicsPerMajorTic>
+  <MiddleCircleDelta>70</MiddleCircleDelta>
+  <MinorTicLength>6</MinorTicLength>
+  <MinorTicsPerMajorTic>5</MinorTicsPerMajorTic>
+  <Resolution>0</Resolution>
+  <SensorIndex>0</SensorIndex>                
+  <Text>Label</Text>
+  <TextAngle>0</TextAngle>
+  <TextHorizontalAlignment>Left</TextHorizontalAlignment>
+  <TextFontColor>Magenta</TextFontColor>
+  <TextFontSize>20</TextFontSize>
+  <TextVerticalAlignment>Top</TextVerticalAlignment>
+  <Units>GallonsUS</Units>
+  <UnitsFontSize>20</UnitsFontSize>
+  <ValueFontSize>20</ValueFontSize>
+</Gauge>
   
 </Simple>

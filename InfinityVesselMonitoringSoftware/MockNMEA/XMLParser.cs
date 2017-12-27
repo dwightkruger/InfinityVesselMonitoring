@@ -25,6 +25,8 @@ namespace InfinityVesselMonitoringSoftware.MockNMEA
     {
         private List<IDeviceItem> _deviceItemList;
         private List<IGaugePageItem> _gaugePageItemList;
+        private List<ISensorItem> _sensorItemList;
+        private List<IGaugeItem> _gaugeItemlist;
 
         public XMLParser(string xmlUrl)
         {
@@ -45,8 +47,8 @@ namespace InfinityVesselMonitoringSoftware.MockNMEA
                 await App.DeviceCollection.BeginAdd(deviceItem);
             }
 
-            List<ISensorItem> sensorItemList = this.ParseSensors(xmlDocument);
-            foreach (ISensorItem sensorItem in sensorItemList)
+            _sensorItemList = this.ParseSensors(xmlDocument);
+            foreach (ISensorItem sensorItem in _sensorItemList)
             {
                 await App.SensorCollection.BeginAdd(sensorItem);
             }
@@ -57,8 +59,8 @@ namespace InfinityVesselMonitoringSoftware.MockNMEA
                 await App.GaugePageCollection.BeginAdd(gaugePageItem);
             }
 
-            List<IGaugeItem> gaugeItemlist = this.ParseGauges(xmlDocument);
-            foreach (IGaugeItem gaugeItem in gaugeItemlist)
+            _gaugeItemlist = this.ParseGauges(xmlDocument);
+            foreach (IGaugeItem gaugeItem in _gaugeItemlist)
             {
                 await App.GaugeItemCollection.BeginAdd(gaugeItem);
             }
@@ -179,11 +181,12 @@ namespace InfinityVesselMonitoringSoftware.MockNMEA
 
                 // Get a index to the gaugePageId for this gauge
                 int gaugePageIndex = Convert.ToInt32(element["GaugePageIndex"].InnerText);
+                int sensorIndex = Convert.ToInt32(element["SensorIndex"].InnerText);
 
                 IGaugeItem gaugeItem = new GaugeItem(_gaugePageItemList[gaugePageIndex].PageId)
                 {
                     GaugeType               = (GaugeTypeEnum) Enum.Parse(typeof(GaugeTypeEnum), element["GaugeType"].InnerText),               
-                    SensorId                = Convert.ToInt64(element["SensorId"].InnerText),
+                    SensorId                = _sensorItemList[sensorIndex].SensorId, 
                     GaugeHeight             = Convert.ToDouble(element["GaugeHeight"].InnerText),
                     GaugeWidth              = Convert.ToDouble(element["GaugeWidth"].InnerText),
                     GaugeLeft               = Convert.ToDouble(element["GaugeLeft"].InnerText),

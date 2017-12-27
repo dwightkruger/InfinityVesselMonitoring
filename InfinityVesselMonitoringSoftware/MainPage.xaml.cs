@@ -143,6 +143,7 @@ namespace VesselMonitoring
                 await xmlParser.BeginParse();
             }).Wait();
 
+
             //SendEmail.FromEmailAddress = App.VesselSettings.FromEmailAddress;
             //SendEmail.FromEmailPassword = App.VesselSettings.FromEmailPassword;
             //SendEmail.SMTPEncryptionMethod = App.VesselSettings.SMTPEncryptionMethod;
@@ -155,7 +156,9 @@ namespace VesselMonitoring
             //               "This is a test",
             //               "");
 
-            this.BuildDemoGaugePages();
+            //this.BuildDemoGaugePages();
+
+            await this.LoadPages();
 
             //Binding mainGridBackgroundBinding = new Binding();
             //mainGridBackgroundBinding.Path = new PropertyPath("ThemeBackgroundColor");
@@ -168,6 +171,103 @@ namespace VesselMonitoring
             if (App.VesselSettings.ThemeForegroundColor == Colors.Black) this.Light_Click(this, null);
             else if (App.VesselSettings.ThemeForegroundColor == Colors.White) this.Dark_Click(this, null);
             else if (App.VesselSettings.ThemeForegroundColor == Colors.Red) this.Night_Click(this, null);
+        }
+
+        async private Task LoadPages()
+        { 
+            this.MainPagePivot.Items.Clear();
+
+            Canvas canvas;
+            PivotItem pivotItem;
+
+            // For each gauge page, build the view and view model
+            foreach (IGaugePageItem item in App.GaugePageCollection)
+            {
+                GaugePageView view = new GaugePageView();
+                view.Rows = 3;
+                view.Columns = 3;
+                view.ViewModel.GaugePageItem = item;
+
+                Binding widthBinding = new Binding();
+                widthBinding.Source = this.MainPagePivot;
+                widthBinding.Path = new PropertyPath("ActualWidth");
+                view.SetBinding(GaugePageView.WidthProperty, widthBinding);
+
+                Binding heightBinding = new Binding();
+                heightBinding.Source = this.MainPagePivot;
+                heightBinding.Path = new PropertyPath("ActualHeight");
+                view.SetBinding(GaugePageView.HeightProperty, heightBinding);
+
+                // Put the view into a Canvas
+                canvas = new Canvas();
+                canvas.Children.Add(view);
+
+                // Put the canvas into a PivotItem
+                pivotItem = new PivotItem();
+                pivotItem.Header = item.PageName;
+                pivotItem.Content = canvas;
+
+                // Put the pivot item on the page
+                this.MainPagePivot.Items.Add(pivotItem);
+
+                // Get all of the gauges for this page and tell the page to build itself.
+                List<IGaugeItem> gaugeItemList = await App.GaugeItemCollection.BeginFindAllByPageId(item.PageId);
+                if ((null != gaugeItemList) && (gaugeItemList.Count > 0))
+                {
+                    Messenger.Default.Send<List<IGaugeItem>>(gaugeItemList, "BuildGaugeItemList");
+                }
+            }
+
+            SettingsHomeView settingsHomeView = new SettingsHomeView();
+
+            // Put the view into a Canvas
+            canvas = new Canvas();
+            canvas.Children.Add(settingsHomeView);
+
+            pivotItem = new PivotItem();
+            pivotItem.Header = "Settings";
+            pivotItem.Content = canvas;
+
+            this.MainPagePivot.Items.Add(pivotItem);
+        }
+
+        /// <summary>
+        /// Pivot controls trap key presses that we need to route to various pages. Pass them through via
+        /// a message.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MainPagePivot_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            if (sender is Pivot)
+            {
+                Messenger.Default.Send<Tuple<int, KeyRoutedEventArgs>>(
+                    Tuple.Create<int, KeyRoutedEventArgs>(MainPagePivot.SelectedIndex, e),
+                    "MainPagePivot_KeyDown");
+            }
+        }
+
+        public static async Task BeginShowNewWindow<TView>()
+        {
+            ApplicationView currentView = ApplicationView.GetForCurrentView();
+            CoreApplicationView newView = CoreApplication.CreateNewView();
+            await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                Window newWindow = Window.Current;
+                ApplicationView newAppView = ApplicationView.GetForCurrentView();
+                newAppView.Title = "Sensor Editor";
+
+                Frame frame = new Frame();
+                frame.Navigate(typeof(TView), null);
+                newWindow.Content = frame;
+                newWindow.Activate();
+    
+                await ApplicationViewSwitcher.TryShowAsStandaloneAsync(
+                    newAppView.Id,
+                    ViewSizePreference.Custom,
+                    currentView.Id,
+                    ViewSizePreference.UseMinimum);
+            });
         }
 
         async Task PopulateDemoGaugePageCollection()
@@ -573,99 +673,7 @@ namespace VesselMonitoring
             App.GaugeItemCollection.Clear();
             await App.GaugeItemCollection.BeginLoad();
 
-            this.MainPagePivot.Items.Clear();
-
-            Canvas canvas;
-            PivotItem pivotItem;
-
-            // For each gauge page, build the view and view model
-            foreach (IGaugePageItem item in App.GaugePageCollection)
-            {
-                GaugePageView view = new GaugePageView();
-                view.Rows = 3;
-                view.Columns = 3;
-                view.ViewModel.GaugePageItem = item;
-
-                Binding widthBinding = new Binding();
-                widthBinding.Source = this.MainPagePivot;
-                widthBinding.Path = new PropertyPath("ActualWidth");
-                view.SetBinding(GaugePageView.WidthProperty, widthBinding);
-
-                Binding heightBinding = new Binding();
-                heightBinding.Source = this.MainPagePivot;
-                heightBinding.Path = new PropertyPath("ActualHeight");
-                view.SetBinding(GaugePageView.HeightProperty, heightBinding);
-
-                // Put the view into a Canvas
-                canvas = new Canvas();
-                canvas.Children.Add(view);
-
-                // Put the canvas into a PivotItem
-                pivotItem = new PivotItem();
-                pivotItem.Header = item.PageName;
-                pivotItem.Content = canvas;
-
-                // Put the pivot item on the page
-                this.MainPagePivot.Items.Add(pivotItem);
-
-                // Get all of the gauges for this page and tell the page to build itself.
-                List<IGaugeItem> gaugeItemList = await App.GaugeItemCollection.BeginFindAllByPageId(item.PageId);
-                if ((null != gaugeItemList) && (gaugeItemList.Count > 0))
-                {
-                    Messenger.Default.Send<List<IGaugeItem>>(gaugeItemList, "BuildGaugeItemList");
-                }
-            }
-
-            SettingsHomeView settingsHomeView = new SettingsHomeView();
-
-            // Put the view into a Canvas
-            canvas = new Canvas();
-            canvas.Children.Add(settingsHomeView);
-
-            pivotItem = new PivotItem();
-            pivotItem.Header = "Settings";
-            pivotItem.Content = canvas;
-
-            this.MainPagePivot.Items.Add(pivotItem);
-        }
-
-        /// <summary>
-        /// Pivot controls trap key presses that we need to route to various pages. Pass them through via
-        /// a message.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MainPagePivot_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
-        {
-            if (sender is Pivot)
-            {
-                Messenger.Default.Send<Tuple<int, KeyRoutedEventArgs>>(
-                    Tuple.Create<int, KeyRoutedEventArgs>(MainPagePivot.SelectedIndex, e),
-                    "MainPagePivot_KeyDown");
-            }
-        }
-
-        public static async Task BeginShowNewWindow<TView>()
-        {
-            ApplicationView currentView = ApplicationView.GetForCurrentView();
-            CoreApplicationView newView = CoreApplication.CreateNewView();
-            await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-            {
-                Window newWindow = Window.Current;
-                ApplicationView newAppView = ApplicationView.GetForCurrentView();
-                newAppView.Title = "Sensor Editor";
-
-                Frame frame = new Frame();
-                frame.Navigate(typeof(TView), null);
-                newWindow.Content = frame;
-                newWindow.Activate();
-    
-                await ApplicationViewSwitcher.TryShowAsStandaloneAsync(
-                    newAppView.Id,
-                    ViewSizePreference.Custom,
-                    currentView.Id,
-                    ViewSizePreference.UseMinimum);
-            });
+            await this.LoadPages();
         }
 
         private void Light_Click(object sender, RoutedEventArgs e)
