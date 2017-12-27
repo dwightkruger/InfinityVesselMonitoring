@@ -7,6 +7,8 @@
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.Utilities;
 using InfinityVesselMonitoringSoftware.Gauges;
+using Microsoft.Graphics.Canvas.Text;
+using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +17,7 @@ using System.Xml;
 using VesselMonitoringSuite.Devices;
 using VesselMonitoringSuite.Sensors;
 using Windows.Storage;
+using Windows.UI.Xaml;
 
 namespace InfinityVesselMonitoringSoftware.MockNMEA
 {
@@ -102,6 +105,7 @@ namespace InfinityVesselMonitoringSoftware.MockNMEA
             {
                 XmlElement element = (XmlElement)node;
 
+                // Get a index to the deviceId for this sensor
                 int deviceIndex = Convert.ToInt32(element["DeviceIndex"].InnerText);
 
                 ISensorItem sensorItem = new SensorItem(_deviceItemList[deviceIndex].DeviceId)
@@ -173,11 +177,37 @@ namespace InfinityVesselMonitoringSoftware.MockNMEA
             {
                 XmlElement element = (XmlElement)node;
 
+                // Get a index to the gaugePageId for this gauge
                 int gaugePageIndex = Convert.ToInt32(element["GaugePageIndex"].InnerText);
 
                 IGaugeItem gaugeItem = new GaugeItem(_gaugePageItemList[gaugePageIndex].PageId)
                 {
-
+                    GaugeType               = (GaugeTypeEnum) Enum.Parse(typeof(GaugeTypeEnum), element["GaugeType"].InnerText),               
+                    SensorId                = Convert.ToInt64(element["SensorId"].InnerText),
+                    GaugeHeight             = Convert.ToDouble(element["GaugeHeight"].InnerText),
+                    GaugeWidth              = Convert.ToDouble(element["GaugeWidth"].InnerText),
+                    GaugeLeft               = Convert.ToDouble(element["GaugeLeft"].InnerText),
+                    GaugeTop                = Convert.ToDouble(element["GaugeTop"].InnerText),
+                    GaugeColor              = ColorHelper.ToColor(element["GaugeColor"].InnerText),
+                    Divisions               = Convert.ToInt32(element["Divisions"].InnerText),
+                    MinorTicsPerMajorTic    = Convert.ToInt32(element["MinorTicsPerMajorTic"].InnerText),
+                    MediumTicsPerMajorTic   = Convert.ToInt32(element["MediumTicsPerMajorTic"].InnerText),
+                    Resolution              = Convert.ToInt32(element["Resolution"].InnerText),
+                    GaugeOutlineVisibility  = (Visibility)Enum.Parse(typeof(Visibility), element["GaugeOutlineVisibility"].InnerText),
+                    MiddleCircleDelta       = Convert.ToInt32(element["MiddleCircleDelta"].InnerText),
+                    InnerCircleDelta        = Convert.ToInt32(element["InnerCircleDelta"].InnerText),
+                    ValueFontSize           = Convert.ToDouble(element["ValueFontSize"].InnerText),
+                    UnitsFontSize           = Convert.ToDouble(element["UnitsFontSize"].InnerText),
+                    MajorTicLength          = Convert.ToDouble(element["MajorTicLength"].InnerText),
+                    MediumTicLength         = Convert.ToDouble(element["MediumTicLength"].InnerText),
+                    MinorTicLength          = Convert.ToDouble(element["MinorTicLength"].InnerText),
+                    Text                    = element["Text"].InnerText,
+                    TextFontSize            = Convert.ToDouble(element["TextFontSize"].InnerText),
+                    TextAngle               = Convert.ToDouble(element["TextAngle"].InnerText),  
+                    TextFontColor           = ColorHelper.ToColor(element["TextFontColor"].InnerText),
+                    TextHorizontalAlignment = (CanvasHorizontalAlignment) Enum.Parse(typeof(CanvasHorizontalAlignment), element["TextHorizontalAlignment"].InnerText),
+                    TextVerticalAlignment   = (CanvasVerticalAlignment) Enum.Parse(typeof(CanvasVerticalAlignment), element["TextVerticalAlignment"].InnerText),
+                    Units                   = (Units) Enum.Parse(typeof(Units), element["Units"].InnerText)
                 };
 
                 gaugeItemList.Add(gaugeItem);
