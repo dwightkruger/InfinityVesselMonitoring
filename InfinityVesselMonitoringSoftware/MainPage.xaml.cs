@@ -136,6 +136,16 @@ namespace VesselMonitoring
             }
 
             await App.BuildDBTables.Build();
+            await App.BuildDBTables.SensorDataTable.BeginEmpty();
+            await App.BuildDBTables.SensorTable.BeginEmpty();
+            await App.BuildDBTables.DeviceTable.BeginEmpty();
+            await App.BuildDBTables.GaugeTable.BeginEmpty();
+            await App.BuildDBTables.GaugePageTable.BeginEmpty();
+
+            await App.GaugePageCollection.BeginLoad();
+            await App.GaugeItemCollection.BeginLoad();
+            await App.DeviceCollection.BeginLoad();
+            App.SensorCollection.Load();
 
             XMLParser xmlParser = new XMLParser("ms-appx:///MockNMEA/Simple.xml");
             Task.Run(async () =>

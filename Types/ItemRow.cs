@@ -99,48 +99,55 @@ namespace InfinityGroup.VesselMonitoring.Types
         {
             T value = default(T);
 
-            ItemColumn col = this.Table.Columns.FirstOrDefault<ItemColumn>((column) => column.ColumnName == myPropertyName);
-            if (null != col)
+            try
             {
-                int index = this.Table.Columns.IndexOf(col);
-                if (index < this.PropertyBlob.Count)
+                ItemColumn col = this.Table.Columns.FirstOrDefault<ItemColumn>((column) => column.ColumnName == myPropertyName);
+                if (null != col)
                 {
-                    // We may have arrived here as a result of serialization/deserialization.
-                    // Coerce some types back into their correct type and assignment them 
-                    // back to the blob so they have the right type on output.
-                    if ((typeof(T) != typeof(Int64)) && (PropertyBlob[index] is Int64))
+                    int index = this.Table.Columns.IndexOf(col);
+                    if (index < this.PropertyBlob.Count)
                     {
-                        Int32 result = Convert.ToInt32(PropertyBlob[index]);
-                        PropertyBlob[index] = result;
-                    }
-                    else if ((typeof(T) == typeof(Int64)) && (PropertyBlob[index] is Int32))
-                    {
-                        Int64 result = Convert.ToInt64(PropertyBlob[index]);
-                        PropertyBlob[index] = result;
-                    }
-                    else if ((typeof(T) == typeof(double)) && (PropertyBlob[index] is float))
-                    {
-                        double result = Convert.ToDouble(PropertyBlob[index]);
-                        PropertyBlob[index] = result;
-                    }
-                    else if ((typeof(T) == typeof(float)) && (PropertyBlob[index] is double))
-                    {
-                        float result = Convert.ToSingle(PropertyBlob[index]);
-                        PropertyBlob[index] = result;
-                    }
-                    else if ((typeof(T) == typeof(Guid)) && (PropertyBlob[index] is string))
-                    {
-                        Guid result = Guid.Parse((string)PropertyBlob[index]);
-                        PropertyBlob[index] = result;
-                    }
-                    else if ((typeof(T) == typeof(uint)) && (PropertyBlob[index] is Int32))
-                    {
-                        uint result = Convert.ToUInt32(PropertyBlob[index]);
-                        PropertyBlob[index] = result;
-                    }
+                        // We may have arrived here as a result of serialization/deserialization.
+                        // Coerce some types back into their correct type and assignment them 
+                        // back to the blob so they have the right type on output.
+                        if ((typeof(T) != typeof(Int64)) && (PropertyBlob[index] is Int64))
+                        {
+                            Int32 result = Convert.ToInt32(PropertyBlob[index]);
+                            PropertyBlob[index] = result;
+                        }
+                        else if ((typeof(T) == typeof(Int64)) && (PropertyBlob[index] is Int32))
+                        {
+                            Int64 result = Convert.ToInt64(PropertyBlob[index]);
+                            PropertyBlob[index] = result;
+                        }
+                        else if ((typeof(T) == typeof(double)) && (PropertyBlob[index] is float))
+                        {
+                            double result = Convert.ToDouble(PropertyBlob[index]);
+                            PropertyBlob[index] = result;
+                        }
+                        else if ((typeof(T) == typeof(float)) && (PropertyBlob[index] is double))
+                        {
+                            float result = Convert.ToSingle(PropertyBlob[index]);
+                            PropertyBlob[index] = result;
+                        }
+                        else if ((typeof(T) == typeof(Guid)) && (PropertyBlob[index] is string))
+                        {
+                            Guid result = Guid.Parse((string)PropertyBlob[index]);
+                            PropertyBlob[index] = result;
+                        }
+                        else if ((typeof(T) == typeof(uint)) && (PropertyBlob[index] is Int32))
+                        {
+                            uint result = Convert.ToUInt32(PropertyBlob[index]);
+                            PropertyBlob[index] = result;
+                        }
 
-                    value = (T)this.PropertyBlob[index];
+                        value = (T)this.PropertyBlob[index];
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+
             }
 
             return (T)value;

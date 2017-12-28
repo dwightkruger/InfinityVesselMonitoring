@@ -4,6 +4,9 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Messaging;
+using InfinityGroup.VesselMonitoring.Controls.Converters;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -22,8 +25,6 @@ namespace InfinityGroup.VesselMonitoring.Controls
 {
     public class Adorner : IDisposable
     {
-        private Brush _handleColor = (SolidColorBrush)Application.Current.Resources["ApplicationForegroundThemeBrush"];
-        private static Brush c_transparentColor = new SolidColorBrush(Colors.Transparent);
         private Popup _popup = new Popup();
         private Grid _grid = new Grid();
         private IGaugeItem _gaugeItem;
@@ -37,60 +38,82 @@ namespace InfinityGroup.VesselMonitoring.Controls
         private Rectangle _wHandle;
         private List<Rectangle> _handleList = new List<Rectangle>();
         private const int c_handleHeight = 16;
+        private Rectangle _boundingRectangle;
 
-        public Adorner(IGaugeItem gaugeItem)
+        public Adorner() 
         {
-            _gaugeItem = gaugeItem;
+            this.HandleColor = (SolidColorBrush)Application.Current.Resources["ApplicationForegroundThemeBrush"];
 
-            Rectangle rectangle = new Rectangle()
+            _boundingRectangle = new Rectangle()
             {
-                Stroke = _handleColor,
+                Name = "AdornerBoundingRectangle",
+                Stroke = this.HandleColor,
                 StrokeThickness = 4,
             };
-            
-            _grid.Children.Add(rectangle);
 
-            _nwHandle = CreateHandle(HorizontalAlignment.Left,   VerticalAlignment.Top,    new Point(-1,-1), CoreCursorType.SizeNorthwestSoutheast);
-            _nHandle  = CreateHandle(HorizontalAlignment.Center, VerticalAlignment.Top,    new Point(0,-1),  CoreCursorType.SizeNorthSouth);
-            _neHandle = CreateHandle(HorizontalAlignment.Right,  VerticalAlignment.Top,    new Point(1,-1),  CoreCursorType.SizeNortheastSouthwest);
-            _eHandle  = CreateHandle(HorizontalAlignment.Right,  VerticalAlignment.Center, new Point(1,0),   CoreCursorType.SizeWestEast);
-            _seHandle = CreateHandle(HorizontalAlignment.Right,  VerticalAlignment.Bottom, new Point(1,1),   CoreCursorType.SizeNorthwestSoutheast);
-            _sHandle  = CreateHandle(HorizontalAlignment.Center, VerticalAlignment.Bottom, new Point(0,1),   CoreCursorType.SizeNorthSouth);
-            _swHandle = CreateHandle(HorizontalAlignment.Left,   VerticalAlignment.Bottom, new Point(-1,1),  CoreCursorType.SizeNortheastSouthwest);
-            _wHandle  = CreateHandle(HorizontalAlignment.Left,   VerticalAlignment.Center, new Point(-1,0),  CoreCursorType.SizeWestEast);
+            _grid.Children.Add(_boundingRectangle);
+
+            _nwHandle = CreateHandle(HorizontalAlignment.Left, VerticalAlignment.Top, new Point(-1, -1), CoreCursorType.SizeNorthwestSoutheast);
+            _nHandle = CreateHandle(HorizontalAlignment.Center, VerticalAlignment.Top, new Point(0, -1), CoreCursorType.SizeNorthSouth);
+            _neHandle = CreateHandle(HorizontalAlignment.Right, VerticalAlignment.Top, new Point(1, -1), CoreCursorType.SizeNortheastSouthwest);
+            _eHandle = CreateHandle(HorizontalAlignment.Right, VerticalAlignment.Center, new Point(1, 0), CoreCursorType.SizeWestEast);
+            _seHandle = CreateHandle(HorizontalAlignment.Right, VerticalAlignment.Bottom, new Point(1, 1), CoreCursorType.SizeNorthwestSoutheast);
+            _sHandle = CreateHandle(HorizontalAlignment.Center, VerticalAlignment.Bottom, new Point(0, 1), CoreCursorType.SizeNorthSouth);
+            _swHandle = CreateHandle(HorizontalAlignment.Left, VerticalAlignment.Bottom, new Point(-1, 1), CoreCursorType.SizeNortheastSouthwest);
+            _wHandle = CreateHandle(HorizontalAlignment.Left, VerticalAlignment.Center, new Point(-1, 0), CoreCursorType.SizeWestEast);
 
             _popup.Child = _grid;
 
-            Binding popupLeftBinding = new Binding();
-            popupLeftBinding.Source = _gaugeItem;
-            popupLeftBinding.Path = new PropertyPath("GaugeLeft");
-            _popup.SetBinding(Popup.HorizontalOffsetProperty, popupLeftBinding);
+            Messenger.Default.Register<Color>(this, "OnThemeColorsChanged", (color) =>
+            {
+                this.HandleColor = new SolidColorBrush(color);
 
-            Binding popupTopBinding = new Binding();
-            popupTopBinding.Source = _gaugeItem;
-            popupTopBinding.Path = new PropertyPath("GaugeTop");
-            _popup.SetBinding(Popup.VerticalOffsetProperty, popupTopBinding);
+                _boundingRectangle.Stroke = this.HandleColor;
+                foreach (Rectangle rect in _handleList)
+                {
+                    rect.Stroke = this.HandleColor;
+                    rect.Fill   = this.HandleColor;
+                }
+            });
+        }
 
-            Binding popupHeightBinding = new Binding();
-            popupHeightBinding.Source = _gaugeItem;
-            popupHeightBinding.Path = new PropertyPath("GaugeHeight");
-            _popup.SetBinding(Popup.HeightProperty, popupHeightBinding);
+        public IGaugeItem GaugeItem
+        {
+            set
+            {
+                _gaugeItem = value;
 
-            Binding popupWidthBinding = new Binding();
-            popupWidthBinding.Source = _gaugeItem;
-            popupWidthBinding.Path = new PropertyPath("GaugeWidth");
-            _popup.SetBinding(Popup.WidthProperty, popupWidthBinding);
+                Binding popupLeftBinding = new Binding();
+                popupLeftBinding.Source = _gaugeItem;
+                popupLeftBinding.Path = new PropertyPath("GaugeLeft");
+                _popup.SetBinding(Popup.HorizontalOffsetProperty, popupLeftBinding);
+
+                Binding popupTopBinding = new Binding();
+                popupTopBinding.Source = _gaugeItem;
+                popupTopBinding.Path = new PropertyPath("GaugeTop");
+                _popup.SetBinding(Popup.VerticalOffsetProperty, popupTopBinding);
+
+                Binding popupHeightBinding = new Binding();
+                popupHeightBinding.Source = _gaugeItem;
+                popupHeightBinding.Path = new PropertyPath("GaugeHeight");
+                _popup.SetBinding(Popup.HeightProperty, popupHeightBinding);
+
+                Binding popupWidthBinding = new Binding();
+                popupWidthBinding.Source = _gaugeItem;
+                popupWidthBinding.Path = new PropertyPath("GaugeWidth");
+                _popup.SetBinding(Popup.WidthProperty, popupWidthBinding);
 
 
-            Binding rectangleHeightBinding = new Binding();
-            rectangleHeightBinding.Source = _gaugeItem;
-            rectangleHeightBinding.Path = new PropertyPath("GaugeHeight");
-            rectangle.SetBinding(Rectangle.HeightProperty, rectangleHeightBinding);
+                Binding rectangleHeightBinding = new Binding();
+                rectangleHeightBinding.Source = _gaugeItem;
+                rectangleHeightBinding.Path = new PropertyPath("GaugeHeight");
+                _boundingRectangle.SetBinding(Rectangle.HeightProperty, rectangleHeightBinding);
 
-            Binding rectangleWidthBinding = new Binding();
-            rectangleWidthBinding.Source = _gaugeItem;
-            rectangleWidthBinding.Path = new PropertyPath("GaugeWidth");
-            rectangle.SetBinding(Rectangle.WidthProperty, rectangleWidthBinding);
+                Binding rectangleWidthBinding = new Binding();
+                rectangleWidthBinding.Source = _gaugeItem;
+                rectangleWidthBinding.Path = new PropertyPath("GaugeWidth");
+                _boundingRectangle.SetBinding(Rectangle.WidthProperty, rectangleWidthBinding);
+            }
         }
 
         public bool IsOpen
@@ -104,6 +127,9 @@ namespace InfinityGroup.VesselMonitoring.Controls
             get { return _popup; }
         }
 
+        private SolidColorBrush HandleColor { get; set; }
+
+
         private Rectangle CreateHandle(
             HorizontalAlignment ha,
             VerticalAlignment va,
@@ -112,8 +138,9 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             Rectangle handle = new Rectangle()
             {
-                Fill = _handleColor,
-                Stroke = _handleColor,
+                Name = "AdonerHandle",
+                Stroke = this.HandleColor,
+                Fill = this.HandleColor,
                 StrokeThickness = 1,
                 Height = c_handleHeight,
                 Width = c_handleHeight,
@@ -173,6 +200,8 @@ namespace InfinityGroup.VesselMonitoring.Controls
             {
                 if (disposing)
                 {
+                    Messenger.Default.Unregister<Color>(this, "OnThemeColorsChanged");
+
                     foreach (Rectangle handle in _handleList)
                     {
                         handle.ManipulationStarted -= Handle_ManipulationStarted;

@@ -21,7 +21,8 @@ namespace InfinityGroup.VesselMonitoring.Controls.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            throw new NotImplementedException();
+            SolidColorBrush brush = value as SolidColorBrush;
+            return brush.Color;
         }
     }
 }

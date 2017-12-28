@@ -180,7 +180,8 @@ namespace VesselMonitoringSuite.Views
         {
             _gaugeItemSelectedList.Add(gaugeItem);
 
-            Adorner adorner = new Adorner(gaugeItem);
+            Adorner adorner = new Adorner();
+            adorner.GaugeItem = gaugeItem;
             adorner.IsOpen = true;
             _adornerList.Add(adorner);
             this.MainCanvas.Children.Add(adorner.Popup);
@@ -239,7 +240,7 @@ namespace VesselMonitoringSuite.Views
             if (null != sensor)
             {
                 sensor.IsOnline = true;
-                sensor.DemoMode = true;
+                sensor.IsDemoMode = true;
             }
 
             constructor(sensor);

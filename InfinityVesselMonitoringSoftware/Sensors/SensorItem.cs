@@ -8,7 +8,6 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Threading;
 using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
-using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Types;
 using InfinityGroup.VesselMonitoring.Utilities;
 using InfinityVesselMonitoringSoftware;
@@ -267,7 +266,7 @@ namespace VesselMonitoringSuite.Sensors
             }
         }
 
-        public bool DemoMode
+        public bool IsDemoMode
         {
             get { return _demoMode; }
             set

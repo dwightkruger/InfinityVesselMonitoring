@@ -47,41 +47,102 @@
     <SerialNumber>SerialNumber</SerialNumber>
     <ShowNominalValue>False</ShowNominalValue>
   </Sensor>
+  <Sensor>
+    <Description>Description</Description>
+    <DeviceIndex>0</DeviceIndex>
+    <HighAlarmValue>90</HighAlarmValue>
+    <HighWarningValue>80</HighWarningValue>
+    <IsCalibrated>False</IsCalibrated>
+    <IsEnabled>True</IsEnabled>
+    <IsHighAlarmEnabled>False</IsHighAlarmEnabled>
+    <IsHighWarningEnabled>False</IsHighWarningEnabled>
+    <IsLowAlarmEnabled>False</IsLowAlarmEnabled>
+    <IsLowWarningEnabled>False</IsLowWarningEnabled>
+    <IsVirtual>False</IsVirtual>
+    <Location>Location</Location>
+    <LowAlarmValue>10</LowAlarmValue>
+    <LowWarningValue>20</LowWarningValue>
+    <MaxValue>100</MaxValue>
+    <MinValue>0</MinValue>
+    <Name>Name</Name>
+    <NominalValue>50</NominalValue>
+    <PersistDataPoints>True</PersistDataPoints>
+    <PGN>1</PGN>
+    <PortNumber>1</PortNumber>
+    <Priority>1</Priority>
+    <Resolution>0</Resolution>
+    <SensorType>Volume</SensorType>
+    <SensorUnits>GallonsUS</SensorUnits>
+    <SensorUnitType>Volume</SensorUnitType>
+    <SensorUsage>TanksFuel</SensorUsage>
+    <SerialNumber>SerialNumber</SerialNumber>
+    <ShowNominalValue>False</ShowNominalValue>
+  </Sensor>
 
+  
   <GaugePage>
     <IsVisible>True</IsVisible>
     <PageName>Engines</PageName>
     <Position>1</Position>
   </GaugePage>
 
-<Gauge>
-  <Divisions>7</Divisions>
-  <GaugeColor>Magenta</GaugeColor>
-  <GaugePageIndex>0</GaugePageIndex>
-  <GaugeHeight>400</GaugeHeight>
-  <GaugeOutlineVisibility>Collapsed</GaugeOutlineVisibility>
-  <GaugeLeft>400</GaugeLeft>
-  <GaugeTop>400</GaugeTop>
-  <GaugeType>LeftArcGauge</GaugeType>
-  <GaugeWidth>400</GaugeWidth>
-  <InnerCircleDelta>30</InnerCircleDelta>
-  <MajorTicLength>18</MajorTicLength>
-  <MediumTicLength>12</MediumTicLength>
-  <MediumTicsPerMajorTic>0</MediumTicsPerMajorTic>
-  <MiddleCircleDelta>70</MiddleCircleDelta>
-  <MinorTicLength>6</MinorTicLength>
-  <MinorTicsPerMajorTic>5</MinorTicsPerMajorTic>
-  <Resolution>0</Resolution>
-  <SensorIndex>0</SensorIndex>                
-  <Text>Label</Text>
-  <TextAngle>0</TextAngle>
-  <TextHorizontalAlignment>Left</TextHorizontalAlignment>
-  <TextFontColor>Magenta</TextFontColor>
-  <TextFontSize>20</TextFontSize>
-  <TextVerticalAlignment>Top</TextVerticalAlignment>
-  <Units>GallonsUS</Units>
-  <UnitsFontSize>20</UnitsFontSize>
-  <ValueFontSize>20</ValueFontSize>
-</Gauge>
+  <Gauge>
+    <Divisions>7</Divisions>
+    <GaugeColor>Magenta</GaugeColor>
+    <GaugePageIndex>0</GaugePageIndex>
+    <GaugeHeight>400</GaugeHeight>
+    <GaugeOutlineVisibility>Collapsed</GaugeOutlineVisibility>
+    <GaugeLeft>400</GaugeLeft>
+    <GaugeTop>400</GaugeTop>
+    <GaugeType>LeftArcGauge</GaugeType>
+    <GaugeWidth>400</GaugeWidth>
+    <InnerCircleDelta>30</InnerCircleDelta>
+    <MajorTicLength>18</MajorTicLength>
+    <MediumTicLength>12</MediumTicLength>
+    <MediumTicsPerMajorTic>0</MediumTicsPerMajorTic>
+    <MiddleCircleDelta>70</MiddleCircleDelta>
+    <MinorTicLength>6</MinorTicLength>
+    <MinorTicsPerMajorTic>5</MinorTicsPerMajorTic>
+    <Resolution>0</Resolution>
+    <SensorIndex>0</SensorIndex>                
+    <Text>Label</Text>
+    <TextAngle>0</TextAngle>
+    <TextHorizontalAlignment>Left</TextHorizontalAlignment>
+    <TextFontColor>Magenta</TextFontColor>
+    <TextFontSize>20</TextFontSize>
+    <TextVerticalAlignment>Top</TextVerticalAlignment>
+    <Units>GallonsUS</Units>
+    <UnitsFontSize>20</UnitsFontSize>
+    <ValueFontSize>20</ValueFontSize>
+  </Gauge>
+  <Gauge>
+    <Divisions>7</Divisions>
+    <GaugeColor>Magenta</GaugeColor>
+    <GaugePageIndex>0</GaugePageIndex>
+    <GaugeHeight>400</GaugeHeight>
+    <GaugeOutlineVisibility>Collapsed</GaugeOutlineVisibility>
+    <GaugeLeft>900</GaugeLeft>
+    <GaugeTop>400</GaugeTop>
+    <GaugeType>LeftArcGauge</GaugeType>
+    <GaugeWidth>400</GaugeWidth>
+    <InnerCircleDelta>30</InnerCircleDelta>
+    <MajorTicLength>18</MajorTicLength>
+    <MediumTicLength>12</MediumTicLength>
+    <MediumTicsPerMajorTic>0</MediumTicsPerMajorTic>
+    <MiddleCircleDelta>70</MiddleCircleDelta>
+    <MinorTicLength>6</MinorTicLength>
+    <MinorTicsPerMajorTic>5</MinorTicsPerMajorTic>
+    <Resolution>0</Resolution>
+    <SensorIndex>1</SensorIndex>                
+    <Text>Label</Text>
+    <TextAngle>0</TextAngle>
+    <TextHorizontalAlignment>Left</TextHorizontalAlignment>
+    <TextFontColor>Magenta</TextFontColor>
+    <TextFontSize>20</TextFontSize>
+    <TextVerticalAlignment>Top</TextVerticalAlignment>
+    <Units>GallonsUS</Units>
+    <UnitsFontSize>20</UnitsFontSize>
+    <ValueFontSize>20</ValueFontSize>
+  </Gauge>
   
 </Simple>

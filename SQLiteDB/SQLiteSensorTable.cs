@@ -133,7 +133,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             statement.Bind("@Name", itemRow.Field<string>("Name"));
             statement.Bind("@NominalValue", itemRow.Field<double>("NominalValue"));
             statement.Bind("@PersistDataPoints", SQLiteDB.Utilities.BooleanSQLite(itemRow.Field<bool>("PersistDataPoints")));
-            statement.Bind("@PGN", itemRow.Field<Int32>("PGN"));
+            statement.Bind("@PGN", itemRow.Field<UInt32>("PGN"));
             statement.Bind("@PortNumber", itemRow.Field<Int32>("PortNumber"));
             statement.Bind("@Priority", itemRow.Field<Int32>("Priority"));
             statement.Bind("@PropertyBag", itemRow.Field<string>("PropertyBag"));
@@ -179,7 +179,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             statement.Bind("@Name", itemRow.Field<string>("Name"));
             statement.Bind("@NominalValue", itemRow.Field<double>("NominalValue"));
             statement.Bind("@PersistDataPoints", SQLiteDB.Utilities.BooleanSQLite(itemRow.Field<bool>("PersistDataPoints")));
-            statement.Bind("@PGN", itemRow.Field<Int32>("PGN"));
+            statement.Bind("@PGN", itemRow.Field<UInt32>("PGN"));
             statement.Bind("@PortNumber", itemRow.Field<Int32>("PortNumber"));
             statement.Bind("@Priority", itemRow.Field<Int32>("Priority"));
             statement.Bind("@PropertyBag", itemRow.Field<string>("PropertyBag"));
@@ -293,7 +293,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemRow.SetField<string>("Name", (string)statement[20]);
             itemRow.SetField<double>("NominalValue", (double)Convert.ToDouble(statement[21]));
             itemRow.SetField<bool>("PersistDataPoints", (bool)((Int64)statement[22] != 0));
-            itemRow.SetField<Int32>("PGN", (Int32)Convert.ToInt32(statement[23]));
+            itemRow.SetField<UInt32>("PGN", (UInt32)Convert.ToUInt32(statement[23]));
             itemRow.SetField<Int32>("PortNumber", (Int32)Convert.ToInt32(statement[24]));
             itemRow.SetField<Int32>("Priority", (Int32)Convert.ToInt32(statement[25]));
             itemRow.SetField<string>("PropertyBag", (string)statement[26]);

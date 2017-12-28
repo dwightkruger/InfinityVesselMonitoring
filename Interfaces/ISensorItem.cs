@@ -19,7 +19,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         void AddSensorValue(double value, bool isOnline, bool forceFlush);
         Task BeginCommit();
         DateTime ChangeDate { get; }
-        bool DemoMode { get; set; }
+        bool IsDemoMode { get; set; }
         string Description { get; set; }
         Int64 DeviceId { get; set; }
         void DisableSensorDataCache();
@@ -37,7 +37,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         bool IsLowWarningEnabled { get; set; }
         bool IsOnline { get; set; }
         bool IsPersisted { get; set; }
-        bool IsVirtual { get; }
+        bool IsVirtual { get; set; }
         string Location { get; set; }
         double LowAlarmValue { get; set; }
         double LowWarningValue { get; set; }
