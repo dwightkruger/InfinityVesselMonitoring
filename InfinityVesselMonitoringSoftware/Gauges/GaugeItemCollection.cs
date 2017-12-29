@@ -94,6 +94,46 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             return results;
         }
 
+        async public Task<List<IGaugeItem>> BeginFindAllBySensorType(SensorType sensorType)
+        {
+            List <IGaugeItem> results = null;
+
+            using (var releaser = await _lock.ReaderLockAsync())
+            {
+                var query = 
+                    from gaugeItem in this 
+                    join sensor in App.SensorCollection on gaugeItem.SensorId equals sensor.SensorId
+                    where sensor.SensorType == sensorType
+                    select gaugeItem;
+
+                if (query.Count<IGaugeItem>() > 0)
+                    results = query.ToList<IGaugeItem>();
+                else
+                    results = new List<IGaugeItem>();
+            }
+
+            return results;
+        }
+
+        async public Task<IGaugeItem> BeginFindFirstBySensorType(SensorType sensorType)
+        {
+            IGaugeItem results = null;
+
+            using (var releaser = await _lock.ReaderLockAsync())
+            {
+                var query =
+                    from gaugeItem in this
+                    join sensor in App.SensorCollection on gaugeItem.SensorId equals sensor.SensorId
+                    where sensor.SensorType == sensorType
+                    select gaugeItem;
+
+                if (query.Count<IGaugeItem>() > 0)
+                    results = query.FirstOrDefault<IGaugeItem>();
+            }
+
+            return results;
+        }
+
         public async Task BeginLoad()
         {
             using (var releaser = await _lock.WriterLockAsync())

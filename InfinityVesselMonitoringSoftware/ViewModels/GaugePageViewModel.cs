@@ -31,6 +31,7 @@ namespace VesselMonitoringSuite.ViewModels
         {
             get { return App.VesselSettings; }
         }
+
         public IGaugePageItem GaugePageItem
         {
             get { return _gaugePageItem; }
