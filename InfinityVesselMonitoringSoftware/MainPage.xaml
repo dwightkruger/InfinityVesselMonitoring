@@ -14,7 +14,7 @@
     <Page.Resources>
     </Page.Resources>
 
-    <Grid 
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
         x:Name="MainPageGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>

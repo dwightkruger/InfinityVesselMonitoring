@@ -4,6 +4,7 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
+using GalaSoft.MvvmLight.Threading;
 using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.Types;
@@ -231,7 +232,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns["GaugeTop"].DefaultValue                = 0D;
             itemTable.Columns["GaugeHeight"].DefaultValue             = 300D;
             itemTable.Columns["GaugeWidth"].DefaultValue              = 200D;
-            itemTable.Columns["GaugeColor"].DefaultValue              = ((SolidColorBrush)Application.Current.Resources["ApplicationForegroundThemeBrush"]).Color;
+            itemTable.Columns["GaugeColor"].DefaultValue              = Colors.White;
             itemTable.Columns["Divisions"].DefaultValue               = 7;
             itemTable.Columns["MinorTicsPerMajorTic"].DefaultValue    = 3;
             itemTable.Columns["MediumTicsPerMajorTic"].DefaultValue   = 6;

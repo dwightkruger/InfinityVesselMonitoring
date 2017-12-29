@@ -3,14 +3,18 @@ using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityVesselMonitoringSoftware.Gauges;
 using InfinityVesselMonitoringSoftware.Settings;
 using System;
+using System.Collections;
+using System.Reflection;
 using System.Threading.Tasks;
 using VesselMonitoring;
 using VesselMonitoringSuite.Devices;
 using VesselMonitoringSuite.Sensors;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace InfinityVesselMonitoringSoftware
@@ -20,6 +24,71 @@ namespace InfinityVesselMonitoringSoftware
     /// </summary>
     sealed partial class App : Application
     {
+        private const string SelectedAppThemeKey = "SelectedAppTheme";
+
+        public enum VesselElementTheme
+        {
+            Default = ElementTheme.Default,
+            Light = ElementTheme.Light,
+            Dark = ElementTheme.Dark,
+            Night = ElementTheme.Dark + 1,
+            HighContrast = Night + 1,   
+        }
+        /// <summary>
+        /// Gets the current actual theme of the app based on the requested theme of the
+        /// root element, or if that value is Default, the requested theme of the Application.
+        /// </summary>
+            public static VesselElementTheme ActualTheme
+            {
+                get
+                {
+                    if (Window.Current.Content is FrameworkElement rootElement)
+                    {
+                        if ((VesselElementTheme)rootElement.RequestedTheme != VesselElementTheme.Default)
+                        {
+                            return (VesselElementTheme)rootElement.RequestedTheme;
+                        }
+                    }
+
+                    return GetEnum<VesselElementTheme>(Current.RequestedTheme.ToString());
+                }
+            }
+
+            /// <summary>
+            /// Gets or sets (with LocalSettings persistence) the RequestedTheme of the root element.
+            /// </summary>
+            public static VesselElementTheme RootTheme
+            {
+                get
+                {
+                    if (Window.Current.Content is FrameworkElement rootElement)
+                    {
+                        return (VesselElementTheme) rootElement.RequestedTheme;
+                    }
+
+                    return VesselElementTheme.Default;
+                }
+                set
+                {
+                    if (Window.Current.Content is FrameworkElement rootElement)
+                    {
+                        rootElement.RequestedTheme = (ElementTheme) value;
+                    }
+
+                    ApplicationData.Current.LocalSettings.Values[SelectedAppThemeKey] = value.ToString();
+                }
+            }
+
+            public static TEnum GetEnum<TEnum>(string text) where TEnum : struct
+            {
+                if (!typeof(TEnum).GetTypeInfo().IsEnum)
+                {
+                    throw new InvalidOperationException("Generic parameter 'TEnum' must be an enum.");
+                }
+                return (TEnum)Enum.Parse(typeof(TEnum), text);
+            }
+
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().

@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Simple>
+<Complex>
+
   <Device>
     <Description>Description</Description>
     <DeviceAddress>1</DeviceAddress>
@@ -13,7 +14,7 @@
     <Name>Name</Name>
     <Manufacturer>Manufacturer</Manufacturer>
     <SerialNumber>SerialNumber</SerialNumber>
-    <SoftwareVersion>SoftwareVersion</SoftwareVersion> 
+    <SoftwareVersion>SoftwareVersion</SoftwareVersion>
   </Device>
 
   <Sensor>
@@ -79,11 +80,16 @@
     <ShowNominalValue>False</ShowNominalValue>
   </Sensor>
 
-  
+
   <GaugePage>
     <IsVisible>True</IsVisible>
     <PageName>Engines</PageName>
     <Position>1</Position>
+  </GaugePage>
+  <GaugePage>
+    <IsVisible>True</IsVisible>
+    <PageName>Tanks</PageName>
+    <Position>2</Position>
   </GaugePage>
 
   <Gauge>
@@ -104,7 +110,7 @@
     <MinorTicLength>6</MinorTicLength>
     <MinorTicsPerMajorTic>5</MinorTicsPerMajorTic>
     <Resolution>0</Resolution>
-    <SensorIndex>0</SensorIndex>                
+    <SensorIndex>0</SensorIndex>
     <Text>Label</Text>
     <TextAngle>0</TextAngle>
     <TextHorizontalAlignment>Left</TextHorizontalAlignment>
@@ -133,7 +139,7 @@
     <MinorTicLength>6</MinorTicLength>
     <MinorTicsPerMajorTic>5</MinorTicsPerMajorTic>
     <Resolution>0</Resolution>
-    <SensorIndex>1</SensorIndex>                
+    <SensorIndex>1</SensorIndex>
     <Text>Label</Text>
     <TextAngle>0</TextAngle>
     <TextHorizontalAlignment>Left</TextHorizontalAlignment>
@@ -144,5 +150,6 @@
     <UnitsFontSize>20</UnitsFontSize>
     <ValueFontSize>20</ValueFontSize>
   </Gauge>
-  
-</Simple>
+
+
+</Complex>

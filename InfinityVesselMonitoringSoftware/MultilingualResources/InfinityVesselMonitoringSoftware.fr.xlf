@@ -14,17 +14,9 @@
           <source>Ok</source>
           <target state="new">Ok</target>
         </trans-unit>
-        <trans-unit id="Database.Text" translate="yes" xml:space="preserve">
-          <source>Database</source>
-          <target state="new">Database</target>
-        </trans-unit>
         <trans-unit id="Sensors.Text" translate="yes" xml:space="preserve">
           <source>Sensors</source>
           <target state="new">Sensors</target>
-        </trans-unit>
-        <trans-unit id="Pages.Text" translate="yes" xml:space="preserve">
-          <source>Pages</source>
-          <target state="new">Pages</target>
         </trans-unit>
         <trans-unit id="CloseApplication.Content" translate="yes" xml:space="preserve">
           <source>Close Application</source>

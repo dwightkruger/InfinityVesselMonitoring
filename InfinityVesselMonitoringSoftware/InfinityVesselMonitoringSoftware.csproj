@@ -190,7 +190,10 @@
     <Content Include="Graphics\UK Flag.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="MockNMEA\Simple.xml" />
+    <Content Include="MockNMEA\Complex.xml" />
+    <Content Include="MockNMEA\Simple.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -238,6 +241,11 @@
     <Page Include="Settings\Views\VesselSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ThemeResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
     <Page Include="Views\GaugePageView.xaml">
       <SubType>Designer</SubType>

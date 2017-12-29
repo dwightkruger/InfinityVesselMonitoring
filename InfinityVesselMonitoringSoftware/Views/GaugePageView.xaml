@@ -24,7 +24,9 @@
     <Grid
         x:Name="MainGrid"
         DataContext="{StaticResource GaugePageViewModel}"
-        Background="{Binding VesselSettings.ThemeBackgroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}}">
+        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+        <!--Background="{Binding VesselSettings.ThemeBackgroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}}">-->
 
         <tools:AlignmentGrid 
             x:Name="AlignmentGrid"

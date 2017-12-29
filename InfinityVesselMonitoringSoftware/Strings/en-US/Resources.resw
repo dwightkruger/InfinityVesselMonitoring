@@ -123,9 +123,6 @@
   <data name="CloseApplication.Content" xml:space="preserve">
     <value>Close Application</value>
   </data>
-  <data name="Database.Text" xml:space="preserve">
-    <value>Database</value>
-  </data>
   <data name="DatabaseEditor.Text" xml:space="preserve">
     <value>Database</value>
   </data>
@@ -137,9 +134,6 @@
   </data>
   <data name="Ok.Content" xml:space="preserve">
     <value>Ok</value>
-  </data>
-  <data name="Pages.Text" xml:space="preserve">
-    <value>Pages</value>
   </data>
   <data name="PagesEditor.Text" xml:space="preserve">
     <value>Pages</value>

@@ -136,16 +136,7 @@ namespace VesselMonitoring
             }
 
             await App.BuildDBTables.Build();
-            await App.BuildDBTables.SensorDataTable.BeginEmpty();
-            await App.BuildDBTables.SensorTable.BeginEmpty();
-            await App.BuildDBTables.DeviceTable.BeginEmpty();
-            await App.BuildDBTables.GaugeTable.BeginEmpty();
-            await App.BuildDBTables.GaugePageTable.BeginEmpty();
-
-            await App.GaugePageCollection.BeginLoad();
-            await App.GaugeItemCollection.BeginLoad();
-            await App.DeviceCollection.BeginLoad();
-            App.SensorCollection.Load();
+            await this.Reset();
 
             XMLParser xmlParser = new XMLParser("ms-appx:///MockNMEA/Simple.xml");
             Task.Run(async () =>
@@ -181,6 +172,20 @@ namespace VesselMonitoring
             if (App.VesselSettings.ThemeForegroundColor == Colors.Black) this.Light_Click(this, null);
             else if (App.VesselSettings.ThemeForegroundColor == Colors.White) this.Dark_Click(this, null);
             else if (App.VesselSettings.ThemeForegroundColor == Colors.Red) this.Night_Click(this, null);
+        }
+
+        async public Task Reset()
+        {
+            await App.BuildDBTables.SensorDataTable.BeginEmpty();
+            await App.BuildDBTables.SensorTable.BeginEmpty();
+            await App.BuildDBTables.DeviceTable.BeginEmpty();
+            await App.BuildDBTables.GaugeTable.BeginEmpty();
+            await App.BuildDBTables.GaugePageTable.BeginEmpty();
+
+            await App.GaugePageCollection.BeginLoad();
+            await App.GaugeItemCollection.BeginLoad();
+            await App.DeviceCollection.BeginLoad();
+            App.SensorCollection.Load();
         }
 
         async private Task LoadPages()
@@ -688,6 +693,7 @@ namespace VesselMonitoring
 
         private void Light_Click(object sender, RoutedEventArgs e)
         {
+            App.RootTheme = App.GetEnum<App.VesselElementTheme>("Light");
             App.VesselSettings.ThemeBackgroundColor = Colors.White;
             App.VesselSettings.ThemeForegroundColor = Colors.Black;
             this.Restyle(Colors.Black);
@@ -695,6 +701,8 @@ namespace VesselMonitoring
 
         private void Dark_Click(object sender, RoutedEventArgs e)
         {
+            App.RootTheme = App.GetEnum<App.VesselElementTheme>("Dark");
+
             App.VesselSettings.ThemeBackgroundColor = Colors.Black;
             App.VesselSettings.ThemeForegroundColor = Colors.White;
             this.Restyle(Colors.White);
@@ -702,6 +710,8 @@ namespace VesselMonitoring
 
         private void Night_Click(object sender, RoutedEventArgs e)
         {
+            App.RootTheme = App.GetEnum<App.VesselElementTheme>("Dark");
+
             App.VesselSettings.ThemeBackgroundColor = Colors.Black;
             App.VesselSettings.ThemeForegroundColor = Colors.Red;
             this.Restyle(Colors.Red);
@@ -715,14 +725,14 @@ namespace VesselMonitoring
                 gaugeItem.GaugeColor = foregroundColor;
             }
 
-            this.MainPageGrid.Background = new SolidColorBrush(App.VesselSettings.ThemeBackgroundColor);
+            //this.MainPageGrid.Background = new SolidColorBrush(App.VesselSettings.ThemeBackgroundColor);
 
-            this.LightButton.Foreground = new SolidColorBrush(foregroundColor);
-            this.LightButton.Background = new SolidColorBrush(App.VesselSettings.ThemeBackgroundColor);
-            this.DarkButton.Foreground = this.LightButton.Foreground;
-            this.DarkButton.Background = this.LightButton.Background;
-            this.NightButton.Foreground = this.LightButton.Foreground;
-            this.NightButton.Background = this.LightButton.Background;
+            //this.LightButton.Foreground = new SolidColorBrush(foregroundColor);
+            //this.LightButton.Background = new SolidColorBrush(App.VesselSettings.ThemeBackgroundColor);
+            //this.DarkButton.Foreground = this.LightButton.Foreground;
+            //this.DarkButton.Background = this.LightButton.Background;
+            //this.NightButton.Foreground = this.LightButton.Foreground;
+            //this.NightButton.Background = this.LightButton.Background;
 
             Messenger.Default.Send<Color>(foregroundColor, "OnThemeColorsChanged");
             Task.Run(async () => { await App.VesselSettings.BeginCommit(); }).Wait();

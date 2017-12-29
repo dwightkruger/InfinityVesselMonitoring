@@ -113,17 +113,18 @@ namespace InfinityVesselMonitoringSoftware.Settings.Views
 
             // Bind each of the TextBlock forground colors so that when someone moves between dark/light/night
             // moded the text blocks automatically update/
-            Binding textBlockBinding = new Binding();
-            textBlockBinding.Source = App.VesselSettings;
-            textBlockBinding.Path = new PropertyPath("ThemeForegroundColor");
-            textBlockBinding.Converter = c_ctscbc;
+            //Binding textBlockBinding = new Binding();
+            //textBlockBinding.Source = App.VesselSettings;
+            //textBlockBinding.Path = new PropertyPath("ThemeForegroundColor");
+            //textBlockBinding.Converter = c_ctscbc;
 
-            foreach (var child in MainViewbox.FindDescendants<TextBlock>())
-            {
-                child.SetBinding(TextBlock.ForegroundProperty, textBlockBinding);
-            }
+            //foreach (var child in MainViewbox.FindDescendants<TextBlock>())
+            //{
+            //    //child.SetBinding(TextBlock.ForegroundProperty, textBlockBinding);
+            //}
 
-            // Same for the background of the toggle buttons
+            // Bind the background color for each of the toggle buttons so that we the theme changes, the background
+            // color changes.
             Binding isSelectedColorBinding = new Binding();
             isSelectedColorBinding.Source = this;
             isSelectedColorBinding.Path = new PropertyPath("IsSelectedColor");
