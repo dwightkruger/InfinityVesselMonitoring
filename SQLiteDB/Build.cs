@@ -14,6 +14,9 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
 {
     public class SQLiteBuildDBTables : IBuildDBTables
     {
+        public SQLiteBuildDBTables()
+        {
+        }
 
         /// <summary>
         /// Create/load the database and enough tables to load the application startup parametes
@@ -21,6 +24,8 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
         /// <returns></returns>
         async public Task BuildVesselSettings()
         {
+            InfinityGroup.VesselMonitoring.SQLiteDB.Utilities.CreateDirectory(this.Directory);
+
             this.RegisterComponents();
 
             this.VesselDB = this.Container.Resolve<IVesselDB>();

@@ -46,6 +46,10 @@
           <source>Vessel Settings</source>
           <target state="new">Vessel Settings</target>
         </trans-unit>
+        <trans-unit id="ExitEditor.Text" translate="yes" xml:space="preserve">
+          <source>Exit Application</source>
+          <target state="new">Exit Application</target>
+        </trans-unit>
       </group>
     </body>
   </file>

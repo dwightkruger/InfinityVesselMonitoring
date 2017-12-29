@@ -1,7 +1,9 @@
 ﻿using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
+using InfinityGroup.VesselMonitoring.SQLiteDB;
+using InfinityVesselMonitoringSoftware.Events;
 using InfinityVesselMonitoringSoftware.Gauges;
-using InfinityVesselMonitoringSoftware.Settings;
+using InfinityVesselMonitoringSoftware.AppSettings;
 using System;
 using System.Collections;
 using System.Reflection;
@@ -34,59 +36,60 @@ namespace InfinityVesselMonitoringSoftware
             Night = ElementTheme.Dark + 1,
             HighContrast = Night + 1,   
         }
+
         /// <summary>
         /// Gets the current actual theme of the app based on the requested theme of the
         /// root element, or if that value is Default, the requested theme of the Application.
         /// </summary>
-            public static VesselElementTheme ActualTheme
+        public static VesselElementTheme ActualTheme
+        {
+            get
             {
-                get
+                if (Window.Current.Content is FrameworkElement rootElement)
                 {
-                    if (Window.Current.Content is FrameworkElement rootElement)
+                    if ((VesselElementTheme)rootElement.RequestedTheme != VesselElementTheme.Default)
                     {
-                        if ((VesselElementTheme)rootElement.RequestedTheme != VesselElementTheme.Default)
-                        {
-                            return (VesselElementTheme)rootElement.RequestedTheme;
-                        }
+                        return (VesselElementTheme)rootElement.RequestedTheme;
                     }
-
-                    return GetEnum<VesselElementTheme>(Current.RequestedTheme.ToString());
                 }
-            }
 
-            /// <summary>
-            /// Gets or sets (with LocalSettings persistence) the RequestedTheme of the root element.
-            /// </summary>
-            public static VesselElementTheme RootTheme
+                return GetEnum<VesselElementTheme>(Current.RequestedTheme.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets (with LocalSettings persistence) the RequestedTheme of the root element.
+        /// </summary>
+        public static VesselElementTheme RootTheme
+        {
+            get
             {
-                get
+                if (Window.Current.Content is FrameworkElement rootElement)
                 {
-                    if (Window.Current.Content is FrameworkElement rootElement)
-                    {
-                        return (VesselElementTheme) rootElement.RequestedTheme;
-                    }
-
-                    return VesselElementTheme.Default;
+                    return (VesselElementTheme) rootElement.RequestedTheme;
                 }
-                set
-                {
-                    if (Window.Current.Content is FrameworkElement rootElement)
-                    {
-                        rootElement.RequestedTheme = (ElementTheme) value;
-                    }
 
-                    ApplicationData.Current.LocalSettings.Values[SelectedAppThemeKey] = value.ToString();
-                }
+                return VesselElementTheme.Default;
             }
-
-            public static TEnum GetEnum<TEnum>(string text) where TEnum : struct
+            set
             {
-                if (!typeof(TEnum).GetTypeInfo().IsEnum)
+                if (Window.Current.Content is FrameworkElement rootElement)
                 {
-                    throw new InvalidOperationException("Generic parameter 'TEnum' must be an enum.");
+                    rootElement.RequestedTheme = (ElementTheme) value;
                 }
-                return (TEnum)Enum.Parse(typeof(TEnum), text);
+
+                ApplicationData.Current.LocalSettings.Values[SelectedAppThemeKey] = value.ToString();
             }
+        }
+
+        public static TEnum GetEnum<TEnum>(string text) where TEnum : struct
+        {
+            if (!typeof(TEnum).GetTypeInfo().IsEnum)
+            {
+                throw new InvalidOperationException("Generic parameter 'TEnum' must be an enum.");
+            }
+            return (TEnum)Enum.Parse(typeof(TEnum), text);
+        }
 
 
         /// <summary>
@@ -157,39 +160,23 @@ namespace InfinityVesselMonitoringSoftware
         /// </summary>
         /// <param name="sender">The source of the suspend request.</param>
         /// <param name="e">Details about the suspend request.</param>
-        private void OnSuspending(object sender, SuspendingEventArgs e)
+        async private void OnSuspending(object sender, SuspendingEventArgs e)
         {
-            // Write an observation for each of the sensors indicating that it is going offline
-            foreach (ISensorItem sensorItem in SensorCollection)
-            {
-                sensorItem.AddOfflineObservation(true);
-            }
-
-            // Flush all of the records to the database
-            Task.Run(async () =>
-            {
-                if ((null != App.BuildDBTables) && (null != App.BuildDBTables.SensorDataTable))
-                {
-                    await App.BuildDBTables.SensorDataTable.BeginCommitAll(() =>
-                    {
-                    },
-                    (ex) =>
-                    {
-                        Telemetry.TrackException(ex);
-                    });
-                }
-            }).Wait();
-
+            await SensorCollection?.BeginShutdown();
+            await EventsCollection?.BeginShutdown();
+            
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
-            deferral.Complete();
+            //BUGBUG fugure out why deferral.Complete() is failing
+            //deferral.Complete();
         }
 
-        public static IBuildDBTables BuildDBTables { get; set; }
+        public static IBuildDBTables BuildDBTables = new SQLiteBuildDBTables();
         public static SensorCollection SensorCollection = new SensorCollection();
         public static DeviceCollection DeviceCollection = new DeviceCollection();
         public static GaugePageCollection GaugePageCollection = new GaugePageCollection();
         public static GaugeItemCollection GaugeItemCollection = new GaugeItemCollection();
-        public static VesselSettingsItem VesselSettings = new VesselSettingsItem();
+        public static EventsCollection EventsCollection = new EventsCollection();
+        public static VesselSettings VesselSettings = new VesselSettings();
     }
 }

@@ -95,5 +95,18 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 await myGaugePageItem.BeginDelete();
             }
         }
+
+        /// <summary>
+        /// Empty the collection of gaugepages and the backing SQL store
+        /// </summary>
+        async public Task BeginEmpty()
+        {
+            using (var releaser = await _lock.WriterLockAsync())
+            {
+                await App.BuildDBTables.GaugePageTable.BeginEmpty();
+                App.BuildDBTables.GaugePageTable.Load();
+                base.Clear();
+            }
+        }
     }
 }

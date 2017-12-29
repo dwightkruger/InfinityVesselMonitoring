@@ -6,7 +6,6 @@
 
 using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
-using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Types;
 using InfinityVesselMonitoringSoftware;
 using System;
@@ -33,7 +32,8 @@ namespace VesselMonitoringSuite.Sensors
 
         public SensorCollection()
         {
-            _sensorObservationFlushTimer = new Timer(SensorObservationFlushTimerTic, null, c_20_seconds, c_2_minutes);
+            _sensorObservationFlushTimer = new Timer(SensorObservationFlushTimerTic, null, Timeout.Infinite, Timeout.Infinite);
+            this.EnableSensorObservationFlushTimer();
         }
 
         /// <summary>
@@ -205,6 +205,60 @@ namespace VesselMonitoringSuite.Sensors
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Empty the collection of sensors and the backing SQL store
+        /// </summary>
+        async public Task BeginEmpty()
+        {
+            using (var releaser = await _lock.WriterLockAsync())
+            {
+                await App.BuildDBTables.SensorTable.BeginEmpty();
+                App.BuildDBTables.SensorTable.Load();
+                _hashBySerialNumber.Clear();
+                _hashBySensorId.Clear();
+                base.Clear();
+            }
+        }
+
+        /// <summary>
+        /// Shutdown sensor data collection and flush all records to the database
+        /// </summary>
+        /// <returns></returns>
+        async public Task BeginShutdown()
+        {
+            if ((null != App.BuildDBTables) && (null != App.BuildDBTables.SensorDataTable))
+            {
+                // Shutdown the timer job flushing sensor data
+                this.DisableSensorObservationFlushTimer();
+
+                // Write an observation for each of the sensors indicating that it is going offline
+                foreach (ISensorItem sensorItem in this)
+                {
+                    sensorItem.AddOfflineObservation(true);
+                }
+
+                await App.BuildDBTables.SensorDataTable.BeginCommitAllAndClear(() =>
+                {
+                },
+                (ex) =>
+                {
+                    Telemetry.TrackException(ex);
+                });
+
+                this.Clear();
+            }
+        }
+
+        public void EnableSensorObservationFlushTimer()
+        {
+            _sensorObservationFlushTimer.Change(c_20_seconds, c_2_minutes);
+        }
+
+        public void DisableSensorObservationFlushTimer()
+        {
+            _sensorObservationFlushTimer.Change(Timeout.Infinite, Timeout.Infinite);
         }
 
         /// <summary>

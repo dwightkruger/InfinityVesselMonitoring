@@ -22,6 +22,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         ObservableCollection<string> ImageNameList();
         bool IsMKS { get; set; }
         bool IsNightMode { get; set; }
+        bool SendAlarmEmail { get; set; }
         void SetBitmapImage(BitmapImage bitmapImage, string imageName);
         int SMTPEncryptionMethod { get; set; }
         int SMTPPort { get; set; }

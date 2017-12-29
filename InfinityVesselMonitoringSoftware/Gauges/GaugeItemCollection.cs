@@ -152,7 +152,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             }
         }
 
-        async public Task BeginRemovePage(IGaugeItem myGaugeItem)
+        async public Task BeginRemoveGaugeItem(IGaugeItem myGaugeItem)
         {
             if (null != myGaugeItem)
             {
@@ -162,6 +162,19 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                 }
 
                 await myGaugeItem.BeginDelete();
+            }
+        }
+
+        /// <summary>
+        /// Empty the collection of gauge items and the backing SQL store
+        /// </summary>
+        async public Task BeginEmpty()
+        {
+            using (var releaser = await _lock.WriterLockAsync())
+            {
+                await App.BuildDBTables.GaugeTable.BeginEmpty();
+                App.BuildDBTables.GaugeTable.Load();
+                base.Clear();
             }
         }
     }

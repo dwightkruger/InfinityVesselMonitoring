@@ -59,16 +59,18 @@ namespace VesselMonitoringSuite.Devices
             return deviceItem;
         }
 
-        public void BeginClear()
+        /// <summary>
+        /// Empty the collection of devices and the backing SQL store
+        /// </summary>
+        async public Task BeginEmpty()
         {
-            Task.Run(async () =>
+            using (var releaser = await _lock.WriterLockAsync())
             {
-                using (var releaser = await _lock.WriterLockAsync())
-                {
-                    _hashBySerialNumber.Clear();
-                    base.Clear();
-                }
-            });
+                await App.BuildDBTables.DeviceTable.BeginEmpty();
+                App.BuildDBTables.DeviceTable.Load();
+                _hashBySerialNumber.Clear();
+                base.Clear();
+            }
         }
 
         async public Task<IDeviceItem> BeginFindBySerialNumber(string serialNumber)

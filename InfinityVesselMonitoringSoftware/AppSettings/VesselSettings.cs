@@ -21,13 +21,13 @@ using Windows.Storage.Streams;
 using Windows.UI;
 using Windows.UI.Xaml.Media.Imaging;
 
-namespace InfinityVesselMonitoringSoftware.Settings
+namespace InfinityVesselMonitoringSoftware.AppSettings
 {
-    public class VesselSettingsItem : ObservableObject, IVesselSettings
+    public class VesselSettings : ObservableObject, IVesselSettings
     {
         private const string c_imagePrefix = "image.";
 
-        public VesselSettingsItem()
+        public VesselSettings()
         {
         }
 
@@ -121,6 +121,12 @@ namespace InfinityVesselMonitoringSoftware.Settings
         {
             get { return GetPropertyRowValue<bool>(() => IsNightMode); }
             set { SetPropertyRowValue<bool>(() => IsNightMode, value); }
+        }
+
+        public bool SendAlarmEmail
+        {
+            get { return GetPropertyRowValue<bool>(() => SendAlarmEmail); }
+            set { SetPropertyRowValue<bool>(() => SendAlarmEmail, value); }
         }
 
         /// <summary>

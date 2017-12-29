@@ -4,6 +4,7 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
+using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Types;
@@ -17,15 +18,13 @@ using System.Threading.Tasks;
 
 namespace InfinityVesselMonitoringSoftware.Events
 {
-    public class EventCollection : ObservableCollection<IEventItem>
+    public class EventsCollection : ObservableCollection<IEventItem>
     {
         private readonly AsyncReaderWriterLock _lock = new AsyncReaderWriterLock();
         private ObservableCollection<IEventItem> _alarmOnList = new ObservableCollection<IEventItem>();
 
-        public EventCollection()
+        public EventsCollection()
         {
-            // Load some of the existing events for this vessel
-            this.Load();
         }
 
         /// <summary>
@@ -36,6 +35,7 @@ namespace InfinityVesselMonitoringSoftware.Events
         {
             throw new NotImplementedException("Use BeginAdd");
         }
+
         /// <summary>
         /// Add an event, and send email if appropriate
         /// </summary>
@@ -43,7 +43,6 @@ namespace InfinityVesselMonitoringSoftware.Events
         /// <param name="bRaiseEvent"></param>
         async public Task BeginAddEvent(IEventItem myEventItem, bool bRaiseEvent)
         {
-            bool sendEventEmail = false;
             await myEventItem.BeginCommit();
             Debug.Assert(myEventItem.EventId > 0);
 
@@ -65,7 +64,7 @@ namespace InfinityVesselMonitoringSoftware.Events
                 base.Add(myEventItem);
             }
 
-            if (sendEventEmail)
+            if (App.VesselSettings.SendAlarmEmail)
             {
                 this.SendEventEmail(myEventItem);
             }
@@ -282,6 +281,37 @@ namespace InfinityVesselMonitoringSoftware.Events
             }
         }
 
+        /// <summary>
+        /// Empty the collection of events and the backing SQL store
+        /// </summary>
+        async public Task BeginEmpty()
+        {
+            using (var releaser = await _lock.WriterLockAsync())
+            {
+                await App.BuildDBTables.EventsTable.BeginEmpty();
+                App.BuildDBTables.EventsTable.Load();
+                _alarmOnList.Clear();
+                base.Clear();
+            }
+        }
+
+        /// <summary>
+        /// Shutdown event collection and flush all records to the database
+        /// </summary>
+        /// <returns></returns>
+        async public Task BeginShutdown()
+        {
+            if ((null != App.BuildDBTables) && (null != App.BuildDBTables.EventsTable))
+            {
+                await App.BuildDBTables.EventsTable.BeginCommitAllAndClear(() =>
+                {
+                },
+                (ex) =>
+                {
+                    Telemetry.TrackException(ex);
+                });
+            }
+        }
 
         /// <summary>
         /// Loads events from persisted storage

@@ -5,14 +5,14 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
 using InfinityGroup.VesselMonitoring.Controls.Converters;
-using InfinityVesselMonitoringSoftware.Settings.ViewModels;
+using InfinityVesselMonitoringSoftware.AppSettings.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace InfinityVesselMonitoringSoftware.Settings.Views
+namespace InfinityVesselMonitoringSoftware.AppSettings.Views
 {
     public sealed partial class VesselSettingsView : UserControl
     {

@@ -4,7 +4,7 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
-using InfinityVesselMonitoringSoftware.Settings.ViewModels;
+using InfinityVesselMonitoringSoftware.AppSettings.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,7 +22,7 @@ using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace InfinityVesselMonitoringSoftware.Settings.Views
+namespace InfinityVesselMonitoringSoftware.AppSettings.Views
 {
     public sealed partial class SensorsView : UserControl
     {

@@ -352,7 +352,6 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                 catch (Exception ex)
                 {
                     Telemetry.TrackException(ex);
-                    Debug.WriteLine(ex.Message);
                 }
             }));
         }

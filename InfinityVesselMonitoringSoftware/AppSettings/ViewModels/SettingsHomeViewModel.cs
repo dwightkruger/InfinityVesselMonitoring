@@ -8,9 +8,11 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.UI.Xaml;
 
-namespace InfinityVesselMonitoringSoftware.Settings.ViewModels
+namespace InfinityVesselMonitoringSoftware.AppSettings.ViewModels
 {
     public class SettingsHomeViewModel : ObservableObject
     {
@@ -18,6 +20,7 @@ namespace InfinityVesselMonitoringSoftware.Settings.ViewModels
         private RelayCommand _sensorsCommand;
         private RelayCommand _pagesCommand;
         private RelayCommand _databaseCommand;
+        private RelayCommand _exitCommand;
         private Nullable<bool> _isVesselSettingsCommandChecked;
         private Nullable<bool> _isSensorsCommandChecked;
         private Nullable<bool> _isPagesCommandChecked;
@@ -133,6 +136,34 @@ namespace InfinityVesselMonitoringSoftware.Settings.ViewModels
                 }
 
                 return _databaseCommand;
+            }
+        }
+
+        public ICommand ExitCommand
+        {
+            get
+            {
+                if (_exitCommand == null)
+                {
+                    _exitCommand = new RelayCommand(
+                        () =>
+                        {
+                            Task.Run(async () => 
+                            { 
+                                await App.SensorCollection?.BeginShutdown();
+                                await App.EventsCollection?.BeginShutdown();
+                            }).Wait();
+
+                            Application.Current.Exit();
+                        },
+                        () =>
+                        {
+                            return true;
+                        }
+                       );
+                }
+
+                return _exitCommand;
             }
         }
 

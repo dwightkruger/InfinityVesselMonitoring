@@ -132,6 +132,9 @@
   <data name="DuplicateInstance.Text" xml:space="preserve">
     <value>Duplicate Instance</value>
   </data>
+  <data name="ExitEditor.Text" xml:space="preserve">
+    <value>Exit Application</value>
+  </data>
   <data name="Ok.Content" xml:space="preserve">
     <value>Ok</value>
   </data>

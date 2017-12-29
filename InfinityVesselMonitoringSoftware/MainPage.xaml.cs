@@ -9,12 +9,11 @@ using GalaSoft.MvvmLight.Threading;
 using InfinityGroup.VesselMonitoring.Controls.Converters;
 using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
-using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Utilities;
 using InfinityVesselMonitoringSoftware;
+using InfinityVesselMonitoringSoftware.AppSettings.Views;
 using InfinityVesselMonitoringSoftware.Gauges;
 using InfinityVesselMonitoringSoftware.MockNMEA;
-using InfinityVesselMonitoringSoftware.Settings.Views;
 using Microsoft.Graphics.Canvas.Text;
 using System;
 using System.Collections.Generic;
@@ -32,7 +31,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 
 // Icons from https://www.flaticon.com
 namespace VesselMonitoring
@@ -46,9 +44,7 @@ namespace VesselMonitoring
         {
             // Connect to the SQL database and load the vessel settings table so that UI customizations can
             // be applied at program startup time.
-            App.BuildDBTables = new SQLiteBuildDBTables();
             App.BuildDBTables.Directory = ApplicationData.Current.LocalFolder.Path + @"\" + typeof(App).ToString();
-            InfinityGroup.VesselMonitoring.SQLiteDB.Utilities.CreateDirectory(App.BuildDBTables.Directory);
             App.BuildDBTables.DatabaseName = "InfinityGroupVesselMonitoring";
 
             Task.Run(async () => 
@@ -176,16 +172,11 @@ namespace VesselMonitoring
 
         async public Task Reset()
         {
-            await App.BuildDBTables.SensorDataTable.BeginEmpty();
-            await App.BuildDBTables.SensorTable.BeginEmpty();
-            await App.BuildDBTables.DeviceTable.BeginEmpty();
-            await App.BuildDBTables.GaugeTable.BeginEmpty();
-            await App.BuildDBTables.GaugePageTable.BeginEmpty();
-
-            await App.GaugePageCollection.BeginLoad();
-            await App.GaugeItemCollection.BeginLoad();
-            await App.DeviceCollection.BeginLoad();
-            App.SensorCollection.Load();
+            //await App.EventsCollection.BeginEmpty();
+            await App.GaugePageCollection.BeginEmpty();
+            await App.GaugeItemCollection.BeginEmpty();
+            await App.DeviceCollection.BeginEmpty();
+            await App.SensorCollection.BeginEmpty();
         }
 
         async private Task LoadPages()

@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InfinityVesselMonitoringSoftware.Settings.ViewModels
+namespace InfinityVesselMonitoringSoftware.AppSettings.ViewModels
 {
     public class PagesViewModel : ObservableObject
     {

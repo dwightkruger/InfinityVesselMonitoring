@@ -1,23 +1,19 @@
 ﻿//////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                                  //
-// Copyright (c) 2017 Dwight Kruger and Infinity Group LLC, All rights reserved.                    //
+// Copyright (c) 2017 Dwight Kruger and Infinity Group, All rights reserved.                        //
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
 using GalaSoft.MvvmLight;
-using InfinityGroup.VesselMonitoring.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace InfinityVesselMonitoringSoftware.Settings.ViewModels
+namespace InfinityVesselMonitoringSoftware.AppSettings.ViewModels
 {
-    public class VesselSettingsViewModel : ObservableObject
+    public class SensorsViewModel : ObservableObject
     {
-        public VesselSettingsViewModel()
-        {
-        }
-
-        public IVesselSettings VesselSettings
-        {
-            get { return App.VesselSettings; }
-        }
     }
 }

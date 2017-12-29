@@ -1,11 +1,11 @@
 ﻿<UserControl
-    x:Class="InfinityVesselMonitoringSoftware.Settings.Views.VesselSettingsView"
+    x:Class="InfinityVesselMonitoringSoftware.AppSettings.Views.VesselSettingsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:InfinityVesselMonitoringSoftware.Settings.Views"
+    xmlns:local="using:InfinityVesselMonitoringSoftware.AppSettings.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:converter="using:InfinityGroup.VesselMonitoring.Controls.Converters"
-    xmlns:vm="using:InfinityVesselMonitoringSoftware.Settings.ViewModels"
+    xmlns:vm="using:InfinityVesselMonitoringSoftware.AppSettings.ViewModels"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
