@@ -758,7 +758,7 @@ namespace VesselMonitoring
             App.GaugeItemCollection.Clear();
             await App.GaugeItemCollection.BeginLoad();
 
-            this.LoadPages();
+            await this.LoadPages();
         }
     }
 }

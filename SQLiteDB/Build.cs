@@ -4,7 +4,7 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
-using Autofac;
+using GalaSoft.MvvmLight.Ioc;
 using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using System.IO;
@@ -28,15 +28,13 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
 
             this.RegisterComponents();
 
-            this.VesselDB = this.Container.Resolve<IVesselDB>();
+            this.VesselDB = SimpleIoc.Default.GetInstance<IVesselDB>();
             this.VesselDB.DatabaseFileName = Path.Combine(Directory, DatabaseName + ".db");
             this.VesselDB.Create();
-            this.Builder.RegisterInstance<IVesselDB>(VesselDB).SingleInstance();
 
-            this.VesselSettingsTable = this.Container.Resolve<IVesselSettingsTable>();
+            this.VesselSettingsTable = SimpleIoc.Default.GetInstance<IVesselSettingsTable>();
             await VesselSettingsTable.BeginCreateTable(() => { }, (ex) => { Telemetry.TrackException(ex); });
             this.VesselSettingsTable.Load();
-            this.Builder.RegisterInstance<IVesselSettingsTable>(VesselSettingsTable).SingleInstance();
         }
 
         /// <summary>
@@ -45,40 +43,33 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
         /// <returns></returns>
         async public Task Build()
         {
-            this.AISTable = this.Container.Resolve<IAISTable>();
+            this.AISTable = SimpleIoc.Default.GetInstance<IAISTable>();
             await this.AISTable.BeginCreateTable(() => { }, (ex) => { });
             this.AISTable.Load();
-            this.Builder.RegisterInstance<IAISTable>(AISTable).SingleInstance();
 
-            this.DeviceTable = this.Container.Resolve<IDeviceTable>();
+            this.DeviceTable = SimpleIoc.Default.GetInstance<IDeviceTable>();
             await this.DeviceTable.BeginCreateTable(() => { }, (ex) => { Telemetry.TrackException(ex); });
             this.DeviceTable.Load();
-            this.Builder.RegisterInstance<IDeviceTable>(DeviceTable).SingleInstance();
 
-            this.EventsTable = this.Container.Resolve<IEventsTable>();
+            this.EventsTable = SimpleIoc.Default.GetInstance<IEventsTable>();
             await this.EventsTable.BeginCreateTable(() => { }, (ex) => { Telemetry.TrackException(ex); });
             this.EventsTable.Load();
-            this.Builder.RegisterInstance<IEventsTable>(EventsTable).SingleInstance();
 
-            this.GaugeTable = this.Container.Resolve<IGaugeTable>();
+            this.GaugeTable = SimpleIoc.Default.GetInstance<IGaugeTable>();
             await this.GaugeTable.BeginCreateTable(() => { }, (ex) => { Telemetry.TrackException(ex); });
             this.GaugeTable.Load();
-            this.Builder.RegisterInstance<IGaugeTable>(GaugeTable).SingleInstance();
 
-            this.GaugePageTable = this.Container.Resolve<IGaugePageTable>();
+            this.GaugePageTable = SimpleIoc.Default.GetInstance<IGaugePageTable>();
             await this.GaugePageTable.BeginCreateTable(() => { }, (ex) => { Telemetry.TrackException(ex); });
             this.GaugePageTable.Load();
-            this.Builder.RegisterInstance<IGaugePageTable>(GaugePageTable).SingleInstance();
 
-            this.SensorTable = this.Container.Resolve<ISensorTable>();
+            this.SensorTable = SimpleIoc.Default.GetInstance<ISensorTable>();
             await this.SensorTable.BeginCreateTable(() => { }, (ex) => { Telemetry.TrackException(ex); });
             this.SensorTable.Load();
-            this.Builder.RegisterInstance<ISensorTable>(SensorTable).SingleInstance();
 
-            this.SensorDataTable = this.Container.Resolve<ISensorDataTable>();
+            this.SensorDataTable = SimpleIoc.Default.GetInstance<ISensorDataTable>();
             await this.SensorDataTable.BeginCreateTable(() => { }, (ex) => { Telemetry.TrackException(ex); });
             this.SensorDataTable.Load();
-            this.Builder.RegisterInstance<ISensorDataTable>(SensorDataTable).SingleInstance();
         }
 
         public string Directory { get; set; }
@@ -92,8 +83,6 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
         public ISensorDataTable SensorDataTable { get; private set; }
         public IVesselDB VesselDB { get; private set; }
         public IVesselSettingsTable VesselSettingsTable { get; private set; }
-        public Autofac.IContainer Container { get; set; }
-        private ContainerBuilder Builder { get; set; }
 
         /// <summary>
         /// Register all of the DB components with the IOC container
@@ -101,19 +90,15 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
         /// <returns></returns>        
         private void RegisterComponents()
         {
-            this.Builder = new ContainerBuilder();
-            this.Builder.RegisterType<SQLiteVesselDB>().As<IVesselDB>().SingleInstance();
-
-            this.Builder.RegisterType<SQLiteAISTable>().As<IAISTable>().SingleInstance();
-            this.Builder.RegisterType<SQLiteDeviceTable>().As<IDeviceTable>().SingleInstance();
-            this.Builder.RegisterType<SQLiteEventsTable>().As<IEventsTable>().SingleInstance();
-            this.Builder.RegisterType<SQLiteGaugePageTable>().As<IGaugePageTable>().SingleInstance();
-            this.Builder.RegisterType<SQLiteGaugeTable>().As<IGaugeTable>().SingleInstance();
-            this.Builder.RegisterType<SQLiteSensorDataTable>().As<ISensorDataTable>().SingleInstance();
-            this.Builder.RegisterType<SQLiteSensorTable>().As<ISensorTable>().SingleInstance();
-            this.Builder.RegisterType<SQLiteVesselSettingsTable>().As<IVesselSettingsTable>().SingleInstance();
-
-            this.Container = this.Builder.Build();
+            SimpleIoc.Default.Register<IVesselDB, SQLiteVesselDB>();
+            SimpleIoc.Default.Register<IAISTable, SQLiteAISTable>();
+            SimpleIoc.Default.Register<IDeviceTable, SQLiteDeviceTable>();
+            SimpleIoc.Default.Register<IEventsTable, SQLiteEventsTable>();
+            SimpleIoc.Default.Register<IGaugePageTable, SQLiteGaugePageTable>();
+            SimpleIoc.Default.Register<IGaugeTable, SQLiteGaugeTable>();
+            SimpleIoc.Default.Register<ISensorDataTable, SQLiteSensorDataTable>();
+            SimpleIoc.Default.Register<ISensorTable, SQLiteSensorTable>();
+            SimpleIoc.Default.Register<IVesselSettingsTable, SQLiteVesselSettingsTable>();
         }
     }
 }

@@ -798,7 +798,5 @@ namespace VesselMonitoringSuite.Sensors
 
             return lastBucket;
         }
-
-        static List<SensorUsage> Tanks; 
     }
 }
