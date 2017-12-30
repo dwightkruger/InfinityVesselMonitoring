@@ -94,9 +94,9 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             return results;
         }
 
-        async public Task<List<IGaugeItem>> BeginFindAllBySensorType(SensorType sensorType)
+        async public Task<ObservableCollection<IGaugeItem>> BeginFindAllBySensorType(SensorType sensorType)
         {
-            List <IGaugeItem> results = null;
+            ObservableCollection<IGaugeItem> results = new ObservableCollection<IGaugeItem>();
 
             using (var releaser = await _lock.ReaderLockAsync())
             {
@@ -107,9 +107,9 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                     select gaugeItem;
 
                 if (query.Count<IGaugeItem>() > 0)
-                    results = query.ToList<IGaugeItem>();
-                else
-                    results = new List<IGaugeItem>();
+                {
+                    query.ToList<IGaugeItem>().ForEach(item => results.Add(item));
+                }
             }
 
             return results;
@@ -125,6 +125,46 @@ namespace InfinityVesselMonitoringSoftware.Gauges
                     from gaugeItem in this
                     join sensor in App.SensorCollection on gaugeItem.SensorId equals sensor.SensorId
                     where sensor.SensorType == sensorType
+                    select gaugeItem;
+
+                if (query.Count<IGaugeItem>() > 0)
+                    results = query.FirstOrDefault<IGaugeItem>();
+            }
+
+            return results;
+        }
+
+        async public Task<List<IGaugeItem>> BeginFindAllBySensorUsageList(List<SensorUsage> sensorUsageList)
+        {
+            List<IGaugeItem> results = null;
+
+            using (var releaser = await _lock.ReaderLockAsync())
+            {
+                var query =
+                    from gaugeItem in this
+                    join sensor in App.SensorCollection on gaugeItem.SensorId equals sensor.SensorId
+                    where sensorUsageList.Contains(sensor.SensorUsage)
+                    select gaugeItem;
+
+                if (query.Count<IGaugeItem>() > 0)
+                    results = query.ToList<IGaugeItem>();
+                else
+                    results = new List<IGaugeItem>();
+            }
+
+            return results;
+        }
+
+        async public Task<IGaugeItem> BeginFindFirstBySensorUsageList(List<SensorUsage> sensorUsageList)
+        {
+            IGaugeItem results = null;
+
+            using (var releaser = await _lock.ReaderLockAsync())
+            {
+                var query =
+                    from gaugeItem in this
+                    join sensor in App.SensorCollection on gaugeItem.SensorId equals sensor.SensorId
+                    where sensorUsageList.Contains(sensor.SensorUsage)
                     select gaugeItem;
 
                 if (query.Count<IGaugeItem>() > 0)

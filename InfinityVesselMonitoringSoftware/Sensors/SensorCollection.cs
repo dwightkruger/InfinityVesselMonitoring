@@ -29,7 +29,6 @@ namespace VesselMonitoringSuite.Sensors
         private int c_20_seconds = 20 * 1000;
         private int c_2_minutes = 2 * 60 * 1000;
 
-
         public SensorCollection()
         {
             _sensorObservationFlushTimer = new Timer(SensorObservationFlushTimerTic, null, Timeout.Infinite, Timeout.Infinite);
@@ -228,11 +227,11 @@ namespace VesselMonitoringSuite.Sensors
         /// <returns></returns>
         async public Task BeginShutdown()
         {
+            // Shutdown the timer job flushing sensor data
+            this.DisableSensorObservationFlushTimer();
+
             if ((null != App.BuildDBTables) && (null != App.BuildDBTables.SensorDataTable))
             {
-                // Shutdown the timer job flushing sensor data
-                this.DisableSensorObservationFlushTimer();
-
                 // Write an observation for each of the sensors indicating that it is going offline
                 foreach (ISensorItem sensorItem in this)
                 {

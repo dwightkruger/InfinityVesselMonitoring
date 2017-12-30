@@ -12,6 +12,7 @@ using InfinityGroup.VesselMonitoring.Types;
 using InfinityGroup.VesselMonitoring.Utilities;
 using InfinityVesselMonitoringSoftware;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -27,14 +28,14 @@ namespace VesselMonitoringSuite.Sensors
         private PropertyBag _propertyBag = null;
         private object _lock = new object();
         private UnitItem _sensorUnits = UnitsConverter.Find(Units.Other);
-        private static UnitItem OtherUnit = UnitsConverter.Find(Units.Other);
         private bool _demoMode = false;
         private Timer _valueTimer;
-        private Random randu = new Random();
         private ItemRow _sensorValueRow;
         private DateTime _lastDBWriteTime = DateTime.MinValue;
         private SensorValueBucket _sensorValueBucket = new SensorValueBucket();
 
+        private static Random randu = new Random();
+        private static UnitItem OtherUnit = UnitsConverter.Find(Units.Other);
         private static TimeSpan c_10Minutes = new TimeSpan(0, 10, 0);
 
         /// <summary>
@@ -797,5 +798,7 @@ namespace VesselMonitoringSuite.Sensors
 
             return lastBucket;
         }
+
+        static List<SensorUsage> Tanks; 
     }
 }

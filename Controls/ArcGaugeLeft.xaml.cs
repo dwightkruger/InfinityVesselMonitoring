@@ -47,11 +47,6 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
             this.Divisions = 7;
             outerCircleThickness = 2;
-
-            if (!ViewModelBase.IsInDesignModeStatic)
-            {
-                DesignEllipse.Visibility = Visibility.Collapsed;
-            }
         }
 
         protected void canvasControl_Loaded(object sender, RoutedEventArgs e)
@@ -82,7 +77,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
             var ds = args.DrawingSession;
 
-            Center = new Vector2((float)(sender.Size.Height / 2f), (float)(sender.Size.Width / 2f));
+            Center = new Vector2((float)(sender.Size.Width / 2f), (float)(sender.Size.Height / 2f));
 
             // BUGBUG create only if dirty
             CreateInnerCircleBrush(sender);

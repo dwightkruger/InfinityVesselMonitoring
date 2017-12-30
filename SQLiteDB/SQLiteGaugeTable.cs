@@ -228,8 +228,8 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns["GaugeType"].DefaultValue               = GaugeTypeEnum.Unknown;
             itemTable.Columns["PageId"].DefaultValue                  = -1L;
             itemTable.Columns["SensorId"].DefaultValue                = -1L;
-            itemTable.Columns["GaugeLeft"].DefaultValue               = 0D;
-            itemTable.Columns["GaugeTop"].DefaultValue                = 0D;
+            itemTable.Columns["GaugeLeft"].DefaultValue               = -1D;    // -1 means not positioned
+            itemTable.Columns["GaugeTop"].DefaultValue                = -1D;    // -1 means not positioned
             itemTable.Columns["GaugeHeight"].DefaultValue             = 300D;
             itemTable.Columns["GaugeWidth"].DefaultValue              = 200D;
             itemTable.Columns["GaugeColor"].DefaultValue              = Colors.White;

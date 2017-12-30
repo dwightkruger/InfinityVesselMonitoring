@@ -160,15 +160,17 @@ namespace InfinityVesselMonitoringSoftware
         /// </summary>
         /// <param name="sender">The source of the suspend request.</param>
         /// <param name="e">Details about the suspend request.</param>
-        async private void OnSuspending(object sender, SuspendingEventArgs e)
+        private void OnSuspending(object sender, SuspendingEventArgs e)
         {
-            await SensorCollection?.BeginShutdown();
-            await EventsCollection?.BeginShutdown();
-            
+            Task.Run(async () =>
+            {
+                await SensorCollection?.BeginShutdown();
+                await EventsCollection?.BeginShutdown();
+            }).Wait();
+
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
-            //BUGBUG fugure out why deferral.Complete() is failing
-            //deferral.Complete();
+            deferral.Complete();
         }
 
         public static IBuildDBTables BuildDBTables = new SQLiteBuildDBTables();

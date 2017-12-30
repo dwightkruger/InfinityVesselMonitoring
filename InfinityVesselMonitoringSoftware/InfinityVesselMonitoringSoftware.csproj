@@ -143,12 +143,12 @@
       <DependentUpon>VesselSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\GaugePageViewModel.cs" />
-    <Compile Include="ViewModels\TankPageViewModel.cs" />
+    <Compile Include="ViewModels\BasePageViewModel.cs" />
     <Compile Include="Views\GaugePageView.xaml.cs">
       <DependentUpon>GaugePageView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\TankPageView.xaml.cs">
-      <DependentUpon>TankPageView.xaml</DependentUpon>
+    <Compile Include="Views\BasePageView.xaml.cs">
+      <DependentUpon>BasePageView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -258,7 +258,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\TankPageView.xaml">
+    <Page Include="Views\BasePageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

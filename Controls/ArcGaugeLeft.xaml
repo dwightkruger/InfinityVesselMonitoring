@@ -12,37 +12,19 @@
     Background="Transparent"    
     x:Name="userControl">
 
-    <Canvas x:Name="MainCanvas">
-        <Grid 
-            x:Name="MainGrid" 
-            Canvas.Left="{x:Bind Path=Left}"
-            Canvas.Top="{x:Bind Path=Top}"        
-            Height="{x:Bind Path=GaugeHeight}" 
-            Width="{x:Bind Path=GaugeWidth}" 
-            HorizontalAlignment="Center" 
-            VerticalAlignment="Center">
+    <Grid 
+        x:Name="MainGrid" 
+        Height="{x:Bind Path=GaugeHeight}" 
+        Width="{x:Bind Path=GaugeWidth}" 
+        HorizontalAlignment="Left" 
+        VerticalAlignment="Top">
 
-            <canvas:CanvasControl 
-                x:Name="canvasControl" 
-                ClearColor="Transparent" 
-                Draw="canvasControl_Draw" 
-                Loaded="canvasControl_Loaded" 
-                SizeChanged="canvasControl_SizeChanged"
-                CreateResources="canvasControl_CreateResources"/>
-            
-            <Grid 
-                x:Name="DesignGrid"
-                Width="{x:Bind Path=GaugeWidth}"
-                Height="{x:Bind Path=GaugeHeight}">
-
-                <Ellipse 
-                    x:Name="DesignEllipse"
-                    Stroke="Red" 
-                    StrokeThickness="14" 
-                    HorizontalAlignment="Stretch" 
-                    VerticalAlignment="Stretch" 
-                    Visibility="Visible"/>
-            </Grid>
-        </Grid>
-    </Canvas>
+        <canvas:CanvasControl 
+            x:Name="canvasControl" 
+            ClearColor="Transparent" 
+            Draw="canvasControl_Draw" 
+            Loaded="canvasControl_Loaded" 
+            SizeChanged="canvasControl_SizeChanged"
+            CreateResources="canvasControl_CreateResources"/>
+    </Grid>
 </local:BaseGauge>

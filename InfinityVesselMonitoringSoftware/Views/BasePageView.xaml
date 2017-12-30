@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="InfinityVesselMonitoringSoftware.Views.TankPageView"
+    x:Class="InfinityVesselMonitoringSoftware.Views.BasePageView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:InfinityVesselMonitoringSoftware.Views"
@@ -16,14 +16,14 @@
     d:DesignWidth="400">
 
     <UserControl.Resources>
-        <vm:TankPageViewModel x:Key="TankPageViewModel" x:Name="VM"/>
+        <vm:BasePageViewModel x:Key="BasePageViewModel" x:Name="VM"/>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <converters:ColorToSolidColorBrushConverter x:Key="ColorToSolidColorBrushConverter"/>
     </UserControl.Resources>
 
     <Grid
         x:Name="MainGrid"
-        DataContext="{StaticResource GaugePageViewModel}"
+        DataContext="{StaticResource BasePageViewModel}"
         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
         <!--Background="{Binding VesselSettings.ThemeBackgroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}}">-->
@@ -40,7 +40,7 @@
             />
 
         <controls:CanvasGrid 
-            x:Name="MainCanvas"
+            x:Name="CanvasGrid"
             Background="Transparent"
             Rows="{Binding Rows, ElementName=UserControl}"
             Columns="{Binding Columns, ElementName=UserControl}">

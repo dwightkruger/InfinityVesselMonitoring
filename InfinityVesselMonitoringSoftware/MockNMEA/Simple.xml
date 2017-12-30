@@ -78,11 +78,42 @@
     <SerialNumber>SerialNumber2</SerialNumber>
     <ShowNominalValue>False</ShowNominalValue>
   </Sensor>
+  <Sensor>
+    <Description>Description</Description>
+    <DeviceIndex>0</DeviceIndex>
+    <HighAlarmValue>90</HighAlarmValue>
+    <HighWarningValue>80</HighWarningValue>
+    <IsCalibrated>False</IsCalibrated>
+    <IsEnabled>True</IsEnabled>
+    <IsHighAlarmEnabled>False</IsHighAlarmEnabled>
+    <IsHighWarningEnabled>False</IsHighWarningEnabled>
+    <IsLowAlarmEnabled>False</IsLowAlarmEnabled>
+    <IsLowWarningEnabled>False</IsLowWarningEnabled>
+    <IsVirtual>False</IsVirtual>
+    <Location>Location</Location>
+    <LowAlarmValue>10</LowAlarmValue>
+    <LowWarningValue>20</LowWarningValue>
+    <MaxValue>100</MaxValue>
+    <MinValue>0</MinValue>
+    <Name>Name</Name>
+    <NominalValue>50</NominalValue>
+    <PersistDataPoints>True</PersistDataPoints>
+    <PGN>1</PGN>
+    <PortNumber>1</PortNumber>
+    <Priority>1</Priority>
+    <Resolution>0</Resolution>
+    <SensorType>Amps</SensorType>
+    <SensorUnits>Amps</SensorUnits>
+    <SensorUnitType>Current</SensorUnitType>
+    <SensorUsage>AmpsACOther</SensorUsage>
+    <SerialNumber>SerialNumber3</SerialNumber>
+    <ShowNominalValue>False</ShowNominalValue>
+  </Sensor>
 
-  
+
   <GaugePage>
     <IsVisible>True</IsVisible>
-    <PageName>Engines</PageName>
+    <PageName>Tanks</PageName>
     <Position>1</Position>
   </GaugePage>
 
@@ -140,7 +171,7 @@
     <TextFontColor>Magenta</TextFontColor>
     <TextFontSize>20</TextFontSize>
     <TextVerticalAlignment>Top</TextVerticalAlignment>
-    <Units>GallonsUS</Units>
+    <Units>GallonsUK</Units>
     <UnitsFontSize>20</UnitsFontSize>
     <ValueFontSize>20</ValueFontSize>
   </Gauge>

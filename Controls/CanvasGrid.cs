@@ -118,11 +118,16 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             Size newSize = base.MeasureOverride(constraint);
 
-            // Position each of the children
+            double rowHeight = constraint.Height / this.Rows;
+            double rowWidth  = constraint.Width / this.Columns;
+
+            // Position each of the children, centered
             foreach (GridChild child in _gridChildren)
             {
-                child.Gauge.Top = child.Row * (constraint.Height / this.Rows);
-                child.Gauge.Left = child.Column * (constraint.Width / this.Columns);
+                double deltaY = (rowHeight - child.Gauge.GaugeItem.GaugeHeight) / 2D;
+                double deltaX = (rowWidth  - child.Gauge.GaugeItem.GaugeWidth) / 2D;
+                child.Gauge.Top  = (child.Row * rowHeight) + deltaY;
+                child.Gauge.Left = (child.Column * rowWidth) + deltaX;
             }
 
             return newSize;

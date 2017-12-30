@@ -929,6 +929,11 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 middleCircleDeltaBinding.Path = new PropertyPath("MiddleCircleDelta");
                 this.SetBinding(MiddleCircleDeltaProperty, middleCircleDeltaBinding);
 
+                Binding outlineVisibilityBinding = new Binding();
+                outlineVisibilityBinding.Source = value;
+                outlineVisibilityBinding.Path = new PropertyPath("GaugeOutlineVisibility");
+                this.SetBinding(GaugeOutlineVisibilityProperty, outlineVisibilityBinding);
+
                 Binding resolutionBinding = new Binding();
                 resolutionBinding.Source = value;
                 resolutionBinding.Path = new PropertyPath("Resolution");
