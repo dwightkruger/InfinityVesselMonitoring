@@ -130,6 +130,8 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 child.Gauge.Left = (child.Column * rowWidth) + deltaX;
             }
 
+            _gridChildren.Clear();
+
             return newSize;
         }
 

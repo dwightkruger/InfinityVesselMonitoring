@@ -875,24 +875,28 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 gaugeHeightBinding.Path = new PropertyPath("GaugeHeight");
                 gaugeHeightBinding.Mode = BindingMode.TwoWay;
                 this.SetBinding(GaugeHeightProperty, gaugeHeightBinding);
+                this.SetBinding(Grid.HeightProperty, gaugeHeightBinding);
 
                 Binding gaugeLeftBinding = new Binding();
                 gaugeLeftBinding.Source = value;
                 gaugeLeftBinding.Path = new PropertyPath("GaugeLeft");
                 gaugeLeftBinding.Mode = BindingMode.TwoWay;
                 this.SetBinding(LeftProperty, gaugeLeftBinding);
+                this.SetBinding(Canvas.LeftProperty, gaugeLeftBinding);
 
                 Binding gaugeTopBinding = new Binding();
                 gaugeTopBinding.Source = value;
                 gaugeTopBinding.Path = new PropertyPath("GaugeTop");
                 gaugeTopBinding.Mode = BindingMode.TwoWay;
                 this.SetBinding(TopProperty, gaugeTopBinding);
+                this.SetBinding(Canvas.TopProperty, gaugeTopBinding);
 
                 Binding gaugeWidthBinding = new Binding();
                 gaugeWidthBinding.Source = value;
                 gaugeWidthBinding.Path = new PropertyPath("GaugeWidth");
                 gaugeWidthBinding.Mode = BindingMode.TwoWay;
                 this.SetBinding(GaugeWidthProperty, gaugeWidthBinding);
+                this.SetBinding(Grid.WidthProperty, gaugeWidthBinding);
 
                 Binding gaugeColorBinding = new Binding();
                 gaugeColorBinding.Source = value;

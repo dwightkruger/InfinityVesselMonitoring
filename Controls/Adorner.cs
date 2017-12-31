@@ -23,7 +23,6 @@ namespace InfinityGroup.VesselMonitoring.Controls
 {
     public class Adorner : IDisposable
     {
-        private Popup _popup = new Popup();
         private Grid _grid = new Grid();
         private IGaugeItem _gaugeItem;
         private Rectangle _nwHandle;
@@ -60,7 +59,10 @@ namespace InfinityGroup.VesselMonitoring.Controls
             _swHandle = CreateHandle(HorizontalAlignment.Left, VerticalAlignment.Bottom, new Point(-1, 1), CoreCursorType.SizeNortheastSouthwest);
             _wHandle = CreateHandle(HorizontalAlignment.Left, VerticalAlignment.Center, new Point(-1, 0), CoreCursorType.SizeWestEast);
 
-            _popup.Child = _grid;
+            this.Popup = new Popup()
+            {
+                Child = _grid,
+            };
 
             Messenger.Default.Register<Color>(this, "OnThemeColorsChanged", (color) =>
             {
@@ -85,40 +87,37 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 popupLeftBinding.Source = _gaugeItem;
                 popupLeftBinding.Path = new PropertyPath("GaugeLeft");
                 popupLeftBinding.Mode = BindingMode.TwoWay;
-                _popup.SetBinding(Popup.HorizontalOffsetProperty, popupLeftBinding);
+                this.Popup.SetBinding(Popup.HorizontalOffsetProperty, popupLeftBinding);
 
                 Binding popupTopBinding = new Binding();
                 popupTopBinding.Source = _gaugeItem;
                 popupTopBinding.Path = new PropertyPath("GaugeTop");
                 popupTopBinding.Mode = BindingMode.TwoWay;
-                _popup.SetBinding(Popup.VerticalOffsetProperty, popupTopBinding);
+                this.Popup.SetBinding(Popup.VerticalOffsetProperty, popupTopBinding);
 
                 Binding popupHeightBinding = new Binding();
                 popupHeightBinding.Source = _gaugeItem;
                 popupHeightBinding.Path = new PropertyPath("GaugeHeight");
                 popupHeightBinding.Mode = BindingMode.TwoWay;
-                _popup.SetBinding(Popup.HeightProperty, popupHeightBinding);
+                this.Popup.SetBinding(Popup.HeightProperty, popupHeightBinding);
                 _boundingRectangle.SetBinding(Rectangle.HeightProperty, popupHeightBinding);
 
                 Binding popupWidthBinding = new Binding();
                 popupWidthBinding.Source = _gaugeItem;
                 popupWidthBinding.Path = new PropertyPath("GaugeWidth");
                 popupWidthBinding.Mode = BindingMode.TwoWay;
-                _popup.SetBinding(Popup.WidthProperty, popupWidthBinding);
+                this.Popup.SetBinding(Popup.WidthProperty, popupWidthBinding);
                 _boundingRectangle.SetBinding(Rectangle.WidthProperty, popupWidthBinding);
             }
         }
 
         public bool IsOpen
         {
-            get { return _popup.IsOpen; }
-            set { _popup.IsOpen = value; }
+            get { return this.Popup.IsOpen; }
+            set { this.Popup.IsOpen = value; }
         }
 
-        public Popup  Popup
-        {
-            get { return _popup; }
-        }
+        public Popup  Popup { get; private set; }
 
         private SolidColorBrush HandleColor { get; set; }
 
@@ -211,7 +210,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
                     }
 
                     _handleList = null;
-                    _popup.IsOpen = false;
+                    this.Popup.IsOpen = false;
                 }
 
                 disposedValue = true;

@@ -17,7 +17,6 @@ using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
@@ -75,18 +74,6 @@ namespace InfinityVesselMonitoringSoftware.Views
                     gauge.GaugeItem = gaugeItem;
                     gauge.SensorItem = App.SensorCollection.FindBySensorId(gaugeItem.SensorId);
 
-                    Binding gaugeLeftBinding = new Binding();
-                    gaugeLeftBinding.Path    = new PropertyPath("Left");
-                    gaugeLeftBinding.Source  = gauge;
-                    gaugeLeftBinding.Mode    = BindingMode.TwoWay;
-                    gauge.SetBinding(Canvas.LeftProperty, gaugeLeftBinding);
-
-                    Binding gaugeTopBinding = new Binding();
-                    gaugeTopBinding.Path    = new PropertyPath("Top");
-                    gaugeTopBinding.Source  = gauge;
-                    gaugeTopBinding.Mode = BindingMode.TwoWay;
-                    gauge.SetBinding(Canvas.TopProperty, gaugeTopBinding);
-
                     this.CanvasGrid.AddChildBaseGauge(gauge as BaseGauge, _nextRow, _nextCol);
 
                     _nextCol++;
@@ -133,20 +120,9 @@ namespace InfinityVesselMonitoringSoftware.Views
                             gauge = this.BuildTextControl(item);
                             break;
 
-                        case GaugeTypeEnum.TextGauge: break;
+                        case GaugeTypeEnum.TextGauge:
+                            break;
                     }
-
-                    Binding gaugeLeftBinding = new Binding();
-                    gaugeLeftBinding.Path = new PropertyPath("Left");
-                    gaugeLeftBinding.Source = gauge;
-                    gaugeLeftBinding.Mode = BindingMode.TwoWay;
-                    gauge.SetBinding(Canvas.LeftProperty, gaugeLeftBinding);
-
-                    Binding gaugeTopBinding = new Binding();
-                    gaugeTopBinding.Path = new PropertyPath("Top");
-                    gaugeTopBinding.Source = gauge;
-                    gaugeTopBinding.Mode = BindingMode.TwoWay;
-                    gauge.SetBinding(Canvas.TopProperty, gaugeTopBinding);
                 }
             });
         }
@@ -167,10 +143,7 @@ namespace InfinityVesselMonitoringSoftware.Views
 
         public BasePageViewModel ViewModel
         {
-            get
-            {
-                return this.VM;
-            }
+            get { return this.VM; }
         }
 
         #region public int Rows
