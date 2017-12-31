@@ -28,48 +28,39 @@ namespace InfinityVesselMonitoringSoftware
     {
         private const string SelectedAppThemeKey = "SelectedAppTheme";
 
-        public enum VesselElementTheme
-        {
-            Default = ElementTheme.Default,
-            Light = ElementTheme.Light,
-            Dark = ElementTheme.Dark,
-            Night = ElementTheme.Dark + 1,
-            HighContrast = Night + 1,   
-        }
-
         /// <summary>
         /// Gets the current actual theme of the app based on the requested theme of the
         /// root element, or if that value is Default, the requested theme of the Application.
         /// </summary>
-        public static VesselElementTheme ActualTheme
+        public static ElementTheme ActualTheme
         {
             get
             {
                 if (Window.Current.Content is FrameworkElement rootElement)
                 {
-                    if ((VesselElementTheme)rootElement.RequestedTheme != VesselElementTheme.Default)
+                    if ((ElementTheme)rootElement.RequestedTheme != ElementTheme.Default)
                     {
-                        return (VesselElementTheme)rootElement.RequestedTheme;
+                        return (ElementTheme)rootElement.RequestedTheme;
                     }
                 }
 
-                return GetEnum<VesselElementTheme>(Current.RequestedTheme.ToString());
+                return GetEnum<ElementTheme>(Current.RequestedTheme.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets (with LocalSettings persistence) the RequestedTheme of the root element.
         /// </summary>
-        public static VesselElementTheme RootTheme
+        public static ElementTheme RootTheme
         {
             get
             {
                 if (Window.Current.Content is FrameworkElement rootElement)
                 {
-                    return (VesselElementTheme) rootElement.RequestedTheme;
+                    return (ElementTheme) rootElement.RequestedTheme;
                 }
 
-                return VesselElementTheme.Default;
+                return ElementTheme.Default;
             }
             set
             {

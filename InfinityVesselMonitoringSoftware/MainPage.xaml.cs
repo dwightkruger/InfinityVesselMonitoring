@@ -6,6 +6,7 @@
 
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
+using GalaSoft.MvvmLight.Views;
 using InfinityGroup.VesselMonitoring.Controls.Converters;
 using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
@@ -15,7 +16,6 @@ using InfinityVesselMonitoringSoftware.AppSettings.Views;
 using InfinityVesselMonitoringSoftware.Gauges;
 using InfinityVesselMonitoringSoftware.MockNMEA;
 using InfinityVesselMonitoringSoftware.Views;
-using Microsoft.Graphics.Canvas.Text;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -40,6 +40,7 @@ namespace VesselMonitoring
     {
         private System.Threading.Semaphore _semaphore;
         private static ColorToSolidColorBrushConverter c_ctscbc = new ColorToSolidColorBrushConverter();
+        private readonly IDialogService _dialogService = new DialogService();
 
         public MainPage()
         {
@@ -48,8 +49,8 @@ namespace VesselMonitoring
             App.BuildDBTables.Directory = ApplicationData.Current.LocalFolder.Path + @"\" + typeof(App).ToString();
             App.BuildDBTables.DatabaseName = "InfinityGroupVesselMonitoring";
 
-            Task.Run(async () => 
-            { 
+            Task.Run(async () =>
+            {
                 await App.BuildDBTables.BuildVesselSettings();
                 //await App.BuildDBTables.VesselSettingsTable.BeginEmpty();
 
@@ -118,15 +119,10 @@ namespace VesselMonitoring
             _semaphore = new System.Threading.Semaphore(1, 1, typeof(App).ToString(), out isSemaphoneCreated);
             if (!isSemaphoneCreated)
             {
-                // BUGBUG set color so that the text is visible.
-                ContentDialog dialog = new ContentDialog()
-                {
-                    Title = Globals.ResourceLoader.GetString("DuplicateInstance"),
-                    Content = Globals.ResourceLoader.GetString("DuplicateApplicationMessage"),
-                    CloseButtonText = Globals.ResourceLoader.GetString("CloseApplication"),
-                };
-
-                await dialog.ShowAsync();
+                await _dialogService.ShowMessage(
+                    Globals.ResourceLoader.GetString("DuplicateApplicationMessage/Text"),
+                    Globals.ResourceLoader.GetString("DuplicateInstance/Text"),
+                    Globals.ResourceLoader.GetString("CloseApplication/Content"), () => { });
 
                 Application.Current.Exit();
                 return;
@@ -182,7 +178,7 @@ namespace VesselMonitoring
         }
 
         async private Task LoadPages()
-        { 
+        {
             this.MainPagePivot.Items.Clear();
 
             Canvas canvas;
@@ -220,7 +216,7 @@ namespace VesselMonitoring
                 this.MainPagePivot.Items.Add(pivotItem);
 
                 //Get all of the gauges for this page and tell the page to build itself.
-                List <IGaugeItem> gaugeItemList = await App.GaugeItemCollection.BeginFindAllByPageId(item.PageId);
+                List<IGaugeItem> gaugeItemList = await App.GaugeItemCollection.BeginFindAllByPageId(item.PageId);
                 if ((null != gaugeItemList) && (gaugeItemList.Count > 0))
                 {
                     Messenger.Default.Send<List<IGaugeItem>>(gaugeItemList, "BuildGaugeItemList");
@@ -256,10 +252,22 @@ namespace VesselMonitoring
             }
         }
 
+        ResourceDictionary _nightResourceDictionary = new ResourceDictionary()
+        {
+            Source = new Uri("ms-appx:///NightThemeResources.xaml", UriKind.Absolute),
+        };
+
+        private bool _isNightLoaded = false;
 
         private void Light_Click(object sender, RoutedEventArgs e)
         {
-            App.RootTheme = App.GetEnum<App.VesselElementTheme>("Light");
+            if (_isNightLoaded)
+            {
+                Application.Current.Resources.MergedDictionaries.Remove(_nightResourceDictionary);
+                _isNightLoaded = false;
+            }
+            App.RootTheme = App.GetEnum<ElementTheme>("Light");
+
             App.VesselSettings.ThemeBackgroundColor = Colors.White;
             App.VesselSettings.ThemeForegroundColor = Colors.Black;
             this.Restyle();
@@ -267,7 +275,12 @@ namespace VesselMonitoring
 
         private void Dark_Click(object sender, RoutedEventArgs e)
         {
-            App.RootTheme = App.GetEnum<App.VesselElementTheme>("Dark");
+            if (_isNightLoaded)
+            {
+                Application.Current.Resources.MergedDictionaries.Remove(_nightResourceDictionary);
+                _isNightLoaded = false;
+            }
+            App.RootTheme = App.GetEnum<ElementTheme>("Dark");
 
             App.VesselSettings.ThemeBackgroundColor = Colors.Black;
             App.VesselSettings.ThemeForegroundColor = Colors.White;
@@ -276,7 +289,12 @@ namespace VesselMonitoring
 
         private void Night_Click(object sender, RoutedEventArgs e)
         {
-            App.RootTheme = App.GetEnum<App.VesselElementTheme>("Dark");
+            App.RootTheme = App.GetEnum<ElementTheme>("Dark");
+            if (!_isNightLoaded)
+            {
+                Application.Current.Resources.MergedDictionaries.Add(_nightResourceDictionary);
+                _isNightLoaded = true;
+            }
 
             App.VesselSettings.ThemeBackgroundColor = Colors.Black;
             App.VesselSettings.ThemeForegroundColor = Colors.Red;

@@ -5,8 +5,6 @@
     xmlns:y="using:Windows.UI.Xaml.Media"
     xmlns:maps="using:Windows.UI.Xaml.Controls.Maps">
 
-  <ResourceDictionary.ThemeDictionaries>
-    <ResourceDictionary x:Key="Night" x:Name="Night">
       <FontFamily x:Key="ContentControlThemeFontFamily">XamlAutoFontFamily</FontFamily>
       <FontFamily x:Key="MTCMediaFontFamily">XamlAutoFontFamily</FontFamily>
       <FontFamily x:Key="PhoneFontFamilyNormal">Segoe WP</FontFamily>
@@ -1171,7 +1169,7 @@
       <SolidColorBrush x:Key="FlyoutBackgroundThemeBrush" Color="#FFFFFFFF" />
       <SolidColorBrush x:Key="FlyoutBorderThemeBrush" Color="#FF000000" />
       <SolidColorBrush x:Key="FocusVisualBlackStrokeThemeBrush" Color="Black" />
-      <SolidColorBrush x:Key="FocusVisualWhiteStrokeThemeBrush" Color="White" />
+      <SolidColorBrush x:Key="FocusVisualWhiteStrokeThemeBrush" Color="Red" />
       <SolidColorBrush x:Key="HyperlinkButtonBackgroundThemeBrush" Color="Transparent" />
       <SolidColorBrush x:Key="HyperlinkButtonBorderThemeBrush" Color="Transparent" />
       <SolidColorBrush x:Key="HyperlinkDisabledThemeBrush" Color="#66000000" />
@@ -1462,7 +1460,5 @@
       <StaticResource x:Key="InkToolbarFlyoutItemHoverSelectedBackgroundThemeBrush" ResourceKey="SystemControlHighlightListAccentMediumBrush" />
       <StaticResource x:Key="InkToolbarFlyoutItemSelectedBackgroundThemeBrush" ResourceKey="SystemControlHighlightListAccentLowBrush" />
       <StaticResource x:Key="InkToolbarFlyoutItemSelectedForegroundThemeBrush" ResourceKey="InkToolbarButtonSelectedForegroundThemeBrush" />
-    </ResourceDictionary>
-  </ResourceDictionary.ThemeDictionaries>
     
 </ResourceDictionary>

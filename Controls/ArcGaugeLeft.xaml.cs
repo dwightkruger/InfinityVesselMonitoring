@@ -422,21 +422,27 @@ namespace InfinityGroup.VesselMonitoring.Controls
         override protected void RefreshLeft(object oldValue, object newValue)
         {
             Canvas.SetLeft(this.MainGrid, this.Left);
+            this.canvasControl?.Invalidate();
         }
 
         override protected void RefreshTop(object oldValue, object newValue)
         {
             Canvas.SetTop(this.MainGrid, this.Top);
+            this.canvasControl?.Invalidate();
         }
 
         override protected void RefreshGaugeHeight(object oldValue, object newValue)
         {
             this.canvasControl.Height = Convert.ToDouble(newValue);
+            this.MainGrid.Height = Convert.ToDouble(newValue);
+            this.canvasControl?.Invalidate();
         }
 
         override protected void RefreshGaugeWidth(object oldValue, object newValue)
         {
             this.canvasControl.Width = Convert.ToDouble(newValue);
+            this.MainGrid.Width = Convert.ToDouble(newValue);
+            this.canvasControl?.Invalidate();
         }
 
         override protected void RefreshMaxValue(object oldValue, object newValue)

@@ -45,10 +45,15 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             if (this.InEditMode)
             {
-                _gaugeItem.GaugeLeft += e.Delta.Translation.X * e.Delta.Scale;
-                _gaugeItem.GaugeTop += e.Delta.Translation.Y * e.Delta.Scale;
-                _gaugeItem.GaugeWidth += e.Delta.Translation.X * e.Delta.Scale;
-                _gaugeItem.GaugeHeight += e.Delta.Translation.Y * e.Delta.Scale;
+                double width = _gaugeItem.GaugeWidth + e.Delta.Translation.X * e.Delta.Scale;
+                double height = _gaugeItem.GaugeHeight + e.Delta.Translation.Y * e.Delta.Scale;
+                double top = _gaugeItem.GaugeTop + e.Delta.Translation.Y * e.Delta.Scale;
+                double left = _gaugeItem.GaugeLeft + e.Delta.Translation.X * e.Delta.Scale;
+
+                _gaugeItem.GaugeTop = Math.Max(0, top);
+                _gaugeItem.GaugeLeft = Math.Max(0, left);
+                //_gaugeItem.GaugeWidth = Math.Max(50, width);
+                //_gaugeItem.GaugeHeight = Math.Max(50, height);
             }
         }
 

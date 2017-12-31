@@ -4,9 +4,7 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
-using InfinityGroup.VesselMonitoring.Controls.Converters;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -86,33 +84,28 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 Binding popupLeftBinding = new Binding();
                 popupLeftBinding.Source = _gaugeItem;
                 popupLeftBinding.Path = new PropertyPath("GaugeLeft");
+                popupLeftBinding.Mode = BindingMode.TwoWay;
                 _popup.SetBinding(Popup.HorizontalOffsetProperty, popupLeftBinding);
 
                 Binding popupTopBinding = new Binding();
                 popupTopBinding.Source = _gaugeItem;
                 popupTopBinding.Path = new PropertyPath("GaugeTop");
+                popupTopBinding.Mode = BindingMode.TwoWay;
                 _popup.SetBinding(Popup.VerticalOffsetProperty, popupTopBinding);
 
                 Binding popupHeightBinding = new Binding();
                 popupHeightBinding.Source = _gaugeItem;
                 popupHeightBinding.Path = new PropertyPath("GaugeHeight");
+                popupHeightBinding.Mode = BindingMode.TwoWay;
                 _popup.SetBinding(Popup.HeightProperty, popupHeightBinding);
+                _boundingRectangle.SetBinding(Rectangle.HeightProperty, popupHeightBinding);
 
                 Binding popupWidthBinding = new Binding();
                 popupWidthBinding.Source = _gaugeItem;
                 popupWidthBinding.Path = new PropertyPath("GaugeWidth");
+                popupWidthBinding.Mode = BindingMode.TwoWay;
                 _popup.SetBinding(Popup.WidthProperty, popupWidthBinding);
-
-
-                Binding rectangleHeightBinding = new Binding();
-                rectangleHeightBinding.Source = _gaugeItem;
-                rectangleHeightBinding.Path = new PropertyPath("GaugeHeight");
-                _boundingRectangle.SetBinding(Rectangle.HeightProperty, rectangleHeightBinding);
-
-                Binding rectangleWidthBinding = new Binding();
-                rectangleWidthBinding.Source = _gaugeItem;
-                rectangleWidthBinding.Path = new PropertyPath("GaugeWidth");
-                _boundingRectangle.SetBinding(Rectangle.WidthProperty, rectangleWidthBinding);
+                _boundingRectangle.SetBinding(Rectangle.WidthProperty, popupWidthBinding);
             }
         }
 
@@ -172,14 +165,20 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
             if (allowedDeleta.X != 0)
             {
-                _gaugeItem.GaugeLeft += e.Delta.Translation.X * e.Delta.Scale;
-                _gaugeItem.GaugeWidth += e.Delta.Translation.X * e.Delta.Scale * allowedDeleta.X;
+                double left = _gaugeItem.GaugeLeft + e.Delta.Translation.X * e.Delta.Scale;
+                _gaugeItem.GaugeLeft = Math.Max(0, left);
+
+                double width = _gaugeItem.GaugeWidth + e.Delta.Translation.X * e.Delta.Scale * allowedDeleta.X;
+                _gaugeItem.GaugeWidth = Math.Max(10, width);
             }
 
             if (allowedDeleta.Y != 0)
             {
-                _gaugeItem.GaugeTop += e.Delta.Translation.Y * e.Delta.Scale;
-                _gaugeItem.GaugeHeight += e.Delta.Translation.Y * e.Delta.Scale * allowedDeleta.Y;
+                double top = _gaugeItem.GaugeTop + e.Delta.Translation.Y * e.Delta.Scale;
+                _gaugeItem.GaugeTop = Math.Max(0, top);
+
+                double height = _gaugeItem.GaugeHeight + e.Delta.Translation.Y * e.Delta.Scale * allowedDeleta.Y;
+                _gaugeItem.GaugeHeight = Math.Max(10, height);
             }
         }
 
