@@ -70,10 +70,10 @@ namespace InfinityVesselMonitoringSoftware.Views
                         case GaugeTypeEnum.TextGauge: break;
                     }
 
-                    // Calculate the row/col position of this gauge
                     gauge.GaugeItem = gaugeItem;
                     gauge.SensorItem = App.SensorCollection.FindBySensorId(gaugeItem.SensorId);
 
+                    // Calculate the row/col position of this gauge
                     this.CanvasGrid.AddChildBaseGauge(gauge as BaseGauge, _nextRow, _nextCol);
 
                     _nextCol++;
@@ -224,6 +224,8 @@ namespace InfinityVesselMonitoringSoftware.Views
         /// <param name="e"></param>
         private void BasePageView_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
+            this.CanvasGrid.ChildPositionComplete();
+
             Image image = e.OriginalSource as Image;
             if (null != image)
             {

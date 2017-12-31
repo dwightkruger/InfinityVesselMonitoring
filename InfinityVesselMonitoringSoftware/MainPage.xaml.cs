@@ -22,11 +22,9 @@ using System.Threading.Tasks;
 using VesselMonitoringSuite.Devices;
 using VesselMonitoringSuite.Sensors;
 using VesselMonitoringSuite.Views;
-using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI;
-using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -163,9 +161,15 @@ namespace VesselMonitoring
 
             await this.PopulateDemoSensorCollection();
 
-            if (App.VesselSettings.ThemeForegroundColor == Colors.Black) this.Light_Click(this, null);
-            else if (App.VesselSettings.ThemeForegroundColor == Colors.White) this.Dark_Click(this, null);
-            else if (App.VesselSettings.ThemeForegroundColor == Colors.Red) this.Night_Click(this, null);
+            if (App.VesselSettings.IsNightMode)
+            {
+                this.Night_Click(this, null);
+            }
+            else
+            {
+                if (App.VesselSettings.ThemeForegroundColor == Colors.White) this.Dark_Click(this, null);
+                else this.Light_Click(this, null);
+            }
         }
 
         async public Task Reset()
@@ -257,51 +261,54 @@ namespace VesselMonitoring
             Source = new Uri("ms-appx:///NightThemeResources.xaml", UriKind.Absolute),
         };
 
-        private bool _isNightLoaded = false;
-
-        private void Light_Click(object sender, RoutedEventArgs e)
+        async private void Light_Click(object sender, RoutedEventArgs e)
         {
-            if (_isNightLoaded)
+            if (App.VesselSettings.IsNightMode)
             {
                 Application.Current.Resources.MergedDictionaries.Remove(_nightResourceDictionary);
-                _isNightLoaded = false;
+                App.VesselSettings.IsNightMode = false;
+                await App.VesselSettings.BeginCommit();
             }
+
             App.RootTheme = App.GetEnum<ElementTheme>("Light");
 
             App.VesselSettings.ThemeBackgroundColor = Colors.White;
             App.VesselSettings.ThemeForegroundColor = Colors.Black;
-            this.Restyle();
+            this.RecolorControls();
         }
 
-        private void Dark_Click(object sender, RoutedEventArgs e)
+        async private void Dark_Click(object sender, RoutedEventArgs e)
         {
-            if (_isNightLoaded)
+            if (App.VesselSettings.IsNightMode)
             {
                 Application.Current.Resources.MergedDictionaries.Remove(_nightResourceDictionary);
-                _isNightLoaded = false;
+                App.VesselSettings.IsNightMode = false;
+                await App.VesselSettings.BeginCommit();
             }
+
             App.RootTheme = App.GetEnum<ElementTheme>("Dark");
 
             App.VesselSettings.ThemeBackgroundColor = Colors.Black;
             App.VesselSettings.ThemeForegroundColor = Colors.White;
-            this.Restyle();
+            this.RecolorControls();
         }
 
-        private void Night_Click(object sender, RoutedEventArgs e)
+        async private void Night_Click(object sender, RoutedEventArgs e)
         {
             App.RootTheme = App.GetEnum<ElementTheme>("Dark");
-            if (!_isNightLoaded)
+            if (!App.VesselSettings.IsNightMode)
             {
                 Application.Current.Resources.MergedDictionaries.Add(_nightResourceDictionary);
-                _isNightLoaded = true;
+                App.VesselSettings.IsNightMode = true;
+                await App.VesselSettings.BeginCommit();
             }
 
             App.VesselSettings.ThemeBackgroundColor = Colors.Black;
             App.VesselSettings.ThemeForegroundColor = Colors.Red;
-            this.Restyle();
+            this.RecolorControls();
         }
 
-        private void Restyle()
+        private void RecolorControls()
         {
             foreach (IGaugeItem gaugeItem in App.GaugeItemCollection)
             {
@@ -309,40 +316,8 @@ namespace VesselMonitoring
                 gaugeItem.GaugeColor = App.VesselSettings.ThemeForegroundColor;
             }
 
-            //this.MainPageGrid.Background = new SolidColorBrush(App.VesselSettings.ThemeBackgroundColor);
-
-            //this.LightButton.Foreground = new SolidColorBrush(foregroundColor);
-            //this.LightButton.Background = new SolidColorBrush(App.VesselSettings.ThemeBackgroundColor);
-            //this.DarkButton.Foreground = this.LightButton.Foreground;
-            //this.DarkButton.Background = this.LightButton.Background;
-            //this.NightButton.Foreground = this.LightButton.Foreground;
-            //this.NightButton.Background = this.LightButton.Background;
-
             Messenger.Default.Send<Color>(App.VesselSettings.ThemeForegroundColor, "OnThemeColorsChanged");
             Task.Run(async () => { await App.VesselSettings.BeginCommit(); }).Wait();
-        }
-
-        public static async Task BeginShowNewWindow<TView>()
-        {
-            ApplicationView currentView = ApplicationView.GetForCurrentView();
-            CoreApplicationView newView = CoreApplication.CreateNewView();
-            await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-            {
-                Window newWindow = Window.Current;
-                ApplicationView newAppView = ApplicationView.GetForCurrentView();
-                newAppView.Title = "Sensor Editor";
-
-                Frame frame = new Frame();
-                frame.Navigate(typeof(TView), null);
-                newWindow.Content = frame;
-                newWindow.Activate();
-
-                await ApplicationViewSwitcher.TryShowAsStandaloneAsync(
-                    newAppView.Id,
-                    ViewSizePreference.Custom,
-                    currentView.Id,
-                    ViewSizePreference.UseMinimum);
-            });
         }
 
         async Task PopulateDemoGaugePageCollection()

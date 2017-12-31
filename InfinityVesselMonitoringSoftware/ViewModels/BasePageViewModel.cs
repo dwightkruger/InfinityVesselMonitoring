@@ -40,6 +40,8 @@ namespace InfinityVesselMonitoringSoftware.ViewModels
             {
                 case NotifyCollectionChangedAction.Add:
                     {
+                        // We want to only automatically add sensors which are of the correct type. For example
+                        // on the tank page only automatically add tank sensors.
                         List<IGaugeItem> addedGaugeItems= new List<IGaugeItem>();
                         foreach (ISensorItem sensorItem in e.NewItems)
                         {
@@ -59,6 +61,8 @@ namespace InfinityVesselMonitoringSoftware.ViewModels
                             }
                         }
 
+                        // If we have found a sensor to add, them send a message to the page to display
+                        // the corresponding gauges.
                         if (addedGaugeItems.Count > 0)
                         {
                             Messenger.Default.Send<List<IGaugeItem>>(addedGaugeItems, "AddGaugeItemList");
@@ -83,6 +87,7 @@ namespace InfinityVesselMonitoringSoftware.ViewModels
                             }
                         }
 
+                        // If we have found gauges to delete, send a message to the page telling it which gauges to delete.
                         if (deletedGaugeItems.Count<IGaugeItem>() > 0)
                         {
                             Messenger.Default.Send<List<IGaugeItem>>(deletedGaugeItems.ToList<IGaugeItem>(), "RemoveGaugeItemList");
@@ -98,11 +103,6 @@ namespace InfinityVesselMonitoringSoftware.ViewModels
                     this.GaugeItemList.Clear();
                 break;
             }
-        }
-
-        public IVesselSettings VesselSettings
-        {
-            get { return App.VesselSettings; }
         }
 
         public bool InEditMode

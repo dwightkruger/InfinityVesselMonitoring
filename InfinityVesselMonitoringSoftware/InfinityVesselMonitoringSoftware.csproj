@@ -173,6 +173,9 @@
     <Content Include="Graphics\Exit-dark.png" />
     <Content Include="Graphics\Exit-light.png" />
     <Content Include="Graphics\Exit-red.png" />
+    <Content Include="Graphics\Fullscreen-dark.png" />
+    <Content Include="Graphics\Fullscreen-light.png" />
+    <Content Include="Graphics\Fullscreen-red.png" />
     <Content Include="Graphics\Germany Flag.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

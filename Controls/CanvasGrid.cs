@@ -114,6 +114,11 @@ namespace InfinityGroup.VesselMonitoring.Controls
             _gridChildren.Add(new GridChild(child, row, column));
         }
 
+        public void ChildPositionComplete()
+        {
+            _gridChildren.Clear();
+        }
+
         protected override Size MeasureOverride(Size constraint)
         {
             Size newSize = base.MeasureOverride(constraint);
@@ -129,8 +134,6 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 child.Gauge.Top  = (child.Row * rowHeight) + deltaY;
                 child.Gauge.Left = (child.Column * rowWidth) + deltaX;
             }
-
-            _gridChildren.Clear();
 
             return newSize;
         }

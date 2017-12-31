@@ -47,8 +47,8 @@ namespace InfinityGroup.VesselMonitoring.Controls
             {
                 double width = _gaugeItem.GaugeWidth + e.Delta.Translation.X * e.Delta.Scale;
                 double height = _gaugeItem.GaugeHeight + e.Delta.Translation.Y * e.Delta.Scale;
-                double top = _gaugeItem.GaugeTop + e.Delta.Translation.Y * e.Delta.Scale;
-                double left = _gaugeItem.GaugeLeft + e.Delta.Translation.X * e.Delta.Scale;
+                double top = _gaugeItem.GaugeTop + e.Delta.Translation.Y * e.Delta.Scale * 1.1;
+                double left = _gaugeItem.GaugeLeft + e.Delta.Translation.X * e.Delta.Scale * 1.1;
 
                 _gaugeItem.GaugeTop = Math.Max(0, top);
                 _gaugeItem.GaugeLeft = Math.Max(0, left);

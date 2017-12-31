@@ -18,15 +18,12 @@
     <UserControl.Resources>
         <vm:BasePageViewModel x:Key="BasePageViewModel" x:Name="VM"/>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-        <converters:ColorToSolidColorBrushConverter x:Key="ColorToSolidColorBrushConverter"/>
     </UserControl.Resources>
 
     <Grid
         x:Name="MainGrid"
         DataContext="{StaticResource BasePageViewModel}"
         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-        <!--Background="{Binding VesselSettings.ThemeBackgroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}}">-->
 
         <tools:AlignmentGrid 
             x:Name="AlignmentGrid"
