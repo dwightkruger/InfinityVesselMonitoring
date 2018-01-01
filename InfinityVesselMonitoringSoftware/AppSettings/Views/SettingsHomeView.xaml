@@ -63,6 +63,7 @@
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
+                <RowDefinition/>
             </Grid.RowDefinitions>
     
             <Grid.ColumnDefinitions>
@@ -107,8 +108,16 @@
                 x:Uid="DatabaseEditor"/>
 
             <controls:ImageToggleButton   
-                x:Name="ExitButton" 
+                x:Name="FullscreenButton" 
                 Grid.Row="4" 
+                Grid.Column="0" 
+                Click="FullscreenButton_Click"
+                Source="ms-appx:///Graphics/Fullscreen-light.png"
+                x:Uid="FullscreenEditor"/>
+
+            <controls:ImageToggleButton   
+                x:Name="ExitButton" 
+                Grid.Row="5" 
                 Grid.Column="0" 
                 Command="{x:Bind Path=VM.ExitCommand}"
                 Source="ms-appx:///Graphics/Exit-light.png"

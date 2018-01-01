@@ -135,6 +135,9 @@
   <data name="ExitEditor.Text" xml:space="preserve">
     <value>Exit Application</value>
   </data>
+  <data name="FullscreenEditor.Text" xml:space="preserve">
+    <value>Full Screen</value>
+  </data>
   <data name="Ok.Content" xml:space="preserve">
     <value>Ok</value>
   </data>

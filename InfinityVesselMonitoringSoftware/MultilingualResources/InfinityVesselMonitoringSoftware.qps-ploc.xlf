@@ -50,6 +50,10 @@
           <source>Exit Application</source>
           <target state="new">Exit Application</target>
         </trans-unit>
+        <trans-unit id="FullscreenEditor.Text" translate="yes" xml:space="preserve">
+          <source>Full Screen</source>
+          <target state="new">Full Screen</target>
+        </trans-unit>
       </group>
     </body>
   </file>

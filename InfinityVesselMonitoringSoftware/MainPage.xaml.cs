@@ -81,8 +81,6 @@ namespace VesselMonitoring
 
             Telemetry.TrackEvent("Application Started");
 
-            // Specify the startup mode to be full screen.
-            //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
         }
 

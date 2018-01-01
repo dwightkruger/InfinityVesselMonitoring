@@ -22,6 +22,11 @@ namespace InfinityGroup.VesselMonitoring.Controls
             this.InitializeComponent();
         }
 
+        public Image Image
+        {
+            get { return VesselSettingsImage; }
+        }
+
         #region Source
         public static readonly DependencyProperty SourceProperty = DependencyProperty.Register(
             "Source",

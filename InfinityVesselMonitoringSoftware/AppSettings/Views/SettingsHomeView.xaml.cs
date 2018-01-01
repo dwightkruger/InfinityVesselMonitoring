@@ -16,6 +16,12 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
+using Lumia.Imaging;
+using Windows.Storage;
+using Windows.Storage.Streams;
+using Lumia.Imaging.Adjustments;
+using System.Threading.Tasks;
+using System.IO;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -38,6 +44,9 @@ namespace InfinityVesselMonitoringSoftware.AppSettings.Views
         private static ImageSource c_exitDark;
         private static ImageSource c_exitLight;
         private static ImageSource c_exitRed;
+        private static ImageSource c_fullscreenDark;
+        private static ImageSource c_fullscreenLight;
+        private static ImageSource c_fullscreenRed;
 
         private static SolidColorBrush c_LightBrush;
         private static SolidColorBrush c_DarkBrush;
@@ -47,21 +56,24 @@ namespace InfinityVesselMonitoringSoftware.AppSettings.Views
         static SettingsHomeView()
         {
             // BUGBUG - we should figure out how to recolor an image on the fly.
-            c_shipDark      = ImageFromUri("ms-appx:///Graphics/Ship-dark.png");
-            c_shipLight     = ImageFromUri("ms-appx:///Graphics/Ship-light.png");
-            c_shipRed       = ImageFromUri("ms-appx:///Graphics/Ship-red.png");
-            c_databaseDark  = ImageFromUri("ms-appx:///Graphics/Database-dark.png");
-            c_databaseLight = ImageFromUri("ms-appx:///Graphics/Database-light.png");
-            c_databaseRed   = ImageFromUri("ms-appx:///Graphics/Database-red.png");
-            c_pagesDark     = ImageFromUri("ms-appx:///Graphics/Pages-dark.png");
-            c_pagesLight    = ImageFromUri("ms-appx:///Graphics/Pages-light.png");
-            c_pagesRed      = ImageFromUri("ms-appx:///Graphics/Pages-red.png");
-            c_sensorDark    = ImageFromUri("ms-appx:///Graphics/Sensor-dark.png");
-            c_sensorLight   = ImageFromUri("ms-appx:///Graphics/Sensor-light.png");
-            c_sensorRed     = ImageFromUri("ms-appx:///Graphics/Sensor-red.png");
-            c_exitDark      = ImageFromUri("ms-appx:///Graphics/Exit-dark.png");
-            c_exitLight     = ImageFromUri("ms-appx:///Graphics/Exit-light.png");
-            c_exitRed       = ImageFromUri("ms-appx:///Graphics/Exit-red.png");
+            c_shipDark        = ImageFromUri("ms-appx:///Graphics/Ship-dark.png");
+            c_shipLight       = ImageFromUri("ms-appx:///Graphics/Ship-light.png");
+            c_shipRed         = ImageFromUri("ms-appx:///Graphics/Ship-red.png");
+            c_databaseDark    = ImageFromUri("ms-appx:///Graphics/Database-dark.png");
+            c_databaseLight   = ImageFromUri("ms-appx:///Graphics/Database-light.png");
+            c_databaseRed     = ImageFromUri("ms-appx:///Graphics/Database-red.png");
+            c_pagesDark       = ImageFromUri("ms-appx:///Graphics/Pages-dark.png");
+            c_pagesLight      = ImageFromUri("ms-appx:///Graphics/Pages-light.png");
+            c_pagesRed        = ImageFromUri("ms-appx:///Graphics/Pages-red.png");
+            c_sensorDark      = ImageFromUri("ms-appx:///Graphics/Sensor-dark.png");
+            c_sensorLight     = ImageFromUri("ms-appx:///Graphics/Sensor-light.png");
+            c_sensorRed       = ImageFromUri("ms-appx:///Graphics/Sensor-red.png");
+            c_exitDark        = ImageFromUri("ms-appx:///Graphics/Exit-dark.png");
+            c_exitLight       = ImageFromUri("ms-appx:///Graphics/Exit-light.png");
+            c_exitRed         = ImageFromUri("ms-appx:///Graphics/Exit-red.png");
+            c_fullscreenDark  = ImageFromUri("ms-appx:///Graphics/Fullscreen-dark.png");
+            c_fullscreenLight = ImageFromUri("ms-appx:///Graphics/Fullscreen-light.png");
+            c_fullscreenRed   = ImageFromUri("ms-appx:///Graphics/Fullscreen-red.png");
 
             c_LightBrush = new SolidColorBrush(Colors.LightGray);
             c_DarkBrush  = new SolidColorBrush(Colors.DarkGray);
@@ -91,18 +103,6 @@ namespace InfinityVesselMonitoringSoftware.AppSettings.Views
             {
                 this.ResetImageColors();
             });
-
-            // Bind each of the TextBlock forground colors so that when someone moves between dark/light/night
-            // moded the text blocks automatically update/
-            //Binding textBlockBinding = new Binding();
-            //textBlockBinding.Source = App.VesselSettings;
-            //textBlockBinding.Path = new PropertyPath("ThemeForegroundColor");
-            //textBlockBinding.Converter = c_ctscbc;
-
-            //foreach (var child in MainViewbox.FindDescendants<TextBlock>())
-            //{
-            //    //child.SetBinding(TextBlock.ForegroundProperty, textBlockBinding);
-            //}
 
             // Bind the background color for each of the toggle buttons so that we the theme changes, the background
             // color changes.
@@ -143,39 +143,93 @@ namespace InfinityVesselMonitoringSoftware.AppSettings.Views
         }
         #endregion
 
-        private void ResetImageColors()
+        async private void ResetImageColors()
         {
             if (App.VesselSettings.ThemeForegroundColor == Colors.White)
             {
-                VesselSettingsButton.Source = c_shipDark;
+                await RecolorImage(Colors.Red, new Uri("ms-appx:///Graphics/Ship-light.png"), VesselSettingsButton.Image);
+
+                //VesselSettingsButton.Source = c_shipDark;
                 SensorsButton.Source = c_sensorDark;
                 PagesButton.Source = c_pagesDark;
                 DatabaseButton.Source = c_databaseDark;
                 ExitButton.Source = c_exitDark;
+                FullscreenButton.Source = c_fullscreenDark;
 
                 this.IsSelectedColor = c_DarkBrush;
             }
             else if (App.VesselSettings.ThemeForegroundColor == Colors.Red)
             {
-                VesselSettingsButton.Source = c_shipRed;
+                await RecolorImage(Colors.Red, new Uri("ms-appx:///Graphics/Ship-light.png"), VesselSettingsButton.Image);
+
+                //VesselSettingsButton.Source = c_shipRed;
                 SensorsButton.Source = c_sensorRed;
                 PagesButton.Source = c_pagesRed;
                 DatabaseButton.Source = c_databaseRed;
+                FullscreenButton.Source = c_fullscreenRed;
                 ExitButton.Source = c_exitRed;
 
                 this.IsSelectedColor = c_NightBrush;
             }
             else
             {
-                VesselSettingsButton.Source = c_shipLight;
+                await RecolorImage(Colors.Red, new Uri("ms-appx:///Graphics/Ship-light.png"), VesselSettingsButton.Image);
+
+                //VesselSettingsButton.Source = c_shipLight;
                 SensorsButton.Source = c_sensorLight;
                 PagesButton.Source = c_pagesLight;
                 DatabaseButton.Source = c_databaseLight;
+                FullscreenButton.Source = c_fullscreenLight;
                 ExitButton.Source = c_exitLight;
 
                 this.IsSelectedColor = c_LightBrush;
             }
+        }
 
+        async private Task<bool> RecolorImage(Color color, Uri uri, Image image)
+        {
+            return true;
+
+            WriteableBitmap writeableBitmap = new WriteableBitmap((int)image.Width, (int)image.Height);
+            StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(uri);
+            Stream stream = await file.OpenStreamForReadAsync();
+            stream.Seek(0, 0);
+
+            using (var imageStream = new StreamImageSource(stream))
+            {
+                // Applying the custom filter effect to the image stream
+                using (var customEffect = new ColorAdjustEffect(imageStream, 0.00, 0.50, 0.00))
+                {
+                    // Rendering the resulting image to a WriteableBitmap
+                    using (var renderer = new WriteableBitmapRenderer(customEffect, writeableBitmap))
+                    {
+                        // Applying the WriteableBitmap to our xaml image control
+                        image.Source = await renderer.RenderAsync();
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Allow the user to set the app to fully screen mode, thus hiding the title bar.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FullscreenButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.FullscreenButton.IsSelected = !this.FullscreenButton.IsSelected;
+
+            // Specify the startup mode to be full screen.
+            if (this.FullscreenButton.IsSelected.Value)
+            {
+                Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+            }
+            else
+            {
+                Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().ExitFullScreenMode();
+            }
         }
     }
 }
