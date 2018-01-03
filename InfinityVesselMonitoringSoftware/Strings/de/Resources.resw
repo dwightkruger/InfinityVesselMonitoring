@@ -12,4 +12,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Cancel.Content" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="Ok.Content" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Sensors.Text" xml:space="preserve">
+    <value>Sensoren</value>
+  </data>
+  <data name="CloseApplication.Content" xml:space="preserve">
+    <value>Anwendung schließen</value>
+  </data>
+  <data name="DatabaseEditor.Text" xml:space="preserve">
+    <value>Datenbank</value>
+  </data>
+  <data name="PagesEditor.Text" xml:space="preserve">
+    <value>Seiten</value>
+  </data>
+  <data name="SensorsEditor.Text" xml:space="preserve">
+    <value>Sensoren</value>
+  </data>
+  <data name="ExitEditor.Text" xml:space="preserve">
+    <value>Anwendung beenden</value>
+  </data>
+  <data name="FullscreenEditor.Text" xml:space="preserve">
+    <value>Vollbild</value>
+  </data>
 </root>

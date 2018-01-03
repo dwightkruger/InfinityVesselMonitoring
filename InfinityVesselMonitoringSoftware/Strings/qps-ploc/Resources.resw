@@ -12,4 +12,40 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Cancel.Content" xml:space="preserve">
+    <value>[CEF14][!!_Ćãиčèļ_!!]</value>
+  </data>
+  <data name="Ok.Content" xml:space="preserve">
+    <value>[867C1][!!_Ôĸ_!!]</value>
+  </data>
+  <data name="Sensors.Text" xml:space="preserve">
+    <value>[90C30][!!_Ŝêйšõѓś_!!]</value>
+  </data>
+  <data name="CloseApplication.Content" xml:space="preserve">
+    <value>[C050D][!!_Ċļòşé Ãρþłìćáťìõи_!!]</value>
+  </data>
+  <data name="DuplicateApplicationMessage.Text" xml:space="preserve">
+    <value>[1DF3F][!!_Àй íηšťãиĉè óƒ тнíś þŗóĝŗâм ìś àĺѓéãðý ŗùήηíηğ._!!]</value>
+  </data>
+  <data name="DuplicateInstance.Text" xml:space="preserve">
+    <value>[88303][!!_Ðúρłįčàţè Îηşτâйćê_!!]</value>
+  </data>
+  <data name="DatabaseEditor.Text" xml:space="preserve">
+    <value>[7F239][!!_ÐãţáБàšè_!!]</value>
+  </data>
+  <data name="PagesEditor.Text" xml:space="preserve">
+    <value>[E5454][!!_Þáğêŝ_!!]</value>
+  </data>
+  <data name="SensorsEditor.Text" xml:space="preserve">
+    <value>[B3F34][!!_Šęйşòѓş_!!]</value>
+  </data>
+  <data name="VesselSettingsEditor.Text" xml:space="preserve">
+    <value>[8861C][!!_Vèŝšéľ Šêтτíиĝş_!!]</value>
+  </data>
+  <data name="ExitEditor.Text" xml:space="preserve">
+    <value>[C1F5D][!!_Éхíτ Áρþĺìĉáťîôη_!!]</value>
+  </data>
+  <data name="FullscreenEditor.Text" xml:space="preserve">
+    <value>[01948][!!_₣ûļľ Şċŗéêή_!!]</value>
+  </data>
 </root>

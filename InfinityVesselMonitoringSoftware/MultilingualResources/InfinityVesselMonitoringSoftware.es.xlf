@@ -8,19 +8,19 @@
       <group id="INFINITYVESSELMONITORINGSOFTWARE/STRINGS/EN-US/RESOURCES.RESW" datatype="resx">
         <trans-unit id="Cancel.Content" translate="yes" xml:space="preserve">
           <source>Cancel</source>
-          <target state="new">Cancel</target>
+          <target state="needs-review-translation" state-qualifier="tm-suggestion">Cancelar</target>
         </trans-unit>
         <trans-unit id="Ok.Content" translate="yes" xml:space="preserve">
           <source>Ok</source>
-          <target state="new">Ok</target>
+          <target state="needs-review-translation" state-qualifier="tm-suggestion">Aceptar</target>
         </trans-unit>
         <trans-unit id="Sensors.Text" translate="yes" xml:space="preserve">
           <source>Sensors</source>
-          <target state="new">Sensors</target>
+          <target state="needs-review-translation" state-qualifier="tm-suggestion">Sensores</target>
         </trans-unit>
         <trans-unit id="CloseApplication.Content" translate="yes" xml:space="preserve">
           <source>Close Application</source>
-          <target state="new">Close Application</target>
+          <target state="needs-review-translation" state-qualifier="tm-suggestion">Cerrar aplicación</target>
         </trans-unit>
         <trans-unit id="DuplicateApplicationMessage.Text" translate="yes" xml:space="preserve">
           <source>An instance of this program is already running.</source>
@@ -32,15 +32,15 @@
         </trans-unit>
         <trans-unit id="DatabaseEditor.Text" translate="yes" xml:space="preserve">
           <source>Database</source>
-          <target state="new">Database</target>
+          <target state="needs-review-translation" state-qualifier="tm-suggestion">Base de datos</target>
         </trans-unit>
         <trans-unit id="PagesEditor.Text" translate="yes" xml:space="preserve">
           <source>Pages</source>
-          <target state="new">Pages</target>
+          <target state="needs-review-translation" state-qualifier="tm-suggestion">Páginas</target>
         </trans-unit>
         <trans-unit id="SensorsEditor.Text" translate="yes" xml:space="preserve">
           <source>Sensors</source>
-          <target state="new">Sensors</target>
+          <target state="needs-review-translation" state-qualifier="tm-suggestion">Sensores</target>
         </trans-unit>
         <trans-unit id="VesselSettingsEditor.Text" translate="yes" xml:space="preserve">
           <source>Vessel Settings</source>
@@ -48,11 +48,11 @@
         </trans-unit>
         <trans-unit id="ExitEditor.Text" translate="yes" xml:space="preserve">
           <source>Exit Application</source>
-          <target state="new">Exit Application</target>
+          <target state="needs-review-translation" state-qualifier="tm-suggestion">Salir de la aplicación</target>
         </trans-unit>
         <trans-unit id="FullscreenEditor.Text" translate="yes" xml:space="preserve">
           <source>Full Screen</source>
-          <target state="new">Full Screen</target>
+          <target state="needs-review-translation" state-qualifier="tm-suggestion">Pantalla completa</target>
         </trans-unit>
       </group>
     </body>
