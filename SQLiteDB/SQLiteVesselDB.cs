@@ -202,6 +202,10 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
         public ItemSet ItemSet { get; set; }
 
         public object Lock { get; private set; }
+        public double Size()
+        {
+            return Utilities.GetSize(this.Connection as ISQLiteConnection);
+        }
     }
 
 }

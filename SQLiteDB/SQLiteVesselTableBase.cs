@@ -390,6 +390,31 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             await BeginRemove(this.Find(id));
         }
 
+        async protected Task<int> TotalItems(string query)
+        {
+            int result = -1;
+
+            await Task.Run(() =>
+            {
+                try
+                {
+                    using (var statement = sqlConnection.Prepare(query))
+                    {
+                        if (statement.Step() == SQLiteResult.ROW)
+                        {
+                            result = Convert.ToInt32(statement[0]);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Telemetry.TrackException(ex);
+                }
+            });
+
+            return result;
+        }
+
         protected override ItemRow CreateItem(ISQLiteStatement statement)
         {
             throw new NotImplementedException("Implement in parent class");
