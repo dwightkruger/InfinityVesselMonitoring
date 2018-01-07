@@ -22,6 +22,7 @@ using Windows.Storage.Streams;
 using Lumia.Imaging.Adjustments;
 using System.Threading.Tasks;
 using System.IO;
+using Windows.Foundation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -143,13 +144,13 @@ namespace InfinityVesselMonitoringSoftware.AppSettings.Views
         }
         #endregion
 
-        async private void ResetImageColors()
+        private void ResetImageColors()
         {
             if (App.VesselSettings.ThemeForegroundColor == Colors.White)
             {
-                await RecolorImage(Colors.Red, new Uri("ms-appx:///Graphics/Ship-light.png"), VesselSettingsButton.Image);
+                //await RecolorImage(c_redEffect, "ms-appx:///Graphics/Fullscreen-light.png", VesselSettingsButton.SwapChainPanel);
 
-                //VesselSettingsButton.Source = c_shipDark;
+                VesselSettingsButton.Source = c_shipDark;
                 SensorsButton.Source = c_sensorDark;
                 PagesButton.Source = c_pagesDark;
                 DatabaseButton.Source = c_databaseDark;
@@ -160,9 +161,9 @@ namespace InfinityVesselMonitoringSoftware.AppSettings.Views
             }
             else if (App.VesselSettings.ThemeForegroundColor == Colors.Red)
             {
-                await RecolorImage(Colors.Red, new Uri("ms-appx:///Graphics/Ship-light.png"), VesselSettingsButton.Image);
+                //await RecolorImage(Colors.Red, new Uri("ms-appx:///Graphics/Ship-light.png"), VesselSettingsButton.Image);
 
-                //VesselSettingsButton.Source = c_shipRed;
+                VesselSettingsButton.Source = c_shipRed;
                 SensorsButton.Source = c_sensorRed;
                 PagesButton.Source = c_pagesRed;
                 DatabaseButton.Source = c_databaseRed;
@@ -173,9 +174,9 @@ namespace InfinityVesselMonitoringSoftware.AppSettings.Views
             }
             else
             {
-                await RecolorImage(Colors.Red, new Uri("ms-appx:///Graphics/Ship-light.png"), VesselSettingsButton.Image);
+                //await RecolorImage(Colors.Red, new Uri("ms-appx:///Graphics/Ship-light.png"), VesselSettingsButton.Image);
 
-                //VesselSettingsButton.Source = c_shipLight;
+                VesselSettingsButton.Source = c_shipLight;
                 SensorsButton.Source = c_sensorLight;
                 PagesButton.Source = c_pagesLight;
                 DatabaseButton.Source = c_databaseLight;
@@ -186,31 +187,11 @@ namespace InfinityVesselMonitoringSoftware.AppSettings.Views
             }
         }
 
-        async private Task<bool> RecolorImage(Color color, Uri uri, Image image)
-        {
-            return true;
+        private static ColorAdjustEffect c_redEffect = new ColorAdjustEffect(1.0, -1.0, -1.0);
 
-            WriteableBitmap writeableBitmap = new WriteableBitmap((int)image.Width, (int)image.Height);
-            StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(uri);
-            Stream stream = await file.OpenStreamForReadAsync();
-            stream.Seek(0, 0);
-
-            using (var imageStream = new StreamImageSource(stream))
-            {
-                // Applying the custom filter effect to the image stream
-                using (var customEffect = new ColorAdjustEffect(imageStream, 0.00, 0.50, 0.00))
-                {
-                    // Rendering the resulting image to a WriteableBitmap
-                    using (var renderer = new WriteableBitmapRenderer(customEffect, writeableBitmap))
-                    {
-                        // Applying the WriteableBitmap to our xaml image control
-                        image.Source = await renderer.RenderAsync();
-                    }
-                }
-            }
-
-            return true;
-        }
+        //async private Task RecolorImage(ColorAdjustEffect colorAdjustEffect, string imagePath, SwapChainPanel swapChainPanel)
+        //{
+        //}
 
         /// <summary>
         /// Allow the user to set the app to fully screen mode, thus hiding the title bar.
@@ -230,6 +211,44 @@ namespace InfinityVesselMonitoringSoftware.AppSettings.Views
             {
                 Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().ExitFullScreenMode();
             }
+        }
+    }
+
+    public static class BufferExtensions
+    {
+        internal class AsyncOperationBufferProvider : IBufferProvider
+        {
+            private readonly Task<IBuffer> m_bufferTask;
+
+            public AsyncOperationBufferProvider(Task<IBuffer> bufferTask)
+            {
+                m_bufferTask = bufferTask;
+            }
+
+            public IAsyncOperation<IBuffer> GetAsync()
+            {
+                return m_bufferTask.AsAsyncOperation();
+            }
+        }
+
+        /// <summary>
+        /// Adapts the Task&lt;IBuffer&gt; to work as an IBufferProvider suitable for BufferProviderImageSource.
+        /// </summary>
+        /// <param name="bufferTask">An asynchronous task that will result in an IBuffer containing an image.</param>
+        /// <returns>An IBufferProvider.</returns>
+        public static IBufferProvider AsBufferProvider(this Task<IBuffer> bufferTask)
+        {
+            return new AsyncOperationBufferProvider(bufferTask);
+        }
+
+        /// <summary>
+        /// Adapts the IAsyncOperation&lt;IBuffer&gt; to work as an IBufferProvider suitable for BufferProviderImageSource.
+        /// </summary>
+        /// <param name="bufferAsyncOperation">An asynchronous operation that will result in an IBuffer containing an image.</param>
+        /// <returns>An IBufferProvider.</returns>
+        public static IBufferProvider AsBufferProvider(this IAsyncOperation<IBuffer> bufferAsyncOperation)
+        {
+            return new AsyncOperationBufferProvider(bufferAsyncOperation.AsTask());
         }
     }
 }

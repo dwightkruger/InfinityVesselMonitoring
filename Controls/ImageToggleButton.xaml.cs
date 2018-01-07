@@ -27,6 +27,11 @@ namespace InfinityGroup.VesselMonitoring.Controls
             get { return VesselSettingsImage; }
         }
 
+        public SwapChainPanel SwapChainPanel
+        {
+            get { return SwapChainPanelControl; }
+        }
+
         #region Source
         public static readonly DependencyProperty SourceProperty = DependencyProperty.Register(
             "Source",

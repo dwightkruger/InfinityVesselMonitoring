@@ -12,6 +12,7 @@
     <Viewbox>
         <Grid>
             <Image x:Name="VesselSettingsImage" Source="{x:Bind Source, Mode=OneWay}"/>
+            <SwapChainPanel x:Name="SwapChainPanelControl" Height="256" Width="256"/>
             <TextBlock x:Name="VesselSettingsTextBlock" Text="{x:Bind Text, Mode=OneWay}"/>
         </Grid>
     </Viewbox>

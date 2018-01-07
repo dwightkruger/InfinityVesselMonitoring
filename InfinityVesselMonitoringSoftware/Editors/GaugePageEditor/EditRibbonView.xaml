@@ -19,6 +19,7 @@
             OverflowButtonVisibility="Auto"
             x:Name="EditRibbonViewCommandBar"  
             HorizontalAlignment="Left" 
+            IsOpen="True"
             DefaultLabelPosition="Bottom">
             
             <AppBarButton Icon="Save" Label="Save" ToolTipService.ToolTip="Save changes" Command="{Binding SaveCommand}"/>
