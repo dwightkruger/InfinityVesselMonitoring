@@ -31,5 +31,6 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         ItemSet ItemSet { get; }
 
         object Lock { get; }
+        double Size();
     }
 }

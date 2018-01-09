@@ -9,6 +9,8 @@ using InfinityGroup.VesselMonitoring.Types;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.Utilities;
 using SQLitePCL;
+using System.Threading.Tasks;
+using InfinityGroup.VesselMonitoring.Globals;
 
 namespace InfinityGroup.VesselMonitoring.SQLiteDB
 {
@@ -103,7 +105,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     "SerialNumber,         \n " +
                     "ShowNominalValue,     \n " +
                     "Throttle              \n " +
-                "FROM " + TableName;
+                "FROM " + this.TableName;
         }
 
 
@@ -436,6 +438,12 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             return
                 "DELETE FROM " + TableName +
                 "  WHERE " + PrimaryKeyName + " = @" + PrimaryKeyName;
+        }
+
+        async public Task<int> TotalSensors()
+        {
+            string query = "SELECT COUNT(" + this.PrimaryKeyName + ") AS TotalSensors FROM " + this.TableName;
+            return await base.TotalItems(query);
         }
     }
 }

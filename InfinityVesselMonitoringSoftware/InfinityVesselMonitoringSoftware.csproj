@@ -142,11 +142,12 @@
     <Compile Include="AppSettings\Views\VesselSettingsView.xaml.cs">
       <DependentUpon>VesselSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\GaugePageViewModel.cs" />
-    <Compile Include="ViewModels\BasePageViewModel.cs" />
-    <Compile Include="Views\GaugePageView.xaml.cs">
-      <DependentUpon>GaugePageView.xaml</DependentUpon>
+    <Compile Include="VideoCamera\AxisVAPIXVersion3.cs" />
+    <Compile Include="VideoCamera\IPVideoCameraView.xaml.cs">
+      <DependentUpon>IPVideoCameraView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VideoCamera\MjpegDecoder.cs" />
+    <Compile Include="ViewModels\BasePageViewModel.cs" />
     <Compile Include="Views\BasePageView.xaml.cs">
       <DependentUpon>BasePageView.xaml</DependentUpon>
     </Compile>
@@ -257,7 +258,7 @@
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
-    <Page Include="Views\GaugePageView.xaml">
+    <Page Include="VideoCamera\IPVideoCameraView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

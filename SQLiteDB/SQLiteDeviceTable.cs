@@ -8,6 +8,7 @@ using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityGroup.VesselMonitoring.Types;
 using SQLitePCL;
 using System;
+using System.Threading.Tasks;
 
 namespace InfinityGroup.VesselMonitoring.SQLiteDB
 {
@@ -17,6 +18,12 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
         {
             PrimaryKeyName = "DeviceId";
             TableName = "DeviceTable";
+        }
+
+        async public Task<int> TotalDevices()
+        {
+            string query = "SELECT COUNT(" + this.PrimaryKeyName + ") AS TotalDevices FROM " + this.TableName;
+            return await base.TotalItems(query);
         }
 
         protected override string GetCreateTableSql()

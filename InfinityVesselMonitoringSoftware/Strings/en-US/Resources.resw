@@ -138,6 +138,9 @@
   <data name="FullscreenEditor.Text" xml:space="preserve">
     <value>Full Screen</value>
   </data>
+  <data name="IP_Video_Camera_View_No_Video_Feed_Available.Text" xml:space="preserve">
+    <value>No Video Feed Available From your Camera</value>
+  </data>
   <data name="Ok.Content" xml:space="preserve">
     <value>Ok</value>
   </data>

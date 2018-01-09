@@ -8,51 +8,56 @@
       <group id="INFINITYVESSELMONITORINGSOFTWARE/STRINGS/EN-US/RESOURCES.RESW" datatype="resx">
         <trans-unit id="Cancel.Content" translate="yes" xml:space="preserve">
           <source>Cancel</source>
-          <target state="new">Cancel</target>
+          <target state="needs-review-translation" state-qualifier="tm-suggestion">Abbrechen</target>
         </trans-unit>
         <trans-unit id="Ok.Content" translate="yes" xml:space="preserve">
           <source>Ok</source>
-          <target state="new">Ok</target>
+          <target state="needs-review-translation" state-qualifier="tm-suggestion">OK</target>
         </trans-unit>
         <trans-unit id="Sensors.Text" translate="yes" xml:space="preserve">
           <source>Sensors</source>
-          <target state="new">Sensors</target>
+          <target state="needs-review-translation" state-qualifier="tm-suggestion">Sensoren</target>
         </trans-unit>
         <trans-unit id="CloseApplication.Content" translate="yes" xml:space="preserve">
           <source>Close Application</source>
-          <target state="new">Close Application</target>
+          <target state="needs-review-translation" state-qualifier="tm-suggestion">Anwendung schließen</target>
         </trans-unit>
         <trans-unit id="DuplicateApplicationMessage.Text" translate="yes" xml:space="preserve">
           <source>An instance of this program is already running.</source>
-          <target state="new">An instance of this program is already running.</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Eine Instanz dieses Programms wird bereits ausgeführt.</target>
         </trans-unit>
         <trans-unit id="DuplicateInstance.Text" translate="yes" xml:space="preserve">
           <source>Duplicate Instance</source>
-          <target state="new">Duplicate Instance</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Doppelte Instanz</target>
         </trans-unit>
         <trans-unit id="DatabaseEditor.Text" translate="yes" xml:space="preserve">
           <source>Database</source>
-          <target state="new">Database</target>
+          <target state="needs-review-translation" state-qualifier="tm-suggestion">Datenbank</target>
         </trans-unit>
         <trans-unit id="PagesEditor.Text" translate="yes" xml:space="preserve">
           <source>Pages</source>
-          <target state="new">Pages</target>
+          <target state="needs-review-translation" state-qualifier="tm-suggestion">Seiten</target>
         </trans-unit>
         <trans-unit id="SensorsEditor.Text" translate="yes" xml:space="preserve">
           <source>Sensors</source>
-          <target state="new">Sensors</target>
+          <target state="needs-review-translation" state-qualifier="tm-suggestion">Sensoren</target>
         </trans-unit>
         <trans-unit id="VesselSettingsEditor.Text" translate="yes" xml:space="preserve">
           <source>Vessel Settings</source>
-          <target state="new">Vessel Settings</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Schiff-Einstellungen</target>
         </trans-unit>
         <trans-unit id="ExitEditor.Text" translate="yes" xml:space="preserve">
           <source>Exit Application</source>
-          <target state="new">Exit Application</target>
+          <target state="needs-review-translation" state-qualifier="tm-suggestion">Anwendung beenden</target>
         </trans-unit>
         <trans-unit id="FullscreenEditor.Text" translate="yes" xml:space="preserve">
           <source>Full Screen</source>
-          <target state="new">Full Screen</target>
+          <target state="needs-review-translation" state-qualifier="tm-suggestion">Vollbild</target>
+        </trans-unit>
+        <trans-unit id="IP_Video_Camera_View_No_Video_Feed_Available.Text" translate="yes" xml:space="preserve">
+          <source>No Video Feed Available From your Camera</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Keine Video-Feed verfügbar</target>
+          <note from="MultilingualUpdate" annotates="source" priority="2">Please verify the translation’s accuracy as the source string was updated after it was translated.</note>
         </trans-unit>
       </group>
     </body>

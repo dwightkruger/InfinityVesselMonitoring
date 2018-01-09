@@ -12,4 +12,43 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Cancel.Content" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Ok.Content" xml:space="preserve">
+    <value>Okey</value>
+  </data>
+  <data name="Sensors.Text" xml:space="preserve">
+    <value>Sensores</value>
+  </data>
+  <data name="CloseApplication.Content" xml:space="preserve">
+    <value>Fechar aplicativo</value>
+  </data>
+  <data name="DuplicateApplicationMessage.Text" xml:space="preserve">
+    <value>Uma instância deste programa já está em execução.</value>
+  </data>
+  <data name="DuplicateInstance.Text" xml:space="preserve">
+    <value>Instância duplicada</value>
+  </data>
+  <data name="DatabaseEditor.Text" xml:space="preserve">
+    <value>Banco de dados</value>
+  </data>
+  <data name="PagesEditor.Text" xml:space="preserve">
+    <value>Páginas</value>
+  </data>
+  <data name="SensorsEditor.Text" xml:space="preserve">
+    <value>Sensores</value>
+  </data>
+  <data name="VesselSettingsEditor.Text" xml:space="preserve">
+    <value>Configurações de navio</value>
+  </data>
+  <data name="ExitEditor.Text" xml:space="preserve">
+    <value>Sair do Aplicativo</value>
+  </data>
+  <data name="FullscreenEditor.Text" xml:space="preserve">
+    <value>Tela Inteira</value>
+  </data>
+  <data name="IP_Video_Camera_View_No_Video_Feed_Available.Text" xml:space="preserve">
+    <value>Nenhum sinal de vídeo disponível</value>
+  </data>
 </root>
