@@ -24,6 +24,12 @@
   <data name="CloseApplication.Content" xml:space="preserve">
     <value>Fermer l'application</value>
   </data>
+  <data name="DuplicateApplicationMessage.Text" xml:space="preserve">
+    <value>Une instance de ce programme est déjà en cours d’exécution.</value>
+  </data>
+  <data name="DuplicateInstance.Text" xml:space="preserve">
+    <value>Instance en double</value>
+  </data>
   <data name="DatabaseEditor.Text" xml:space="preserve">
     <value>Base de données</value>
   </data>
@@ -33,10 +39,16 @@
   <data name="SensorsEditor.Text" xml:space="preserve">
     <value>Capteurs</value>
   </data>
+  <data name="VesselSettingsEditor.Text" xml:space="preserve">
+    <value>Paramètres de navire</value>
+  </data>
   <data name="ExitEditor.Text" xml:space="preserve">
     <value>Quitter l'application</value>
   </data>
   <data name="FullscreenEditor.Text" xml:space="preserve">
     <value>Plein écran</value>
+  </data>
+  <data name="IP_Video_Camera_View_No_Video_Feed_Available.Text" xml:space="preserve">
+    <value>Aucun flux vidéo disponible</value>
   </data>
 </root>

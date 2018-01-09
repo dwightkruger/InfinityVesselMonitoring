@@ -147,11 +147,7 @@
       <DependentUpon>IPVideoCameraView.xaml</DependentUpon>
     </Compile>
     <Compile Include="VideoCamera\MjpegDecoder.cs" />
-    <Compile Include="ViewModels\GaugePageViewModel.cs" />
     <Compile Include="ViewModels\BasePageViewModel.cs" />
-    <Compile Include="Views\GaugePageView.xaml.cs">
-      <DependentUpon>GaugePageView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\BasePageView.xaml.cs">
       <DependentUpon>BasePageView.xaml</DependentUpon>
     </Compile>
@@ -263,10 +259,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
     <Page Include="VideoCamera\IPVideoCameraView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\GaugePageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

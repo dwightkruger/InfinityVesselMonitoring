@@ -24,6 +24,12 @@
   <data name="CloseApplication.Content" xml:space="preserve">
     <value>Cerrar aplicación</value>
   </data>
+  <data name="DuplicateApplicationMessage.Text" xml:space="preserve">
+    <value>Ya se está ejecutando una instancia de este programa.</value>
+  </data>
+  <data name="DuplicateInstance.Text" xml:space="preserve">
+    <value>Instancia duplicada</value>
+  </data>
   <data name="DatabaseEditor.Text" xml:space="preserve">
     <value>Base de datos</value>
   </data>
@@ -33,10 +39,16 @@
   <data name="SensorsEditor.Text" xml:space="preserve">
     <value>Sensores</value>
   </data>
+  <data name="VesselSettingsEditor.Text" xml:space="preserve">
+    <value>Configuración de buque</value>
+  </data>
   <data name="ExitEditor.Text" xml:space="preserve">
     <value>Salir de la aplicación</value>
   </data>
   <data name="FullscreenEditor.Text" xml:space="preserve">
     <value>Pantalla completa</value>
+  </data>
+  <data name="IP_Video_Camera_View_No_Video_Feed_Available.Text" xml:space="preserve">
+    <value>No hay alimentación de Video disponible</value>
   </data>
 </root>

@@ -55,8 +55,9 @@
           <target state="needs-review-translation" state-qualifier="tm-suggestion">Pantalla completa</target>
         </trans-unit>
         <trans-unit id="IP_Video_Camera_View_No_Video_Feed_Available.Text" translate="yes" xml:space="preserve">
-          <source>No Video Feed Available</source>
+          <source>No Video Feed Available From your Camera</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">No hay alimentación de Video disponible</target>
+          <note from="MultilingualUpdate" annotates="source" priority="2">Please verify the translation’s accuracy as the source string was updated after it was translated.</note>
         </trans-unit>
       </group>
     </body>

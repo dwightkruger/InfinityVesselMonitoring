@@ -13,39 +13,42 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Cancel.Content" xml:space="preserve">
-    <value>[CEF14][!!_Ćãиčèļ_!!]</value>
+    <value>[CEF14][!!_Čãηĉéľ_!!]</value>
   </data>
   <data name="Ok.Content" xml:space="preserve">
-    <value>[867C1][!!_Ôĸ_!!]</value>
+    <value>[867C1][!!_Óќ_!!]</value>
   </data>
   <data name="Sensors.Text" xml:space="preserve">
-    <value>[90C30][!!_Ŝêйšõѓś_!!]</value>
+    <value>[90C30][!!_Šéиśóѓś_!!]</value>
   </data>
   <data name="CloseApplication.Content" xml:space="preserve">
-    <value>[C050D][!!_Ċļòşé Ãρþłìćáťìõи_!!]</value>
+    <value>[C050D][!!_Čļóśę Âрþļįćãťîóи_!!]</value>
   </data>
   <data name="DuplicateApplicationMessage.Text" xml:space="preserve">
-    <value>[1DF3F][!!_Àй íηšťãиĉè óƒ тнíś þŗóĝŗâм ìś àĺѓéãðý ŗùήηíηğ._!!]</value>
+    <value>[1DF3F][!!_Àη íиśţáηćê õƒ τћíş þŗôģŗãм įš âļѓèãďў ŕµиηįйĝ._!!]</value>
   </data>
   <data name="DuplicateInstance.Text" xml:space="preserve">
-    <value>[88303][!!_Ðúρłįčàţè Îηşτâйćê_!!]</value>
+    <value>[88303][!!_Đùρľįċãťę Įήşťàήċé_!!]</value>
   </data>
   <data name="DatabaseEditor.Text" xml:space="preserve">
-    <value>[7F239][!!_ÐãţáБàšè_!!]</value>
+    <value>[7F239][!!_Ďâτâьâśè_!!]</value>
   </data>
   <data name="PagesEditor.Text" xml:space="preserve">
-    <value>[E5454][!!_Þáğêŝ_!!]</value>
+    <value>[E5454][!!_Þãģęŝ_!!]</value>
   </data>
   <data name="SensorsEditor.Text" xml:space="preserve">
-    <value>[B3F34][!!_Šęйşòѓş_!!]</value>
+    <value>[B3F34][!!_Şéиşôŗš_!!]</value>
   </data>
   <data name="VesselSettingsEditor.Text" xml:space="preserve">
-    <value>[8861C][!!_Vèŝšéľ Šêтτíиĝş_!!]</value>
+    <value>[8861C][!!_Vèššèł Ŝęтţįήģŝ_!!]</value>
   </data>
   <data name="ExitEditor.Text" xml:space="preserve">
-    <value>[C1F5D][!!_Éхíτ Áρþĺìĉáťîôη_!!]</value>
+    <value>[C1F5D][!!_Ê×îт Áþρļîćáťįòи_!!]</value>
   </data>
   <data name="FullscreenEditor.Text" xml:space="preserve">
-    <value>[01948][!!_₣ûļľ Şċŗéêή_!!]</value>
+    <value>[01948][!!_₣ûľł Şĉŗèèи_!!]</value>
+  </data>
+  <data name="IP_Video_Camera_View_No_Video_Feed_Available.Text" xml:space="preserve">
+    <value>[B7130][!!_Ňó Vìđéò ₣ęęď Âνáįłáьĺè_!!]</value>
   </data>
 </root>

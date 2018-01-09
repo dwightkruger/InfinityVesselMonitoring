@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using VesselMonitoringSuite.Devices;
 using VesselMonitoringSuite.Sensors;
-using VesselMonitoringSuite.Views;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI;
@@ -198,12 +197,12 @@ namespace VesselMonitoring
                 Binding widthBinding = new Binding();
                 widthBinding.Source = this.MainPagePivot;
                 widthBinding.Path = new PropertyPath("ActualWidth");
-                view.SetBinding(GaugePageView.WidthProperty, widthBinding);
+                view.SetBinding(BasePageView.WidthProperty, widthBinding);
 
                 Binding heightBinding = new Binding();
                 heightBinding.Source = this.MainPagePivot;
                 heightBinding.Path = new PropertyPath("ActualHeight");
-                view.SetBinding(GaugePageView.HeightProperty, heightBinding);
+                view.SetBinding(BasePageView.HeightProperty, heightBinding);
 
                 // Put the view into a Canvas
                 canvas = new Canvas();
