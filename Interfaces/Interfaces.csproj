@@ -124,6 +124,7 @@
     <Compile Include="IVesselSettings.cs" />
     <Compile Include="IVesselSettingsTable.cs" />
     <Compile Include="IVesselTable.cs" />
+    <Compile Include="IVideoCamera.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Interfaces.rd.xml" />
   </ItemGroup>

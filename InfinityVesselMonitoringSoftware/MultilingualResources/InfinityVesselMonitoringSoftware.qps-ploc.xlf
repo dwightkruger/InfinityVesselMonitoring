@@ -8,51 +8,55 @@
       <group id="INFINITYVESSELMONITORINGSOFTWARE/STRINGS/EN-US/RESOURCES.RESW" datatype="resx">
         <trans-unit id="Cancel.Content" translate="yes" xml:space="preserve">
           <source>Cancel</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">[CEF14][!!_Ćãиčèļ_!!]</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[CEF14][!!_Čãηĉéľ_!!]</target>
         </trans-unit>
         <trans-unit id="Ok.Content" translate="yes" xml:space="preserve">
           <source>Ok</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">[867C1][!!_Ôĸ_!!]</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[867C1][!!_Óќ_!!]</target>
         </trans-unit>
         <trans-unit id="Sensors.Text" translate="yes" xml:space="preserve">
           <source>Sensors</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">[90C30][!!_Ŝêйšõѓś_!!]</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[90C30][!!_Šéиśóѓś_!!]</target>
         </trans-unit>
         <trans-unit id="CloseApplication.Content" translate="yes" xml:space="preserve">
           <source>Close Application</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">[C050D][!!_Ċļòşé Ãρþłìćáťìõи_!!]</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[C050D][!!_Čļóśę Âрþļįćãťîóи_!!]</target>
         </trans-unit>
         <trans-unit id="DuplicateApplicationMessage.Text" translate="yes" xml:space="preserve">
           <source>An instance of this program is already running.</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">[1DF3F][!!_Àй íηšťãиĉè óƒ тнíś þŗóĝŗâм ìś àĺѓéãðý ŗùήηíηğ._!!]</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[1DF3F][!!_Àη íиśţáηćê õƒ τћíş þŗôģŗãм įš âļѓèãďў ŕµиηįйĝ._!!]</target>
         </trans-unit>
         <trans-unit id="DuplicateInstance.Text" translate="yes" xml:space="preserve">
           <source>Duplicate Instance</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">[88303][!!_Ðúρłįčàţè Îηşτâйćê_!!]</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[88303][!!_Đùρľįċãťę Įήşťàήċé_!!]</target>
         </trans-unit>
         <trans-unit id="DatabaseEditor.Text" translate="yes" xml:space="preserve">
           <source>Database</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">[7F239][!!_ÐãţáБàšè_!!]</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[7F239][!!_Ďâτâьâśè_!!]</target>
         </trans-unit>
         <trans-unit id="PagesEditor.Text" translate="yes" xml:space="preserve">
           <source>Pages</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">[E5454][!!_Þáğêŝ_!!]</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[E5454][!!_Þãģęŝ_!!]</target>
         </trans-unit>
         <trans-unit id="SensorsEditor.Text" translate="yes" xml:space="preserve">
           <source>Sensors</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">[B3F34][!!_Šęйşòѓş_!!]</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[B3F34][!!_Şéиşôŗš_!!]</target>
         </trans-unit>
         <trans-unit id="VesselSettingsEditor.Text" translate="yes" xml:space="preserve">
           <source>Vessel Settings</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">[8861C][!!_Vèŝšéľ Šêтτíиĝş_!!]</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[8861C][!!_Vèššèł Ŝęтţįήģŝ_!!]</target>
         </trans-unit>
         <trans-unit id="ExitEditor.Text" translate="yes" xml:space="preserve">
           <source>Exit Application</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">[C1F5D][!!_Éхíτ Áρþĺìĉáťîôη_!!]</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[C1F5D][!!_Ê×îт Áþρļîćáťįòи_!!]</target>
         </trans-unit>
         <trans-unit id="FullscreenEditor.Text" translate="yes" xml:space="preserve">
           <source>Full Screen</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">[01948][!!_₣ûļľ Şċŗéêή_!!]</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[01948][!!_₣ûľł Şĉŗèèи_!!]</target>
+        </trans-unit>
+        <trans-unit id="IP_Video_Camera_View_No_Video_Feed_Available.Text" translate="yes" xml:space="preserve">
+          <source>No Video Feed Available</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[B7130][!!_Ňó Vìđéò ₣ęęď Âνáįłáьĺè_!!]</target>
         </trans-unit>
       </group>
     </body>

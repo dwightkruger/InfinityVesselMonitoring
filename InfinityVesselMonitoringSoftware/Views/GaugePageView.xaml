@@ -26,8 +26,6 @@
         DataContext="{StaticResource GaugePageViewModel}"
         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-        <!--Background="{Binding VesselSettings.ThemeBackgroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}}">-->
-
         <tools:AlignmentGrid 
             x:Name="AlignmentGrid"
             Visibility="{x:Bind Path=VM.InEditMode, Converter={StaticResource BoolToVisibilityConverter}}"

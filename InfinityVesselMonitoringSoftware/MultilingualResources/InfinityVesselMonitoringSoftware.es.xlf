@@ -24,11 +24,11 @@
         </trans-unit>
         <trans-unit id="DuplicateApplicationMessage.Text" translate="yes" xml:space="preserve">
           <source>An instance of this program is already running.</source>
-          <target state="new">An instance of this program is already running.</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Ya se está ejecutando una instancia de este programa.</target>
         </trans-unit>
         <trans-unit id="DuplicateInstance.Text" translate="yes" xml:space="preserve">
           <source>Duplicate Instance</source>
-          <target state="new">Duplicate Instance</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Instancia duplicada</target>
         </trans-unit>
         <trans-unit id="DatabaseEditor.Text" translate="yes" xml:space="preserve">
           <source>Database</source>
@@ -44,7 +44,7 @@
         </trans-unit>
         <trans-unit id="VesselSettingsEditor.Text" translate="yes" xml:space="preserve">
           <source>Vessel Settings</source>
-          <target state="new">Vessel Settings</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Configuración de buque</target>
         </trans-unit>
         <trans-unit id="ExitEditor.Text" translate="yes" xml:space="preserve">
           <source>Exit Application</source>
@@ -53,6 +53,10 @@
         <trans-unit id="FullscreenEditor.Text" translate="yes" xml:space="preserve">
           <source>Full Screen</source>
           <target state="needs-review-translation" state-qualifier="tm-suggestion">Pantalla completa</target>
+        </trans-unit>
+        <trans-unit id="IP_Video_Camera_View_No_Video_Feed_Available.Text" translate="yes" xml:space="preserve">
+          <source>No Video Feed Available</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">No hay alimentación de Video disponible</target>
         </trans-unit>
       </group>
     </body>
