@@ -18,6 +18,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         void AddSensorValue(DateTime timeUTC, double value, bool isOnline, bool forceFlush);
         void AddSensorValue(double value, bool isOnline, bool forceFlush);
         Task BeginCommit();
+        Task BeginDelete();
         DateTime ChangeDate { get; }
         bool IsDemoMode { get; set; }
         string Description { get; set; }

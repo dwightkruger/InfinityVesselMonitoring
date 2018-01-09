@@ -67,6 +67,24 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             successCallback();
         }
 
+        /// <summary>
+        /// Delete all of the observations for the sensorId provided.
+        /// </summary>
+        /// <param name="mySensorID"></param>
+        /// <returns></returns>
+        async public Task BeginDeleteSensorObservations(Int64 mySensorID)
+        {
+            await Task.Run(() =>
+            {
+                string query = "DELETE FROM " + TableName + " WHERE SensorId = " + mySensorID.ToString();
+
+                using (var statement = ((ISQLiteConnection)_vesselDB.Connection).Prepare(query))
+                {
+                    statement.Step();
+                }
+            });
+        }
+
         protected override string GetCreateTableSql()
         {
             return

@@ -18,6 +18,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using InfinityVesselMonitoringSoftware.VideoCamera;
 
 namespace InfinityVesselMonitoringSoftware
 {
@@ -171,5 +172,6 @@ namespace InfinityVesselMonitoringSoftware
         public static GaugeItemCollection GaugeItemCollection = new GaugeItemCollection();
         public static EventsCollection EventsCollection = new EventsCollection();
         public static VesselSettings VesselSettings = new VesselSettings();
+        public static VideoCameraCollection VideoCameraCollection = new VideoCameraCollection();
     }
 }

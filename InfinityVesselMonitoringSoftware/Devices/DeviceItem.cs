@@ -7,7 +7,6 @@
 using GalaSoft.MvvmLight;
 using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
-using InfinityGroup.VesselMonitoring.SQLiteDB;
 using InfinityGroup.VesselMonitoring.Types;
 using InfinityVesselMonitoringSoftware;
 using Newtonsoft.Json;
@@ -72,6 +71,12 @@ namespace VesselMonitoringSuite.Devices
                         Telemetry.TrackException(ex);
                     });
             }
+        }
+
+        async public Task BeginDelete()
+        {
+            await App.BuildDBTables.DeviceTable.BeginRemove(this.DeviceId);
+            this.Row = null;
         }
 
         public DateTime ChangeDate

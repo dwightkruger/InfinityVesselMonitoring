@@ -70,6 +70,30 @@ namespace VesselMonitoringSuite.Sensors
             return sensorItem;
         }
 
+        /// <summary>
+        /// Delete the sensor item from this cache as well as the backing SQL store.
+        /// </summary>
+        /// <param name="sensorItem"></param>
+        /// <returns></returns>
+        async public Task BeginDelete(ISensorItem sensorItem)
+        {
+            if (_hashBySensorId.ContainsKey(sensorItem.SensorId))
+            {
+                _hashBySensorId.Remove(sensorItem);
+            }
+
+            if (_hashBySerialNumber.ContainsKey(sensorItem.SerialNumber))
+            {
+                _hashBySerialNumber.Remove(sensorItem);
+            }
+
+            await sensorItem.BeginDelete();
+            base.Remove(sensorItem);
+        }
+
+        /// <summary>
+        /// Clear out all of the items in this cache without deleting them from the backing SQL store.
+        /// </summary>
         new public void Clear()
         {
             Task.Run(async () =>
@@ -83,6 +107,11 @@ namespace VesselMonitoringSuite.Sensors
             });
         }
 
+        /// <summary>
+        /// Find a specific sensor item by its serial number.
+        /// </summary>
+        /// <param name="serialNumber"></param>
+        /// <returns></returns>
         async public Task<ISensorItem> BeginFindBySerialNumber(string serialNumber)
         {
             ISensorItem result = null;

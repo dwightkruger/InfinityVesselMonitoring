@@ -167,6 +167,8 @@ namespace VesselMonitoring
                 if (App.VesselSettings.ThemeForegroundColor == Colors.White) this.Dark_Click(this, null);
                 else this.Light_Click(this, null);
             }
+
+            await App.VideoCameraCollection.Start();
         }
 
         async public Task Reset()

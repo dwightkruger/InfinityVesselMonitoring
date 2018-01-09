@@ -19,5 +19,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         Task BeginGetLastDataPoint(Int64 sensorID, Action<DateTime, double, bool, byte> callback);
 
         Task BeginTruncate(double maxSize);
+
+        Task BeginDeleteSensorObservations(Int64 mySensorID);
     }
 }

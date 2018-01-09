@@ -8,7 +8,6 @@ using GalaSoft.MvvmLight.Threading;
 using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Threading;
@@ -179,21 +178,21 @@ namespace InfinityVesselMonitoringSoftware.VideoCamera
             }
         }
 
-        #region Label
-        public static readonly DependencyProperty LabelProperty = DependencyProperty.Register(
-            "Label",
-            typeof(string),
+        #region Sensor
+        public static readonly DependencyProperty SensorProperty = DependencyProperty.Register(
+            "Sensor",
+            typeof(ISensorItem),
             typeof(IPVideoCameraView),
-            new PropertyMetadata("Your Video camera title",
-                                  new PropertyChangedCallback(OnLabelPropertyChanged)));
+            new PropertyMetadata(null,
+                                  new PropertyChangedCallback(OnSensorPropertyChanged)));
 
-        public string Label
+        public ISensorItem Sensor
         {
-            get { return (string)this.GetValue(LabelProperty); }
-            set { this.SetValue(LabelProperty, value); }
+            get { return (ISensorItem)this.GetValue(SensorProperty); }
+            set { this.SetValue(SensorProperty, value); }
         }
 
-        protected static void OnLabelPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        protected static void OnSensorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             IPVideoCameraView g = d as IPVideoCameraView;
         }

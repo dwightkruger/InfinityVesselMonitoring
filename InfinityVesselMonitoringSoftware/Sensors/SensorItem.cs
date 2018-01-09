@@ -257,6 +257,16 @@ namespace VesselMonitoringSuite.Sensors
             }
         }
 
+        async public Task BeginDelete()
+        {
+            this.IsOnline = false;
+            this.IsDemoMode = false;
+            await App.BuildDBTables.SensorDataTable.BeginDeleteSensorObservations(this.SensorId);
+            await App.BuildDBTables.SensorTable.BeginRemove(this.SensorId);
+            this.Row = null;
+        }
+
+
         public DateTime ChangeDate
         {
             get
@@ -307,7 +317,15 @@ namespace VesselMonitoringSuite.Sensors
             set { SetRowPropertyValue<Int64>(() => DeviceId, value); }
         }
 
-        public string FriendlyName => throw new NotImplementedException();
+        public string FriendlyName
+        {
+            get
+            {
+                if (this.Description.Length > 0) return this.Description;
+
+                return "(" + this.SerialNumber + ")";
+            }
+        }
 
         public double HighAlarmValue
         {

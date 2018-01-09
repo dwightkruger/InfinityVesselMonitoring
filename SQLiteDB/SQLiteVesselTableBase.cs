@@ -368,6 +368,11 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             return result;
         }
 
+        /// <summary>
+        /// Remove the row from the database
+        /// </summary>
+        /// <param name="row"></param>
+        /// <returns></returns>
         async public Task BeginRemove(ItemRow row)
         {
             if (null != row)
@@ -385,6 +390,11 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             }
         }
 
+        /// <summary>
+        /// Remove the row from the database with the primary key value specified
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         async public Task BeginRemove(Int64 id)
         {
             await BeginRemove(this.Find(id));

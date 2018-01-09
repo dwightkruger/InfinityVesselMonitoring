@@ -22,6 +22,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
     public interface IDeviceItem
     {
         Task BeginCommit();
+        Task BeginDelete();
         DateTime ChangeDate { get; }
         string Description { get; set; }
         byte DeviceAddress { get; set; }

@@ -60,6 +60,30 @@ namespace VesselMonitoringSuite.Devices
         }
 
         /// <summary>
+        /// Delete the device item from this cache and the backing SQL store.
+        /// </summary>
+        /// <param name="deviceItem"></param>
+        /// <returns></returns>
+        async public Task BeginDelete(IDeviceItem deviceItem)
+        {
+            using (var releaser = await _lock.WriterLockAsync())
+            {
+                if (_hashBySerialNumber.ContainsKey(deviceItem.SerialNumber))
+                {
+                    _hashBySerialNumber.Remove(deviceItem.SerialNumber);
+                }
+
+                foreach (ISensorItem sensor in deviceItem.Sensors)
+                {
+                    await App.SensorCollection.BeginDelete(sensor);
+                }
+
+                base.Remove(deviceItem);
+                await deviceItem.BeginDelete();
+            }
+        }
+
+        /// <summary>
         /// Empty the collection of devices and the backing SQL store
         /// </summary>
         async public Task BeginEmpty()
@@ -73,6 +97,11 @@ namespace VesselMonitoringSuite.Devices
             }
         }
 
+        /// <summary>
+        /// Find a device item by its serial number.
+        /// </summary>
+        /// <param name="serialNumber"></param>
+        /// <returns></returns>
         async public Task<IDeviceItem> BeginFindBySerialNumber(string serialNumber)
         {
             IDeviceItem deviceItem = null;
