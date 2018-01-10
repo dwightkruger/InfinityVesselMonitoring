@@ -24,6 +24,7 @@
   </Applications>
   <Capabilities>
     <Capability Name="internetClient" />
+    <Capability Name="privateNetworkClientServer" />
     <uap3:Capability Name="backgroundMediaPlayback" />
   </Capabilities>
 </Package>

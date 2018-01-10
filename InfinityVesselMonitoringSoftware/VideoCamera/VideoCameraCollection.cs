@@ -27,13 +27,15 @@ namespace InfinityVesselMonitoringSoftware.VideoCamera
 
         /// <summary>
         /// See the UPnP documentation at http://upnp.org/specs/arch/UPnP-arch-DeviceArchitecture-v1.1.pdf
+        /// UPnP library documetation is available at https://github.com/Yortw/RSSDP
         /// </summary>
         /// <returns></returns>
         async public Task Start()
         {
             _deviceLocator = new SsdpDeviceLocator();
             //_deviceLocator.NotificationFilter = "upnp:rootdevice";
-            _deviceLocator.NotificationFilter = "urn:schemas-upnp-org:device:Basic:1";
+            //_deviceLocator.NotificationFilter = "urn:schemas-upnp-org:device:Basic:1";
+            _deviceLocator.NotificationFilter = "ssdp:all";
             _deviceLocator.DeviceAvailable += DeviceLocator_DeviceAvailable;
             _deviceLocator.StartListeningForNotifications();
             IEnumerable<Discovered​Ssdp​Device> devices = await _deviceLocator.SearchAsync(TimeSpan.FromSeconds(30));
