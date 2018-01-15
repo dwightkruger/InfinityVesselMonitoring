@@ -695,6 +695,11 @@ namespace VesselMonitoringSuite.Sensors
                 value = Math.Max(value, this.MinValue);
             }
 
+            if (value == this.MaxValue)
+                value = MinValue;
+            else
+                value = Math.Min(this.SensorValue * 1.05 + 1, this.MaxValue);
+
             this.AddSensorValue(value, true, false);
         }
 

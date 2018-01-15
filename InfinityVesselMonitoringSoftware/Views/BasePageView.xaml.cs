@@ -50,8 +50,12 @@ namespace InfinityVesselMonitoringSoftware.Views
                     switch (gaugeItem.GaugeType)
                     {
                         case GaugeTypeEnum.LeftArcGauge:
-                            gauge = new ArcGaugeLeft();
+                            gauge = new LeftArcGauge();
                         break;
+
+                        case GaugeTypeEnum.CircularGauge:
+                            gauge = new CircularGauge();
+                            break;
 
                         case GaugeTypeEnum.LeftTankGauge:
                             gauge = new TankGaugeLeft();
@@ -104,6 +108,10 @@ namespace InfinityVesselMonitoringSoftware.Views
                     {
                         case GaugeTypeEnum.LeftArcGauge:
                             gauge = this.BuildLeftArcGauge(item);
+                            break;
+
+                        case GaugeTypeEnum.CircularGauge:
+                            gauge = BuildCircularGauge(item);
                             break;
 
                         case GaugeTypeEnum.LeftTankGauge:
@@ -346,17 +354,32 @@ namespace InfinityVesselMonitoringSoftware.Views
 
         private BaseGauge BuildLeftArcGauge(IGaugeItem gaugeItem)
         {
-            ArcGaugeLeft arcGaugeLeft = new ArcGaugeLeft();
-            arcGaugeLeft.GaugeItem = gaugeItem;
+            LeftArcGauge leftArcGauge = new LeftArcGauge();
+            leftArcGauge.GaugeItem = gaugeItem;
 
             BuildGauge(gaugeItem, (sensor) =>
             {
-                arcGaugeLeft.SensorItem = sensor;
+                leftArcGauge.SensorItem = sensor;
             });
 
             // Add it to the page
-            this.CanvasGrid.Children.Add(arcGaugeLeft);
-            return arcGaugeLeft;
+            this.CanvasGrid.Children.Add(leftArcGauge);
+            return leftArcGauge;
+        }
+
+        private BaseGauge BuildCircularGauge(IGaugeItem gaugeItem)
+        {
+            CircularGauge circularGauge = new CircularGauge();
+            circularGauge.GaugeItem = gaugeItem;
+
+            BuildGauge(gaugeItem, (sensor) =>
+            {
+                circularGauge.SensorItem = sensor;
+            });
+
+            // Add it to the page
+            this.CanvasGrid.Children.Add(circularGauge);
+            return circularGauge;
         }
 
         private BaseGauge BuildLeftTankGauge(IGaugeItem gaugeItem)

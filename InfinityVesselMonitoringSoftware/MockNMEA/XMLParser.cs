@@ -65,7 +65,7 @@ namespace InfinityVesselMonitoringSoftware.MockNMEA
             {
                 gaugeItem.GaugeHeight = screenSize.Height / 4.0;
                 gaugeItem.GaugeWidth = screenSize.Width / 4.0;
-                await App.GaugeItemCollection.BeginAdd(gaugeItem);
+                //await App.GaugeItemCollection.BeginAdd(gaugeItem);
             }
         }
 

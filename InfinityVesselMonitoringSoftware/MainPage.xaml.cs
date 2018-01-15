@@ -378,12 +378,19 @@ namespace VesselMonitoring
             //await App.BuildDBTables.SensorDataTable.BeginEmpty();
             //App.SensorCollection.Clear();
 
+            if (null == App.DeviceCollection) return;
+            if (0 == App.DeviceCollection.Count) return;
+
             // Sensor 00
             ISensorItem sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
             sensor.SensorType = SensorType.Tank;
             sensor.SensorUnitType = UnitType.Power;
             sensor.SensorUnits = Units.AmpHrs;
+            sensor.IsHighAlarmEnabled = true;
+            sensor.IsHighWarningEnabled = true;
+            sensor.IsLowAlarmEnabled = true;
+            sensor.IsLowWarningEnabled = true;
             sensor.IsEnabled = true;
             sensor.IsDemoMode = true;
             sensor = await App.SensorCollection.BeginAdd(sensor);
@@ -394,6 +401,10 @@ namespace VesselMonitoring
             sensor.SensorType = SensorType.Tank;
             sensor.SensorUnits = Units.Amps;
             sensor.SensorUnitType = UnitType.Current;
+            sensor.IsHighAlarmEnabled = true;
+            sensor.IsHighWarningEnabled = true;
+            sensor.IsLowAlarmEnabled = true;
+            sensor.IsLowWarningEnabled = true;
             sensor.IsEnabled = true;
             sensor.IsDemoMode = true;
             sensor = await App.SensorCollection.BeginAdd(sensor);
@@ -404,6 +415,10 @@ namespace VesselMonitoring
             sensor.SensorType = SensorType.Tank;
             sensor.SensorUnits = Units.Bar;
             sensor.SensorUnitType = UnitType.Pressure;
+            sensor.IsHighAlarmEnabled = true;
+            sensor.IsHighWarningEnabled = true;
+            sensor.IsLowAlarmEnabled = true;
+            sensor.IsLowWarningEnabled = true;
             sensor.IsEnabled = true;
             sensor.IsDemoMode = true;
             sensor = await App.SensorCollection.BeginAdd(sensor);
@@ -414,6 +429,10 @@ namespace VesselMonitoring
             sensor.SensorType = SensorType.Tank;
             sensor.SensorUnits = Units.Fahrenheit;
             sensor.SensorUnitType = UnitType.Temperature;
+            sensor.IsHighAlarmEnabled = true;
+            sensor.IsHighWarningEnabled = true;
+            sensor.IsLowAlarmEnabled = true;
+            sensor.IsLowWarningEnabled = true;
             sensor.IsEnabled = true;
             sensor.IsDemoMode = true;
             sensor = await App.SensorCollection.BeginAdd(sensor);
@@ -424,6 +443,10 @@ namespace VesselMonitoring
             sensor.SensorType = SensorType.Tank;
             sensor.SensorUnits = Units.CubicMeters;
             sensor.SensorUnitType = UnitType.Volume;
+            sensor.IsHighAlarmEnabled = true;
+            sensor.IsHighWarningEnabled = true;
+            sensor.IsLowAlarmEnabled = true;
+            sensor.IsLowWarningEnabled = true;
             sensor.IsEnabled = true;
             sensor.IsDemoMode = true;
             sensor = await App.SensorCollection.BeginAdd(sensor);
@@ -434,6 +457,10 @@ namespace VesselMonitoring
             sensor.SensorType = SensorType.Tank;
             sensor.SensorUnits = Units.CubicMetersPerHr;
             sensor.SensorUnitType = UnitType.VolumeFlow;
+            sensor.IsHighAlarmEnabled = true;
+            sensor.IsHighWarningEnabled = true;
+            sensor.IsLowAlarmEnabled = true;
+            sensor.IsLowWarningEnabled = true;
             sensor.IsEnabled = true;
             sensor.IsDemoMode = true;
             sensor = await App.SensorCollection.BeginAdd(sensor);

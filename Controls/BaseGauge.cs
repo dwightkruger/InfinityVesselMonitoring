@@ -1051,6 +1051,11 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 sensorValueBinding.ConverterParameter = Tuple.Create<ISensorItem,IGaugeItem>(value, _gaugeItem);
                 sensorValueBinding.Path = new PropertyPath("SensorValue");
                 this.SetBinding(ValueProperty, sensorValueBinding);
+
+                this.IsHighAlarmEnabled   = value.IsHighAlarmEnabled;
+                this.IsHighWarningEnabled = value.IsHighWarningEnabled;
+                this.IsLowAlarmEnabled    = value.IsLowAlarmEnabled;
+                this.IsLowWarningEnabled  = value.IsLowWarningEnabled;
             }
         }
         #endregion SensorItem

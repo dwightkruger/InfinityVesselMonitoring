@@ -4,7 +4,6 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
-using GalaSoft.MvvmLight;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Brushes;
 using Microsoft.Graphics.Canvas.Effects;
@@ -23,7 +22,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace InfinityGroup.VesselMonitoring.Controls
 {
-    public partial class ArcGaugeLeft : BaseGauge
+    public partial class CircularGauge : BaseGauge
     {
         private bool _needsResourceRecreation = true;
         protected const float skip = 5.5f;
@@ -37,7 +36,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
         protected int totalMediumTics;
         protected int totalMinorTics;
 
-        public ArcGaugeLeft() : base()
+        public CircularGauge() : base()
         {
             this.InitializeComponent();
             this.GaugeHeight = 400;

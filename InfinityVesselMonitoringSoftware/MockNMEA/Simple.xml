@@ -23,10 +23,10 @@
     <HighWarningValue>80</HighWarningValue>
     <IsCalibrated>False</IsCalibrated>
     <IsEnabled>True</IsEnabled>
-    <IsHighAlarmEnabled>False</IsHighAlarmEnabled>
-    <IsHighWarningEnabled>False</IsHighWarningEnabled>
-    <IsLowAlarmEnabled>False</IsLowAlarmEnabled>
-    <IsLowWarningEnabled>False</IsLowWarningEnabled>
+    <IsHighAlarmEnabled>True</IsHighAlarmEnabled>
+    <IsHighWarningEnabled>True</IsHighWarningEnabled>
+    <IsLowAlarmEnabled>True</IsLowAlarmEnabled>
+    <IsLowWarningEnabled>True</IsLowWarningEnabled>
     <IsVirtual>False</IsVirtual>
     <Location>Location</Location>
     <LowAlarmValue>10</LowAlarmValue>
@@ -54,10 +54,10 @@
     <HighWarningValue>80</HighWarningValue>
     <IsCalibrated>False</IsCalibrated>
     <IsEnabled>True</IsEnabled>
-    <IsHighAlarmEnabled>False</IsHighAlarmEnabled>
-    <IsHighWarningEnabled>False</IsHighWarningEnabled>
-    <IsLowAlarmEnabled>False</IsLowAlarmEnabled>
-    <IsLowWarningEnabled>False</IsLowWarningEnabled>
+    <IsHighAlarmEnabled>True</IsHighAlarmEnabled>
+    <IsHighWarningEnabled>True</IsHighWarningEnabled>
+    <IsLowAlarmEnabled>True</IsLowAlarmEnabled>
+    <IsLowWarningEnabled>True</IsLowWarningEnabled>
     <IsVirtual>False</IsVirtual>
     <Location>Location</Location>
     <LowAlarmValue>10</LowAlarmValue>
@@ -85,10 +85,10 @@
     <HighWarningValue>80</HighWarningValue>
     <IsCalibrated>False</IsCalibrated>
     <IsEnabled>True</IsEnabled>
-    <IsHighAlarmEnabled>False</IsHighAlarmEnabled>
-    <IsHighWarningEnabled>False</IsHighWarningEnabled>
-    <IsLowAlarmEnabled>False</IsLowAlarmEnabled>
-    <IsLowWarningEnabled>False</IsLowWarningEnabled>
+    <IsHighAlarmEnabled>True</IsHighAlarmEnabled>
+    <IsHighWarningEnabled>True</IsHighWarningEnabled>
+    <IsLowAlarmEnabled>True</IsLowAlarmEnabled>
+    <IsLowWarningEnabled>True</IsLowWarningEnabled>
     <IsVirtual>False</IsVirtual>
     <Location>Location</Location>
     <LowAlarmValue>10</LowAlarmValue>
@@ -125,7 +125,7 @@
     <GaugeOutlineVisibility>Collapsed</GaugeOutlineVisibility>
     <GaugeLeft>400</GaugeLeft>
     <GaugeTop>400</GaugeTop>
-    <GaugeType>LeftArcGauge</GaugeType>
+    <GaugeType>CircularGauge</GaugeType>
     <GaugeWidth>400</GaugeWidth>
     <InnerCircleDelta>30</InnerCircleDelta>
     <MajorTicLength>18</MajorTicLength>
@@ -154,7 +154,7 @@
     <GaugeOutlineVisibility>Collapsed</GaugeOutlineVisibility>
     <GaugeLeft>900</GaugeLeft>
     <GaugeTop>400</GaugeTop>
-    <GaugeType>LeftArcGauge</GaugeType>
+    <GaugeType>CircularGauge</GaugeType>
     <GaugeWidth>400</GaugeWidth>
     <InnerCircleDelta>30</InnerCircleDelta>
     <MajorTicLength>18</MajorTicLength>
