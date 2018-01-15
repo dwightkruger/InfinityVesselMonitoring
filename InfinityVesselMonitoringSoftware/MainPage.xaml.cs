@@ -69,8 +69,9 @@ namespace VesselMonitoring
             const double titlebarHeight = 70;
             const double pivotHeaderHeight = 68;
 
-            this.MainPageInnerGrid.Height = ds.Height - titlebarHeight - pivotHeaderHeight;
-            this.MainPageInnerGrid.Width = ds.Width;
+            Globals.ScreenSize = new Size(ds.Width, ds.Height - titlebarHeight - pivotHeaderHeight);
+            this.MainPageInnerGrid.Height = Globals.ScreenSize.Height;
+            this.MainPageInnerGrid.Width = Globals.ScreenSize.Width;
 
             DispatcherHelper.Initialize();
 
@@ -129,7 +130,7 @@ namespace VesselMonitoring
             XMLParser xmlParser = new XMLParser("ms-appx:///MockNMEA/Simple.xml");
             Task.Run(async () =>
             {
-                await xmlParser.BeginParse();
+                await xmlParser.BeginParse(Globals.ScreenSize);
             }).Wait();
 
             await this.LoadPages();
