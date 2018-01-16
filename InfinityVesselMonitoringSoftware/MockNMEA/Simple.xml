@@ -144,7 +144,7 @@
     <TextVerticalAlignment>Top</TextVerticalAlignment>
     <Units>GallonsUS</Units>
     <UnitsFontSize>20</UnitsFontSize>
-    <ValueFontSize>20</ValueFontSize>
+    <ValueFontSize>40</ValueFontSize>
   </Gauge>
   <Gauge>
     <Divisions>7</Divisions>
@@ -173,7 +173,7 @@
     <TextVerticalAlignment>Top</TextVerticalAlignment>
     <Units>GallonsUK</Units>
     <UnitsFontSize>20</UnitsFontSize>
-    <ValueFontSize>20</ValueFontSize>
+    <ValueFontSize>40</ValueFontSize>
   </Gauge>
   
 </Simple>

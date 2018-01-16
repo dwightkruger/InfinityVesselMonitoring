@@ -540,7 +540,7 @@ namespace VesselMonitoring
             gaugeItem.Divisions = 7;
             gaugeItem.MinorTicsPerMajorTic = 5;
             gaugeItem.MediumTicsPerMajorTic = 0;
-            gaugeItem.ValueFontSize = 18;
+            gaugeItem.ValueFontSize = 30;
             gaugeItem.UnitsFontSize = 14;
             gaugeItem.Units = Units.AmpHrs;
             await App.GaugeItemCollection.BeginAdd(gaugeItem);
@@ -557,7 +557,7 @@ namespace VesselMonitoring
             gaugeItem.Divisions = 4;
             gaugeItem.MinorTicsPerMajorTic = 10;
             gaugeItem.MediumTicsPerMajorTic = 0;
-            gaugeItem.ValueFontSize = 12;
+            gaugeItem.ValueFontSize = 30;
             gaugeItem.UnitsFontSize = 12;
             gaugeItem.MajorTicLength = 12;
             gaugeItem.MiddleCircleDelta = 45;
@@ -577,7 +577,7 @@ namespace VesselMonitoring
             //gaugeItem.Divisions = 4;
             //gaugeItem.MinorTicsPerMajorTic = 10;
             //gaugeItem.MediumTicsPerMajorTic = 0;
-            //gaugeItem.ValueFontSize = 12;
+            //gaugeItem.ValueFontSize = 30;
             //gaugeItem.UnitsFontSize = 12;
             //gaugeItem.MajorTicLength = 12;
             //gaugeItem.MiddleCircleDelta = 45;
@@ -597,7 +597,7 @@ namespace VesselMonitoring
             //gaugeItem.Divisions = 7;
             //gaugeItem.MinorTicsPerMajorTic = 5;
             //gaugeItem.MediumTicsPerMajorTic = 0;
-            //gaugeItem.ValueFontSize = 18;
+            //gaugeItem.ValueFontSize = 30;
             //gaugeItem.UnitsFontSize = 14;
             //gaugeItem.Units = Units.Celsius;
             //await App.GaugeItemCollection.BeginAdd(gaugeItem);
@@ -614,7 +614,7 @@ namespace VesselMonitoring
             //gaugeItem.Divisions = 4;
             //gaugeItem.MinorTicsPerMajorTic = 10;
             //gaugeItem.MediumTicsPerMajorTic = 0;
-            //gaugeItem.ValueFontSize = 12;
+            //gaugeItem.ValueFontSize = 30;
             //gaugeItem.UnitsFontSize = 12;
             //gaugeItem.MajorTicLength = 12;
             //gaugeItem.MiddleCircleDelta = 45;
@@ -634,7 +634,7 @@ namespace VesselMonitoring
             //gaugeItem.Divisions = 4;
             //gaugeItem.MinorTicsPerMajorTic = 10;
             //gaugeItem.MediumTicsPerMajorTic = 0;
-            //gaugeItem.ValueFontSize = 12;
+            //gaugeItem.ValueFontSize = 30;
             //gaugeItem.UnitsFontSize = 12;
             //gaugeItem.MajorTicLength = 12;
             //gaugeItem.MiddleCircleDelta = 45;

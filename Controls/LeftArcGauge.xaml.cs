@@ -7,6 +7,7 @@
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Brushes;
 using Microsoft.Graphics.Canvas.Geometry;
+using Microsoft.Graphics.Canvas.Text;
 using Microsoft.Graphics.Canvas.UI;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using System;
@@ -23,6 +24,9 @@ namespace InfinityGroup.VesselMonitoring.Controls
     public partial class LeftArcGauge : BaseGauge
     {
         private bool _needsResourceRecreation = true;
+        private const float c_arcThickness = 15;
+        private const float c_needleThickness = 15;
+        private const double c_arcSweep = 270;
 
         public LeftArcGauge()
         {
@@ -51,24 +55,126 @@ namespace InfinityGroup.VesselMonitoring.Controls
             this.DrawLowAlarmArc(sender, ds);
             this.DrawHighWarningArc(sender, ds);
             this.DrawHighAlarmArc(sender, ds);
+            this.DrawMinValue(sender, ds);
+            this.DrawMaxValue(sender, ds);
+            this.DrawValue(sender, ds);
+            this.DrawUnits(sender, ds);
+            this.DrawPointer(sender, ds);
+        }
+
+        protected void DrawValue(CanvasControl sender, CanvasDrawingSession ds)
+        {
+            string format = "{0:F" + string.Format("{0:F0}", this.Resolution) + "}";
+            double degree = 20;
+            double radian = RadiansFromDegrees(degree);
+            float atX = (float)(Math.Cos(radian) * (this.Radius - 0 * c_arcThickness)) + Center.X;
+            float atY = (float)(Math.Sin(radian) * (this.Radius - 0 * c_arcThickness)) + Center.Y;
+            atX = this.Center.X + this.Radius;
+            atY = this.Center.Y + this.Radius - (float)(this.ValueFontSize * 3);
+            Vector2 at = new Vector2(atX, atY);
+
+            using (var textFormat = new CanvasTextFormat()
+            {
+                HorizontalAlignment = CanvasHorizontalAlignment.Right,
+                VerticalAlignment = CanvasVerticalAlignment.Center,
+                FontSize = (float)this.ValueFontSize*3,
+            })
+            {
+                ds.DrawText(string.Format(format, this.Value), at, this.GaugeColor, textFormat);
+            }
+        }
+
+        protected void DrawUnits(CanvasControl sender, CanvasDrawingSession ds)
+        {
+            string format = "{0:F" + string.Format("{0:F0}", this.Resolution) + "}";
+            double degree = 45;
+            double radian = RadiansFromDegrees(degree);
+            float atX = this.Center.X + this.Radius;
+            float atY = (float)(Math.Sin(radian) * (this.Radius + 4 * c_arcThickness)) + Center.Y;
+            Vector2 at = new Vector2(atX, atY);
+
+            using (var textFormat = new CanvasTextFormat()
+            {
+                HorizontalAlignment = CanvasHorizontalAlignment.Right,
+                VerticalAlignment = CanvasVerticalAlignment.Center,
+                FontSize = (float)this.ValueFontSize,
+            })
+            {
+                ds.DrawText(this.Units, at, this.GaugeColor, textFormat);
+            }
+        }
+
+        protected void DrawMinValue(CanvasControl sender, CanvasDrawingSession ds)
+        {
+            string format = "{0:F" + string.Format("{0:F0}", this.Resolution) + "}";
+            double degree = 130;
+            double radian = RadiansFromDegrees(degree);
+            float atX = (float)(Math.Cos(radian) * (this.Radius + 4*c_arcThickness)) + Center.X;
+            float atY = (float)(Math.Sin(radian) * (this.Radius + 4*c_arcThickness)) + Center.Y;
+            Vector2 at = new Vector2(atX, atY);
+
+            using (var textFormat = new CanvasTextFormat()
+            {
+                HorizontalAlignment = CanvasHorizontalAlignment.Center,
+                VerticalAlignment = CanvasVerticalAlignment.Center,
+                FontSize = (float)this.ValueFontSize
+            })
+            {
+                ds.DrawText(string.Format(format, this.MinValue), at, this.GaugeColor, textFormat);
+            }
+        }
+
+        protected void DrawMaxValue(CanvasControl sender, CanvasDrawingSession ds)
+        {
+            string format = "{0:F" + string.Format("{0:F0}", this.Resolution) + "}";
+            double degree = 0;
+            double radian = RadiansFromDegrees(degree);
+            float atX = (float)(Math.Cos(radian) * (this.Radius - 2 * c_arcThickness)) + Center.X;
+            float atY = (float)(Math.Sin(radian) * (this.Radius - 2 * c_arcThickness)) + Center.Y;
+            Vector2 at = new Vector2(atX, atY);
+
+            using (var textFormat = new CanvasTextFormat()
+            {
+                HorizontalAlignment = CanvasHorizontalAlignment.Right,
+                VerticalAlignment = CanvasVerticalAlignment.Center,
+                FontSize = (float)this.ValueFontSize
+            })
+            {
+                ds.DrawText(string.Format(format, this.MaxValue), at, this.GaugeColor, textFormat);
+            }
+        }
+
+        protected void DrawPointer(CanvasControl sender, CanvasDrawingSession ds)
+        {
+            using (CanvasPathBuilder cp = new CanvasPathBuilder(sender))
+            {
+                cp.BeginFigure(this.Center);
+                cp.AddLine(new Vector2(this.Center.X - c_needleThickness / 2, this.Center.Y));
+                cp.AddLine(new Vector2(this.Center.X - c_needleThickness / 2, this.Center.Y + this.Radius));
+                cp.AddLine(new Vector2(this.Center.X + c_needleThickness / 2, this.Center.Y + this.Radius));
+                cp.AddLine(new Vector2(this.Center.X + c_needleThickness / 2, this.Center.Y));
+                cp.AddLine(new Vector2(this.Center.X - c_needleThickness / 2, this.Center.Y));
+                cp.EndFigure(CanvasFigureLoop.Closed);
+
+                using (var geometry = CanvasGeometry.CreatePath(cp))
+                {
+                    float angle = (float)RadiansFromDegrees(this.PercentToPointerAngle(this.PercentFull));
+                    ds.Transform *= System.Numerics.Matrix3x2.CreateRotation(angle, this.Center);  
+                    ds.FillGeometry(geometry, this.PointerColor);
+                }
+            }
         }
 
         protected void DrawValueArc(CanvasControl sender, CanvasDrawingSession ds)
         {
-            const float arcThickness = 15;
-            float radius = Math.Min(this.Center.X, this.Center.Y) - arcThickness;
             using (CanvasPathBuilder cp = new CanvasPathBuilder(sender))
             {
                 cp.BeginFigure(this.Center);
                 float startAngle = (float)RadiansFromDegrees(130);
-                double percentFull = this.PercentFull;
                 double endDegrees = this.PercentToStartAngle(this.PercentFull);
                 float endAngle = (float)RadiansFromDegrees(this.PercentToStartAngle(this.PercentFull));
-                Debug.Assert(startAngle <= endAngle);
-                Debug.Assert(endAngle <= 2.01 * Math.PI);
-                Debug.Assert(percentFull <= 1.0D);
 
-                cp.AddArc(this.Center, radius, radius, startAngle, endAngle-startAngle);
+                cp.AddArc(this.Center, this.Radius, this.Radius, startAngle, endAngle-startAngle);
                 cp.EndFigure(CanvasFigureLoop.Closed);
 
                 using (var geometry = CanvasGeometry.CreatePath(cp))
@@ -121,18 +227,17 @@ namespace InfinityGroup.VesselMonitoring.Controls
             double value = Math.Max(percent, 0D);
             value = Math.Min(value, 1.0D);
 
-            double delta = 230;     // 230 degrees for the arc total
-            double angle = 360 - (delta * (1 - percent));
+            double angle = 360 - (c_arcSweep * (1 - percent));
 
             return angle;
         }
+
         protected double PercentToStartAngle(double percent)
         {
             double value = Math.Max(percent, 0D);
             value = Math.Min(value, 1.0D);
 
-            double delta = 230;     // 230 degrees for the arc total
-            double angle = 130D + (delta * percent);
+            double angle = 130D + (c_arcSweep * percent);
 
             Debug.Assert(angle <= 360);
             Debug.Assert(angle >= 130);
@@ -140,18 +245,30 @@ namespace InfinityGroup.VesselMonitoring.Controls
             return angle;
         }
 
+        protected double PercentToPointerAngle(double percent)
+        {
+            double value = Math.Max(percent, 0D);
+            value = Math.Min(value, 1.0D);
+
+            double angle = 40D + (c_arcSweep * percent);
+
+            Debug.Assert(angle <= 270);
+            Debug.Assert(angle >= 40);
+
+            return angle;
+        }
+
         protected void DrawGaugeArc(CanvasControl sender, CanvasDrawingSession ds, float startAngle, float endAngle, Color color, CanvasSweepDirection canvasSweepDirection, CanvasArcSize canvasArcSize)
         {
             const float arcThickness = 15;
-            float radius = Math.Min(this.Center.X, this.Center.Y) - arcThickness;
 
             using (CanvasPathBuilder cp = new CanvasPathBuilder(sender))
             {
-                var startPoint = this.Center + Vector2.Transform(Vector2.UnitX, Matrix3x2.CreateRotation(startAngle)) * radius;
-                var endPoint = this.Center + Vector2.Transform(Vector2.UnitX, Matrix3x2.CreateRotation(endAngle)) * radius;
+                var startPoint = this.Center + Vector2.Transform(Vector2.UnitX, Matrix3x2.CreateRotation(startAngle)) * this.Radius;
+                var endPoint = this.Center + Vector2.Transform(Vector2.UnitX, Matrix3x2.CreateRotation(endAngle)) * this.Radius;
 
                 cp.BeginFigure(startPoint);
-                cp.AddArc(endPoint, radius, radius, 0, canvasSweepDirection, canvasArcSize);
+                cp.AddArc(endPoint, this.Radius, this.Radius, 0, canvasSweepDirection, canvasArcSize);
                 cp.EndFigure(CanvasFigureLoop.Open);
 
                 using (var geometry = CanvasGeometry.CreatePath(cp))
@@ -161,11 +278,19 @@ namespace InfinityGroup.VesselMonitoring.Controls
             }
         }
 
+        protected float Radius
+        {
+            get
+            {
+                return Math.Min(this.Center.X, this.Center.Y) - c_arcThickness;
+            }
+        }
+
         protected CanvasStrokeStyle ArcStrokeStyle = new CanvasStrokeStyle()
         {
             DashStyle = CanvasDashStyle.Solid,
-            StartCap = CanvasCapStyle.Flat,
-            EndCap = CanvasCapStyle.Flat,
+            StartCap = CanvasCapStyle.Round,
+            EndCap = CanvasCapStyle.Round,
         };
 
         protected Color PointerColor
@@ -206,7 +331,6 @@ namespace InfinityGroup.VesselMonitoring.Controls
         protected CanvasLinearGradientBrush InnerCircleBrush { get; set; }
 
         protected Vector2 Center { get; set; }
-        protected CanvasStrokeStyle PointerStrokeStyle { get; set; }
 
         override protected void RefreshAlarmColors()
         {
