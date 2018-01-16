@@ -6,6 +6,7 @@
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
+using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityVesselMonitoringSoftware.Gauges;
 using System.Collections.Generic;
@@ -51,6 +52,8 @@ namespace InfinityVesselMonitoringSoftware.ViewModels
                                 gaugeItem.TextFontColor = App.VesselSettings.ThemeForegroundColor;
                                 gaugeItem.GaugeColor = App.VesselSettings.ThemeForegroundColor;
                                 gaugeItem.GaugeType = GaugeTypeEnum.LeftArcGauge;
+                                gaugeItem.GaugeHeight = Globals.ScreenSize.Height / 4;
+                                gaugeItem.GaugeWidth = Globals.ScreenSize.Width / 4;
                                 gaugeItem.SensorId = sensorItem.SensorId;
                                 gaugeItem.Units = sensorItem.SensorUnits;
                                 await gaugeItem.BeginCommit();

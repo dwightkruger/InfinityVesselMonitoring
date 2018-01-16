@@ -240,8 +240,8 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns["GaugeOutlineVisibility"].DefaultValue  = Convert.ToInt32(Windows.UI.Xaml.Visibility.Visible);
             itemTable.Columns["MiddleCircleDelta"].DefaultValue       = 70;
             itemTable.Columns["InnerCircleDelta"].DefaultValue        = 30;
-            itemTable.Columns["ValueFontSize"].DefaultValue           = 13D;
-            itemTable.Columns["UnitsFontSize"].DefaultValue           = 13D;
+            itemTable.Columns["ValueFontSize"].DefaultValue           = 60D;
+            itemTable.Columns["UnitsFontSize"].DefaultValue           = 60D;
             itemTable.Columns["Units"].DefaultValue                   = Units.AmpHrs;
             itemTable.Columns["MajorTicLength"].DefaultValue          = 18D;
             itemTable.Columns["MediumTicLength"].DefaultValue         = 12D;

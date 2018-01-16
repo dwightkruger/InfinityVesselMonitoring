@@ -107,8 +107,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Adorner.cs" />
-    <Compile Include="ArcGaugeLeft.xaml.cs">
-      <DependentUpon>ArcGaugeLeft.xaml</DependentUpon>
+    <Compile Include="CircularGauge.xaml.cs">
+      <DependentUpon>CircularGauge.xaml</DependentUpon>
     </Compile>
     <Compile Include="BaseGauge.cs" />
     <Compile Include="CanvasGrid.cs" />
@@ -118,6 +118,9 @@
     <Compile Include="FrameworkElementAttachedProperties.cs" />
     <Compile Include="ImageToggleButton.xaml.cs">
       <DependentUpon>ImageToggleButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LeftArcGauge.xaml.cs">
+      <DependentUpon>LeftArcGauge.xaml</DependentUpon>
     </Compile>
     <Compile Include="PolyLineControl.xaml.cs">
       <DependentUpon>PolyLineControl.xaml</DependentUpon>
@@ -160,11 +163,15 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="ArcGaugeLeft.xaml">
+    <Page Include="CircularGauge.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ImageToggleButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LeftArcGauge.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using VesselMonitoringSuite.Devices;
 using VesselMonitoringSuite.Sensors;
+using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI.Xaml;
 
@@ -33,7 +34,7 @@ namespace InfinityVesselMonitoringSoftware.MockNMEA
             this.XmlUrl = xmlUrl;
         }
 
-        async public Task BeginParse()
+        async public Task BeginParse(Size screenSize)
         {
             StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(new Uri(this.XmlUrl));
             Stream stream = await file.OpenStreamForReadAsync();
@@ -62,7 +63,9 @@ namespace InfinityVesselMonitoringSoftware.MockNMEA
             _gaugeItemlist = this.ParseGauges(xmlDocument);
             foreach (IGaugeItem gaugeItem in _gaugeItemlist)
             {
-                await App.GaugeItemCollection.BeginAdd(gaugeItem);
+                gaugeItem.GaugeHeight = screenSize.Height / 4.0;
+                gaugeItem.GaugeWidth = screenSize.Width / 4.0;
+                //await App.GaugeItemCollection.BeginAdd(gaugeItem);
             }
         }
 

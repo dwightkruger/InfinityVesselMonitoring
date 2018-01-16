@@ -69,8 +69,9 @@ namespace VesselMonitoring
             const double titlebarHeight = 70;
             const double pivotHeaderHeight = 68;
 
-            this.MainPageInnerGrid.Height = ds.Height - titlebarHeight - pivotHeaderHeight;
-            this.MainPageInnerGrid.Width = ds.Width;
+            Globals.ScreenSize = new Size(ds.Width, ds.Height - titlebarHeight - pivotHeaderHeight);
+            this.MainPageInnerGrid.Height = Globals.ScreenSize.Height;
+            this.MainPageInnerGrid.Width = Globals.ScreenSize.Width;
 
             DispatcherHelper.Initialize();
 
@@ -129,7 +130,7 @@ namespace VesselMonitoring
             XMLParser xmlParser = new XMLParser("ms-appx:///MockNMEA/Simple.xml");
             Task.Run(async () =>
             {
-                await xmlParser.BeginParse();
+                await xmlParser.BeginParse(Globals.ScreenSize);
             }).Wait();
 
             await this.LoadPages();
@@ -377,12 +378,19 @@ namespace VesselMonitoring
             //await App.BuildDBTables.SensorDataTable.BeginEmpty();
             //App.SensorCollection.Clear();
 
+            if (null == App.DeviceCollection) return;
+            if (0 == App.DeviceCollection.Count) return;
+
             // Sensor 00
             ISensorItem sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
             sensor.SerialNumber = Guid.NewGuid().ToString();
             sensor.SensorType = SensorType.Tank;
             sensor.SensorUnitType = UnitType.Power;
             sensor.SensorUnits = Units.AmpHrs;
+            sensor.IsHighAlarmEnabled = true;
+            sensor.IsHighWarningEnabled = true;
+            sensor.IsLowAlarmEnabled = true;
+            sensor.IsLowWarningEnabled = true;
             sensor.IsEnabled = true;
             sensor.IsDemoMode = true;
             sensor = await App.SensorCollection.BeginAdd(sensor);
@@ -393,6 +401,10 @@ namespace VesselMonitoring
             sensor.SensorType = SensorType.Tank;
             sensor.SensorUnits = Units.Amps;
             sensor.SensorUnitType = UnitType.Current;
+            sensor.IsHighAlarmEnabled = true;
+            sensor.IsHighWarningEnabled = true;
+            sensor.IsLowAlarmEnabled = true;
+            sensor.IsLowWarningEnabled = true;
             sensor.IsEnabled = true;
             sensor.IsDemoMode = true;
             sensor = await App.SensorCollection.BeginAdd(sensor);
@@ -403,6 +415,10 @@ namespace VesselMonitoring
             sensor.SensorType = SensorType.Tank;
             sensor.SensorUnits = Units.Bar;
             sensor.SensorUnitType = UnitType.Pressure;
+            sensor.IsHighAlarmEnabled = true;
+            sensor.IsHighWarningEnabled = true;
+            sensor.IsLowAlarmEnabled = true;
+            sensor.IsLowWarningEnabled = true;
             sensor.IsEnabled = true;
             sensor.IsDemoMode = true;
             sensor = await App.SensorCollection.BeginAdd(sensor);
@@ -413,6 +429,10 @@ namespace VesselMonitoring
             sensor.SensorType = SensorType.Tank;
             sensor.SensorUnits = Units.Fahrenheit;
             sensor.SensorUnitType = UnitType.Temperature;
+            sensor.IsHighAlarmEnabled = true;
+            sensor.IsHighWarningEnabled = true;
+            sensor.IsLowAlarmEnabled = true;
+            sensor.IsLowWarningEnabled = true;
             sensor.IsEnabled = true;
             sensor.IsDemoMode = true;
             sensor = await App.SensorCollection.BeginAdd(sensor);
@@ -423,6 +443,10 @@ namespace VesselMonitoring
             sensor.SensorType = SensorType.Tank;
             sensor.SensorUnits = Units.CubicMeters;
             sensor.SensorUnitType = UnitType.Volume;
+            sensor.IsHighAlarmEnabled = true;
+            sensor.IsHighWarningEnabled = true;
+            sensor.IsLowAlarmEnabled = true;
+            sensor.IsLowWarningEnabled = true;
             sensor.IsEnabled = true;
             sensor.IsDemoMode = true;
             sensor = await App.SensorCollection.BeginAdd(sensor);
@@ -433,6 +457,10 @@ namespace VesselMonitoring
             sensor.SensorType = SensorType.Tank;
             sensor.SensorUnits = Units.CubicMetersPerHr;
             sensor.SensorUnitType = UnitType.VolumeFlow;
+            sensor.IsHighAlarmEnabled = true;
+            sensor.IsHighWarningEnabled = true;
+            sensor.IsLowAlarmEnabled = true;
+            sensor.IsLowWarningEnabled = true;
             sensor.IsEnabled = true;
             sensor.IsDemoMode = true;
             sensor = await App.SensorCollection.BeginAdd(sensor);
@@ -512,7 +540,7 @@ namespace VesselMonitoring
             gaugeItem.Divisions = 7;
             gaugeItem.MinorTicsPerMajorTic = 5;
             gaugeItem.MediumTicsPerMajorTic = 0;
-            gaugeItem.ValueFontSize = 18;
+            gaugeItem.ValueFontSize = 30;
             gaugeItem.UnitsFontSize = 14;
             gaugeItem.Units = Units.AmpHrs;
             await App.GaugeItemCollection.BeginAdd(gaugeItem);
@@ -529,7 +557,7 @@ namespace VesselMonitoring
             gaugeItem.Divisions = 4;
             gaugeItem.MinorTicsPerMajorTic = 10;
             gaugeItem.MediumTicsPerMajorTic = 0;
-            gaugeItem.ValueFontSize = 12;
+            gaugeItem.ValueFontSize = 30;
             gaugeItem.UnitsFontSize = 12;
             gaugeItem.MajorTicLength = 12;
             gaugeItem.MiddleCircleDelta = 45;
@@ -549,7 +577,7 @@ namespace VesselMonitoring
             //gaugeItem.Divisions = 4;
             //gaugeItem.MinorTicsPerMajorTic = 10;
             //gaugeItem.MediumTicsPerMajorTic = 0;
-            //gaugeItem.ValueFontSize = 12;
+            //gaugeItem.ValueFontSize = 30;
             //gaugeItem.UnitsFontSize = 12;
             //gaugeItem.MajorTicLength = 12;
             //gaugeItem.MiddleCircleDelta = 45;
@@ -569,7 +597,7 @@ namespace VesselMonitoring
             //gaugeItem.Divisions = 7;
             //gaugeItem.MinorTicsPerMajorTic = 5;
             //gaugeItem.MediumTicsPerMajorTic = 0;
-            //gaugeItem.ValueFontSize = 18;
+            //gaugeItem.ValueFontSize = 30;
             //gaugeItem.UnitsFontSize = 14;
             //gaugeItem.Units = Units.Celsius;
             //await App.GaugeItemCollection.BeginAdd(gaugeItem);
@@ -586,7 +614,7 @@ namespace VesselMonitoring
             //gaugeItem.Divisions = 4;
             //gaugeItem.MinorTicsPerMajorTic = 10;
             //gaugeItem.MediumTicsPerMajorTic = 0;
-            //gaugeItem.ValueFontSize = 12;
+            //gaugeItem.ValueFontSize = 30;
             //gaugeItem.UnitsFontSize = 12;
             //gaugeItem.MajorTicLength = 12;
             //gaugeItem.MiddleCircleDelta = 45;
@@ -606,7 +634,7 @@ namespace VesselMonitoring
             //gaugeItem.Divisions = 4;
             //gaugeItem.MinorTicsPerMajorTic = 10;
             //gaugeItem.MediumTicsPerMajorTic = 0;
-            //gaugeItem.ValueFontSize = 12;
+            //gaugeItem.ValueFontSize = 30;
             //gaugeItem.UnitsFontSize = 12;
             //gaugeItem.MajorTicLength = 12;
             //gaugeItem.MiddleCircleDelta = 45;
