@@ -25,8 +25,10 @@ namespace InfinityGroup.VesselMonitoring.Controls
     {
         private bool _needsResourceRecreation = true;
         private const float c_arcThickness = 15;
-        private const float c_needleThickness = 15;
-        private const double c_arcSweep = 360 - 130;
+        private const float c_needleThickness = 10;
+        private const float c_endAngle = 0;
+        private const float c_startAngle = 130;
+        private const double c_arcSweep = 360 - c_endAngle - c_startAngle;
 
         public LeftArcGauge()
         {
@@ -57,27 +59,33 @@ namespace InfinityGroup.VesselMonitoring.Controls
             this.DrawHighAlarmArc(sender, ds);
             this.DrawMinValue(sender, ds);
             this.DrawMaxValue(sender, ds);
-            this.DrawValue(sender, ds);
-            this.DrawUnits(sender, ds);
             this.DrawPointer(sender, ds);
+        }
+
+        protected void valueControl_Draw(CanvasControl sender, CanvasDrawEventArgs args)
+        {
+            this.EnsureResources(sender, args);
+            this.DrawValue(sender, args.DrawingSession);
+        }
+
+        protected void unitsControl_Draw(CanvasControl sender, CanvasDrawEventArgs args)
+        {
+            this.EnsureResources(sender, args);
+            this.DrawUnits(sender, args.DrawingSession);
         }
 
         protected void DrawValue(CanvasControl sender, CanvasDrawingSession ds)
         {
             string format = "{0:F" + string.Format("{0:F0}", this.Resolution) + "}";
-            double degree = 20;
-            double radian = RadiansFromDegrees(degree);
-            float atX = (float)(Math.Cos(radian) * (this.Radius - 0 * c_arcThickness)) + Center.X;
-            float atY = (float)(Math.Sin(radian) * (this.Radius - 0 * c_arcThickness)) + Center.Y;
-            atX = this.Center.X + this.Radius;
-            atY = this.Center.Y + this.Radius - (float)(this.ValueFontSize * 3);
+            float atX = (float)sender.ActualWidth;
+            float atY = (float)sender.ActualHeight;
             Vector2 at = new Vector2(atX, atY);
 
             using (var textFormat = new CanvasTextFormat()
             {
                 HorizontalAlignment = CanvasHorizontalAlignment.Right,
-                VerticalAlignment = CanvasVerticalAlignment.Center,
-                FontSize = (float)this.ValueFontSize*3,
+                VerticalAlignment = CanvasVerticalAlignment.Bottom,
+                FontSize = (float)this.ValueFontSize,
             })
             {
                 ds.DrawText(string.Format(format, this.Value), at, this.GaugeColor, textFormat);
@@ -87,17 +95,15 @@ namespace InfinityGroup.VesselMonitoring.Controls
         protected void DrawUnits(CanvasControl sender, CanvasDrawingSession ds)
         {
             string format = "{0:F" + string.Format("{0:F0}", this.Resolution) + "}";
-            double degree = 45;
-            double radian = RadiansFromDegrees(degree);
-            float atX = this.Center.X + this.Radius;
-            float atY = (float)(Math.Sin(radian) * (this.Radius + 4 * c_arcThickness)) + Center.Y;
+            float atX = (float) sender.ActualWidth;
+            float atY = (float) sender.ActualHeight; 
             Vector2 at = new Vector2(atX, atY);
 
             using (var textFormat = new CanvasTextFormat()
             {
                 HorizontalAlignment = CanvasHorizontalAlignment.Right,
-                VerticalAlignment = CanvasVerticalAlignment.Center,
-                FontSize = (float)this.ValueFontSize,
+                VerticalAlignment = CanvasVerticalAlignment.Bottom,
+                FontSize = (float)this.UnitsFontSize,
             })
             {
                 ds.DrawText(this.Units, at, this.GaugeColor, textFormat);
@@ -107,17 +113,16 @@ namespace InfinityGroup.VesselMonitoring.Controls
         protected void DrawMinValue(CanvasControl sender, CanvasDrawingSession ds)
         {
             string format = "{0:F" + string.Format("{0:F0}", this.Resolution) + "}";
-            double degree = 130;
-            double radian = RadiansFromDegrees(degree);
-            float atX = (float)(Math.Cos(radian) * (this.Radius + 4*c_arcThickness)) + Center.X;
-            float atY = (float)(Math.Sin(radian) * (this.Radius + 4*c_arcThickness)) + Center.Y;
+            double radian = RadiansFromDegrees(c_startAngle);
+            float atX = (float)(Math.Cos(radian) * (this.Radius + 1.3*c_arcThickness)) + Center.X;
+            float atY = (float)(Math.Sin(radian) * (this.Radius + 1.3*c_arcThickness)) + Center.Y;
             Vector2 at = new Vector2(atX, atY);
 
             using (var textFormat = new CanvasTextFormat()
             {
-                HorizontalAlignment = CanvasHorizontalAlignment.Center,
+                HorizontalAlignment = CanvasHorizontalAlignment.Right,
                 VerticalAlignment = CanvasVerticalAlignment.Center,
-                FontSize = (float)this.ValueFontSize
+                FontSize = (float)this.LabelsFontSize
             })
             {
                 ds.DrawText(string.Format(format, this.MinValue), at, this.GaugeColor, textFormat);
@@ -127,17 +132,16 @@ namespace InfinityGroup.VesselMonitoring.Controls
         protected void DrawMaxValue(CanvasControl sender, CanvasDrawingSession ds)
         {
             string format = "{0:F" + string.Format("{0:F0}", this.Resolution) + "}";
-            double degree = 0;
-            double radian = RadiansFromDegrees(degree);
-            float atX = (float)(Math.Cos(radian) * (this.Radius - 2 * c_arcThickness)) + Center.X;
-            float atY = (float)(Math.Sin(radian) * (this.Radius - 2 * c_arcThickness)) + Center.Y;
+            double radian = RadiansFromDegrees(c_endAngle);
+            float atX = (float)(Math.Cos(radian) * (this.Radius - 1 * c_arcThickness)) + Center.X;
+            float atY = (float)(Math.Sin(radian) * (this.Radius - 1 * c_arcThickness)) + Center.Y;
             Vector2 at = new Vector2(atX, atY);
 
             using (var textFormat = new CanvasTextFormat()
             {
                 HorizontalAlignment = CanvasHorizontalAlignment.Right,
                 VerticalAlignment = CanvasVerticalAlignment.Center,
-                FontSize = (float)this.ValueFontSize
+                FontSize = (float)this.LabelsFontSize
             })
             {
                 ds.DrawText(string.Format(format, this.MaxValue), at, this.GaugeColor, textFormat);
@@ -170,7 +174,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
             using (CanvasPathBuilder cp = new CanvasPathBuilder(sender))
             {
                 cp.BeginFigure(this.Center);
-                float startAngle = (float)RadiansFromDegrees(130);
+                float startAngle = (float)RadiansFromDegrees(c_startAngle);
                 double endDegrees = this.PercentToStartAngle(this.PercentFull);
                 float endAngle = (float)RadiansFromDegrees(this.PercentToStartAngle(this.PercentFull));
 
@@ -189,21 +193,21 @@ namespace InfinityGroup.VesselMonitoring.Controls
         /// </summary>
         protected void DrawBaseArc(CanvasControl sender, CanvasDrawingSession ds)
         {
-            float startAngle   = (float) RadiansFromDegrees(0);
-            float endAngle     = (float) RadiansFromDegrees(130);
+            float startAngle   = (float) RadiansFromDegrees(c_endAngle);
+            float endAngle     = (float) RadiansFromDegrees(c_startAngle);
             this.DrawGaugeArc(sender, ds, startAngle, endAngle, this.GaugeColor, CanvasSweepDirection.CounterClockwise, CanvasArcSize.Large);
         }
 
         protected void DrawHighWarningArc(CanvasControl sender, CanvasDrawingSession ds)
         {
-            float startAngle = (float)RadiansFromDegrees(0);
+            float startAngle = (float)RadiansFromDegrees(c_endAngle);
             float endAngle   = (float)RadiansFromDegrees(this.PercentToEndAngle(this.HighWarningStartPercent));
             this.DrawGaugeArc(sender, ds, startAngle, endAngle, Colors.Orange, CanvasSweepDirection.CounterClockwise, CanvasArcSize.Small);
         }
 
         protected void DrawHighAlarmArc(CanvasControl sender, CanvasDrawingSession ds)
         {
-            float startAngle = (float)RadiansFromDegrees(0);
+            float startAngle = (float)RadiansFromDegrees(c_endAngle);
             float endAngle = (float)RadiansFromDegrees(this.PercentToEndAngle(this.HighAlarmStartPercent));
             this.DrawGaugeArc(sender, ds, startAngle, endAngle, Colors.Red, CanvasSweepDirection.CounterClockwise, CanvasArcSize.Small);
         }
@@ -211,14 +215,14 @@ namespace InfinityGroup.VesselMonitoring.Controls
         protected void DrawLowWarningArc(CanvasControl sender, CanvasDrawingSession ds)
         {
             float startAngle = (float)RadiansFromDegrees(this.PercentToStartAngle(this.LowWarningEndPercent));
-            float endAngle = (float)RadiansFromDegrees(130);
+            float endAngle = (float)RadiansFromDegrees(c_startAngle);
             this.DrawGaugeArc(sender, ds, startAngle, endAngle, Colors.Orange, CanvasSweepDirection.CounterClockwise, CanvasArcSize.Small);
         }
 
         protected void DrawLowAlarmArc(CanvasControl sender, CanvasDrawingSession ds)
         {
             float startAngle = (float)RadiansFromDegrees(this.PercentToStartAngle(this.LowAlarmEndPercent));
-            float endAngle = (float)RadiansFromDegrees(130);
+            float endAngle = (float)RadiansFromDegrees(c_startAngle);
             this.DrawGaugeArc(sender, ds, startAngle, endAngle, Colors.Red, CanvasSweepDirection.CounterClockwise, CanvasArcSize.Small);
         }
 
@@ -237,10 +241,10 @@ namespace InfinityGroup.VesselMonitoring.Controls
             double value = Math.Max(percent, 0D);
             value = Math.Min(value, 1.0D);
 
-            double angle = 130D + (c_arcSweep * percent);
+            double angle = c_startAngle + (c_arcSweep * percent);
 
             Debug.Assert(angle <= 360);
-            Debug.Assert(angle >= 130);
+            Debug.Assert(angle >= c_startAngle);
 
             return angle;
         }
@@ -335,11 +339,14 @@ namespace InfinityGroup.VesselMonitoring.Controls
         override protected void RefreshAlarmColors()
         {
             this.canvasControl?.Invalidate();
+            this.ValueControl?.Invalidate();
+            this.UnitsControl?.Invalidate();
         }
 
         override protected void RefreshValue(object oldValue, object newValue)
         {
             this.canvasControl?.Invalidate();
+            this.ValueControl?.Invalidate();
         }
 
         override protected void RefreshLeft(object oldValue, object newValue)
@@ -359,6 +366,8 @@ namespace InfinityGroup.VesselMonitoring.Controls
             this.canvasControl.Height = Convert.ToDouble(newValue);
             this.MainGrid.Height = Convert.ToDouble(newValue);
             this.canvasControl?.Invalidate();
+            this.ValueControl?.Invalidate();
+            this.UnitsControl?.Invalidate();
         }
 
         override protected void RefreshGaugeWidth(object oldValue, object newValue)
@@ -366,6 +375,8 @@ namespace InfinityGroup.VesselMonitoring.Controls
             this.canvasControl.Width = Convert.ToDouble(newValue);
             this.MainGrid.Width = Convert.ToDouble(newValue);
             this.canvasControl?.Invalidate();
+            this.ValueControl?.Invalidate();
+            this.UnitsControl?.Invalidate();
         }
 
         override protected void RefreshMaxValue(object oldValue, object newValue)
@@ -380,7 +391,6 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
         override protected void RefreshHighAlarmValue(object oldValue, object newValue)
         {
-
             this.canvasControl?.Invalidate();
         }
 
@@ -404,14 +414,19 @@ namespace InfinityGroup.VesselMonitoring.Controls
             this.canvasControl?.Invalidate();
         }
 
-        protected override void RefreshValueFontSize(object oldValue, object newValue)
+        protected override void RefreshLabelsFontSize(object oldValue, object newValue)
         {
             this.canvasControl?.Invalidate();
         }
 
+        protected override void RefreshValueFontSize(object oldValue, object newValue)
+        {
+            this.ValueControl?.Invalidate();
+        }
+
         protected override void RefreshUnitsFontSize(object oldValue, object newValue)
         {
-            this.canvasControl?.Invalidate();
+            this.UnitsControl?.Invalidate();
         }
 
         private void canvasControl_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -422,6 +437,8 @@ namespace InfinityGroup.VesselMonitoring.Controls
         override protected void RefreshGaugeColor(object oldValue, object newValue)
         {
             this.canvasControl?.Invalidate();
+            this.ValueControl?.Invalidate();
+            this.UnitsControl?.Invalidate();
         }
 
         static protected double RadiansFromDegrees(double degrees)

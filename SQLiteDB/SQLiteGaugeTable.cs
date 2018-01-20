@@ -49,6 +49,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     "GaugeOutlineVisibility  INTEGER  NOT NULL, \n " +
                     "MiddleCircleDelta       INTEGER  NOT NULL, \n " +
                     "InnerCircleDelta        INTEGER  NOT NULL, \n " +
+                    "LabelsFontSize          INTEGER  NOT NULL, \n " +
                     "ValueFontSize           FLOAT    NOT NULL, \n " +
                     "UnitsFontSize           FLOAT    NOT NULL, \n " +
                     "Units                   INTEGER  NOT NULL, \n " +
@@ -87,6 +88,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                     "GaugeOutlineVisibility, " +
                     "MiddleCircleDelta, " +
                     "InnerCircleDelta, " +
+                    "LabelsFontSize, " +
                     "ValueFontSize, " +
                     "UnitsFontSize, " +
                     "Units, " +
@@ -129,6 +131,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             statement.Bind("@GaugeOutlineVisibility",  Convert.ToInt32(itemRow.Field<Windows.UI.Xaml.Visibility>("GaugeOutlineVisibility")));
             statement.Bind("@MiddleCircleDelta",       itemRow.Field<int>("MiddleCircleDelta"));
             statement.Bind("@InnerCircleDelta",        itemRow.Field<int>("InnerCircleDelta"));
+            statement.Bind("@LabelsFontSize",          itemRow.Field<double>("LabelsFontSize"));
             statement.Bind("@ValueFontSize",           itemRow.Field<double>("ValueFontSize"));
             statement.Bind("@UnitsFontSize",           itemRow.Field<double>("UnitsFontSize"));
             statement.Bind("@Units",                   Convert.ToInt32(itemRow.Field<Units>("Units")));
@@ -172,19 +175,20 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemRow.SetField<int>("GaugeOutlineVisibility",     (int)Convert.ToInt32(statement[14]));
             itemRow.SetField<int>("MiddleCircleDelta",          (int)Convert.ToInt32(statement[15]));
             itemRow.SetField<int>("InnerCircleDelta",           (int)Convert.ToInt32(statement[16]));
-            itemRow.SetField<double>("ValueFontSize",           (double)Convert.ToDouble(statement[17]));
-            itemRow.SetField<double>("UnitsFontSize",           (double)Convert.ToDouble(statement[18]));
-            itemRow.SetField<Units>("Units",                    (Units)Convert.ToInt32(statement[19]));
-            itemRow.SetField<double>("MajorTicLength",          (double)Convert.ToDouble(statement[20]));
-            itemRow.SetField<double>("MediumTicLength",         (double)Convert.ToDouble(statement[21]));
-            itemRow.SetField<double>("MinorTicLength",          (double)Convert.ToDouble(statement[22]));
-            itemRow.SetField<string>("Text",                    (string)Convert.ToString(statement[23]));
-            itemRow.SetField<double>("TextFontSize",            (double)Convert.ToDouble(statement[24]));
-            itemRow.SetField<Color>("TextFontColor",            (Color)Utilities.ColorFromI64((Int64)statement[25])); 
-            itemRow.SetField<double>("TextAngle",               (double)Convert.ToDouble(statement[26]));
-            itemRow.SetField<CanvasHorizontalAlignment>("TextHorizontalAlignment", (CanvasHorizontalAlignment)Convert.ToInt32(statement[27]));
-            itemRow.SetField<CanvasVerticalAlignment>("TextVerticalAlignment",     (CanvasVerticalAlignment)Convert.ToInt32(statement[28]));
-            itemRow.SetField<string>("Properties",              (string)statement[29]);
+            itemRow.SetField<double>("LabelsFontSize",          (double)Convert.ToDouble(statement[17]));
+            itemRow.SetField<double>("ValueFontSize",           (double)Convert.ToDouble(statement[18]));
+            itemRow.SetField<double>("UnitsFontSize",           (double)Convert.ToDouble(statement[19]));
+            itemRow.SetField<Units>("Units",                    (Units)Convert.ToInt32(statement[20]));
+            itemRow.SetField<double>("MajorTicLength",          (double)Convert.ToDouble(statement[21]));
+            itemRow.SetField<double>("MediumTicLength",         (double)Convert.ToDouble(statement[22]));
+            itemRow.SetField<double>("MinorTicLength",          (double)Convert.ToDouble(statement[23]));
+            itemRow.SetField<string>("Text",                    (string)Convert.ToString(statement[24]));
+            itemRow.SetField<double>("TextFontSize",            (double)Convert.ToDouble(statement[25]));
+            itemRow.SetField<Color>("TextFontColor",            (Color)Utilities.ColorFromI64((Int64)statement[26])); 
+            itemRow.SetField<double>("TextAngle",               (double)Convert.ToDouble(statement[27]));
+            itemRow.SetField<CanvasHorizontalAlignment>("TextHorizontalAlignment", (CanvasHorizontalAlignment)Convert.ToInt32(statement[28]));
+            itemRow.SetField<CanvasVerticalAlignment>("TextVerticalAlignment",     (CanvasVerticalAlignment)Convert.ToInt32(statement[29]));
+            itemRow.SetField<string>("Properties",              (string)statement[30]);
 
             itemTable.Rows.Add(itemRow);
             itemRow.AcceptChanges();
@@ -209,6 +213,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns.Add("GaugeOutlineVisibility",  typeof(int));
             itemTable.Columns.Add("MiddleCircleDelta",       typeof(int));
             itemTable.Columns.Add("InnerCircleDelta",        typeof(int));
+            itemTable.Columns.Add("LabelsFontSize",          typeof(double));
             itemTable.Columns.Add("ValueFontSize",           typeof(double));
             itemTable.Columns.Add("UnitsFontSize",           typeof(double));
             itemTable.Columns.Add("Units",                   typeof(Units));
@@ -240,8 +245,9 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns["GaugeOutlineVisibility"].DefaultValue  = Convert.ToInt32(Windows.UI.Xaml.Visibility.Visible);
             itemTable.Columns["MiddleCircleDelta"].DefaultValue       = 70;
             itemTable.Columns["InnerCircleDelta"].DefaultValue        = 30;
-            itemTable.Columns["ValueFontSize"].DefaultValue           = 60D;
-            itemTable.Columns["UnitsFontSize"].DefaultValue           = 60D;
+            itemTable.Columns["LabelsFontSize"].DefaultValue          = 20D;
+            itemTable.Columns["ValueFontSize"].DefaultValue           = 50D;
+            itemTable.Columns["UnitsFontSize"].DefaultValue           = 20D;
             itemTable.Columns["Units"].DefaultValue                   = Units.AmpHrs;
             itemTable.Columns["MajorTicLength"].DefaultValue          = 18D;
             itemTable.Columns["MediumTicLength"].DefaultValue         = 12D;
@@ -276,6 +282,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                                 "GaugeOutlineVisibility," +
                                 "MiddleCircleDelta," +
                                 "InnerCircleDelta," +
+                                "LabelsFontSize," +
                                 "ValueFontSize," +
                                 "UnitsFontSize," +
                                 "Units, " +
@@ -308,6 +315,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                                 "@GaugeOutlineVisibility, " +
                                 "@MiddleCircleDelta, " +
                                 "@InnerCircleDelta, " +
+                                "@LabelsFontSize, " +
                                 "@ValueFontSize, " +
                                 "@UnitsFontSize, " +
                                 "@Units, " +
@@ -344,6 +352,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
                    "    GaugeOutlineVisibility  = @GaugeOutlineVisibility , \n" +
                    "    MiddleCircleDelta       = @MiddleCircleDelta      , \n" +
                    "    InnerCircleDelta        = @InnerCircleDelta       , \n" +
+                   "    LabelsFontSize          = @LabelsFontSize         , \n" +
                    "    ValueFontSize           = @ValueFontSize          , \n" +
                    "    UnitsFontSize           = @UnitsFontSize          , \n" +
                    "    Units                   = @Units                  , \n" +

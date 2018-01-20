@@ -41,6 +41,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         double GaugeWidth { get; set; }
         int InnerCircleDelta { get; set; }
         bool IsDirty { get; }
+        double LabelsFontSize { get; set; }
         double MajorTicLength { get; set; }
         int MinorTicsPerMajorTic   { get; set; }
         int MediumTicsPerMajorTic  { get; set; }

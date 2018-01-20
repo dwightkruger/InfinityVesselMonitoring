@@ -7,6 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"        
     mc:Ignorable="d"
+    d:DesignWidth="200"
+    d:DesignHeight="300"
     Background="Transparent"    
     x:Name="userControl">
 
@@ -17,12 +19,44 @@
         HorizontalAlignment="Left" 
         VerticalAlignment="Top">
 
+        <Grid.RowDefinitions>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <!--<Rectangle Stroke="Red"   Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="2"/>
+        <Rectangle Stroke="Green" Grid.Row="1" Grid.RowSpan="1" Grid.Column="1" Grid.ColumnSpan="1"/>
+        <Rectangle Stroke="Blue" Grid.Row="2" Grid.RowSpan="1" Grid.Column="1" Grid.ColumnSpan="1"/>-->
+
+
         <canvas:CanvasControl 
-            x:Name="canvasControl" 
+            x:Name="canvasControl"           
+            Grid.Row="0" Grid.RowSpan="3"
+            Grid.Column="0" Grid.ColumnSpan="2"
             ClearColor="Transparent" 
             Draw="canvasControl_Draw" 
             Loaded="canvasControl_Loaded" 
             SizeChanged="canvasControl_SizeChanged"
             CreateResources="canvasControl_CreateResources"/>
+
+        <canvas:CanvasControl 
+            x:Name="ValueControl"
+            Grid.Row="0" Grid.RowSpan="2"
+            Grid.Column="1" Grid.ColumnSpan="1"
+            ClearColor="Transparent" 
+            Draw="valueControl_Draw" />
+
+        <canvas:CanvasControl 
+            x:Name="UnitsControl"
+            Grid.Row="1" Grid.RowSpan="2"
+            Grid.Column="0" Grid.ColumnSpan="2"
+            ClearColor="Transparent" 
+            Draw="unitsControl_Draw" />
+
     </Grid>
 </local:BaseGauge>

@@ -47,6 +47,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
         private UndoableProperty<Windows.UI.Xaml.Visibility> _gaugeOutlineVisibility;
         private UndoableProperty<int> _middleCircleDelta;
         private UndoableProperty<int> _innerCircleDelta;
+        private UndoableProperty<double> _labelsFontSize;
         private UndoableProperty<double> _valueFontSize;
         private UndoableProperty<double> _unitsFontSize;
         private UndoableProperty<double> _majorTicLength;
@@ -76,6 +77,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
         public const string GaugeOutlineVisibilityPropertyName = "GaugeOutlineVisibility";
         public const string MiddleCircleDeltaPropertyName = "MiddleCircleDelta";
         public const string InnerCircleDeltaPropertyName = "InnerCircleDelta";
+        public const string LabelsFontSizePropertyName = "LabelsFontSize";
         public const string ValueFontSizePropertyName = "ValueFontSize";
         public const string UnitsFontSizePropertyName = "UnitsFontSize";
         public const string MajorTicLengthPropertyName = "MajorTicLength";
@@ -168,6 +170,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             item.Units = this.Units;
             item.UnitsFontSize = this.UnitsFontSize;
             item.ValueFontSize = this.ValueFontSize;
+            item.LabelsFontSize = this.LabelsFontSize;
 
             return item;
         }
@@ -287,6 +290,16 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             {
                 _innerCircleDelta.SetValue(value);
                 SetRowPropertyValue<int>(() => InnerCircleDelta, value);
+            }
+        }
+
+        public double LabelsFontSize
+        {
+            get { return _labelsFontSize.GetValue(); }
+            set
+            {
+                _labelsFontSize.SetValue(value);
+                SetRowPropertyValue<double>(() => LabelsFontSize, value);
             }
         }
 
@@ -634,6 +647,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             _gaugeType = new UndoableProperty<GaugeTypeEnum>(this, GaugeTypePropertyName, this._context, this.Row.Field<GaugeTypeEnum>(GaugeTypePropertyName));
             _gaugeWidth = new UndoableProperty<double>(this, GaugeWidthPropertyName, this._context, this.Row.Field<double>(GaugeWidthPropertyName));
             _innerCircleDelta = new UndoableProperty<int>(this, InnerCircleDeltaPropertyName, this._context, this.Row.Field<int>(InnerCircleDeltaPropertyName));
+            _labelsFontSize = new UndoableProperty<double>(this, LabelsFontSizePropertyName, this._context, this.Row.Field<double>(LabelsFontSizePropertyName));
             _majorTicLength = new UndoableProperty<double>(this, MajorTicLengthPropertyName, this._context, this.Row.Field<double>(MajorTicLengthPropertyName));
             _middleCircleDelta = new UndoableProperty<int>(this, MiddleCircleDeltaPropertyName, this._context, this.Row.Field<int>(MiddleCircleDeltaPropertyName));
             _mediumTicLength = new UndoableProperty<double>(this, MediumTicLengthPropertyName, this._context, this.Row.Field<double>(MediumTicLengthPropertyName));
@@ -668,6 +682,7 @@ namespace InfinityVesselMonitoringSoftware.Gauges
             this.GaugeType = this.Row.Field<GaugeTypeEnum>(GaugeTypePropertyName);
             this.GaugeWidth = this.Row.Field<double>(GaugeWidthPropertyName);
             this.InnerCircleDelta = this.Row.Field<int>(InnerCircleDeltaPropertyName);
+            this.LabelsFontSize = this.Row.Field<double>(LabelsFontSizePropertyName);
             this.MajorTicLength = this.Row.Field<double>(MajorTicLengthPropertyName);
             this.MediumTicLength = this.Row.Field<double>(MediumTicLengthPropertyName);
             this.MediumTicsPerMajorTic = this.Row.Field<int>(MediumTicsPerMajorTicPropertyName);

@@ -543,6 +543,29 @@ namespace InfinityGroup.VesselMonitoring.Controls
         }
         #endregion
 
+        #region LabelsFontSize
+        public static readonly DependencyProperty LabelsFontSizeProperty = DependencyProperty.Register(
+            "LabelsFontSize",
+            typeof(double),
+            typeof(BaseGauge),
+            new PropertyMetadata(
+                10.0,
+                new PropertyChangedCallback(OnLabelsFontSizePropertyChanged)));
+
+        public double LabelsFontSize
+        {
+            get { return (double)this.GetValue(LabelsFontSizeProperty); }
+            set { this.SetValue(LabelsFontSizeProperty, value); }
+        }
+
+        protected static void OnLabelsFontSizePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            BaseGauge g = d as BaseGauge;
+            g.RefreshLabelsFontSize(e.OldValue, e.NewValue);
+        }
+        #endregion
+
+
         #region LowAlarmColor
         public static readonly DependencyProperty LowAlarmColorProperty = DependencyProperty.Register(
             "LowAlarmColor",
@@ -977,6 +1000,11 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 valueFontSizeBinding.Source = value;
                 valueFontSizeBinding.Path = new PropertyPath("ValueFontSize");
                 this.SetBinding(ValueFontSizeProperty, valueFontSizeBinding);
+
+                Binding labelsFontSizeBinding = new Binding();
+                labelsFontSizeBinding.Source = value;
+                labelsFontSizeBinding.Path = new PropertyPath("LabelsFontSize");
+                this.SetBinding(LabelsFontSizeProperty, labelsFontSizeBinding);
 
                 _gaugeItem = value;
             }
@@ -1672,6 +1700,10 @@ namespace InfinityGroup.VesselMonitoring.Controls
         }
 
         virtual protected void RefreshGaugeColor(object oldValue, object newValue)
+        {
+        }
+
+        virtual protected void RefreshLabelsFontSize(object oldValue, object newValue)
         {
         }
     }
