@@ -4,7 +4,6 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////    
 
-using Autofac;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 

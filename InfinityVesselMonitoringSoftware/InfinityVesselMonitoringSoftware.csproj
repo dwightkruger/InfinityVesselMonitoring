@@ -269,9 +269,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="LumiaImagingSDK.UWP">
-      <Version>3.0.593</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.0.6</Version>
     </PackageReference>

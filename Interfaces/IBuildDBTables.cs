@@ -4,7 +4,6 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
-using Autofac;
 using System.Threading.Tasks;
 
 namespace InfinityGroup.VesselMonitoring.Interfaces

@@ -26,7 +26,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
         private bool _needsResourceRecreation = true;
         private const float c_arcThickness = 15;
         private const float c_needleThickness = 15;
-        private const double c_arcSweep = 270;
+        private const double c_arcSweep = 360 - 130;
 
         public LeftArcGauge()
         {
