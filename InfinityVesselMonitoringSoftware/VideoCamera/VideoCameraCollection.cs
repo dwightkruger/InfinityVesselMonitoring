@@ -38,7 +38,7 @@ namespace InfinityVesselMonitoringSoftware.VideoCamera
             _deviceLocator.NotificationFilter = "ssdp:all";
             _deviceLocator.DeviceAvailable += DeviceLocator_DeviceAvailable;
             _deviceLocator.StartListeningForNotifications();
-            IEnumerable<Discovered​Ssdp​Device> devices = await _deviceLocator.SearchAsync(TimeSpan.FromSeconds(30));
+            //IEnumerable<Discovered​Ssdp​Device> devices = await _deviceLocator.SearchAsync(TimeSpan.FromSeconds(30));
         }
 
         public void Stop()
