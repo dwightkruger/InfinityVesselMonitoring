@@ -55,7 +55,10 @@ namespace InfinityVesselMonitoringSoftware.ViewModels
                                 IGaugeItem gaugeItem = new GaugeItem(this.GaugePageItem.PageId);
                                 gaugeItem.TextFontColor = App.VesselSettings.ThemeForegroundColor;
                                 gaugeItem.GaugeColor = App.VesselSettings.ThemeForegroundColor;
-                                gaugeItem.GaugeType = GaugeTypeEnum.LeftArcGauge;
+                                //gaugeItem.GaugeType = GaugeTypeEnum.LeftArcGauge;
+                                //gaugeItem.GaugeType = GaugeTypeEnum.LeftTankGauge;
+                                gaugeItem.GaugeType = GaugeTypeEnum.RightTankGauge;
+                                gaugeItem.Divisions = 5;
                                 gaugeItem.GaugeHeight = 300;
                                 gaugeItem.GaugeWidth = 240;
                                 gaugeItem.SensorId = sensorItem.SensorId;

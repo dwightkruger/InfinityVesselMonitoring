@@ -32,43 +32,62 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
     public partial class TankGaugeBase : BaseGauge
     {
-        protected const float outerRectangleThickness = 5;
+        protected const float c_outerRectangleThickness = 5;
         protected TankType _tankType;
 
         protected int totalMajorTics;
 
-        protected const float majorTicLength = 12;
-        protected const float mediumTicLength = 6;
-        protected const float minorTicLength = 3;
-        protected const float ticWidth = 2;
-        protected int totalMediumTics;
-        protected int totalMinorTics;
+        protected const float c_majorTicLength = 12;
+        protected const float c_mediumTicLength = 6;
+        protected const float c_minorTicLength = 3;
+        protected const float c_ticWidth = 2;
+        protected const float c_gaugeBoxWith = 2;
+        protected int _totalMediumTics;
+        protected int _totalMinorTics;
+        private bool _needsResourceRecreation = true;
 
         public TankGaugeBase()
         {
-            Divisions = 10;
+            this.Divisions = 4;
             this.TankType = TankType.Unknown;
+        }
+
+        protected void TitleControl_Draw(CanvasControl sender, CanvasDrawEventArgs args)
+        {
+            this.EnsureResources(sender, args);
+            CanvasDrawingSession ds = args.DrawingSession;
+            Vector2 at = new Vector2((float)sender.ActualWidth / 2F, 4);
+
+            using (var textFormat = new CanvasTextFormat()
+            {
+                HorizontalAlignment = CanvasHorizontalAlignment.Center,
+                VerticalAlignment = CanvasVerticalAlignment.Top,
+                FontSize = (float)this.TextFontSize,
+            })
+            {
+                ds.DrawText(this.Text, at, this.GaugeColor, textFormat);
+            }
         }
 
         virtual protected void canvasControl_Draw(CanvasControl sender, CanvasDrawEventArgs args)
         {
-            totalMajorTics = Divisions + 1;
-            totalMediumTics = (totalMajorTics * MediumTicsPerMajorTic) - MediumTicsPerMajorTic + 1;
-            totalMinorTics = (totalMajorTics * MinorTicsPerMajorTic) - MinorTicsPerMajorTic + 1;
+            totalMajorTics = this.Divisions + 1;
+            _totalMediumTics = (totalMajorTics * MediumTicsPerMajorTic) - MediumTicsPerMajorTic + 1;
+            _totalMinorTics = (totalMajorTics * MinorTicsPerMajorTic) - MinorTicsPerMajorTic + 1;
 
-            DrawOuterBox(sender, args);
-            DrawInnerBox(args);
+            this.DrawOuterBox(sender, args);
+            this.DrawInnerBox(args);
 
-            if (IsLowWarningEnabled) DrawAlarmLow(args, LowWarningColor, LowWarningValue);
-            if (IsLowAlarmEnabled) DrawAlarmLow(args, LowAlarmColor, LowAlarmValue);
+            //if (IsLowWarningEnabled) DrawAlarmLow(args, LowWarningColor, LowWarningValue);
+            //if (IsLowAlarmEnabled) DrawAlarmLow(args, LowAlarmColor, LowAlarmValue);
 
-            if (IsHighWarningEnabled) DrawAlarmHigh(args, HighWarningColor, HighWarningValue);
-            if (IsHighAlarmEnabled) DrawAlarmHigh(args, HighAlarmColor, HighAlarmValue);
+            //if (IsHighWarningEnabled) DrawAlarmHigh(args, HighWarningColor, HighWarningValue);
+            //if (IsHighAlarmEnabled) DrawAlarmHigh(args, HighAlarmColor, HighAlarmValue);
 
-            DrawTics(args, totalMajorTics, majorTicLength);
-            DrawTics(args, totalMediumTics, mediumTicLength);
-            DrawTics(args, totalMinorTics, minorTicLength);
-            DrawScale(args, totalMajorTics, majorTicLength);
+            this.DrawTics(args, totalMajorTics, c_majorTicLength);
+            this.DrawTics(args, _totalMediumTics, c_mediumTicLength);
+            this.DrawTics(args, _totalMinorTics, c_minorTicLength);
+            this.DrawScale(args, totalMajorTics, c_majorTicLength);
         }
 
         virtual protected void DrawAlarmLow(CanvasDrawEventArgs args, Color alarmColor, double alarmValue)
@@ -78,10 +97,10 @@ namespace InfinityGroup.VesselMonitoring.Controls
             float percentValue = (float)((alarmValue - MinValue) / (MaxValue - MinValue));
 
             float height = (float)(OuterRectangle.Height * percentValue);
-            float width = (float)(majorTicLength);
+            float width = (float)(c_majorTicLength);
 
-            float X = (float)(OuterRectangle.X - majorTicLength - outerRectangleThickness);
-            float Y = (float)(OuterRectangle.Y + OuterRectangle.Height - height - outerRectangleThickness);
+            float X = (float)(OuterRectangle.X - c_majorTicLength - c_outerRectangleThickness);
+            float Y = (float)(OuterRectangle.Y + OuterRectangle.Height - height - c_outerRectangleThickness);
 
             ds.FillRectangle(X, Y, width, height, alarmColor);
         }
@@ -93,12 +112,15 @@ namespace InfinityGroup.VesselMonitoring.Controls
             float percentValue = 1 - (float)((alarmValue - MinValue) / (MaxValue - MinValue));
 
             float height = (float)(OuterRectangle.Height * percentValue);
-            float width = (float)(majorTicLength);
+            float width = (float)(c_majorTicLength);
 
-            float X = (float)(OuterRectangle.X - majorTicLength - outerRectangleThickness);
+            float X = (float)(OuterRectangle.X - c_majorTicLength - c_outerRectangleThickness);
             float Y = (float)(OuterRectangle.Y);
 
-            ds.FillRectangle(X, Y, width, height, alarmColor);
+            Color alarmColorOpacity = alarmColor;
+            alarmColorOpacity.A = 0x88;
+
+            ds.FillRectangle(X, Y, width, height, alarmColorOpacity);
         }
 
         virtual protected void canvasControl_Loaded(object sender, RoutedEventArgs e)
@@ -109,9 +131,8 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             IsLoaded = false;
 
-            OuterRectangle = new Rect(sender.Size.Width * (2f / 3f), 16f,
-                                      sender.Size.Width * (1f / 3f) - 8, sender.Size.Height - 32);
-            //args.TrackAsyncAction(CreateResourcesAsync(sender).AsAsyncAction());
+            this.OuterRectangle = new Rect(sender.Size.Width * (2f / 3f), 16f,
+                                           sender.Size.Width * (1f / 3f) - 8, sender.Size.Height - 0);
 
             CreateTankBrushes(sender);
 
@@ -119,9 +140,13 @@ namespace InfinityGroup.VesselMonitoring.Controls
             CanvasControl.Invalidate();
         }
 
-        //virtual protected async Task CreateResourcesAsync(CanvasControl sender)
-        //{
-        //}
+        void EnsureResources(CanvasControl sender, CanvasDrawEventArgs args)
+        {
+            if (!_needsResourceRecreation)
+                return;
+
+            _needsResourceRecreation = false;
+        }
 
         virtual protected void DrawOuterBox(CanvasControl sender, CanvasDrawEventArgs args)
         {
@@ -146,17 +171,13 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 edgeColor = HighWarningColor;
             }
 
-            CanvasCommandList cl = new CanvasCommandList(sender);
-            using (CanvasDrawingSession clds = cl.CreateDrawingSession())
-            {
-                clds.DrawRectangle(OuterRectangle, edgeColor, outerRectangleThickness);
-            }
-
-            GaussianBlurEffect blur = new GaussianBlurEffect();
-            blur.Source = cl;
-            blur.BlurAmount = 3.0f;
-            blur.BorderMode = EffectBorderMode.Soft;
-            args.DrawingSession.DrawImage(blur);
+            ds.DrawRectangle(
+                (float)this.OuterRectangle.Left, 
+                (float)this.OuterRectangle.Top, 
+                (float)this.OuterRectangle.Width, 
+                (float)this.OuterRectangle.Height,
+                this.GaugeColor, 
+                c_gaugeBoxWith);
         }
 
         virtual protected void DrawInnerBox(CanvasDrawEventArgs args)
@@ -167,56 +188,24 @@ namespace InfinityGroup.VesselMonitoring.Controls
             value = Math.Max(MinValue, value);
 
             double percentFull = (value - MinValue) / (MaxValue - MinValue);
-            float height = (float)(OuterRectangle.Height * percentFull) - (2f * outerRectangleThickness);
+            float height = (float)(this.OuterRectangle.Height * percentFull) - (2f * c_outerRectangleThickness);
             height = Math.Max(height, 1);
 
-            float width = (float)(OuterRectangle.Width - 2 * outerRectangleThickness);
-            float X = (float)(OuterRectangle.X + outerRectangleThickness);
-            float Y = (float)(OuterRectangle.Y + OuterRectangle.Height - height - outerRectangleThickness);
+            float width = (float)(OuterRectangle.Width - 2 * c_outerRectangleThickness);
+            float X = (float)(this.OuterRectangle.X + c_outerRectangleThickness);
+            float Y = (float)(this.OuterRectangle.Y + this.OuterRectangle.Height - height - c_outerRectangleThickness);
 
             ds.FillRectangle(X, Y, width, height, this.TankBrush);
         }
 
         virtual protected void DrawTics(CanvasDrawEventArgs args, int totalTics, float ticLength)
         {
-            var ds = args.DrawingSession;
-
-            double increment = OuterRectangle.Height / (totalTics - 1);
-
-            for (int i = 0; i < totalTics; i++)
-            {
-                float Y = (float)(OuterRectangle.Y + (i * increment));
-
-                Vector2 from = new Vector2((float)OuterRectangle.X - outerRectangleThickness, Y);
-                Vector2 to = new Vector2((float)OuterRectangle.X - ticLength - outerRectangleThickness, Y);
-                ds.DrawLine(from, to, this.GaugeColor, ticWidth);
-            }
+            throw new NotImplementedException("Implement in parent class");
         }
 
         virtual protected void DrawScale(CanvasDrawEventArgs args, int totalTics, float ticLength)
         {
-            var ds = args.DrawingSession;
-
-            double increment = OuterRectangle.Height / (totalTics - 1);
-            double valueIncrement = (MaxValue - MinValue) / (totalTics - 1);
-
-            for (int i = 0; i < totalTics; i++)
-            {
-                float Y = (float)(OuterRectangle.Y + (i * increment));
-
-                Vector2 at = new Vector2((float)OuterRectangle.X - outerRectangleThickness - 28, Y);
-
-                using (var textFormat = new CanvasTextFormat()
-                {
-                    HorizontalAlignment = CanvasHorizontalAlignment.Right,
-                    VerticalAlignment = CanvasVerticalAlignment.Center,
-                    FontSize = (float)ValueFontSize,
-                })
-                {
-                    string format = "{0:F" + string.Format("{0:F0}", Resolution) + "}";
-                    ds.DrawText(string.Format(format, MinValue + (MaxValue - (i * valueIncrement))), at, this.GaugeColor, textFormat);
-                }
-            }
+            throw new NotImplementedException("Implement in parent class");
         }
 
         CanvasLinearGradientBrush TankBrush
@@ -312,55 +301,6 @@ namespace InfinityGroup.VesselMonitoring.Controls
             HydraulicFluidTankBrush.EndPoint = new Vector2((float)(OuterRectangle.X + OuterRectangle.Width), 0);
         }
 
-        override protected void RefreshAlarmColors()
-        {
-            this.CanvasControl?.Invalidate();
-        }
-
-        override protected void RefreshValue(object oldValue, object newValue)
-        {
-            this.CanvasControl?.Invalidate();
-        }
-
-        override protected void RefreshMaxValue(object oldValue, object newValue)
-        {
-            this.CanvasControl?.Invalidate();
-        }
-
-        override protected void RefreshMinValue(object oldValue, object newValue)
-        {
-            this.CanvasControl?.Invalidate();
-        }
-
-        override protected void RefreshHighAlarmValue(object oldValue, object newValue)
-        {
-            this.CanvasControl?.Invalidate();
-        }
-
-        override protected void RefreshHighWarningValue(object oldValue, object newValue)
-        {
-            this.CanvasControl?.Invalidate();
-        }
-
-        override protected void RefreshLowAlarmValue(object oldValue, object newValue)
-        {
-            this.CanvasControl?.Invalidate();
-        }
-
-        override protected void RefreshLowWarningValue(object oldValue, object newValue)
-        {
-            this.CanvasControl.Invalidate();
-        }
-
-        override protected void RefreshNominalValue(object oldValue, object newValue)
-        {
-            this.CanvasControl.Invalidate();
-        }
-
-        override protected void RefreshGaugeColor(object oldValue, object newValue)
-        {
-            this.CanvasControl?.Invalidate();
-        }
 
         protected CanvasControl CanvasControl { get; set; }
         protected bool IsLoaded { get; set; }

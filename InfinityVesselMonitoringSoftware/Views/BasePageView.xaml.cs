@@ -11,7 +11,6 @@ using InfinityVesselMonitoringSoftware.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Core;
@@ -25,7 +24,6 @@ namespace InfinityVesselMonitoringSoftware.Views
 {
     public sealed partial class BasePageView : UserControl
     {
-        private bool _ignorePropertyChange;
         private ObservableCollection<IGaugeItem> _gaugeItemSelectedList = new ObservableCollection<IGaugeItem>();
         private List<Adorner> _adornerList = new List<Adorner>();
         private int _nextRow = 0;

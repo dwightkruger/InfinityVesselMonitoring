@@ -8,10 +8,12 @@
     DataContext="{Binding RelativeSource={RelativeSource Self}}"
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     x:Name="userControl"
+    d:DesignWidth="200"
+    d:DesignHeight="300"    
     Background="Transparent"    
     mc:Ignorable="d">
 
-    <Canvas>
+    <Viewbox Stretch="Uniform">
         <Grid 
             x:Name="MainGrid" 
             Canvas.Left="{Binding Left}"  
@@ -21,15 +23,28 @@
             HorizontalAlignment="Stretch" 
             VerticalAlignment="Stretch">
 
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.6*"/>
+                <RowDefinition Height="6*"/>
+            </Grid.RowDefinitions>
+
             <canvas:CanvasControl 
-            x:Name="canvasControl" 
-            ClearColor="Transparent" 
-            Draw="canvasControl_Draw" 
-            Loaded="canvasControl_Loaded" 
-            CreateResources="canvasControl_CreateResources"/>
+                x:Name="TitleControl"
+                Grid.Row="0" Grid.RowSpan="2"
+                ClearColor="Transparent" 
+                Draw="TitleControl_Draw" />
+            
+            <canvas:CanvasControl 
+                x:Name="canvasControl" 
+                Grid.Row="1" Grid.RowSpan="1"                
+                ClearColor="Transparent" 
+                Draw="canvasControl_Draw" 
+                Loaded="canvasControl_Loaded" 
+                CreateResources="canvasControl_CreateResources"/>
 
             <Grid 
                 x:Name="DesignGrid"
+                Grid.Row="1" Grid.RowSpan="1"                
                 Width="{x:Bind Path=GaugeWidth}"
                 Height="{x:Bind Path=GaugeHeight}">
 
@@ -38,14 +53,15 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
+                
                 <Rectangle x:Name="DesignRectangle" 
                        Grid.Column="1"
                        Stroke="Red" 
                        StrokeThickness="5" 
                         RadiusX="4"
                         RadiusY="4"
-                       VerticalAlignment="Stretch" 
-                       HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch" 
+                        HorizontalAlignment="Stretch"
                 />
                 <Rectangle  
                        Grid.Column="1"
@@ -59,5 +75,5 @@
                 />
             </Grid>
         </Grid>
-    </Canvas>
+    </Viewbox>
 </local:TankGaugeBase>

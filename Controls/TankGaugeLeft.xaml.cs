@@ -8,9 +8,7 @@ using GalaSoft.MvvmLight;
 using Microsoft.Graphics.Canvas.Text;
 using Microsoft.Graphics.Canvas.UI;
 using Microsoft.Graphics.Canvas.UI.Xaml;
-using System;
 using System.Numerics;
-using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -37,13 +35,13 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             var ds = args.DrawingSession;
 
-            float percentValue = (float)((alarmValue - MinValue) / (MaxValue - MinValue));
+            float percentValue = (float)((alarmValue - this.MinValue) / (this.MaxValue - this.MinValue));
 
-            float height = (float)(OuterRectangle.Height * percentValue);
-            float width = (float)(majorTicLength);
+            float height = (float)(this.OuterRectangle.Height * percentValue);
+            float width = (float)(c_majorTicLength);
 
-            float X = (float)(OuterRectangle.X - majorTicLength - outerRectangleThickness);
-            float Y = (float)(OuterRectangle.Y + OuterRectangle.Height - height - outerRectangleThickness);
+            float X = (float)(this.OuterRectangle.X - c_majorTicLength - c_outerRectangleThickness);
+            float Y = (float)(this.OuterRectangle.Y + this.OuterRectangle.Height - height - c_outerRectangleThickness);
 
             ds.FillRectangle(X, Y, width, height, alarmColor);
         }
@@ -52,13 +50,13 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             var ds = args.DrawingSession;
 
-            float percentValue = 1 - (float)((alarmValue - MinValue) / (MaxValue - MinValue));
+            float percentValue = 1 - (float)((alarmValue - this.MinValue) / (this.MaxValue - this.MinValue));
 
-            float height = (float)(OuterRectangle.Height * percentValue);
-            float width = (float)(majorTicLength);
+            float height = (float)(this.OuterRectangle.Height * percentValue);
+            float width = (float)(c_majorTicLength);
 
-            float X = (float)(OuterRectangle.X - majorTicLength - outerRectangleThickness);
-            float Y = (float)(OuterRectangle.Y);
+            float X = (float)(this.OuterRectangle.X - c_majorTicLength - c_outerRectangleThickness);
+            float Y = (float)(this.OuterRectangle.Y);
 
             ds.FillRectangle(X, Y, width, height, alarmColor);
         }
@@ -69,45 +67,48 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
         override protected void canvasControl_CreateResources(CanvasControl sender, CanvasCreateResourcesEventArgs args)
         {
-            IsLoaded = false;
+            this.IsLoaded = false;
 
             if ((0 == sender.Size.Width) || (0 == sender.Size.Height))
             {
-                OuterRectangle = new Rect();
+                this.OuterRectangle = new Rect();
             }
             else
             {
-                OuterRectangle = new Rect(sender.Size.Width * (1f / 3f) + 8, 16f,
-                                          sender.Size.Width * (1f / 3f) - 8, sender.Size.Height - 32);
+                this.OuterRectangle = new Rect(sender.Size.Width * (1f / 3f) + 8, 16f,
+                                               sender.Size.Width * (1f / 3f) - 8, sender.Size.Height - 32);
             }
 
-            //args.TrackAsyncAction(CreateResourcesAsync(sender).AsAsyncAction());
-
-            CreateTankBrushes(sender);
+            this.CreateTankBrushes(sender);
 
             IsLoaded = true;
-            CanvasControl.Invalidate();
+            this.CanvasControl.Invalidate();
         }
-
-        //override protected async Task CreateResourcesAsync(CanvasControl sender)
-        //{
-        //}
 
         override protected void DrawTics(CanvasDrawEventArgs args, int totalTics, float ticLength)
         {
             var ds = args.DrawingSession;
 
             double increment = OuterRectangle.Height / (totalTics - 1);
+            double delta = (this.MaxValue - this.MinValue) / (totalTics - 1);
 
             for (int i = 0; i < totalTics; i++)
             {
-                float X1 = (float)OuterRectangle.X - outerRectangleThickness;
-                float X2 = (float)OuterRectangle.X - ticLength - outerRectangleThickness;
-                float Y = (float)(OuterRectangle.Y + (i * increment));
+                float X1 = (float)this.OuterRectangle.X - c_outerRectangleThickness;
+                float X2 = (float)this.OuterRectangle.X - ticLength - c_outerRectangleThickness;
+                float Y = (float)(this.OuterRectangle.Y + (i * increment));
 
                 Vector2 from = new Vector2(X1, Y);
                 Vector2 to = new Vector2(X2, Y);
-                ds.DrawLine(from, to, this.GaugeColor, ticWidth);
+
+                // Set the tic color to reflect the alarm/wanring values
+                Color ticColor = this.GaugeColor;
+                if (i * delta <= this.LowAlarmValue) ticColor = this.LowAlarmColor;
+                else if (i * delta <= this.LowWarningValue) ticColor = this.LowWarningColor;
+                else if (i * delta >= this.HighAlarmValue) ticColor = this.HighAlarmColor;
+                else if (i * delta >= this.HighWarningValue) ticColor = this.HighWarningColor;
+
+                ds.DrawLine(from, to, ticColor, c_ticWidth);
             }
         }
 
@@ -120,7 +121,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
             for (int i = 0; i < totalTics; i++)
             {
-                float X = (float)OuterRectangle.X - majorTicLength - outerRectangleThickness;
+                float X = (float)OuterRectangle.X - c_majorTicLength - c_outerRectangleThickness;
                 float Y = (float)(OuterRectangle.Y + (i * increment));
 
                 Vector2 at = new Vector2(X, Y);
@@ -129,13 +130,72 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 {
                     HorizontalAlignment = CanvasHorizontalAlignment.Right,
                     VerticalAlignment = CanvasVerticalAlignment.Center,
-                    FontSize = (float)ValueFontSize
+                    FontSize = (float)this.LabelsFontSize,
                 })
                 {
                     string format = "{0:F" + string.Format("{0:F0}", Resolution) + "}";
                     ds.DrawText(string.Format(format, MinValue + (MaxValue - (i * valueIncrement))), at, this.GaugeColor, textFormat);
                 }
             }
+        }
+
+        override protected void RefreshAlarmColors()
+        {
+            this.TitleControl?.Invalidate();
+            this.CanvasControl?.Invalidate();
+        }
+
+        override protected void RefreshValue(object oldValue, object newValue)
+        {
+            this.TitleControl?.Invalidate();
+            this.CanvasControl?.Invalidate();
+        }
+
+        override protected void RefreshMaxValue(object oldValue, object newValue)
+        {
+            this.TitleControl?.Invalidate();
+            this.CanvasControl?.Invalidate();
+        }
+
+        override protected void RefreshMinValue(object oldValue, object newValue)
+        {
+            this.TitleControl?.Invalidate();
+            this.CanvasControl?.Invalidate();
+        }
+
+        override protected void RefreshHighAlarmValue(object oldValue, object newValue)
+        {
+            this.TitleControl?.Invalidate();
+            this.CanvasControl?.Invalidate();
+        }
+
+        override protected void RefreshHighWarningValue(object oldValue, object newValue)
+        {
+            this.TitleControl?.Invalidate();
+            this.CanvasControl?.Invalidate();
+        }
+
+        override protected void RefreshLowAlarmValue(object oldValue, object newValue)
+        {
+            this.TitleControl?.Invalidate();
+            this.CanvasControl?.Invalidate();
+        }
+
+        override protected void RefreshLowWarningValue(object oldValue, object newValue)
+        {
+            this.TitleControl?.Invalidate();
+            this.CanvasControl.Invalidate();
+        }
+
+        override protected void RefreshNominalValue(object oldValue, object newValue)
+        {
+            this.CanvasControl.Invalidate();
+        }
+
+        override protected void RefreshGaugeColor(object oldValue, object newValue)
+        {
+            this.TitleControl?.Invalidate();
+            this.CanvasControl?.Invalidate();
         }
     }
 }
