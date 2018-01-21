@@ -39,8 +39,8 @@
         <controls:CanvasGrid 
             x:Name="CanvasGrid"
             Background="Transparent"
-            Rows="{Binding Rows, ElementName=UserControl}"
-            Columns="{Binding Columns, ElementName=UserControl}">
+            Rows="{x:Bind VM.Rows}"
+            Columns="{x:Bind VM.Cols}">
         </controls:CanvasGrid>
         
         <editors:EditRibbonView 

@@ -1080,6 +1080,11 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 sensorValueBinding.Path = new PropertyPath("SensorValue");
                 this.SetBinding(ValueProperty, sensorValueBinding);
 
+                Binding textBinding = new Binding();
+                textBinding.Source = value;
+                textBinding.Path = new PropertyPath("Name");
+                this.SetBinding(TextProperty, textBinding);
+
                 this.IsHighAlarmEnabled   = value.IsHighAlarmEnabled;
                 this.IsHighWarningEnabled = value.IsHighWarningEnabled;
                 this.IsLowAlarmEnabled    = value.IsLowAlarmEnabled;

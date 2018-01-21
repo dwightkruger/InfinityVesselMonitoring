@@ -81,7 +81,7 @@ namespace InfinityVesselMonitoringSoftware.Views
                     this.CanvasGrid.AddChildBaseGauge(gauge as BaseGauge, _nextRow, _nextCol);
 
                     _nextCol++;
-                    if (_nextCol >= this.Columns)
+                    if (_nextCol >= this.ViewModel.Cols)
                     {
                         _nextRow++;
                         _nextCol = 0;
@@ -153,76 +153,6 @@ namespace InfinityVesselMonitoringSoftware.Views
         {
             get { return this.VM; }
         }
-
-        #region public int Rows
-
-        /// <summary>
-        /// Gets or sets the number of rows that are in the grid.
-        /// </summary>
-        /// <returns>The number of rows that are in the grid. The default is 0.</returns>
-        public int Rows
-        {
-            get { return (int)GetValue(RowsProperty); }
-            set { SetValue(RowsProperty, value); }
-        }
-
-        public static readonly DependencyProperty RowsProperty =
-            DependencyProperty.Register(
-                "Rows",
-                typeof(int),
-                typeof(BasePageView),
-                new PropertyMetadata(0, OnRowsColumnsChanged));
-
-        #endregion
-
-        #region public int Columns
-        /// <summary>
-        /// Gets or sets the number of columns that are in the grid.
-        /// </summary>
-        /// <returns>The number of columns that are in the grid. The default is 0.</returns>
-        public int Columns
-        {
-            get { return (int)GetValue(ColumnsProperty); }
-            set { SetValue(ColumnsProperty, value); }
-        }
-
-        public static readonly DependencyProperty ColumnsProperty =
-            DependencyProperty.Register(
-                "Columns",
-                typeof(int),
-                typeof(BasePageView),
-                new PropertyMetadata(0, OnRowsColumnsChanged));
-
-        private static void OnRowsColumnsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            BasePageView source = (BasePageView)d;
-            int value = (int)e.NewValue;
-
-            // Ignore the change if requested
-            if (source._ignorePropertyChange)
-            {
-                source._ignorePropertyChange = false;
-                return;
-            }
-
-            if (value < 0)
-            {
-                // Reset the property to its original state before throwing
-                source._ignorePropertyChange = true;
-                source.SetValue(e.Property, (int)e.OldValue);
-
-                string message = string.Format(
-                    CultureInfo.InvariantCulture,
-                    "Properties.Resources.BasePageView_RowsColumnsChanged_InvalidValue",
-                    value);
-                throw new ArgumentException(message, "value");
-            }
-
-            // The length properties affect measuring.
-            source.InvalidateMeasure();
-        }
-
-        #endregion
 
         /// <summary>
         /// When an object on the screen is selected, put an an adorner with handles so the object can be

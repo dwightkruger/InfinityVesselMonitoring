@@ -253,8 +253,8 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns["MediumTicLength"].DefaultValue         = 12D;
             itemTable.Columns["MinorTicLength"].DefaultValue          = 6D;
             itemTable.Columns["Text"].DefaultValue                    = string.Empty;
-            itemTable.Columns["TextFontSize"].DefaultValue            = 12D;
-            itemTable.Columns["TextFontColor"].DefaultValue           = Colors.Red;
+            itemTable.Columns["TextFontSize"].DefaultValue            = 20D;
+            itemTable.Columns["TextFontColor"].DefaultValue           = Colors.White;
             itemTable.Columns["TextAngle"].DefaultValue               = 0D;
             itemTable.Columns["TextHorizontalAlignment"].DefaultValue = CanvasHorizontalAlignment.Left;
             itemTable.Columns["TextVerticalAlignment"].DefaultValue   = CanvasVerticalAlignment.Top;

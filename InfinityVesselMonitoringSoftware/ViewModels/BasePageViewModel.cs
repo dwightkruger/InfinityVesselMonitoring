@@ -21,6 +21,8 @@ namespace InfinityVesselMonitoringSoftware.ViewModels
     public class BasePageViewModel : ObservableObject
     {
         private SensorType _sensorType = SensorType.Unknown;
+        private int _rows;
+        private int _cols;
         private bool _inEditMode = false;
         private IGaugePageItem _gaugePageItem;
 
@@ -47,7 +49,7 @@ namespace InfinityVesselMonitoringSoftware.ViewModels
                         List<IGaugeItem> addedGaugeItems= new List<IGaugeItem>();
                         foreach (ISensorItem sensorItem in e.NewItems)
                         {
-                            double size = Math.Min(Globals.ScreenSize.Height / 4, Globals.ScreenSize.Width / 4);
+                            double size = Math.Min(Globals.ScreenSize.Height / this.Rows, Globals.ScreenSize.Width / this.Cols);
                             if (sensorItem.SensorType == this.SensorType)
                             {
                                 IGaugeItem gaugeItem = new GaugeItem(this.GaugePageItem.PageId);
@@ -131,6 +133,17 @@ namespace InfinityVesselMonitoringSoftware.ViewModels
             get; set;
         }
 
+        public int Rows
+        {
+            get { return _rows; }
+            set { Set<int>(() => Rows, ref _rows, value); }
+        }
+
+        public int Cols
+        {
+            get { return _cols; }
+            set { Set <int>(() => Cols, ref _cols, value); }
+        }
         public IGaugePageItem GaugePageItem
         {
             get { return _gaugePageItem; }

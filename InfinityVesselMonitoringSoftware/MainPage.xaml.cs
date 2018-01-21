@@ -192,10 +192,10 @@ namespace VesselMonitoring
             foreach (IGaugePageItem item in App.GaugePageCollection)
             {
                 BasePageView view = new BasePageView();
-                view.Rows = 2;
-                view.Columns = 3;
                 view.ViewModel.GaugePageItem = item;
                 view.ViewModel.SensorType = SensorType.Tank;
+                view.ViewModel.Rows = 2;
+                view.ViewModel.Cols = 3;
 
                 Binding widthBinding = new Binding();
                 widthBinding.Source = this.MainPagePivot;
