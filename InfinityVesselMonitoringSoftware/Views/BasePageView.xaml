@@ -12,44 +12,48 @@
     xmlns:converters="using:InfinityGroup.VesselMonitoring.Controls.Converters"
     x:Name="UserControl"    
     mc:Ignorable="d"
-    d:DesignHeight="300"
-    d:DesignWidth="400">
+    d:DesignHeight="800"
+    d:DesignWidth="900">
 
     <UserControl.Resources>
         <vm:BasePageViewModel x:Key="BasePageViewModel" x:Name="VM"/>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </UserControl.Resources>
 
-    <Grid
-        x:Name="MainGrid"
-        DataContext="{StaticResource BasePageViewModel}"
-        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Viewbox  Stretch="Uniform">
+        <Grid
+            Width="900"
+            Height="800"
+            x:Name="MainGrid"
+            DataContext="{StaticResource BasePageViewModel}"
+            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-        <tools:AlignmentGrid 
-            x:Name="AlignmentGrid"
-            Visibility="{x:Bind Path=VM.InEditMode, Converter={StaticResource BoolToVisibilityConverter}}"
-            LineBrush = "{ThemeResource ApplicationForegroundThemeBrush}"
-            HorizontalStep = "100"
-            VerticalStep = "100"
-            Background="Transparent"
-            Width = "{Binding Width, ElementName=MainGrid}" 
-            Height="{Binding Height, ElementName=MainGrid}"           
-            />
+            <tools:AlignmentGrid 
+                x:Name="AlignmentGrid"
+                Visibility="{x:Bind Path=VM.InEditMode, Converter={StaticResource BoolToVisibilityConverter}}"
+                LineBrush = "{ThemeResource ApplicationForegroundThemeBrush}"
+                HorizontalStep = "100"
+                VerticalStep = "100"
+                Background="Transparent"
+                Width = "{Binding Width, ElementName=MainGrid}" 
+                Height="{Binding Height, ElementName=MainGrid}"           
+                />
 
-        <controls:CanvasGrid 
-            x:Name="CanvasGrid"
-            Background="Transparent"
-            Rows="{x:Bind VM.Rows}"
-            Columns="{x:Bind VM.Cols}">
-        </controls:CanvasGrid>
+            <controls:CanvasGrid 
+                x:Name="CanvasGrid"
+                Background="Transparent"
+                Rows="{x:Bind VM.Rows}"
+                Columns="{x:Bind VM.Cols}">
+            </controls:CanvasGrid>
         
-        <editors:EditRibbonView 
-            x:Name="EditRibbon"
-            CanDrag="True"
-            KeyDown="MainCanvas_KeyDown" 
-            Visibility="{x:Bind Path=VM.InEditMode, Converter={StaticResource BoolToVisibilityConverter}}"
-            VerticalAlignment="Bottom"
-            Margin="0,0,0,70"
-            />
-    </Grid>
+            <editors:EditRibbonView 
+                x:Name="EditRibbon"
+                CanDrag="True"
+                KeyDown="MainCanvas_KeyDown" 
+                Visibility="{x:Bind Path=VM.InEditMode, Converter={StaticResource BoolToVisibilityConverter}}"
+                VerticalAlignment="Bottom"
+                Margin="0,0,0,70"
+                />
+        </Grid>
+     </Viewbox>
 </UserControl>

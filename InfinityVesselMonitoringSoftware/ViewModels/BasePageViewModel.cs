@@ -49,15 +49,15 @@ namespace InfinityVesselMonitoringSoftware.ViewModels
                         List<IGaugeItem> addedGaugeItems= new List<IGaugeItem>();
                         foreach (ISensorItem sensorItem in e.NewItems)
                         {
-                            double size = Math.Min(Globals.ScreenSize.Height / this.Rows, Globals.ScreenSize.Width / this.Cols);
+                           // double size = Math.Min(Globals.ScreenSize.Height / this.Rows, Globals.ScreenSize.Width / this.Cols);
                             if (sensorItem.SensorType == this.SensorType)
                             {
                                 IGaugeItem gaugeItem = new GaugeItem(this.GaugePageItem.PageId);
                                 gaugeItem.TextFontColor = App.VesselSettings.ThemeForegroundColor;
                                 gaugeItem.GaugeColor = App.VesselSettings.ThemeForegroundColor;
                                 gaugeItem.GaugeType = GaugeTypeEnum.LeftArcGauge;
-                                gaugeItem.GaugeHeight = size;
-                                gaugeItem.GaugeWidth = size;
+                                gaugeItem.GaugeHeight = 300;
+                                gaugeItem.GaugeWidth = 240;
                                 gaugeItem.SensorId = sensorItem.SensorId;
                                 gaugeItem.Units = sensorItem.SensorUnits;
                                 await gaugeItem.BeginCommit();

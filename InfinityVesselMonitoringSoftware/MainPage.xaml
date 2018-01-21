@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:VesselMonitoring"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"  
     x:Name="MainPagePage"
     Loaded="Page_Loaded"
     mc:Ignorable="d">
@@ -20,7 +20,10 @@
         </Grid.RowDefinitions>
         
         <Viewbox x:Name="MainPageViewbox" Stretch="Uniform" Grid.Row="0">
-            <Grid x:Name="MainPageInnerGrid">
+            <Grid 
+                x:Name="MainPageInnerGrid"
+                Width="800" 
+                Height="600" >
                 <Pivot x:Name="MainPagePivot" KeyDown="MainPagePivot_KeyDown">
                 </Pivot>
             </Grid>

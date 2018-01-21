@@ -24,8 +24,8 @@ namespace InfinityGroup.VesselMonitoring.Controls
     public partial class LeftArcGauge : BaseGauge
     {
         private bool _needsResourceRecreation = true;
-        private const float c_arcThickness = 12;
-        private const float c_needleThickness = 10;
+        private const float c_arcThickness = 4;
+        private const float c_needleThickness = 4;
         private const float c_endAngle = 0;
         private const float c_startAngle = 130;
         private const double c_arcSweep = 360 - c_endAngle - c_startAngle;
@@ -48,12 +48,12 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             this.EnsureResources(sender, args);
             CanvasDrawingSession ds = args.DrawingSession;
-            Vector2 at = new Vector2((float)sender.ActualWidth/2F, (float)sender.ActualHeight/2F);
+            Vector2 at = new Vector2((float)sender.ActualWidth/2F, 4);
 
             using (var textFormat = new CanvasTextFormat()
             {
                 HorizontalAlignment = CanvasHorizontalAlignment.Center,
-                VerticalAlignment = CanvasVerticalAlignment.Center,
+                VerticalAlignment = CanvasVerticalAlignment.Top,
                 FontSize = (float)this.TextFontSize,
             })
             {
@@ -130,9 +130,9 @@ namespace InfinityGroup.VesselMonitoring.Controls
         protected void DrawMinValue(CanvasControl sender, CanvasDrawingSession ds)
         {
             string format = "{0:F" + string.Format("{0:F0}", this.Resolution) + "}";
-            double radian = RadiansFromDegrees(c_startAngle);
+            double radian = RadiansFromDegrees(c_startAngle-5);
             float atX = (float)(Math.Cos(radian) * (this.Radius + 1.3*c_arcThickness)) + Center.X;
-            float atY = (float)(Math.Sin(radian) * (this.Radius + 1.3*c_arcThickness)) + Center.Y;
+            float atY = (float)(Math.Sin(radian) * (this.Radius + 1.3*c_arcThickness)) + Center.Y + 5;
             Vector2 at = new Vector2(atX, atY);
 
             using (var textFormat = new CanvasTextFormat()
@@ -150,7 +150,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             string format = "{0:F" + string.Format("{0:F0}", this.Resolution) + "}";
             double radian = RadiansFromDegrees(c_endAngle);
-            float atX = (float)(Math.Cos(radian) * (this.Radius - 1 * c_arcThickness)) + Center.X;
+            float atX = (float)(Math.Cos(radian) * (this.Radius - 1 * c_arcThickness)) + Center.X - 2;
             float atY = (float)(Math.Sin(radian) * (this.Radius - 1 * c_arcThickness)) + Center.Y;
             Vector2 at = new Vector2(atX, atY);
 
@@ -283,8 +283,6 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
         protected void DrawGaugeArc(CanvasControl sender, CanvasDrawingSession ds, float startAngle, float endAngle, Color color, CanvasSweepDirection canvasSweepDirection, CanvasArcSize canvasArcSize)
         {
-            const float arcThickness = 15;
-
             using (CanvasPathBuilder cp = new CanvasPathBuilder(sender))
             {
                 var startPoint = this.Center + Vector2.Transform(Vector2.UnitX, Matrix3x2.CreateRotation(startAngle)) * this.Radius;
@@ -296,7 +294,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
                 using (var geometry = CanvasGeometry.CreatePath(cp))
                 {
-                    ds.DrawGeometry(geometry, color, arcThickness, this.ArcStrokeStyle);
+                    ds.DrawGeometry(geometry, color, c_arcThickness, this.ArcStrokeStyle);
                 }
             }
         }
