@@ -24,6 +24,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         TextControl    = 5,
         TextGauge      = 6,
         CircularGauge  = 7,
+        DonutGauge     = 8,
     }
 
     public interface IGaugeItem

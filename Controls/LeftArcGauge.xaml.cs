@@ -111,7 +111,6 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
         protected void DrawUnits(CanvasControl sender, CanvasDrawingSession ds)
         {
-            string format = "{0:F" + string.Format("{0:F0}", this.Resolution) + "}";
             float atX = (float) sender.ActualWidth - c_arcThickness;
             float atY = (float) sender.ActualHeight; 
             Vector2 at = new Vector2(atX, atY);

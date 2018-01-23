@@ -6,10 +6,8 @@
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
-using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityVesselMonitoringSoftware.Gauges;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -25,6 +23,7 @@ namespace InfinityVesselMonitoringSoftware.ViewModels
         private int _cols;
         private bool _inEditMode = false;
         private IGaugePageItem _gaugePageItem;
+        static private int gt = 0;
 
         public BasePageViewModel()
         {
@@ -49,16 +48,22 @@ namespace InfinityVesselMonitoringSoftware.ViewModels
                         List<IGaugeItem> addedGaugeItems= new List<IGaugeItem>();
                         foreach (ISensorItem sensorItem in e.NewItems)
                         {
-                           // double size = Math.Min(Globals.ScreenSize.Height / this.Rows, Globals.ScreenSize.Width / this.Cols);
                             if (sensorItem.SensorType == this.SensorType)
                             {
                                 IGaugeItem gaugeItem = new GaugeItem(this.GaugePageItem.PageId);
                                 gaugeItem.TextFontColor = App.VesselSettings.ThemeForegroundColor;
                                 gaugeItem.GaugeColor = App.VesselSettings.ThemeForegroundColor;
-                                //gaugeItem.GaugeType = GaugeTypeEnum.LeftArcGauge;
-                                //gaugeItem.GaugeType = GaugeTypeEnum.LeftTankGauge;
-                                gaugeItem.GaugeType = GaugeTypeEnum.RightTankGauge;
+                                switch (gt)
+                                {
+                                    case 0: gaugeItem.GaugeType = GaugeTypeEnum.LeftArcGauge; break;
+                                    case 1: gaugeItem.GaugeType = GaugeTypeEnum.LeftTankGauge; break;
+                                    case 2: gaugeItem.GaugeType = GaugeTypeEnum.RightTankGauge; break;
+                                    case 3: gaugeItem.GaugeType = GaugeTypeEnum.DonutGauge; break;
+                                    default: gaugeItem.GaugeType = GaugeTypeEnum.DonutGauge; break;
+                                }
+                                gt++;
                                 gaugeItem.Divisions = 5;
+                                gaugeItem.UnitsFontSize = 12;
                                 gaugeItem.GaugeHeight = 300;
                                 gaugeItem.GaugeWidth = 240;
                                 gaugeItem.SensorId = sensorItem.SensorId;

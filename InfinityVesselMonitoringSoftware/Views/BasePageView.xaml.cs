@@ -47,12 +47,16 @@ namespace InfinityVesselMonitoringSoftware.Views
                     BaseGauge gauge = null;
                     switch (gaugeItem.GaugeType)
                     {
-                        case GaugeTypeEnum.LeftArcGauge:
-                            gauge = new LeftArcGauge();
-                        break;
-
                         case GaugeTypeEnum.CircularGauge:
                             gauge = new CircularGauge();
+                            break;
+
+                        case GaugeTypeEnum.DonutGauge:
+                            gauge = new DonutGauge();
+                            break;
+
+                        case GaugeTypeEnum.LeftArcGauge:
+                            gauge = new LeftArcGauge();
                             break;
 
                         case GaugeTypeEnum.LeftTankGauge:
@@ -104,6 +108,10 @@ namespace InfinityVesselMonitoringSoftware.Views
                 {
                     switch (item.GaugeType)
                     {
+                        case GaugeTypeEnum.DonutGauge:
+                            gauge = this.BuildDonutGauge(item);
+                            break;
+
                         case GaugeTypeEnum.LeftArcGauge:
                             gauge = this.BuildLeftArcGauge(item);
                             break;
@@ -278,6 +286,22 @@ namespace InfinityVesselMonitoringSoftware.Views
                     }
                     break;
             }
+        }
+
+
+        private BaseGauge BuildDonutGauge(IGaugeItem gaugeItem)
+        {
+            DonutGauge donutGauge = new DonutGauge();
+            donutGauge.GaugeItem = gaugeItem;
+
+            BuildGauge(gaugeItem, (sensor) =>
+            {
+                donutGauge.SensorItem = sensor;
+            });
+
+            // Add it to the page
+            this.CanvasGrid.Children.Add(donutGauge);
+            return donutGauge;
         }
 
         private BaseGauge BuildLeftArcGauge(IGaugeItem gaugeItem)
