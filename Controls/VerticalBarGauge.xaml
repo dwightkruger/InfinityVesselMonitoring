@@ -22,11 +22,11 @@
                 <RowDefinition Height="0.5*"/>
                 <RowDefinition Height="0.3*"/>
                 <RowDefinition Height="6*"/>
-                <RowDefinition Height="0.3*"/>
+                <RowDefinition Height="0.6*"/>
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="6*"/>
+                <ColumnDefinition Width="4*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
 
