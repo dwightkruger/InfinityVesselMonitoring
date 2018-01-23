@@ -112,13 +112,13 @@ namespace InfinityGroup.VesselMonitoring.Controls
         protected void DrawUnits(CanvasControl sender, CanvasDrawingSession ds)
         {
             float atX = (float) sender.ActualWidth - c_arcThickness;
-            float atY = (float) sender.ActualHeight; 
+            float atY = (float) 0; 
             Vector2 at = new Vector2(atX, atY);
 
             using (var textFormat = new CanvasTextFormat()
             {
                 HorizontalAlignment = CanvasHorizontalAlignment.Right,
-                VerticalAlignment = CanvasVerticalAlignment.Bottom,
+                VerticalAlignment = CanvasVerticalAlignment.Top,
                 FontSize = (float)this.UnitsFontSize,
             })
             {
