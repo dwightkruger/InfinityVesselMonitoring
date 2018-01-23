@@ -13,13 +13,13 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <Canvas>
+    <Viewbox Stretch="Uniform">
         <Grid 
             x:Name="MainGrid" 
-            Height="{Binding GaugeHeight}" 
-            Width="{Binding GaugeWidth}"
-            Canvas.Left="{Binding Left}"  
-            Canvas.Top="{Binding Top}">
+            Height="{x:Bind Path=GaugeHeight}" 
+            Width="{x:Bind Path=GaugeWidth}" 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top">
 
             <canvas:CanvasControl 
                 x:Name="canvasControl" 
@@ -40,8 +40,8 @@
                     x:Name="DesignTextBlock"
                     Foreground="Red" 
                     FontSize="14" 
-                    Text="Design Text" />
+                    Text="Design Text"/>
             </Grid>
         </Grid>
-    </Canvas>
+    </Viewbox>
 </local:BaseGauge>

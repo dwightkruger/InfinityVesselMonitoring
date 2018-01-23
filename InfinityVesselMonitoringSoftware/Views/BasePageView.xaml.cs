@@ -74,6 +74,10 @@ namespace InfinityVesselMonitoringSoftware.Views
                         break;
 
                         case GaugeTypeEnum.TextGauge: break;
+
+                        case GaugeTypeEnum.VerticalBarGauge:
+                            gauge = new VerticalBarGauge();
+                            break;
                     }
 
                     gauge.GaugeItem = gaugeItem;
@@ -135,6 +139,10 @@ namespace InfinityVesselMonitoringSoftware.Views
                             break;
 
                         case GaugeTypeEnum.TextGauge:
+                            break;
+
+                        case GaugeTypeEnum.VerticalBarGauge:
+                            gauge = this.BuildVerticalBarGauge(item);
                             break;
                     }
                 }
@@ -288,7 +296,6 @@ namespace InfinityVesselMonitoringSoftware.Views
             }
         }
 
-
         private BaseGauge BuildDonutGauge(IGaugeItem gaugeItem)
         {
             DonutGauge donutGauge = new DonutGauge();
@@ -362,6 +369,21 @@ namespace InfinityVesselMonitoringSoftware.Views
             // Add it to the page
             this.CanvasGrid.Children.Add(tankGaugeRight);
             return tankGaugeRight;
+        }
+
+        private BaseGauge BuildVerticalBarGauge(IGaugeItem gaugeItem)
+        {
+            VerticalBarGauge verticalBarGauge = new VerticalBarGauge();
+            verticalBarGauge.GaugeItem = gaugeItem;
+
+            BuildGauge(gaugeItem, (sensor) =>
+            {
+                verticalBarGauge.SensorItem = sensor;
+            });
+
+            // Add it to the page
+            this.CanvasGrid.Children.Add(verticalBarGauge);
+            return verticalBarGauge;
         }
 
         private void BuildGauge(IGaugeItem gaugeItem, Action<ISensorItem> constructor)

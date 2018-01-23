@@ -1,4 +1,4 @@
-﻿<UserControl
+﻿<local:BaseGauge
     x:Class="InfinityGroup.VesselMonitoring.Controls.PolyLineControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -12,14 +12,22 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <Grid x:Name="MainGrid">
-        <canvas:CanvasControl 
-            x:Name="canvasControl" 
-            ClearColor="Transparent" 
-            Draw="canvasControl_Draw" 
-            Loaded="canvasControl_Loaded" 
-            CreateResources="canvasControl_CreateResources"/>
-        <!--<Ellipse Stroke="White" StrokeThickness="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>-->
+    <Viewbox Stretch="Uniform">
+        <Grid
+            x:Name="MainGrid" 
+            Height="{x:Bind Path=GaugeHeight}" 
+            Width="{x:Bind Path=GaugeWidth}" 
+            HorizontalAlignment="Left" 
+            VerticalAlignment="Top">
+            
+            <canvas:CanvasControl 
+                x:Name="canvasControl" 
+                ClearColor="Transparent" 
+                Draw="canvasControl_Draw" 
+                Loaded="canvasControl_Loaded" 
+                CreateResources="canvasControl_CreateResources"/>
+                <!--<Ellipse Stroke="White" StrokeThickness="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>-->
 
-    </Grid>
-</UserControl>
+        </Grid>
+    </Viewbox>
+</local:BaseGauge>

@@ -10,20 +10,25 @@ using Microsoft.Graphics.Canvas.Text;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using System;
 using System.Numerics;
+using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Shapes;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace InfinityGroup.VesselMonitoring.Controls
 {
-    public partial class DonutGauge : BaseGauge
+    public partial class VerticalBarGauge : BaseGauge
     {
         private bool _needsResourceRecreation = true;
-        private const float c_arcThickness = 14;
+        private const float c_boxThickness = 2;
+        private const float c_gaugeWidth = 100;
+        private float _gaugeBoxWidth  = 0;
+        private float _gaugeBoxHeight = 0;
 
-        public DonutGauge()
+        public VerticalBarGauge()
         {
             this.InitializeComponent();
         }
@@ -52,25 +57,30 @@ namespace InfinityGroup.VesselMonitoring.Controls
         protected void canvasControl_Draw(CanvasControl sender, CanvasDrawEventArgs args)
         {
             this.EnsureResources(sender, args);
+            CanvasDrawingSession ds = args.DrawingSession;
 
-            var ds = args.DrawingSession;
-            this.Center = new Vector2((float)(sender.Size.Width / 2f), (float)(sender.Size.Height / 2f));
+            float height = (float)(sender.ActualHeight * _gaugeBoxHeight);
+            float yTop = (float)(sender.ActualHeight - height) / 2;
+            float width = (float) sender.ActualWidth * _gaugeBoxWidth;
+            float xLeft = width - c_gaugeWidth;
 
-            ds.DrawCircle(this.Center, this.Radius + c_arcThickness/2F, this.GaugePointerColor, 1);
-            ds.DrawCircle(this.Center, this.Radius - c_arcThickness/2F, this.GaugePointerColor, 1);
+            Rect rect = new Rect(xLeft, yTop, width, height);
+            ds.DrawRectangle(rect, this.GaugePointerColor, c_boxThickness);
 
-            float startAngle = 0;
+            xLeft += 2 * c_boxThickness;
+            height -= 4 * c_boxThickness;
+            yTop += 2 * c_boxThickness;
+            width -= 4 * c_boxThickness;
+            float increment = (float)(height / (this.MaxValue - this.MinValue));
 
-            double value = Math.Min(this.MaxValue, this.Value);
-            double increment = 360D / (this.MaxValue - this.MinValue);
-            float endAngle = (float) ((value - this.MinValue) * increment);
-            endAngle = Math.Max(endAngle, 1);
-            endAngle = Math.Min(endAngle, 359.99F);
+            yTop = (float)(yTop + height - ((this.Value - this.MinValue) * increment));
+            height = (float)(height * this.PercentFull);
 
-            if (endAngle <= 180)
-                this.DrawGaugeArc(sender, ds, RadiansFromDegrees(startAngle), RadiansFromDegrees(endAngle), this.GaugePointerColor, CanvasSweepDirection.Clockwise, CanvasArcSize.Small);
-            else
-                this.DrawGaugeArc(sender, ds, RadiansFromDegrees(startAngle), RadiansFromDegrees(endAngle), this.GaugePointerColor, CanvasSweepDirection.Clockwise, CanvasArcSize.Large);
+            height = Math.Max(1, height);
+            width = Math.Max(0, width);
+
+            rect = new Rect(xLeft, yTop, width, height);
+            ds.FillRectangle(rect, this.GaugePointerColor);
         }
 
         protected void valueControl_Draw(CanvasControl sender, CanvasDrawEventArgs args)
@@ -78,20 +88,28 @@ namespace InfinityGroup.VesselMonitoring.Controls
             this.EnsureResources(sender, args);
             CanvasDrawingSession ds = args.DrawingSession;
 
-            string format = "{0:F" + string.Format("{0:F0}", this.Resolution) + "}";
-            float atX = (float)sender.ActualWidth / 2;
-            float atY = (float)sender.ActualHeight / 2;
+            float height = (float)(sender.ActualHeight * _gaugeBoxHeight);
+            float yTop = (float)(sender.ActualHeight - height) / 2;
+            float increment = (float) (height / (this.MaxValue - this.MinValue));
+
+            float atX = 10;
+            float atY = (float)(yTop + height - ((this.Value - this.MinValue) * increment));
             Vector2 at = new Vector2(atX, atY);
 
             using (var textFormat = new CanvasTextFormat()
             {
                 HorizontalAlignment = CanvasHorizontalAlignment.Center,
                 VerticalAlignment = CanvasVerticalAlignment.Center,
-                FontSize = (float)this.ValueFontSize,
+                FontSize = 26, // (float)this.ValueFontSize,
             })
             {
-                ds.DrawText(string.Format(format, this.Value), at, this.GaugePointerColor, textFormat);
+                //string format = "{0:F" + string.Format("{0:F0}", this.Resolution) + "}";
+                //ds.DrawText(string.Format(format, this.Value), at, this.GaugePointerColor, textFormat);
+                ds.DrawText("◄", at, this.GaugePointerColor, textFormat);
             }
+
+            float width = (float)sender.ActualWidth * _gaugeBoxWidth;
+            float xLeft = width - c_gaugeWidth;
         }
 
         protected void unitsControl_Draw(CanvasControl sender, CanvasDrawEventArgs args)
@@ -114,24 +132,6 @@ namespace InfinityGroup.VesselMonitoring.Controls
             }
         }
 
-        protected void DrawGaugeArc(CanvasControl sender, CanvasDrawingSession ds, float startAngle, float endAngle, Color color, CanvasSweepDirection canvasSweepDirection, CanvasArcSize canvasArcSize)
-        {
-            using (CanvasPathBuilder cp = new CanvasPathBuilder(sender))
-            {
-                var startPoint = this.Center + Vector2.Transform(Vector2.UnitX, Matrix3x2.CreateRotation(startAngle)) * this.Radius;
-                var endPoint = this.Center + Vector2.Transform(Vector2.UnitX, Matrix3x2.CreateRotation(endAngle)) * this.Radius;
-
-                cp.BeginFigure(startPoint);
-                cp.AddArc(endPoint, this.Radius, this.Radius, 0, canvasSweepDirection, canvasArcSize);
-                cp.EndFigure(CanvasFigureLoop.Open);
-
-                using (var geometry = CanvasGeometry.CreatePath(cp))
-                {
-                    ds.DrawGeometry(geometry, color, c_arcThickness, this.ArcStrokeStyle);
-                }
-            }
-        }
-
         protected CanvasStrokeStyle ArcStrokeStyle = new CanvasStrokeStyle()
         {
             DashStyle = CanvasDashStyle.Solid,
@@ -144,17 +144,19 @@ namespace InfinityGroup.VesselMonitoring.Controls
             if (!_needsResourceRecreation)
                 return;
 
-            _needsResourceRecreation = false;
-        }
+            // Calculate the percentage of the gauge width the bounding box will occupy
+            _gaugeBoxWidth = 0;
+            for (int i = 0; i < this.MainGrid.ColumnDefinitions.Count; i++)
+                _gaugeBoxWidth += (float)this.MainGrid.ColumnDefinitions[i].Width.Value;
+            _gaugeBoxWidth = (float)this.MainGrid.ColumnDefinitions[0].Width.Value / _gaugeBoxWidth;
 
-        protected Vector2 Center { get; set; }
-        
-        protected float Radius
-        {
-            get
-            {
-                return Math.Min(this.Center.X, this.Center.Y) - 2 * c_arcThickness;
-            }
+            // Calculate the percentage of the gauge height the bounding box will occupy
+            _gaugeBoxHeight = 0;
+            for (int i = 0; i < this.MainGrid.RowDefinitions.Count; i++)
+                _gaugeBoxHeight += (float)this.MainGrid.RowDefinitions[i].Height.Value;
+            _gaugeBoxHeight = (float)this.MainGrid.RowDefinitions[2].Height.Value / _gaugeBoxHeight;
+
+            _needsResourceRecreation = false;
         }
 
         protected Color GaugePointerColor
@@ -189,7 +191,6 @@ namespace InfinityGroup.VesselMonitoring.Controls
             this.TitleControl?.Invalidate();
             this.canvasControl?.Invalidate();
             this.ValueControl?.Invalidate();
-            this.UnitsControl?.Invalidate();
         }
 
         override protected void RefreshValue(object oldValue, object newValue)
@@ -218,7 +219,6 @@ namespace InfinityGroup.VesselMonitoring.Controls
             this.TitleControl?.Invalidate();
             this.canvasControl?.Invalidate();
             this.ValueControl?.Invalidate();
-            this.UnitsControl?.Invalidate();
         }
 
         override protected void RefreshGaugeWidth(object oldValue, object newValue)
@@ -228,7 +228,6 @@ namespace InfinityGroup.VesselMonitoring.Controls
             this.TitleControl?.Invalidate();
             this.canvasControl?.Invalidate();
             this.ValueControl?.Invalidate();
-            this.UnitsControl?.Invalidate();
         }
 
         override protected void RefreshMaxValue(object oldValue, object newValue)
@@ -282,7 +281,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
         protected override void RefreshUnitsFontSize(object oldValue, object newValue)
         {
-            this.UnitsControl?.Invalidate();
+            this.ValueControl?.Invalidate();
         }
 
         private void canvasControl_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -294,12 +293,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             this.canvasControl?.Invalidate();
             this.ValueControl?.Invalidate();
-            this.UnitsControl?.Invalidate();
-        }
 
-        static protected float RadiansFromDegrees(double degrees)
-        {
-            return (float)(degrees * Math.PI / 180F);
         }
     }
 }

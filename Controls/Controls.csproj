@@ -143,6 +143,9 @@
       <DependentUpon>TextControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utilities.cs" />
+    <Compile Include="VerticalBarGauge.xaml.cs">
+      <DependentUpon>VerticalBarGauge.xaml</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Properties\Controls.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -199,6 +202,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="TextControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="VerticalBarGauge.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

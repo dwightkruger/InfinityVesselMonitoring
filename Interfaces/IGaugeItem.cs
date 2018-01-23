@@ -16,15 +16,17 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
 {
     public enum GaugeTypeEnum
     {
-        Unknown        = 0,
-        LeftArcGauge   = 1,
-        RightArcGauge  = 2,
-        LeftTankGauge  = 3,
-        RightTankGauge = 4,
-        TextControl    = 5,
-        TextGauge      = 6,
-        CircularGauge  = 7,
-        DonutGauge     = 8,
+        Unknown            = 0,
+        LeftArcGauge       = 1,
+        RightArcGauge      = 2,
+        LeftTankGauge      = 3,
+        RightTankGauge     = 4,
+        TextControl        = 5,
+        TextGauge          = 6,
+        CircularGauge      = 7,
+        DonutGauge         = 8,
+        VerticalBarGauge   = 9,
+        HorizontalBarGauge = 10,
     }
 
     public interface IGaugeItem

@@ -21,7 +21,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace InfinityGroup.VesselMonitoring.Controls
 {
-    public partial class PolyLineControl : UserControl
+    public partial class PolyLineControl : BaseGauge
     {
         public PolyLineControl()
         {
@@ -163,7 +163,6 @@ namespace InfinityGroup.VesselMonitoring.Controls
             g?.canvasControl?.Invalidate();
         }
         #endregion
-
 
     }
 }

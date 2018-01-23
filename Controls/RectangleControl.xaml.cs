@@ -17,7 +17,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace InfinityGroup.VesselMonitoring.Controls
 {
-    public partial class RectangleControl : UserControl
+    public partial class RectangleControl : BaseGauge
     {
         public RectangleControl()
         {
