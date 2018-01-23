@@ -14,7 +14,6 @@ using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Shapes;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -25,8 +24,8 @@ namespace InfinityGroup.VesselMonitoring.Controls
         private bool _needsResourceRecreation = true;
         private const float c_boxThickness = 2;
         private const float c_gaugeWidth = 100;
-        private float _gaugeBoxWidth  = 0;
-        private float _gaugeBoxHeight = 0;
+        private float _gaugeGridWidth  = 0;
+        private float _gaugeGridHeight = 0;
 
         public VerticalBarGauge()
         {
@@ -41,7 +40,10 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             this.EnsureResources(sender, args);
             CanvasDrawingSession ds = args.DrawingSession;
-            Vector2 at = new Vector2((float)sender.ActualWidth / 2F, 4);
+
+            float xRight = (float)(sender.ActualWidth * _gaugeGridWidth);
+            float center = xRight - (c_gaugeWidth / 2);
+            Vector2 at = new Vector2(center, 4);
 
             using (var textFormat = new CanvasTextFormat()
             {
@@ -59,27 +61,25 @@ namespace InfinityGroup.VesselMonitoring.Controls
             this.EnsureResources(sender, args);
             CanvasDrawingSession ds = args.DrawingSession;
 
-            float height = (float)(sender.ActualHeight * _gaugeBoxHeight);
+            float height = (float)(sender.ActualHeight * _gaugeGridHeight);
             float yTop = (float)(sender.ActualHeight - height) / 2;
-            float width = (float) sender.ActualWidth * _gaugeBoxWidth;
-            float xLeft = width - c_gaugeWidth;
+            float xRight = (float)(sender.ActualWidth * _gaugeGridWidth);
+            float xLeft = xRight - c_gaugeWidth;
 
-            Rect rect = new Rect(xLeft, yTop, width, height);
+            Rect rect = new Rect(xLeft, yTop, c_gaugeWidth, height);
             ds.DrawRectangle(rect, this.GaugePointerColor, c_boxThickness);
 
             xLeft += 2 * c_boxThickness;
             height -= 4 * c_boxThickness;
             yTop += 2 * c_boxThickness;
-            width -= 4 * c_boxThickness;
             float increment = (float)(height / (this.MaxValue - this.MinValue));
 
             yTop = (float)(yTop + height - ((this.Value - this.MinValue) * increment));
             height = (float)(height * this.PercentFull);
 
             height = Math.Max(1, height);
-            width = Math.Max(0, width);
 
-            rect = new Rect(xLeft, yTop, width, height);
+            rect = new Rect(xLeft, yTop, c_gaugeWidth - 4*c_boxThickness, height);
             ds.FillRectangle(rect, this.GaugePointerColor);
         }
 
@@ -88,7 +88,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
             this.EnsureResources(sender, args);
             CanvasDrawingSession ds = args.DrawingSession;
 
-            float height = (float)(sender.ActualHeight * _gaugeBoxHeight);
+            float height = (float)(sender.ActualHeight * _gaugeGridHeight);
             float yTop = (float)(sender.ActualHeight - height) / 2;
             float increment = (float) (height / (this.MaxValue - this.MinValue));
 
@@ -108,7 +108,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 ds.DrawText("◄", at, this.GaugePointerColor, textFormat);
             }
 
-            float width = (float)sender.ActualWidth * _gaugeBoxWidth;
+            float width = (float)sender.ActualWidth * _gaugeGridWidth;
             float xLeft = width - c_gaugeWidth;
         }
 
@@ -145,16 +145,16 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 return;
 
             // Calculate the percentage of the gauge width the bounding box will occupy
-            _gaugeBoxWidth = 0;
+            _gaugeGridWidth = 0;
             for (int i = 0; i < this.MainGrid.ColumnDefinitions.Count; i++)
-                _gaugeBoxWidth += (float)this.MainGrid.ColumnDefinitions[i].Width.Value;
-            _gaugeBoxWidth = (float)this.MainGrid.ColumnDefinitions[0].Width.Value / _gaugeBoxWidth;
+                _gaugeGridWidth += (float)this.MainGrid.ColumnDefinitions[i].Width.Value;
+            _gaugeGridWidth = (float)this.MainGrid.ColumnDefinitions[0].Width.Value / _gaugeGridWidth;
 
             // Calculate the percentage of the gauge height the bounding box will occupy
-            _gaugeBoxHeight = 0;
+            _gaugeGridHeight = 0;
             for (int i = 0; i < this.MainGrid.RowDefinitions.Count; i++)
-                _gaugeBoxHeight += (float)this.MainGrid.RowDefinitions[i].Height.Value;
-            _gaugeBoxHeight = (float)this.MainGrid.RowDefinitions[2].Height.Value / _gaugeBoxHeight;
+                _gaugeGridHeight += (float)this.MainGrid.RowDefinitions[i].Height.Value;
+            _gaugeGridHeight = (float)this.MainGrid.RowDefinitions[2].Height.Value / _gaugeGridHeight;
 
             _needsResourceRecreation = false;
         }
