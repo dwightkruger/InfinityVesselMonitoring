@@ -236,7 +236,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns["GaugeLeft"].DefaultValue               = -1D;    // -1 means not positioned
             itemTable.Columns["GaugeTop"].DefaultValue                = -1D;    // -1 means not positioned
             itemTable.Columns["GaugeHeight"].DefaultValue             = 300D;
-            itemTable.Columns["GaugeWidth"].DefaultValue              = 200D;
+            itemTable.Columns["GaugeWidth"].DefaultValue              = 240D;
             itemTable.Columns["GaugeColor"].DefaultValue              = Colors.White;
             itemTable.Columns["Divisions"].DefaultValue               = 7;
             itemTable.Columns["MinorTicsPerMajorTic"].DefaultValue    = 3;
@@ -247,13 +247,13 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns["InnerCircleDelta"].DefaultValue        = 30;
             itemTable.Columns["LabelsFontSize"].DefaultValue          = 20D;
             itemTable.Columns["ValueFontSize"].DefaultValue           = 50D;
-            itemTable.Columns["UnitsFontSize"].DefaultValue           = 20D;
+            itemTable.Columns["UnitsFontSize"].DefaultValue           = 16D;
             itemTable.Columns["Units"].DefaultValue                   = Units.AmpHrs;
             itemTable.Columns["MajorTicLength"].DefaultValue          = 18D;
             itemTable.Columns["MediumTicLength"].DefaultValue         = 12D;
             itemTable.Columns["MinorTicLength"].DefaultValue          = 6D;
             itemTable.Columns["Text"].DefaultValue                    = string.Empty;
-            itemTable.Columns["TextFontSize"].DefaultValue            = 20D;
+            itemTable.Columns["TextFontSize"].DefaultValue            = 30D;
             itemTable.Columns["TextFontColor"].DefaultValue           = Colors.White;
             itemTable.Columns["TextAngle"].DefaultValue               = 0D;
             itemTable.Columns["TextHorizontalAlignment"].DefaultValue = CanvasHorizontalAlignment.Left;

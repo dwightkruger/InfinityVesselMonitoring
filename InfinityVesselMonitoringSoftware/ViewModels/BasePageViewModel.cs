@@ -64,7 +64,6 @@ namespace InfinityVesselMonitoringSoftware.ViewModels
                                 }
                                 gt++;
                                 gaugeItem.Divisions = 5;
-                                gaugeItem.UnitsFontSize = 12;
                                 gaugeItem.GaugeHeight = 300;
                                 gaugeItem.GaugeWidth = 240;
                                 gaugeItem.SensorId = sensorItem.SensorId;

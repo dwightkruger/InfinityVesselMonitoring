@@ -43,16 +43,38 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
             float xRight = (float)(sender.ActualWidth * _gaugeGridWidth);
             float center = xRight - (c_gaugeWidth / 2);
-            Vector2 at = new Vector2(center, 4);
+            Vector2 at = new Vector2(center, (float)sender.ActualHeight);
 
             using (var textFormat = new CanvasTextFormat()
             {
                 HorizontalAlignment = CanvasHorizontalAlignment.Center,
-                VerticalAlignment = CanvasVerticalAlignment.Top,
+                VerticalAlignment = CanvasVerticalAlignment.Bottom,
                 FontSize = (float)this.TextFontSize,
             })
             {
                 ds.DrawText(this.Text, at, this.GaugeColor, textFormat);
+            }
+        }
+
+
+        protected void MaxValueControl_Draw(CanvasControl sender, CanvasDrawEventArgs args)
+        {
+            this.EnsureResources(sender, args);
+            CanvasDrawingSession ds = args.DrawingSession;
+
+            float xRight = (float)(sender.ActualWidth * _gaugeGridWidth);
+            float center = xRight - (c_gaugeWidth / 2);
+            Vector2 at = new Vector2(center, (float)sender.ActualHeight);
+            string format = "{0:F" + string.Format("{0:F0}", this.Resolution) + "}";
+
+            using (var textFormat = new CanvasTextFormat()
+            {
+                HorizontalAlignment = CanvasHorizontalAlignment.Center,
+                VerticalAlignment = CanvasVerticalAlignment.Bottom,
+                FontSize = (float)this.LabelsFontSize,
+            })
+            {
+                ds.DrawText(string.Format(format, this.MaxValue), at, this.GaugeColor, textFormat);
             }
         }
 
@@ -62,16 +84,16 @@ namespace InfinityGroup.VesselMonitoring.Controls
             CanvasDrawingSession ds = args.DrawingSession;
 
             float height = (float)(sender.ActualHeight * _gaugeGridHeight);
-            float yTop = (float)(sender.ActualHeight - height) / 2;
+            float yTop = (float)(sender.ActualHeight - height) / 2F;
             float xRight = (float)(sender.ActualWidth * _gaugeGridWidth);
             float xLeft = xRight - c_gaugeWidth;
 
             Rect rect = new Rect(xLeft, yTop, c_gaugeWidth, height);
             ds.DrawRectangle(rect, this.GaugePointerColor, c_boxThickness);
 
-            xLeft += 2 * c_boxThickness;
-            height -= 4 * c_boxThickness;
-            yTop += 2 * c_boxThickness;
+            xLeft += 2F * c_boxThickness;
+            height -= 4F * c_boxThickness;
+            yTop += 2F * c_boxThickness;
             float increment = (float)(height / (this.MaxValue - this.MinValue));
 
             yTop = (float)(yTop + height - ((this.Value - this.MinValue) * increment));
@@ -83,16 +105,40 @@ namespace InfinityGroup.VesselMonitoring.Controls
             ds.FillRectangle(rect, this.GaugePointerColor);
         }
 
+        protected void MinValueControl_Draw(CanvasControl sender, CanvasDrawEventArgs args)
+        {
+            this.EnsureResources(sender, args);
+            CanvasDrawingSession ds = args.DrawingSession;
+
+            float xRight = (float)(sender.ActualWidth * _gaugeGridWidth);
+            float center = xRight - (c_gaugeWidth / 2F);
+            Vector2 at = new Vector2(center, 0F);
+            string format = "{0:F" + string.Format("{0:F0}", this.Resolution) + "}";
+
+            using (var textFormat = new CanvasTextFormat()
+            {
+                HorizontalAlignment = CanvasHorizontalAlignment.Center,
+                VerticalAlignment = CanvasVerticalAlignment.Top,
+                FontSize = (float)this.LabelsFontSize,
+            })
+            {
+                ds.DrawText(string.Format(format, this.MinValue), at, this.GaugeColor, textFormat);
+            }
+        }
+
         protected void valueControl_Draw(CanvasControl sender, CanvasDrawEventArgs args)
         {
             this.EnsureResources(sender, args);
             CanvasDrawingSession ds = args.DrawingSession;
 
             float height = (float)(sender.ActualHeight * _gaugeGridHeight);
-            float yTop = (float)(sender.ActualHeight - height) / 2;
+            float yTop = (float)(sender.ActualHeight - height) / 2F;
             float increment = (float) (height / (this.MaxValue - this.MinValue));
 
-            float atX = 10;
+            height -= 4F * c_boxThickness;
+            yTop += 2F * c_boxThickness;
+
+            float atX = 10F;
             float atY = (float)(yTop + height - ((this.Value - this.MinValue) * increment));
 
             Vector2 atPointer = new Vector2(atX, atY);
@@ -163,7 +209,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
             // Calculate the percentage of the gauge height the bounding box will occupy
             _gaugeGridHeight = 0;
-            for (int i = 0; i < this.MainGrid.RowDefinitions.Count; i++)
+            for (int i = 1; i < this.MainGrid.RowDefinitions.Count; i++)
                 _gaugeGridHeight += (float)this.MainGrid.RowDefinitions[i].Height.Value;
             _gaugeGridHeight = (float)this.MainGrid.RowDefinitions[2].Height.Value / _gaugeGridHeight;
 
