@@ -15,6 +15,7 @@ using System.Numerics;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace InfinityGroup.VesselMonitoring.Controls
 {
@@ -56,12 +57,12 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             this.EnsureResources(sender, args);
             CanvasDrawingSession ds = args.DrawingSession;
-            Vector2 at = new Vector2((float)sender.ActualWidth / 2F, 4);
+            Vector2 at = new Vector2((float)sender.ActualWidth / 2F, (float)sender.ActualHeight);
 
             using (var textFormat = new CanvasTextFormat()
             {
                 HorizontalAlignment = CanvasHorizontalAlignment.Center,
-                VerticalAlignment = CanvasVerticalAlignment.Top,
+                VerticalAlignment = CanvasVerticalAlignment.Bottom,
                 FontSize = (float)this.TextFontSize,
             })
             {
@@ -129,15 +130,28 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
         virtual protected void canvasControl_CreateResources(CanvasControl sender, CanvasCreateResourcesEventArgs args)
         {
-            IsLoaded = false;
+            this.IsLoaded = false;
 
-            this.OuterRectangle = new Rect(sender.Size.Width * (2f / 3f), 16f,
-                                           sender.Size.Width * (1f / 3f) - 8, sender.Size.Height - 0);
+            if ((0 == sender.Size.Width) || (0 == sender.Size.Height))
+            {
+                this.OuterRectangle = new Rect();
+            }
+            else
+            {
+                double topMarginHeight = this.MainGrid.RowDefinitions[0].Height.Value;
+                double gaugeAreaHeight = this.MainGrid.RowDefinitions[1].Height.Value;
+                double bottomMarginHeight = this.MainGrid.RowDefinitions[2].Height.Value;
+                float percentTopMargin = (float)(topMarginHeight / (topMarginHeight + gaugeAreaHeight + bottomMarginHeight));
+                float percentGaugeArea = (float)(gaugeAreaHeight / (topMarginHeight + gaugeAreaHeight + bottomMarginHeight));
 
-            CreateTankBrushes(sender);
+                this.OuterRectangle = new Rect(sender.Size.Width * (1f / 3f) + 8, sender.Size.Height * percentTopMargin + 10,
+                                               sender.Size.Width * (1f / 3f) - 8, sender.Size.Height * percentGaugeArea - 10);
+            }
+
+            this.CreateTankBrushes(sender);
 
             IsLoaded = true;
-            CanvasControl.Invalidate();
+            this.CanvasControl.Invalidate();
         }
 
         void EnsureResources(CanvasControl sender, CanvasDrawEventArgs args)
@@ -303,6 +317,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
 
         protected CanvasControl CanvasControl { get; set; }
+        protected Grid MainGrid { get; set; }
         protected bool IsLoaded { get; set; }
         protected Rect OuterRectangle { get; set; }
         public CanvasLinearGradientBrush OilTankBrush { get; set; }

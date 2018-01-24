@@ -48,16 +48,16 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             this.EnsureResources(sender, args);
             CanvasDrawingSession ds = args.DrawingSession;
-            Vector2 at = new Vector2((float)sender.ActualWidth/2F, 4);
+            Vector2 at = new Vector2((float)sender.ActualWidth/2F, (float)sender.ActualHeight);
 
             using (var textFormat = new CanvasTextFormat()
             {
                 HorizontalAlignment = CanvasHorizontalAlignment.Center,
-                VerticalAlignment = CanvasVerticalAlignment.Top,
+                VerticalAlignment = CanvasVerticalAlignment.Bottom,
                 FontSize = (float)this.TextFontSize,
             })
             {
-                ds.DrawText(this.Text, at, this.GaugePointerColor, textFormat);
+                ds.DrawText(this.Text, at, this.GaugeColor, textFormat);
             }
         }
 

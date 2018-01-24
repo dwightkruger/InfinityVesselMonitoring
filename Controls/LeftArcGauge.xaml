@@ -21,8 +21,8 @@
             VerticalAlignment="Top">
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="6*"/>
-                <RowDefinition Height="2*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="8*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
 
@@ -34,7 +34,7 @@
 
             <canvas:CanvasControl 
                 x:Name="canvasControl"           
-                Grid.Row="0" Grid.RowSpan="3" 
+                Grid.Row="1" Grid.RowSpan="2" 
                 ClearColor="Transparent" 
                 Draw="canvasControl_Draw" 
                 Loaded="canvasControl_Loaded" 

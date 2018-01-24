@@ -23,6 +23,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             this.InitializeComponent();
             this.CanvasControl = canvasControl;
+            this.MainGrid = mainGrid;
 
             if (!ViewModelBase.IsInDesignModeStatic)
             {
@@ -64,29 +65,6 @@ namespace InfinityGroup.VesselMonitoring.Controls
         override protected void canvasControl_Loaded(object sender, RoutedEventArgs e)
         {
         }
-
-        override protected void canvasControl_CreateResources(CanvasControl sender, CanvasCreateResourcesEventArgs args)
-        {
-            if ((0 == sender.Size.Width) || (0 == sender.Size.Height))
-            {
-                this.IsLoaded = false;
-            }
-            if ((0 == sender.Size.Width) || (0 == sender.Size.Height))
-            {
-                this.OuterRectangle = new Rect();
-            }
-            else
-            {
-                this.OuterRectangle = new Rect(sender.Size.Width * (1f / 3f) + 8, 16f,
-                                               sender.Size.Width * (1f / 3f) - 8, sender.Size.Height - 32);
-            }
-
-            CreateTankBrushes(sender);
-
-            this.IsLoaded = true;
-            this.CanvasControl.Invalidate();
-        }
-
 
         override protected void DrawTics(CanvasDrawEventArgs args, int totalTics, float ticLength)
         {
@@ -165,48 +143,56 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             this.TitleControl?.Invalidate();
             this.CanvasControl?.Invalidate();
+            this.UnitsControl?.Invalidate();
         }
 
         override protected void RefreshValue(object oldValue, object newValue)
         {
             this.TitleControl?.Invalidate();
             this.CanvasControl?.Invalidate();
+            this.UnitsControl?.Invalidate();
         }
 
         override protected void RefreshMaxValue(object oldValue, object newValue)
         {
             this.TitleControl?.Invalidate();
             this.CanvasControl?.Invalidate();
+            this.UnitsControl?.Invalidate();
         }
 
         override protected void RefreshMinValue(object oldValue, object newValue)
         {
             this.TitleControl?.Invalidate();
             this.CanvasControl?.Invalidate();
+            this.UnitsControl?.Invalidate();
         }
 
         override protected void RefreshHighAlarmValue(object oldValue, object newValue)
         {
             this.TitleControl?.Invalidate();
             this.CanvasControl?.Invalidate();
+            this.UnitsControl?.Invalidate();
         }
 
         override protected void RefreshHighWarningValue(object oldValue, object newValue)
         {
             this.TitleControl?.Invalidate();
             this.CanvasControl?.Invalidate();
+            this.UnitsControl?.Invalidate();
         }
 
         override protected void RefreshLowAlarmValue(object oldValue, object newValue)
         {
             this.TitleControl?.Invalidate();
             this.CanvasControl?.Invalidate();
+            this.UnitsControl?.Invalidate();
         }
 
         override protected void RefreshLowWarningValue(object oldValue, object newValue)
         {
             this.TitleControl?.Invalidate();
             this.CanvasControl.Invalidate();
+            this.UnitsControl?.Invalidate();
         }
 
         override protected void RefreshNominalValue(object oldValue, object newValue)
@@ -218,6 +204,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             this.TitleControl?.Invalidate();
             this.CanvasControl?.Invalidate();
+            this.UnitsControl?.Invalidate();
         }
     }
 }

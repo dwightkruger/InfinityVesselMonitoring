@@ -248,6 +248,8 @@ namespace InfinityGroup.VesselMonitoring.Controls
             this.TitleControl?.Invalidate();
             this.canvasControl?.Invalidate();
             this.ValueControl?.Invalidate();
+            this.MaxControl?.Invalidate();
+            this.MinControl?.Invalidate();
         }
 
         override protected void RefreshValue(object oldValue, object newValue)
@@ -276,6 +278,8 @@ namespace InfinityGroup.VesselMonitoring.Controls
             this.TitleControl?.Invalidate();
             this.canvasControl?.Invalidate();
             this.ValueControl?.Invalidate();
+            this.MaxControl?.Invalidate();
+            this.MinControl?.Invalidate();
         }
 
         override protected void RefreshGaugeWidth(object oldValue, object newValue)
@@ -285,16 +289,22 @@ namespace InfinityGroup.VesselMonitoring.Controls
             this.TitleControl?.Invalidate();
             this.canvasControl?.Invalidate();
             this.ValueControl?.Invalidate();
+            this.MaxControl?.Invalidate();
+            this.MinControl?.Invalidate();
         }
 
         override protected void RefreshMaxValue(object oldValue, object newValue)
         {
             this.canvasControl?.Invalidate();
+            this.MaxControl?.Invalidate();
+            this.MinControl?.Invalidate();
         }
 
         override protected void RefreshMinValue(object oldValue, object newValue)
         {
             this.canvasControl?.Invalidate();
+            this.MaxControl?.Invalidate();
+            this.MinControl?.Invalidate();
         }
 
         override protected void RefreshHighAlarmValue(object oldValue, object newValue)
@@ -348,9 +358,11 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
         override protected void RefreshGaugeColor(object oldValue, object newValue)
         {
+            this.TitleControl?.Invalidate();
             this.canvasControl?.Invalidate();
             this.ValueControl?.Invalidate();
-
+            this.MaxControl?.Invalidate();
+            this.MinControl?.Invalidate();
         }
     }
 }

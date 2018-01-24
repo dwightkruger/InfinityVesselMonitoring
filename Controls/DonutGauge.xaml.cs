@@ -36,12 +36,12 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             this.EnsureResources(sender, args);
             CanvasDrawingSession ds = args.DrawingSession;
-            Vector2 at = new Vector2((float)sender.ActualWidth / 2F, 4);
+            Vector2 at = new Vector2((float)sender.ActualWidth / 2F, (float)sender.ActualHeight);
 
             using (var textFormat = new CanvasTextFormat()
             {
                 HorizontalAlignment = CanvasHorizontalAlignment.Center,
-                VerticalAlignment = CanvasVerticalAlignment.Top,
+                VerticalAlignment = CanvasVerticalAlignment.Bottom,
                 FontSize = (float)this.TextFontSize,
             })
             {
@@ -80,13 +80,13 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
             string format = "{0:F" + string.Format("{0:F0}", this.Resolution) + "}";
             float atX = (float)sender.ActualWidth / 2;
-            float atY = (float)sender.ActualHeight / 2;
+            float atY = (float)sender.ActualHeight;
             Vector2 at = new Vector2(atX, atY);
 
             using (var textFormat = new CanvasTextFormat()
             {
                 HorizontalAlignment = CanvasHorizontalAlignment.Center,
-                VerticalAlignment = CanvasVerticalAlignment.Center,
+                VerticalAlignment = CanvasVerticalAlignment.Bottom,
                 FontSize = (float)this.ValueFontSize,
             })
             {
@@ -100,13 +100,13 @@ namespace InfinityGroup.VesselMonitoring.Controls
             CanvasDrawingSession ds = args.DrawingSession;
 
             float atX = (float)sender.ActualWidth / 2;
-            float atY = (float)sender.ActualHeight / 2;
+            float atY = 0;
             Vector2 at = new Vector2(atX, atY);
 
             using (var textFormat = new CanvasTextFormat()
             {
                 HorizontalAlignment = CanvasHorizontalAlignment.Center,
-                VerticalAlignment = CanvasVerticalAlignment.Center,
+                VerticalAlignment = CanvasVerticalAlignment.Top,
                 FontSize = (float)this.UnitsFontSize,
             })
             {
@@ -292,6 +292,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
         override protected void RefreshGaugeColor(object oldValue, object newValue)
         {
+            this.TitleControl?.Invalidate();
             this.canvasControl?.Invalidate();
             this.ValueControl?.Invalidate();
             this.UnitsControl?.Invalidate();
