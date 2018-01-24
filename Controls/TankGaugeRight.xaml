@@ -26,6 +26,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.6*"/>
                 <RowDefinition Height="6*"/>
+                <RowDefinition Height="0.4*"/>
             </Grid.RowDefinitions>
 
             <canvas:CanvasControl 
@@ -41,6 +42,12 @@
                 Draw="canvasControl_Draw" 
                 Loaded="canvasControl_Loaded" 
                 CreateResources="canvasControl_CreateResources"/>
+
+            <canvas:CanvasControl 
+                x:Name="UnitsControl"
+                Grid.Row="2" Grid.RowSpan="1"
+                ClearColor="Transparent" 
+                Draw="unitsControl_Draw" />
 
             <Grid 
                 x:Name="DesignGrid"

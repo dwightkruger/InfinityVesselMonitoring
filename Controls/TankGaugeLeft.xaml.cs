@@ -17,7 +17,7 @@ using Windows.UI.Xaml;
 
 namespace InfinityGroup.VesselMonitoring.Controls
 {
-    public sealed partial class TankGaugeLeft : TankGaugeBase
+    public partial class TankGaugeLeft : TankGaugeBase
     {
         public TankGaugeLeft()
         {
@@ -91,11 +91,11 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
             double increment = OuterRectangle.Height / (totalTics - 1);
             double delta = (this.MaxValue - this.MinValue) / (totalTics - 1);
+            float X1 = (float)this.OuterRectangle.X - c_outerRectangleThickness;
+            float X2 = (float)this.OuterRectangle.X - ticLength - c_outerRectangleThickness;
 
             for (int i = 0; i < totalTics; i++)
             {
-                float X1 = (float)this.OuterRectangle.X - c_outerRectangleThickness;
-                float X2 = (float)this.OuterRectangle.X - ticLength - c_outerRectangleThickness;
                 float Y = (float)(this.OuterRectangle.Y + (i * increment));
 
                 Vector2 from = new Vector2(X1, Y);
@@ -116,13 +116,14 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             var ds = args.DrawingSession;
 
-            double increment = OuterRectangle.Height / (totalTics - 1);
-            double valueIncrement = (MaxValue - MinValue) / (totalTics - 1);
+            double yIncrement = this.OuterRectangle.Height / (totalTics - 1);
+            double valueIncrement = (this.MaxValue - this.MinValue) / (totalTics - 1);
+            float X = (float)this.OuterRectangle.X - c_majorTicLength - c_outerRectangleThickness;
+            string format = "{0:F" + string.Format("{0:F0}", this.Resolution) + "}";
 
             for (int i = 0; i < totalTics; i++)
             {
-                float X = (float)OuterRectangle.X - c_majorTicLength - c_outerRectangleThickness;
-                float Y = (float)(OuterRectangle.Y + (i * increment));
+                float Y = (float)(this.OuterRectangle.Y + (i * yIncrement));
 
                 Vector2 at = new Vector2(X, Y);
 
@@ -133,9 +134,27 @@ namespace InfinityGroup.VesselMonitoring.Controls
                     FontSize = (float)this.LabelsFontSize,
                 })
                 {
-                    string format = "{0:F" + string.Format("{0:F0}", Resolution) + "}";
-                    ds.DrawText(string.Format(format, MinValue + (MaxValue - (i * valueIncrement))), at, this.GaugeColor, textFormat);
+                    ds.DrawText(string.Format(format, this.MaxValue - (i * valueIncrement)), at, this.GaugeColor, textFormat);
                 }
+            }
+        }
+
+        protected void unitsControl_Draw(CanvasControl sender, CanvasDrawEventArgs args)
+        {
+            var ds = args.DrawingSession;
+
+            float atX = (float)sender.ActualWidth/2F;
+            float atY = (float)0;
+            Vector2 at = new Vector2(atX, atY);
+
+            using (var textFormat = new CanvasTextFormat()
+            {
+                HorizontalAlignment = CanvasHorizontalAlignment.Center,
+                VerticalAlignment = CanvasVerticalAlignment.Top,
+                FontSize = (float)this.UnitsFontSize,
+            })
+            {
+                ds.DrawText(this.Units, at, this.GaugeColor, textFormat);
             }
         }
 

@@ -17,7 +17,7 @@ using Windows.UI.Xaml;
 
 namespace InfinityGroup.VesselMonitoring.Controls
 {
-    public sealed partial class TankGaugeRight : TankGaugeBase
+    public partial class TankGaugeRight : TankGaugeBase
     {
         public TankGaugeRight()
         {
@@ -94,11 +94,11 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
             double increment = OuterRectangle.Height / (totalTics - 1);
             double delta = (this.MaxValue - this.MinValue) / (totalTics - 1);
+            float X1 = (float)(this.OuterRectangle.X + this.OuterRectangle.Width + c_outerRectangleThickness);
+            float X2 = X1 + ticLength;
 
             for (int i = 0; i < totalTics; i++)
             {
-                float X1 = (float)(this.OuterRectangle.X + this.OuterRectangle.Width + c_outerRectangleThickness);
-                float X2 = X1 + ticLength;
                 float Y = (float)(this.OuterRectangle.Y + (i * increment));
 
                 Vector2 from = new Vector2(X1, Y);
@@ -121,10 +121,11 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
             double increment = this.OuterRectangle.Height / (totalTics - 1);
             double valueIncrement = (this.MaxValue - this.MinValue) / (totalTics - 1);
+            string format = "{0:F" + string.Format("{0:F0}", Resolution) + "}";
+            float X = (float)(this.OuterRectangle.X + this.OuterRectangle.Width + c_majorTicLength + c_outerRectangleThickness);
 
             for (int i = 0; i < totalTics; i++)
             {
-                float X = (float)(this.OuterRectangle.X + this.OuterRectangle.Width + c_majorTicLength + c_outerRectangleThickness);
                 float Y = (float)(this.OuterRectangle.Y + (i * increment));
 
                 Vector2 at = new Vector2(X, Y);
@@ -136,9 +137,27 @@ namespace InfinityGroup.VesselMonitoring.Controls
                     FontSize = (float)this.LabelsFontSize
                 })
                 {
-                    string format = "{0:F" + string.Format("{0:F0}", Resolution) + "}";
-                    ds.DrawText(string.Format(format, this.MinValue + (this.MaxValue - (i * valueIncrement))), at, this.GaugeColor, textFormat);
+                    ds.DrawText(string.Format(format, this.MaxValue - (i * valueIncrement)), at, this.GaugeColor, textFormat);
                 }
+            }
+        }
+
+        protected void unitsControl_Draw(CanvasControl sender, CanvasDrawEventArgs args)
+        {
+            var ds = args.DrawingSession;
+
+            float atX = (float)sender.ActualWidth / 2F;
+            float atY = (float)0;
+            Vector2 at = new Vector2(atX, atY);
+
+            using (var textFormat = new CanvasTextFormat()
+            {
+                HorizontalAlignment = CanvasHorizontalAlignment.Center,
+                VerticalAlignment = CanvasVerticalAlignment.Top,
+                FontSize = (float)this.UnitsFontSize,
+            })
+            {
+                ds.DrawText(this.Units, at, this.GaugeColor, textFormat);
             }
         }
 
