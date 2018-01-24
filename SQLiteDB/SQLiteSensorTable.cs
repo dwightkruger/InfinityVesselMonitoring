@@ -236,8 +236,8 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns["ChangeDate"].DefaultValue = DateTime.Now.ToUniversalTime();
             itemTable.Columns["Description"].DefaultValue = "Description";
             itemTable.Columns["DeviceId"].DefaultValue = -1;
-            itemTable.Columns["HighAlarmValue"].DefaultValue = 95D;
-            itemTable.Columns["HighWarningValue"].DefaultValue = 90D;
+            itemTable.Columns["HighAlarmValue"].DefaultValue = 950D;
+            itemTable.Columns["HighWarningValue"].DefaultValue = 900D;
             itemTable.Columns["IsCalibrated"].DefaultValue = false;
             itemTable.Columns["IsEnabled"].DefaultValue = false;
             itemTable.Columns["IsHighAlarmEnabled"].DefaultValue = false;
@@ -247,10 +247,10 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns["IsPersisted"].DefaultValue = true;
             itemTable.Columns["IsVirtual"].DefaultValue = false;
             itemTable.Columns["Location"].DefaultValue = "Location";
-            itemTable.Columns["LowAlarmValue"].DefaultValue = 5D;
-            itemTable.Columns["LowWarningValue"].DefaultValue = 10D;
-            itemTable.Columns["MaxValue"].DefaultValue = 100D;
-            itemTable.Columns["MinValue"].DefaultValue = 0D;
+            itemTable.Columns["LowAlarmValue"].DefaultValue = 50D;
+            itemTable.Columns["LowWarningValue"].DefaultValue = 20D;
+            itemTable.Columns["MaxValue"].DefaultValue = 1000D;
+            itemTable.Columns["MinValue"].DefaultValue = 10D;
             itemTable.Columns["Name"].DefaultValue = "Name";
             itemTable.Columns["NominalValue"].DefaultValue = 50D;
             itemTable.Columns["PersistDataPoints"].DefaultValue = true;

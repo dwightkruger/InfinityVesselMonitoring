@@ -1496,7 +1496,11 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 if (double.IsNaN(MinValue)) return 0;
                 if (double.IsNaN(MaxValue)) return 0;
 
-                return (Value - MinValue) / (MaxValue - MinValue);
+                double percentFull = (Value - MinValue) / (MaxValue - MinValue);
+                percentFull = Math.Max(0, percentFull);
+                percentFull = Math.Min(1, percentFull);
+
+                return percentFull;
             }
         }
 

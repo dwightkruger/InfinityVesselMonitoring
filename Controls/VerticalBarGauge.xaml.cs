@@ -23,7 +23,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
     {
         private bool _needsResourceRecreation = true;
         private const float c_boxThickness = 2;
-        private const float c_gaugeWidth = 100;
+        private const float c_gaugeWidth = 75;
         private float _gaugeGridWidth  = 0;
         private float _gaugeGridHeight = 0;
 
@@ -104,7 +104,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
             {
                 HorizontalAlignment = CanvasHorizontalAlignment.Center,
                 VerticalAlignment = CanvasVerticalAlignment.Center,
-                FontSize = 26, // (float)this.ValueFontSize,
+                FontSize = 32, // (float)this.ValueFontSize,
             })
             {
                 ds.DrawText("◄", atPointer, this.GaugePointerColor, textFormat);
@@ -120,7 +120,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
             {
                 string format = "{0:F" + string.Format("{0:F0}", this.Resolution) + "}";
                 Vector2 at = new Vector2(
-                    atPointer.X + (float)pointerBoundingRectangle.Width + 4, 
+                    atPointer.X + (float)pointerBoundingRectangle.Width + 22, 
                     atPointer.Y);
 
                 ds.DrawText(string.Format(format, this.Value), at, this.GaugePointerColor, textFormat);
@@ -129,36 +129,16 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
             using (var textFormat = new CanvasTextFormat()
             {
-                HorizontalAlignment = CanvasHorizontalAlignment.Center,
+                HorizontalAlignment = CanvasHorizontalAlignment.Left,
                 VerticalAlignment = CanvasVerticalAlignment.Center,
                 FontSize = (float)this.UnitsFontSize,
             })
             {
                 Vector2 at = new Vector2(
-                    atPointer.X + 4, 
+                    atPointer.X + 12, 
                     atPointer.Y + 
                         (float)pointerBoundingRectangle.Height + 
-                        (float)valueBoundingRectangle.Height);
-                ds.DrawText(this.Units, at, this.GaugePointerColor, textFormat);
-            }
-        }
-
-        protected void unitsControl_Draw(CanvasControl sender, CanvasDrawEventArgs args)
-        {
-            this.EnsureResources(sender, args);
-            CanvasDrawingSession ds = args.DrawingSession;
-
-            float atX = (float)sender.ActualWidth / 2;
-            float atY = (float)sender.ActualHeight / 2;
-            Vector2 at = new Vector2(atX, atY);
-
-            using (var textFormat = new CanvasTextFormat()
-            {
-                HorizontalAlignment = CanvasHorizontalAlignment.Center,
-                VerticalAlignment = CanvasVerticalAlignment.Center,
-                FontSize = (float)this.UnitsFontSize,
-            })
-            {
+                        (float)valueBoundingRectangle.Height/2);
                 ds.DrawText(this.Units, at, this.GaugePointerColor, textFormat);
             }
         }
