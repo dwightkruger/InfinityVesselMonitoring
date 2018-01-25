@@ -55,6 +55,10 @@ namespace InfinityVesselMonitoringSoftware.Views
                             gauge = new DonutGauge();
                             break;
 
+                        case GaugeTypeEnum.HorizontalBarGauge:
+                            gauge = new HorizontalBarGauge();
+                            break;
+
                         case GaugeTypeEnum.LeftArcGauge:
                             gauge = new LeftArcGauge();
                             break;
@@ -112,16 +116,20 @@ namespace InfinityVesselMonitoringSoftware.Views
                 {
                     switch (item.GaugeType)
                     {
+                        case GaugeTypeEnum.CircularGauge:
+                            gauge = BuildCircularGauge(item);
+                            break;
+
                         case GaugeTypeEnum.DonutGauge:
                             gauge = this.BuildDonutGauge(item);
                             break;
 
-                        case GaugeTypeEnum.LeftArcGauge:
-                            gauge = this.BuildLeftArcGauge(item);
+                        case GaugeTypeEnum.HorizontalBarGauge:
+                            gauge = this.BuildHorizontalBarGauge(item);
                             break;
 
-                        case GaugeTypeEnum.CircularGauge:
-                            gauge = BuildCircularGauge(item);
+                        case GaugeTypeEnum.LeftArcGauge:
+                            gauge = this.BuildLeftArcGauge(item);
                             break;
 
                         case GaugeTypeEnum.LeftTankGauge:
@@ -384,6 +392,21 @@ namespace InfinityVesselMonitoringSoftware.Views
             // Add it to the page
             this.CanvasGrid.Children.Add(verticalBarGauge);
             return verticalBarGauge;
+        }
+
+        private BaseGauge BuildHorizontalBarGauge(IGaugeItem gaugeItem)
+        {
+            HorizontalBarGauge horizontalBarGauge = new HorizontalBarGauge();
+            horizontalBarGauge.GaugeItem = gaugeItem;
+
+            BuildGauge(gaugeItem, (sensor) =>
+            {
+                horizontalBarGauge.SensorItem = sensor;
+            });
+
+            // Add it to the page
+            this.CanvasGrid.Children.Add(horizontalBarGauge);
+            return horizontalBarGauge;
         }
 
         private void BuildGauge(IGaugeItem gaugeItem, Action<ISensorItem> constructor)

@@ -1,0 +1,45 @@
+﻿<local:BaseGauge
+    x:Class="InfinityGroup.VesselMonitoring.Controls.HorizontalBarGauge"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:InfinityGroup.VesselMonitoring.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"       
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <Viewbox Stretch="Uniform">
+        <Grid
+            x:Name="MainGrid" 
+            Height="{x:Bind Path=GaugeHeight}" 
+            Width="{x:Bind Path=GaugeWidth}" 
+            HorizontalAlignment="Left" 
+            VerticalAlignment="Top">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="7*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+
+            <canvas:CanvasControl 
+                x:Name="TitleControl"
+                Grid.Row="0" Grid.RowSpan="1"   
+                Grid.Column="0" Grid.ColumnSpan="2"
+                ClearColor="Transparent" 
+                Draw="TitleControl_Draw" />
+
+            <canvas:CanvasControl 
+                x:Name="canvasControl"           
+                Grid.Row="1" Grid.RowSpan="3" 
+                Grid.Column="0" Grid.ColumnSpan="2"               
+                ClearColor="Transparent" 
+                Draw="canvasControl_Draw" 
+                Loaded="canvasControl_Loaded" 
+                SizeChanged="canvasControl_SizeChanged"/>
+        </Grid>
+    </Viewbox>
+</local:BaseGauge>

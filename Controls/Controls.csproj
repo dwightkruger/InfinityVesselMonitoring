@@ -119,6 +119,9 @@
       <DependentUpon>DonutGauge.xaml</DependentUpon>
     </Compile>
     <Compile Include="FrameworkElementAttachedProperties.cs" />
+    <Compile Include="HorizontalBarGauge.xaml.cs">
+      <DependentUpon>HorizontalBarGauge.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ImageToggleButton.xaml.cs">
       <DependentUpon>ImageToggleButton.xaml</DependentUpon>
     </Compile>
@@ -174,6 +177,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DonutGauge.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HorizontalBarGauge.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

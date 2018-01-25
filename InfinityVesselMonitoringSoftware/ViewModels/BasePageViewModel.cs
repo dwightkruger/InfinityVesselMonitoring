@@ -60,6 +60,7 @@ namespace InfinityVesselMonitoringSoftware.ViewModels
                                     case 2: gaugeItem.GaugeType = GaugeTypeEnum.RightTankGauge; break;
                                     case 3: gaugeItem.GaugeType = GaugeTypeEnum.DonutGauge; break;
                                     case 4: gaugeItem.GaugeType = GaugeTypeEnum.VerticalBarGauge; break;
+                                    case 5: gaugeItem.GaugeType = GaugeTypeEnum.HorizontalBarGauge; break;
                                     default: gaugeItem.GaugeType = GaugeTypeEnum.DonutGauge; break;
                                 }
                                 gt++;
