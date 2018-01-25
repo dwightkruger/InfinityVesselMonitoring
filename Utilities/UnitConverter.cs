@@ -200,6 +200,211 @@ namespace InfinityGroup.VesselMonitoring.Utilities
             return (a.Units == this.Units) && (a.Type == this.Type);
         }
 
+        static public string ToString(Units units)
+        {
+            switch (units)
+            {
+                case Units.AmpHrs:
+                    return _ampHrs;
+
+                case Units.Amps:
+                    return _amps;
+
+                case Units.Bar:
+                    return _bar;
+
+                case Units.CubicMeters:
+                    return _cubicMeters;
+
+                case Units.CubicMetersPerHr:
+                    return _cubicMetersPerHour;
+
+                case Units.Celsius:
+                    return _degreeC;
+
+                case Units.Date:
+                    return _date;
+
+                case Units.Deciliters:
+                    return _deciliters;
+
+                case Units.Degrees:
+                    return _degrees;
+
+                case Units.DegreesPerSecond:
+                    return _degreesPerSecond;
+
+                case Units.DegreesPerMinute:
+                    return _degreesPerMinute;
+
+                case Units.Fathoms:
+                    return _fathoms;
+
+                case Units.Fahrenheit:
+                    return _degreeF;
+
+                case Units.Feet:
+                    return _feet;
+
+                case Units.GallonsUK:
+                    return _gallonsUK;
+
+                case Units.GallonsUS:
+                    return _gallonsUS;
+
+                case Units.GallonsUSPerNauticalMile:
+                    return _gallonsUSPerNauticalMile;
+
+                case Units.GallonsUSPerHr:
+                    return _gallonsUSPerHour;
+
+                case Units.GallonsUSPerMinute:
+                    return _gallonsUSPerMinute;
+
+                case Units.GallonsUKPerNauticalMile:
+                    return _gallonsUKPerNauticalMile;
+
+                case Units.GallonsUKPerHr:
+                    return _gallonsUKPerHour;
+
+                case Units.GallonsUKPerMinute:
+                    return _gallonsUKPerMinute;
+
+                case Units.Hertz:
+                    return _hertz;
+
+                case Units.Hours:
+                    return _hours;
+
+                case Units.InchesHg:
+                    return _inchesOfMercury;
+
+                case Units.Kelvin:
+                    return _degreeK;
+
+                case Units.Kg:
+                    return _kilograms;
+
+                case Units.KgPerCubicMeter:
+                    return _kilogramsPerCubicMeter;
+
+                case Units.KgPerLiter:
+                    return _kilogramsPerLiter;
+
+                case Units.KgPerHour:
+                    return _kilogramsPerHour;
+
+                case Units.Km:
+                    return _kilometers;
+
+                case Units.KilometersPerHour:
+                    return _kilometersPerHour;
+
+                case Units.KiloWatts:
+                    return _kiloWatts;
+
+                case Units.Knots:
+                    return _nauticalMilesPerHour;
+
+                case Units.KPa:
+                    return _kilopascal;
+
+                case Units.LitersPerNauticalMile:
+                    return _litersPerNauticalMile;
+
+                case Units.Liters:
+                    return _liters;
+
+                case Units.LitersPerHr:
+                    return _litersPerHour;
+
+                case Units.LitersPerMinute:
+                    return _litersPerMinute;
+
+                case Units.Meters:
+                    return _meters;
+
+                case Units.MetersPerSecond:
+                    return _metersPerSecond;
+
+                case Units.MetricTons:
+                    return _metricTons;
+
+                case Units.Miles:
+                    return _miles;
+
+                case Units.Minutes:
+                    return _minutes;
+
+                case Units.MM:
+                    return _millimetres;
+
+                case Units.MmHg:
+                    return _millimetreOfMercury;
+
+                case Units.MilesPerHour:
+                    return _milesPerHour;
+
+                case Units.NauticalMiles:
+                    return _nauticalMiles;
+
+                case Units.Null:
+                    return _null;
+
+                case Units.OFF:
+                    return _OFF;
+
+                case Units.ON:
+                    return _ON;
+
+                case Units.ONOFF:
+                    return _ONOFF;
+
+                case Units.Other:
+                    return "unknown";
+
+                case Units.Pascals:
+                    return _pascals;
+
+                case Units.Percent:
+                    return _percent;
+
+                case Units.Pounds:
+                    return _pounds;
+
+                case Units.PoundsPerHour:
+                    return _poundsPerHour;
+
+                case Units.PSI:
+                    return _PSI;
+
+                case Units.Radians:
+                    return _radians;
+
+                case Units.RadiansPerSecond:
+                    return _radiansPerSecond;
+
+                case Units.RPM:
+                    return _RPM;
+
+                case Units.Seconds:
+                    return _seconds;
+
+                case Units.Volts:
+                    return _volts;
+
+                case Units.Watts:
+                    return _watts;
+
+                case Units.Yards:
+                    return _yards;
+
+                default:
+                    return "known";
+            }
+
+        }
+
         public override string ToString()
         {
             switch (Units)

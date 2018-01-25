@@ -23,7 +23,8 @@ namespace InfinityGroup.VesselMonitoring.Controls
     public class BaseGauge : UserControl, IGauge
     {
         IGaugeItem _gaugeItem = null;
-        private static IValueConverter _uc = new SensorValueToGaugeValueConverter();
+        private static IValueConverter c_svtgvc = new SensorValueToGaugeValueConverter();
+        private static IValueConverter c_utosc = new UnitsToStringConverter();
 
         public BaseGauge()
         {
@@ -993,6 +994,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
                 Binding unitsBinding = new Binding();
                 unitsBinding.Source = value;
+                unitsBinding.Converter = c_utosc;
                 unitsBinding.Path = new PropertyPath("Units");
                 this.SetBinding(UnitsProperty, unitsBinding);
 
@@ -1025,49 +1027,49 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
                 Binding lowAlarmBinding = new Binding();
                 lowAlarmBinding.Source = value;
-                lowAlarmBinding.Converter = _uc;
+                lowAlarmBinding.Converter = c_svtgvc;
                 lowAlarmBinding.ConverterParameter = Tuple.Create<ISensorItem, IGaugeItem>(value, _gaugeItem);
                 lowAlarmBinding.Path = new PropertyPath("LowAlarmValue");
                 this.SetBinding(LowAlarmValueProperty, lowAlarmBinding);
 
                 Binding lowWarningBinding = new Binding();
                 lowWarningBinding.Source = value;
-                lowWarningBinding.Converter = _uc;
+                lowWarningBinding.Converter = c_svtgvc;
                 lowWarningBinding.ConverterParameter = Tuple.Create<ISensorItem, IGaugeItem>(value, _gaugeItem);
                 lowWarningBinding.Path = new PropertyPath("LowWarningValue");
                 this.SetBinding(LowWarningValueProperty, lowWarningBinding);
 
                 Binding highAlarmBinding = new Binding();
                 highAlarmBinding.Source = value;
-                highAlarmBinding.Converter = _uc;
+                highAlarmBinding.Converter = c_svtgvc;
                 highAlarmBinding.ConverterParameter = Tuple.Create<ISensorItem, IGaugeItem>(value, _gaugeItem);
                 highAlarmBinding.Path = new PropertyPath("HighAlarmValue");
                 this.SetBinding(HighAlarmValueProperty, highAlarmBinding);
 
                 Binding highWarningBinding = new Binding();
                 highWarningBinding.Source = value;
-                highWarningBinding.Converter = _uc;
+                highWarningBinding.Converter = c_svtgvc;
                 highWarningBinding.ConverterParameter = Tuple.Create<ISensorItem, IGaugeItem>(value, _gaugeItem);
                 highWarningBinding.Path = new PropertyPath("HighWarningValue");
                 this.SetBinding(HighWarningValueProperty, highWarningBinding);
 
                 Binding maxValueBinding = new Binding();
                 maxValueBinding.Source = value;
-                maxValueBinding.Converter = _uc;
+                maxValueBinding.Converter = c_svtgvc;
                 maxValueBinding.ConverterParameter = Tuple.Create<ISensorItem, IGaugeItem>(value, _gaugeItem);
                 maxValueBinding.Path = new PropertyPath("MaxValue");
                 this.SetBinding(MaxValueProperty, maxValueBinding);
 
                 Binding minValueBinding = new Binding();
                 minValueBinding.Source = value;
-                minValueBinding.Converter = _uc;
+                minValueBinding.Converter = c_svtgvc;
                 minValueBinding.ConverterParameter = Tuple.Create<ISensorItem, IGaugeItem>(value, _gaugeItem);
                 minValueBinding.Path = new PropertyPath("MinValue");
                 this.SetBinding(MinValueProperty, minValueBinding);
 
                 Binding nominalValueBinding = new Binding();
                 nominalValueBinding.Source = value;
-                nominalValueBinding.Converter = _uc;
+                nominalValueBinding.Converter = c_svtgvc;
                 nominalValueBinding.ConverterParameter = Tuple.Create<ISensorItem, IGaugeItem>(value, _gaugeItem);
                 nominalValueBinding.Path = new PropertyPath("NominalValue");
                 this.SetBinding(NominalValueProperty, nominalValueBinding);
@@ -1075,7 +1077,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 Debug.Assert(_gaugeItem != null);
                 Binding sensorValueBinding = new Binding();
                 sensorValueBinding.Source = value;
-                sensorValueBinding.Converter = _uc;
+                sensorValueBinding.Converter = c_svtgvc;
                 sensorValueBinding.ConverterParameter = Tuple.Create<ISensorItem,IGaugeItem>(value, _gaugeItem);
                 sensorValueBinding.Path = new PropertyPath("SensorValue");
                 this.SetBinding(ValueProperty, sensorValueBinding);

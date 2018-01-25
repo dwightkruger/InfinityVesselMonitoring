@@ -115,6 +115,7 @@
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\ColorToSolidColorBrushConverter.cs" />
     <Compile Include="Converters\SensorValueToGaugeValueConverter.cs" />
+    <Compile Include="Converters\UnitsToStringConverter.cs" />
     <Compile Include="DonutGauge.xaml.cs">
       <DependentUpon>DonutGauge.xaml</DependentUpon>
     </Compile>
