@@ -162,7 +162,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
             {
                 HorizontalAlignment = CanvasHorizontalAlignment.Center,
                 VerticalAlignment = CanvasVerticalAlignment.Center,
-                FontSize = (float)this.ValueFontSize,
+                FontSize = (float)this.ValueFontSize * 0.8F,
             })
             {
                 string format = "{0:F" + string.Format("{0:F0}", this.Resolution) + "}";
@@ -178,7 +178,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
             {
                 HorizontalAlignment = CanvasHorizontalAlignment.Left,
                 VerticalAlignment = CanvasVerticalAlignment.Center,
-                FontSize = (float)this.UnitsFontSize,
+                FontSize = (float)this.UnitsFontSize * 0.8F
             })
             {
                 Vector2 at = new Vector2(
