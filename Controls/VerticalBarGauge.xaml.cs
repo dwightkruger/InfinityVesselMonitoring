@@ -133,10 +133,11 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
             float height = (float)(sender.ActualHeight * _gaugeGridHeight);
             float yTop = (float)(sender.ActualHeight - height) / 2F;
-            float increment = (float) (height / (this.MaxValue - this.MinValue));
 
             height -= 4F * c_boxThickness;
             yTop += 2F * c_boxThickness;
+
+            float increment = (float)(height / (this.MaxValue - this.MinValue));
 
             float atX = 10F;
             float atY = (float)(yTop + height - ((this.Value - this.MinValue) * increment));
@@ -181,7 +182,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
             })
             {
                 Vector2 at = new Vector2(
-                    atPointer.X + 12, 
+                    atPointer.X, 
                     atPointer.Y + 
                         (float)pointerBoundingRectangle.Height + 
                         (float)valueBoundingRectangle.Height/2);

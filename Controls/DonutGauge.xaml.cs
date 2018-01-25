@@ -153,7 +153,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             get
             {
-                return Math.Min(this.Center.X, this.Center.Y) - 2 * c_arcThickness;
+                return Math.Min(this.Center.X, this.Center.Y) - 1 * c_arcThickness;
             }
         }
 

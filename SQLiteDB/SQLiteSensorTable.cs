@@ -234,7 +234,7 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
 
             itemTable.Columns[PrimaryKeyName].DefaultValue = -1L;
             itemTable.Columns["ChangeDate"].DefaultValue = DateTime.Now.ToUniversalTime();
-            itemTable.Columns["Description"].DefaultValue = "Description";
+            itemTable.Columns["Description"].DefaultValue = "Sensor Description";
             itemTable.Columns["DeviceId"].DefaultValue = -1;
             itemTable.Columns["HighAlarmValue"].DefaultValue = 950D;
             itemTable.Columns["HighWarningValue"].DefaultValue = 900D;
@@ -246,19 +246,19 @@ namespace InfinityGroup.VesselMonitoring.SQLiteDB
             itemTable.Columns["IsLowWarningEnabled"].DefaultValue = false;
             itemTable.Columns["IsPersisted"].DefaultValue = true;
             itemTable.Columns["IsVirtual"].DefaultValue = false;
-            itemTable.Columns["Location"].DefaultValue = "Location";
+            itemTable.Columns["Location"].DefaultValue = "Sensor Location";
             itemTable.Columns["LowAlarmValue"].DefaultValue = 50D;
             itemTable.Columns["LowWarningValue"].DefaultValue = 20D;
             itemTable.Columns["MaxValue"].DefaultValue = 1000D;
             itemTable.Columns["MinValue"].DefaultValue = 10D;
-            itemTable.Columns["Name"].DefaultValue = "Name";
+            itemTable.Columns["Name"].DefaultValue = "Sensor Name";
             itemTable.Columns["NominalValue"].DefaultValue = 50D;
             itemTable.Columns["PersistDataPoints"].DefaultValue = true;
             itemTable.Columns["PGN"].DefaultValue = 0;
             itemTable.Columns["PortNumber"].DefaultValue = 0;
             itemTable.Columns["Priority"].DefaultValue = -1;
             itemTable.Columns["PropertyBag"].DefaultValue = new PropertyBag().JsonSerialize();
-            itemTable.Columns["Resolution"].DefaultValue = 2;
+            itemTable.Columns["Resolution"].DefaultValue = 1;
             itemTable.Columns["SensorType"].DefaultValue = SensorType.Unknown;
             itemTable.Columns["SensorUnitType"].DefaultValue = UnitType.Uninitialized;
             itemTable.Columns["SensorUnits"].DefaultValue = Units.Other;

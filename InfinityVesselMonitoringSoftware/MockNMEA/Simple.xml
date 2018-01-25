@@ -39,7 +39,7 @@
     <PGN>1</PGN>
     <PortNumber>1</PortNumber>
     <Priority>1</Priority>
-    <Resolution>0</Resolution>
+    <Resolution>1</Resolution>
     <SensorType>Volume</SensorType>
     <SensorUnits>GallonsUS</SensorUnits>
     <SensorUnitType>Volume</SensorUnitType>
@@ -70,7 +70,7 @@
     <PGN>1</PGN>
     <PortNumber>1</PortNumber>
     <Priority>1</Priority>
-    <Resolution>0</Resolution>
+    <Resolution>1</Resolution>
     <SensorType>Volume</SensorType>
     <SensorUnits>GallonsUS</SensorUnits>
     <SensorUnitType>Volume</SensorUnitType>
@@ -101,7 +101,7 @@
     <PGN>1</PGN>
     <PortNumber>1</PortNumber>
     <Priority>1</Priority>
-    <Resolution>0</Resolution>
+    <Resolution>1</Resolution>
     <SensorType>Amps</SensorType>
     <SensorUnits>Amps</SensorUnits>
     <SensorUnitType>Current</SensorUnitType>
@@ -134,7 +134,7 @@
     <MiddleCircleDelta>70</MiddleCircleDelta>
     <MinorTicLength>6</MinorTicLength>
     <MinorTicsPerMajorTic>5</MinorTicsPerMajorTic>
-    <Resolution>0</Resolution>
+    <Resolution>1</Resolution>
     <SensorIndex>0</SensorIndex>                
     <Text>Label</Text>
     <TextAngle>0</TextAngle>
@@ -163,7 +163,7 @@
     <MiddleCircleDelta>70</MiddleCircleDelta>
     <MinorTicLength>6</MinorTicLength>
     <MinorTicsPerMajorTic>5</MinorTicsPerMajorTic>
-    <Resolution>0</Resolution>
+    <Resolution>1</Resolution>
     <SensorIndex>1</SensorIndex>                
     <Text>Label</Text>
     <TextAngle>0</TextAngle>

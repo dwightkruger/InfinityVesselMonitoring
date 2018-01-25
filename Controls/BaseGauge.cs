@@ -1089,6 +1089,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 this.IsHighWarningEnabled = value.IsHighWarningEnabled;
                 this.IsLowAlarmEnabled    = value.IsLowAlarmEnabled;
                 this.IsLowWarningEnabled  = value.IsLowWarningEnabled;
+                this.Resolution           = value.Resolution;
             }
         }
         #endregion SensorItem
