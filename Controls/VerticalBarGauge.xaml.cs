@@ -52,6 +52,11 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 FontSize = (float)this.TextFontSize,
             })
             {
+                // If the text cannot fit into the first column, then push it to the right enough so that the left side of ther text is not cut off.
+                Rect titleBoundingRectangle = Utilities.CalculateStringBoundingRectangle(sender, args, this.Text, textFormat);
+                if (titleBoundingRectangle.Width > sender.ActualWidth / 2)
+                    at.X += (float)((titleBoundingRectangle.Width - sender.ActualWidth / 2F) / 2F);
+
                 ds.DrawText(this.Text, at, this.GaugeColor, textFormat);
             }
         }
@@ -160,14 +165,14 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
             using (var textFormat = new CanvasTextFormat()
             {
-                HorizontalAlignment = CanvasHorizontalAlignment.Center,
+                HorizontalAlignment = CanvasHorizontalAlignment.Left,
                 VerticalAlignment = CanvasVerticalAlignment.Center,
                 FontSize = (float)this.ValueFontSize * 0.8F,
             })
             {
                 string format = "{0:F" + string.Format("{0:F0}", this.Resolution) + "}";
                 Vector2 at = new Vector2(
-                    atPointer.X + (float)pointerBoundingRectangle.Width + 22, 
+                    (float)pointerBoundingRectangle.Width, 
                     atPointer.Y);
 
                 ds.DrawText(string.Format(format, this.Value), at, this.GaugePointerColor, textFormat);
@@ -178,14 +183,12 @@ namespace InfinityGroup.VesselMonitoring.Controls
             {
                 HorizontalAlignment = CanvasHorizontalAlignment.Left,
                 VerticalAlignment = CanvasVerticalAlignment.Center,
-                FontSize = (float)this.UnitsFontSize * 0.8F
+                FontSize = (float)this.UnitsFontSize * 0.9F
             })
             {
                 Vector2 at = new Vector2(
-                    atPointer.X, 
-                    atPointer.Y + 
-                        (float)pointerBoundingRectangle.Height + 
-                        (float)valueBoundingRectangle.Height/2);
+                    (float)pointerBoundingRectangle.Width, 
+                    atPointer.Y + (float)valueBoundingRectangle.Height*0.9F);
                 ds.DrawText(this.Units, at, this.GaugePointerColor, textFormat);
             }
         }

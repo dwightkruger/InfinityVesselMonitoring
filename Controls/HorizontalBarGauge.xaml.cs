@@ -39,7 +39,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
             this.EnsureResources(sender, args);
             CanvasDrawingSession ds = args.DrawingSession;
 
-            Vector2 at = new Vector2((float)sender.ActualWidth/2, (float)sender.ActualHeight);
+            Vector2 at = new Vector2((float)sender.ActualWidth/4, (float)sender.ActualHeight);
 
             using (var textFormat = new CanvasTextFormat()
             {
@@ -48,6 +48,11 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 FontSize = (float)this.TextFontSize,
             })
             {
+                // If the text cannot fit into the first column, then push it to the right enough so that the left side of ther text is not cut off.
+                Rect titleBoundingRectangle = Utilities.CalculateStringBoundingRectangle(sender, args, this.Text, textFormat);
+                if (titleBoundingRectangle.Width > sender.ActualWidth / 2)
+                    at.X += (float)((titleBoundingRectangle.Width - sender.ActualWidth / 2F) / 2F);
+
                 ds.DrawText(this.Text, at, this.GaugeColor, textFormat);
             }
         }
@@ -103,7 +108,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
             {
                 HorizontalAlignment = CanvasHorizontalAlignment.Left,
                 VerticalAlignment = CanvasVerticalAlignment.Bottom,
-                FontSize = (float)this.UnitsFontSize * 0.8F,
+                FontSize = (float)this.UnitsFontSize * 0.9F,
             })
             {
                 Vector2 at = new Vector2(12, (float)sender.ActualHeight);
@@ -120,7 +125,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
             {
                 Vector2 at = new Vector2(
                     12, 
-                    (float)(sender.ActualHeight - unitsBoundingRectangle.Height));
+                    (float)(sender.ActualHeight - unitsBoundingRectangle.Height*0.9F));
                 string format = "{0:F" + string.Format("{0:F0}", this.Resolution) + "}";
 
                 ds.DrawText(string.Format(format, this.Value), at, this.GaugeColor, textFormat);
