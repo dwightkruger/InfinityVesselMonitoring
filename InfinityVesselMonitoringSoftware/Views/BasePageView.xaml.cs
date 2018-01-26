@@ -6,6 +6,7 @@
 
 using GalaSoft.MvvmLight.Messaging;
 using InfinityGroup.VesselMonitoring.Controls;
+using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using InfinityVesselMonitoringSoftware.ViewModels;
 using System;
@@ -32,6 +33,11 @@ namespace InfinityVesselMonitoringSoftware.Views
         public BasePageView()
         {
             this.InitializeComponent();
+
+            // Set the actual size of the page based on the resolution of the phyical device we are on.
+            this.MainGrid.Height = Globals.ScreenSize.Height;
+            this.MainGrid.Width = Globals.ScreenSize.Width;
+
             this.Loaded += BasePageView_Loaded;
             this.PointerPressed += BasePageView_PointerPressed;
             this.KeyDown += MainCanvas_KeyDown;

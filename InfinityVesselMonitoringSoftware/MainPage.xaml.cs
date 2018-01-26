@@ -124,6 +124,10 @@ namespace VesselMonitoring
                 return;
             }
 
+            // Set the actual size of the page based on the resolution of the phyical device we are on.
+            this.MainPageInnerGrid.Width = Globals.ScreenSize.Width;
+            this.MainPageInnerGrid.Height = Globals.ScreenSize.Height;
+
             await App.BuildDBTables.Build();
             await this.Reset();
 
@@ -148,14 +152,6 @@ namespace VesselMonitoring
             //               "");
 
             //this.BuildDemoGaugePages();
-
-            //Binding mainGridBackgroundBinding = new Binding();
-            //mainGridBackgroundBinding.Path = new PropertyPath("ThemeBackgroundColor");
-            //mainGridBackgroundBinding.Source = App.VesselSettings;
-            //mainGridBackgroundBinding.Converter = c_ctscbc;
-            //mainGridBackgroundBinding.Mode = BindingMode.OneWay;
-            //this.MainPageGrid.SetBinding(BackgroundProperty, mainGridBackgroundBinding);
-            //this.MainPageGrid.Background = new SolidColorBrush(App.VesselSettings.ThemeBackgroundColor);
 
             await this.PopulateDemoSensorCollection();
 
@@ -195,7 +191,7 @@ namespace VesselMonitoring
                 view.ViewModel.GaugePageItem = item;
                 view.ViewModel.SensorType = SensorType.Tank;
                 view.ViewModel.Rows = 2;
-                view.ViewModel.Cols = 3;
+                view.ViewModel.Cols = 4;
 
                 Binding widthBinding = new Binding();
                 widthBinding.Source = this.MainPagePivot;
@@ -465,23 +461,33 @@ namespace VesselMonitoring
             sensor.IsDemoMode = true;
             sensor = await App.SensorCollection.BeginAdd(sensor);
 
-            //// Sensor 06
-            //sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
-            //sensor.SerialNumber = Guid.NewGuid().ToString();
-            //sensor.SensorType = SensorType.Tank;
-            //sensor.SensorUnits = Units.CubicMetersPerHr;
-            //sensor.SensorUnitType = UnitType.VolumeFlow;
-            //sensor.IsEnabled = true;
-            //sensor = await App.SensorCollection.BeginAdd(sensor);
+            // Sensor 06
+            sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
+            sensor.SerialNumber = Guid.NewGuid().ToString();
+            sensor.SensorType = SensorType.Tank;
+            sensor.SensorUnits = Units.CubicMetersPerHr;
+            sensor.SensorUnitType = UnitType.VolumeFlow;
+            sensor.IsHighAlarmEnabled = true;
+            sensor.IsHighWarningEnabled = true;
+            sensor.IsLowAlarmEnabled = true;
+            sensor.IsLowWarningEnabled = true;
+            sensor.IsEnabled = true;
+            sensor.IsDemoMode = true;
+            sensor = await App.SensorCollection.BeginAdd(sensor);
 
-            //// Sensor 07
-            //sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
-            //sensor.SerialNumber = Guid.NewGuid().ToString();
-            //sensor.SensorType = SensorType.Tank;
-            //sensor.SensorUnits = Units.CubicMetersPerHr;
-            //sensor.SensorUnitType = UnitType.VolumeFlow;
-            //sensor.IsEnabled = true;
-            //sensor = await App.SensorCollection.BeginAdd(sensor);
+            // Sensor 07
+            sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
+            sensor.SerialNumber = Guid.NewGuid().ToString();
+            sensor.SensorType = SensorType.Tank;
+            sensor.SensorUnits = Units.CubicMetersPerHr;
+            sensor.SensorUnitType = UnitType.VolumeFlow;
+            sensor.IsEnabled = true;
+            sensor.IsHighAlarmEnabled = true;
+            sensor.IsHighWarningEnabled = true;
+            sensor.IsLowAlarmEnabled = true;
+            sensor.IsLowWarningEnabled = true;
+            sensor.IsDemoMode = true;
+            sensor = await App.SensorCollection.BeginAdd(sensor);
 
             //// Sensor 08
             //sensor = new SensorItem(App.DeviceCollection[0].DeviceId);

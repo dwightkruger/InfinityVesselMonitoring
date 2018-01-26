@@ -22,9 +22,9 @@
 
     <Viewbox  Stretch="Uniform">
         <Grid
+            x:Name="MainGrid"
             Width="900"
             Height="800"
-            x:Name="MainGrid"
             DataContext="{StaticResource BasePageViewModel}"
             Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
