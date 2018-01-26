@@ -48,6 +48,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         double NominalValue { get; set; }
         bool PersistDataPoints { get; set; }
         uint PGN { get; set; }
+        double PercentFull { get; }
         int PortNumber { get; set; }
         int Priority { get; set; }
         int Resolution { get; set; }

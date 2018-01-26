@@ -73,6 +73,10 @@ namespace InfinityVesselMonitoringSoftware.Views
                             gauge = new TankGaugeLeft();
                         break;
 
+                        case GaugeTypeEnum.PieChartGauge:
+                            gauge = new PieChartGauge();
+                            break;
+
                         case GaugeTypeEnum.RightArcGauge: break;
 
                         case GaugeTypeEnum.RightTankGauge:
@@ -142,6 +146,10 @@ namespace InfinityVesselMonitoringSoftware.Views
 
                         case GaugeTypeEnum.LeftTankGauge:
                             gauge = this.BuildLeftTankGauge(item);
+                            break;
+
+                        case GaugeTypeEnum.PieChartGauge:
+                            gauge = this.BuildPieChartGauge(item);
                             break;
 
                         case GaugeTypeEnum.RightArcGauge: break;
@@ -441,6 +449,16 @@ namespace InfinityVesselMonitoringSoftware.Views
             // Add it to the page
             this.CanvasGrid.Children.Add(textGauge);
             return textGauge;
+        }
+
+        private BaseGauge BuildPieChartGauge(IGaugeItem gaugeItem)
+        {
+            PieChartGauge pieChartGauge = new PieChartGauge();
+            pieChartGauge.GaugeItem = gaugeItem;
+
+            // Add it to the page
+            this.CanvasGrid.Children.Add(pieChartGauge);
+            return pieChartGauge;
         }
 
         private void BuildGauge(IGaugeItem gaugeItem, Action<ISensorItem> constructor)

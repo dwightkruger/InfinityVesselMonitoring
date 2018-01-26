@@ -107,6 +107,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Adorner.cs" />
+    <Compile Include="ChartRenderer.cs" />
     <Compile Include="CircularGauge.xaml.cs">
       <DependentUpon>CircularGauge.xaml</DependentUpon>
     </Compile>
@@ -128,6 +129,9 @@
     </Compile>
     <Compile Include="LeftArcGauge.xaml.cs">
       <DependentUpon>LeftArcGauge.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PieChartGauge.xaml.cs">
+      <DependentUpon>PieChartGauge.xaml</DependentUpon>
     </Compile>
     <Compile Include="PolyLineControl.xaml.cs">
       <DependentUpon>PolyLineControl.xaml</DependentUpon>
@@ -193,6 +197,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="LeftArcGauge.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PieChartGauge.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

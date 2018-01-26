@@ -12,7 +12,6 @@ using InfinityGroup.VesselMonitoring.Types;
 using InfinityGroup.VesselMonitoring.Utilities;
 using InfinityVesselMonitoringSoftware;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -460,6 +459,15 @@ namespace VesselMonitoringSuite.Sensors
         {
             get { return GetRowPropertyValue<uint>(() => PGN); }
             set { SetRowPropertyValue<uint>(() => PGN, value); }
+        }
+
+        public double PercentFull
+        {
+            get
+            {
+                if (!this.IsOnline) return 0;
+                return this.SensorValue / (this.MaxValue - this.MinValue);
+            }
         }
 
         public int PortNumber
