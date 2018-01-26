@@ -20,7 +20,8 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
-                <RowDefinition Height="9*"/>
+                <RowDefinition Height="4*"/>
+                <RowDefinition Height="5*"/>
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
@@ -50,13 +51,6 @@
                 Grid.Column="1" Grid.ColumnSpan="1"                
                 ClearColor="Transparent" 
                 Draw="valueControl_Draw" />
-
-            <canvas:CanvasControl 
-                x:Name="UnitsControl"
-                Grid.Row="1" Grid.RowSpan="1"
-                Grid.Column="1" Grid.ColumnSpan="1"                
-                ClearColor="Transparent" 
-                Draw="unitsControl_Draw" />
 
         </Grid>
     </Viewbox>

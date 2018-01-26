@@ -96,35 +96,34 @@ namespace InfinityGroup.VesselMonitoring.Controls
         {
             this.EnsureResources(sender, args);
             CanvasDrawingSession ds = args.DrawingSession;
+            Rect unitsBoundingRectangle;
+
+            // Draw the units, and then above it draw the value
+            using (var textFormat = new CanvasTextFormat()
+            {
+                HorizontalAlignment = CanvasHorizontalAlignment.Left,
+                VerticalAlignment = CanvasVerticalAlignment.Bottom,
+                FontSize = (float)this.UnitsFontSize * 0.8F,
+            })
+            {
+                Vector2 at = new Vector2(12, (float)sender.ActualHeight);
+                ds.DrawText(this.Units, at, this.GaugeColor, textFormat);
+                unitsBoundingRectangle = Utilities.CalculateStringBoundingRectangle(sender, args, this.Units, textFormat);
+            }
 
             using (var textFormat = new CanvasTextFormat()
             {
                 HorizontalAlignment = CanvasHorizontalAlignment.Left,
                 VerticalAlignment = CanvasVerticalAlignment.Bottom,
-                FontSize = (float)this.ValueFontSize,
+                FontSize = (float)this.ValueFontSize * 0.8F,
             })
             {
-                Vector2 at = new Vector2(0, (float)sender.ActualHeight / 2);
+                Vector2 at = new Vector2(
+                    12, 
+                    (float)(sender.ActualHeight - unitsBoundingRectangle.Height));
                 string format = "{0:F" + string.Format("{0:F0}", this.Resolution) + "}";
 
                 ds.DrawText(string.Format(format, this.Value), at, this.GaugeColor, textFormat);
-            }
-        }
-
-        protected void unitsControl_Draw(CanvasControl sender, CanvasDrawEventArgs args)
-        {
-            this.EnsureResources(sender, args);
-            CanvasDrawingSession ds = args.DrawingSession;
-
-            using (var textFormat = new CanvasTextFormat()
-            {
-                HorizontalAlignment = CanvasHorizontalAlignment.Left,
-                VerticalAlignment = CanvasVerticalAlignment.Top,
-                FontSize = (float)this.UnitsFontSize,
-            })
-            {
-                Vector2 at = new Vector2(0, (float)sender.ActualHeight / 2);
-                ds.DrawText(this.Units, at, this.GaugeColor, textFormat);
             }
         }
 
