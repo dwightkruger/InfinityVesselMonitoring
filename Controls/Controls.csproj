@@ -146,6 +146,9 @@
     <Compile Include="TextControl.xaml.cs">
       <DependentUpon>TextControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TextGauge.xaml.cs">
+      <DependentUpon>TextGauge.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utilities.cs" />
     <Compile Include="VerticalBarGauge.xaml.cs">
       <DependentUpon>VerticalBarGauge.xaml</DependentUpon>
@@ -210,6 +213,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="TextControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TextGauge.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

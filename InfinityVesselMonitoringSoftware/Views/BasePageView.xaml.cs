@@ -83,11 +83,13 @@ namespace InfinityVesselMonitoringSoftware.Views
                             gauge = new TextControl();
                         break;
 
-                        case GaugeTypeEnum.TextGauge: break;
+                        case GaugeTypeEnum.TextGauge:
+                            gauge = new TextGauge();
+                        break;
 
                         case GaugeTypeEnum.VerticalBarGauge:
                             gauge = new VerticalBarGauge();
-                            break;
+                         break;
                     }
 
                     gauge.GaugeItem = gaugeItem;
@@ -153,6 +155,7 @@ namespace InfinityVesselMonitoringSoftware.Views
                             break;
 
                         case GaugeTypeEnum.TextGauge:
+                            gauge = this.BuildTextGauge(item);
                             break;
 
                         case GaugeTypeEnum.VerticalBarGauge:
@@ -415,6 +418,31 @@ namespace InfinityVesselMonitoringSoftware.Views
             return horizontalBarGauge;
         }
 
+        private BaseGauge BuildTextControl(IGaugeItem gaugeItem)
+        {
+            TextControl textControl = new TextControl();
+            textControl.GaugeItem = gaugeItem;
+
+            // Add it to the page
+            this.CanvasGrid.Children.Add(textControl);
+            return textControl;
+        }
+
+        private BaseGauge BuildTextGauge(IGaugeItem gaugeItem)
+        {
+            TextGauge textGauge = new TextGauge();
+            textGauge.GaugeItem = gaugeItem;
+
+            BuildGauge(gaugeItem, (sensor) =>
+            {
+                textGauge.SensorItem = sensor;
+            });
+
+            // Add it to the page
+            this.CanvasGrid.Children.Add(textGauge);
+            return textGauge;
+        }
+
         private void BuildGauge(IGaugeItem gaugeItem, Action<ISensorItem> constructor)
         {
             ISensorItem sensor = App.SensorCollection.FindBySensorId(gaugeItem.SensorId);
@@ -424,16 +452,6 @@ namespace InfinityVesselMonitoringSoftware.Views
             }
 
             constructor(sensor);
-        }
-
-        private BaseGauge BuildTextControl(IGaugeItem gaugeItem)
-        {
-            TextControl textControl = new TextControl();
-            textControl.GaugeItem = gaugeItem;
-
-            // Add it to the page
-            this.CanvasGrid.Children.Add(textControl);
-            return textControl;
         }
     }
 }

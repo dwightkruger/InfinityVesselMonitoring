@@ -19,13 +19,11 @@ using Windows.UI.Xaml.Controls;
 
 namespace InfinityGroup.VesselMonitoring.Controls
 {
-    public partial class HorizontalBarGauge : BaseGauge
+    public partial class TextGauge : BaseGauge
     {
         private bool _needsResourceRecreation = true;
-        private const float c_boxThickness = 10;
-        private const float c_boxHeight = 3* c_boxThickness;
 
-        public HorizontalBarGauge()
+        public TextGauge()
         {
             this.InitializeComponent();
         }
@@ -39,7 +37,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
             this.EnsureResources(sender, args);
             CanvasDrawingSession ds = args.DrawingSession;
 
-            Vector2 at = new Vector2((float)sender.ActualWidth/4, (float)sender.ActualHeight);
+            Vector2 at = new Vector2((float)sender.ActualWidth/2, (float)sender.ActualHeight);
 
             using (var textFormat = new CanvasTextFormat()
             {
@@ -48,96 +46,48 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 FontSize = (float)this.TextFontSize,
             })
             {
-                // If the text cannot fit into the first column, then push it to the right enough so that the left side of ther text is not cut off.
-                Rect titleBoundingRectangle = Utilities.CalculateStringBoundingRectangle(sender, args, this.Text, textFormat);
-                if (titleBoundingRectangle.Width > sender.ActualWidth / 2)
-                    at.X += (float)((titleBoundingRectangle.Width - sender.ActualWidth / 2F) / 2F);
-
                 ds.DrawText(this.Text, at, this.GaugeColor, textFormat);
             }
         }
+
 
         protected void canvasControl_Draw(CanvasControl sender, CanvasDrawEventArgs args)
         {
             this.EnsureResources(sender, args);
             CanvasDrawingSession ds = args.DrawingSession;
 
-            Rect leftRect   = new Rect(0,                                     sender.ActualHeight - c_boxHeight,    c_boxThickness,     c_boxHeight);
-            Rect bottomRect = new Rect(0,                                     sender.ActualHeight - c_boxThickness, sender.ActualWidth, c_boxThickness);
-            Rect rightRect  = new Rect(sender.ActualWidth/2 - c_boxThickness, sender.ActualHeight - c_boxHeight,    c_boxThickness,     c_boxHeight);
-            Rect fillRect   = new Rect(
-                c_boxThickness,                                                 // X
-                sender.ActualHeight - 2*c_boxThickness,                         // Y
-                (sender.ActualWidth/2 - 2*c_boxThickness) * this.PercentFull,   // Width
-                c_boxThickness);                                                // Height
-
-            ds.FillRectangle(leftRect, this.GaugeColor);
-            ds.FillRectangle(bottomRect, this.GaugeColor);
-            ds.FillRectangle(rightRect, this.GaugeColor);
-            ds.FillRectangle(fillRect, Colors.Blue);
-
-            using (CanvasPathBuilder cp = new CanvasPathBuilder(sender))
-            {
-                float left = c_boxThickness/2;
-                float top  = (float)sender.ActualHeight - 3*c_boxThickness;
-                cp.BeginFigure(new Vector2(left,top));
-
-                cp.AddLine(new Vector2(left + c_boxThickness/2, top + c_boxThickness));
-                cp.AddLine(new Vector2(left + c_boxThickness,   top));
-                cp.AddLine(new Vector2(left, top));
-
-                cp.EndFigure(CanvasFigureLoop.Closed);
-
-                using (var geometry = CanvasGeometry.CreatePath(cp))
-                {
-                    Vector2 at = new Vector2((float)fillRect.Width, 0);
-                    ds.Transform *= System.Numerics.Matrix3x2.CreateTranslation(at);
-                    ds.FillGeometry(geometry, Colors.Blue);
-                }
-            }
-        }
-
-        protected void valueControl_Draw(CanvasControl sender, CanvasDrawEventArgs args)
-        {
-            this.EnsureResources(sender, args);
-            CanvasDrawingSession ds = args.DrawingSession;
             Rect unitsBoundingRectangle;
 
             // Draw the units, and then draw the value above it
             using (var textFormat = new CanvasTextFormat()
             {
-                HorizontalAlignment = CanvasHorizontalAlignment.Left,
+                HorizontalAlignment = CanvasHorizontalAlignment.Center,
                 VerticalAlignment = CanvasVerticalAlignment.Bottom,
-                FontSize = (float)this.UnitsFontSize * 0.9F,
+                FontSize = (float)this.UnitsFontSize,
             })
             {
-                Vector2 at = new Vector2(12, (float)sender.ActualHeight);
-                ds.DrawText(this.Units, at, this.GaugeColor, textFormat);
+                Vector2 at = new Vector2(
+                    (float)(sender.ActualWidth / 2F),
+                    (float)sender.ActualHeight);
+                ds.DrawText(this.Units, at, this.GaugePointerColor, textFormat);
                 unitsBoundingRectangle = Utilities.CalculateStringBoundingRectangle(sender, args, this.Units, textFormat);
             }
 
             using (var textFormat = new CanvasTextFormat()
             {
-                HorizontalAlignment = CanvasHorizontalAlignment.Left,
+                HorizontalAlignment = CanvasHorizontalAlignment.Center,
                 VerticalAlignment = CanvasVerticalAlignment.Bottom,
-                FontSize = (float)this.ValueFontSize * 0.8F,
+                FontSize = (float)this.ValueFontSize,
             })
             {
                 Vector2 at = new Vector2(
-                    12, 
-                    (float)(sender.ActualHeight - unitsBoundingRectangle.Height*0.9F));
+                    (float)(sender.ActualWidth / 2F),
+                    (float)(sender.ActualHeight - unitsBoundingRectangle.Height));
                 string format = "{0:F" + string.Format("{0:F0}", this.Resolution) + "}";
 
-                ds.DrawText(string.Format(format, this.Value), at, this.GaugeColor, textFormat);
+                ds.DrawText(string.Format(format, this.Value), at, this.GaugePointerColor, textFormat);
             }
-        }
 
-        void EnsureResources(CanvasControl sender, CanvasDrawEventArgs args)
-        {
-            if (!_needsResourceRecreation)
-                return;
-
-            _needsResourceRecreation = false;
         }
 
         protected CanvasStrokeStyle ArcStrokeStyle = new CanvasStrokeStyle()
@@ -146,6 +96,14 @@ namespace InfinityGroup.VesselMonitoring.Controls
             StartCap = CanvasCapStyle.Flat,
             EndCap = CanvasCapStyle.Flat,
         };
+
+        void EnsureResources(CanvasControl sender, CanvasDrawEventArgs args)
+        {
+            if (!_needsResourceRecreation)
+                return;
+
+            _needsResourceRecreation = false;
+        }
 
         protected Color GaugePointerColor
         {
@@ -174,23 +132,16 @@ namespace InfinityGroup.VesselMonitoring.Controls
             }
         }
 
-        private void canvasControl_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            _needsResourceRecreation = true;
-        }
-
         override protected void RefreshAlarmColors()
         {
             this.TitleControl?.Invalidate();
             this.canvasControl?.Invalidate();
-            this.ValueControl?.Invalidate();
         }
 
         override protected void RefreshValue(object oldValue, object newValue)
         {
             this.TitleControl?.Invalidate();
             this.canvasControl?.Invalidate();
-            this.ValueControl?.Invalidate();
         }
 
         override protected void RefreshLeft(object oldValue, object newValue)
@@ -211,7 +162,6 @@ namespace InfinityGroup.VesselMonitoring.Controls
             this.MainGrid.Height = Convert.ToDouble(newValue);
             this.TitleControl?.Invalidate();
             this.canvasControl?.Invalidate();
-            this.ValueControl?.Invalidate();
         }
 
         override protected void RefreshGaugeWidth(object oldValue, object newValue)
@@ -220,7 +170,6 @@ namespace InfinityGroup.VesselMonitoring.Controls
             this.MainGrid.Width = Convert.ToDouble(newValue);
             this.TitleControl?.Invalidate();
             this.canvasControl?.Invalidate();
-            this.ValueControl?.Invalidate();
         }
 
         override protected void RefreshMaxValue(object oldValue, object newValue)
@@ -269,19 +218,23 @@ namespace InfinityGroup.VesselMonitoring.Controls
 
         protected override void RefreshValueFontSize(object oldValue, object newValue)
         {
-            this.ValueControl?.Invalidate();
+            this.canvasControl?.Invalidate();
         }
 
         protected override void RefreshUnitsFontSize(object oldValue, object newValue)
         {
-            this.ValueControl?.Invalidate();
+            this.canvasControl?.Invalidate();
+        }
+
+        private void canvasControl_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            _needsResourceRecreation = true;
         }
 
         override protected void RefreshGaugeColor(object oldValue, object newValue)
         {
             this.TitleControl?.Invalidate();
             this.canvasControl?.Invalidate();
-            this.ValueControl?.Invalidate();
         }
     }
 }
