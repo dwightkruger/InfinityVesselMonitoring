@@ -112,31 +112,37 @@ namespace InfinityGroup.VesselMonitoring.Controls
             }
         }
 
-        public void RenderAveragesAsPieChart(CanvasControl canvas, CanvasDrawEventArgs args, List<double> pieValues, Color borderColor, List<Color> palette)
+        public void RenderAveragesAsPieChart(
+            CanvasControl canvas,                   // Where to render
+            CanvasDrawEventArgs args,               // Our drawing session
+            List<double> pieValues,                 // The values to calculate the size of each slice
+            List<string> pieLabels,                 // The slice labels
+            Color borderColor,                      // The color of the border for each slice
+            List<Color> palette)                    // A list of colors for the slices
         {
             var total = pieValues.Sum();
 
-            var w = (float)canvas.ActualWidth;
-            var h = (float)canvas.ActualHeight;
-            var midx = w / 2;
-            var midy = h / 2;
-            var padding = 1; // 50;
-            //var lineOffset = 20;
-            var r = Math.Min(w, h) / 2 - padding;
+            var width = (float)canvas.ActualWidth;
+            var height = (float)canvas.ActualHeight;
+            var midX = width / 2;
+            var midY = height / 2;
+            var padding = 1; 
+            var radius = Math.Min(width, height) / 2 - padding;
 
             float angle = 0f;
-            var center = new Vector2(midx, midy);
+            var center = new Vector2(midX, midY);
 
+            // Draw the pie slices
             for (int i = 0; i < pieValues.Count; i++)
             {
                 float sweepAngle = (float)(2 * Math.PI * pieValues[i] / total);
-                var arcStartPoint = new Vector2((float)(midx + r * Math.Sin(angle)), (float)(midy - r * Math.Cos(angle)));
+                var arcStartPoint = new Vector2((float)(midX + radius * Math.Sin(angle)), (float)(midY - radius * Math.Cos(angle)));
 
                 using (var cpb = new CanvasPathBuilder(args.DrawingSession))
                 {
                     cpb.BeginFigure(center);
                     cpb.AddLine(arcStartPoint);
-                    cpb.AddArc(new Vector2(midx, midy), r, r, angle - (float)(Math.PI / 2), sweepAngle);
+                    cpb.AddArc(new Vector2(midX, midY), radius, radius, angle - (float)(Math.PI / 2), sweepAngle);
                     cpb.EndFigure(CanvasFigureLoop.Closed);
                     args.DrawingSession.FillGeometry(CanvasGeometry.CreatePath(cpb), palette[i % palette.Count]);
                 }
@@ -145,7 +151,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 {
                     cpb.BeginFigure(center);
                     cpb.AddLine(arcStartPoint);
-                    cpb.AddArc(new Vector2(midx, midy), r, r, angle - (float)(Math.PI / 2), sweepAngle);
+                    cpb.AddArc(new Vector2(midX, midY), radius, radius, angle - (float)(Math.PI / 2), sweepAngle);
                     cpb.EndFigure(CanvasFigureLoop.Open);
                     args.DrawingSession.DrawGeometry(CanvasGeometry.CreatePath(cpb), borderColor);
                 }
@@ -153,48 +159,33 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 angle += sweepAngle;
             }
 
-            args.DrawingSession.DrawCircle(center, r, borderColor);
+            args.DrawingSession.DrawCircle(center, radius, borderColor);
 
-            //angle = 0f;
+            // Label each of the pie slices
+            angle = 0f;
+            for (int i = 0; i < pieValues.Count; i++)
+            {
+                float sweepAngle = (float)(2 * Math.PI * pieValues[i] / total);
 
-            //var lineBrush = new CanvasSolidColorBrush(args.DrawingSession, Colors.Black);
+                if (palette[i % palette.Count] != Colors.Transparent)
+                {
+                    double midAngle = angle + sweepAngle / 2;
+                    Vector2 pt = new Vector2((float)(midX + (radius*.75) * Math.Sin(midAngle)), (float)(midY - (radius*0.75)* Math.Cos(midAngle)));
 
-            //for (int i = 0; i < pieValues.Count; i++)
-            //{
-            //    float sweepAngle = (float)(2 * Math.PI * pieValues[i] / total);
-            //    var midAngle = angle + sweepAngle / 2;
-            //    var isRightHalf = midAngle < Math.PI;
-            //    var isTopHalf = midAngle <= Math.PI / 2 || midAngle >= Math.PI * 3 / 2;
-            //    var p0 = new Vector2((float)(midx + (r - lineOffset) * Math.Sin(midAngle)), (float)(midy - (r - lineOffset) * Math.Cos(midAngle)));
-            //    var p1 = new Vector2((float)(midx + (r + lineOffset) * Math.Sin(midAngle)), (float)(midy - (r + lineOffset) * Math.Cos(midAngle)));
-            //    var p2 = isRightHalf ? new Vector2(p1.X + 50, p1.Y) : new Vector2(p1.X - 50, p1.Y);
+                    args.DrawingSession.DrawText(
+                        pieLabels[i],
+                        pt,
+                        borderColor,
+                        new CanvasTextFormat
+                        {
+                            HorizontalAlignment = CanvasHorizontalAlignment.Center,
+                            VerticalAlignment = CanvasVerticalAlignment.Center,
+                            FontSize = 14,
+                        });
+                }
 
-            //    using (var cpb = new CanvasPathBuilder(args.DrawingSession))
-            //    {
-            //        cpb.BeginFigure(p0);
-            //        cpb.AddLine(p1);
-            //        cpb.AddLine(p2);
-            //        cpb.EndFigure(CanvasFigureLoop.Open);
-
-            //        args.DrawingSession.DrawGeometry(
-            //            CanvasGeometry.CreatePath(cpb),
-            //            lineBrush,
-            //            1);
-            //    }
-
-            //    args.DrawingSession.DrawText(
-            //        pieValues[i].ToString("F2"),
-            //        p1,
-            //        Colors.Black,
-            //        new CanvasTextFormat
-            //        {
-            //            HorizontalAlignment = isRightHalf ? CanvasHorizontalAlignment.Left : CanvasHorizontalAlignment.Right,
-            //            VerticalAlignment = isTopHalf ? CanvasVerticalAlignment.Bottom : CanvasVerticalAlignment.Top,
-            //            FontSize = 18
-            //        });
-
-            //    angle += sweepAngle;
-            //}
+                angle += sweepAngle;
+            }
         }
 
         public void RenderMovingAverage(CanvasControl canvas, CanvasDrawEventArgs args, Color color, float thickness, int movingAverageRange, List<double> data)

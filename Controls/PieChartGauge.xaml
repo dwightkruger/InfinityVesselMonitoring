@@ -20,8 +20,7 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
-                <RowDefinition Height="3*"/>
-                <RowDefinition Height="6*"/>
+                <RowDefinition Height="9*"/>
             </Grid.RowDefinitions>
 
             <canvas:CanvasControl 
