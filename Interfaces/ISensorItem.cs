@@ -4,6 +4,7 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////   
 
+using GalaSoft.MvvmLight.Messaging;
 using InfinityGroup.VesselMonitoring.Types;
 using InfinityGroup.VesselMonitoring.Utilities;
 using System;

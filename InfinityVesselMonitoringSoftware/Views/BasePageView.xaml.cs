@@ -75,6 +75,9 @@ namespace InfinityVesselMonitoringSoftware.Views
 
                         case GaugeTypeEnum.PieChartGauge:
                             gauge = new PieChartGauge();
+                            ((PieChartGauge)gauge).SensorCollection.Add(App.SensorCollection[0]);
+                            ((PieChartGauge)gauge).SensorCollection.Add(App.SensorCollection[1]);
+                            ((PieChartGauge)gauge).SensorCollection.Add(App.SensorCollection[2]);
                             break;
 
                         case GaugeTypeEnum.RightArcGauge: break;
@@ -455,6 +458,9 @@ namespace InfinityVesselMonitoringSoftware.Views
         {
             PieChartGauge pieChartGauge = new PieChartGauge();
             pieChartGauge.GaugeItem = gaugeItem;
+            pieChartGauge.SensorCollection.Add(App.SensorCollection[0]);
+            pieChartGauge.SensorCollection.Add(App.SensorCollection[1]);
+            pieChartGauge.SensorCollection.Add(App.SensorCollection[2]);
 
             // Add it to the page
             this.CanvasGrid.Children.Add(pieChartGauge);

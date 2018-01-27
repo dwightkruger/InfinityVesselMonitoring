@@ -5,6 +5,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
@@ -534,6 +535,7 @@ namespace VesselMonitoringSuite.Sensors
             set
             {
                 Set<double>(() => SensorValue, ref _sensorValue, value);
+                Globals.SensorValueMessenger.Send<ISensorItem>(this);
             }
         }
 

@@ -4,6 +4,7 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
+using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Geometry;
@@ -13,10 +14,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Numerics;
-using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using System.Linq;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -32,35 +33,14 @@ namespace InfinityGroup.VesselMonitoring.Controls
             this.InitializeComponent();
             _chartRenderer = new ChartRenderer();
             this.SensorCollection = new ObservableCollection<ISensorItem>();
-            this.SensorCollection.CollectionChanged += SensorCollection_CollectionChanged;
-        }
-
-        private void SensorCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            switch (e.Action)
+            Globals.Globals.SensorValueMessenger.Register<ISensorItem>(this, (sensorItem) =>
             {
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
-                    {
-                        foreach (ISensorItem sensorItem in e.NewItems)
-                        {
-                        }
-                    }
-                    break;
-
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
-                    {
-                        foreach (ISensorItem sensorItem in e.OldItems)
-                        {
-                        }
-                    }
-                    break;
-
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
-                    break;
-            }
-
-            this.TitleControl?.Invalidate();
-            this.canvasControl?.Invalidate();
+                if (this.SensorCollection.Contains(sensorItem))
+                {
+                    this.TitleControl?.Invalidate();
+                    this.canvasControl?.Invalidate();
+                }
+            });
         }
 
         protected void canvasControl_Loaded(object sender, RoutedEventArgs e)
@@ -86,28 +66,37 @@ namespace InfinityGroup.VesselMonitoring.Controls
         }
 
 
+        private readonly Color[] _colorVector = new Color[3] { Colors.Cyan, Colors.Green, Colors.Blue };
         protected void canvasControl_Draw(CanvasControl sender, CanvasDrawEventArgs args)
         {
+
             this.EnsureResources(sender, args);
             CanvasDrawingSession ds = args.DrawingSession;
 
             // The Piechart has N slices; one for each sensor.
-            var pieValues = new List<double>(this.SensorCollection.Count);
-            var pieLabels = new List<string>(this.SensorCollection.Count);
+            var pieValues = new List<double>(this.SensorCollection.Count + 1);
+            var pieLabels = new List<string>(this.SensorCollection.Count + 1);
+            var pallet    = new List<Color>(this.SensorCollection.Count + 1);
 
-            foreach (ISensorItem sensor in this.SensorCollection)
+            for (int i= 0; i < this.SensorCollection.Count; i++)
             {
-                pieValues.Add(sensor.PercentFull);
-                pieLabels.Add(sensor.Name);
+                pieValues.Add(this.SensorCollection[i].PercentFull);
+                pieLabels.Add(this.SensorCollection[i].Name);
+                pallet.Add(_colorVector[i % _colorVector.Count()]);
             }
+            
+            pieValues.Add(pieValues.Count - pieValues.Sum());
+            pieLabels.Add("% remaining");
+            pallet.Add(Colors.Transparent);
 
             _chartRenderer.RenderAveragesAsPieChart(
-                sender, 
-                args, 
+                sender,
+                args,
                 pieValues,
                 pieLabels,
-                this.GaugeColor, 
-                new List<Color>(new[] { Colors.Cyan, Colors.Green, Colors.Blue, Colors.Transparent }));
+                this.GaugeColor,
+                pallet
+            );
         }
 
         protected CanvasStrokeStyle ArcStrokeStyle = new CanvasStrokeStyle()
@@ -152,7 +141,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
             }
         }
 
-        ObservableCollection<ISensorItem> SensorCollection { get; set; }
+        public ObservableCollection<ISensorItem> SensorCollection { get; set; }
 
         override protected void RefreshAlarmColors()
         {
