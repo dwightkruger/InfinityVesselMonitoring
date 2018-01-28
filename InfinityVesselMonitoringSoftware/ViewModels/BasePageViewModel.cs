@@ -63,12 +63,13 @@ namespace InfinityVesselMonitoringSoftware.ViewModels
                                     case 5: gaugeItem.GaugeType = GaugeTypeEnum.HorizontalBarGauge; break;
                                     case 6: gaugeItem.GaugeType = GaugeTypeEnum.TextGauge; break;
                                     case 7: gaugeItem.GaugeType = GaugeTypeEnum.PieChartGauge; break;
+                                    case 8: gaugeItem.GaugeType = GaugeTypeEnum.CompassRoseGauge; break;
                                     default: gaugeItem.GaugeType = GaugeTypeEnum.DonutGauge; break;
                                 }
                                 gt++;
                                 gaugeItem.Divisions = 5;
-                                gaugeItem.GaugeHeight = 300;
-                                gaugeItem.GaugeWidth = 240;
+                                gaugeItem.GaugeHeight = 300 * 1.7;
+                                gaugeItem.GaugeWidth  = 240 * 1.7;
                                 gaugeItem.SensorId = sensorItem.SensorId;
                                 gaugeItem.Units = sensorItem.SensorUnits;
                                 await gaugeItem.BeginCommit();

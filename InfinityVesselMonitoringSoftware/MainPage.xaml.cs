@@ -191,7 +191,7 @@ namespace VesselMonitoring
                 view.ViewModel.GaugePageItem = item;
                 view.ViewModel.SensorType = SensorType.Tank;
                 view.ViewModel.Rows = 2;
-                view.ViewModel.Cols = 4;
+                view.ViewModel.Cols = 5;
 
                 Binding widthBinding = new Binding();
                 widthBinding.Source = this.MainPagePivot;
@@ -489,23 +489,33 @@ namespace VesselMonitoring
             sensor.IsDemoMode = true;
             sensor = await App.SensorCollection.BeginAdd(sensor);
 
-            //// Sensor 08
-            //sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
-            //sensor.SerialNumber = Guid.NewGuid().ToString();
-            //sensor.SensorType = SensorType.Tank;
-            //sensor.SensorUnits = Units.CubicMetersPerHr;
-            //sensor.SensorUnitType = UnitType.VolumeFlow;
-            //sensor.IsEnabled = true;
-            //sensor = await App.SensorCollection.BeginAdd(sensor);
+            // Sensor 08
+            sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
+            sensor.SerialNumber = Guid.NewGuid().ToString();
+            sensor.SensorType = SensorType.Tank;
+            sensor.SensorUnits = Units.CubicMetersPerHr;
+            sensor.SensorUnitType = UnitType.VolumeFlow;
+            sensor.IsEnabled = true;
+            sensor.IsHighAlarmEnabled = true;
+            sensor.IsHighWarningEnabled = true;
+            sensor.IsLowAlarmEnabled = true;
+            sensor.IsLowWarningEnabled = true;
+            sensor.IsDemoMode = true;
+            sensor = await App.SensorCollection.BeginAdd(sensor);
 
-            //// Sensor 09
-            //sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
-            //sensor.SerialNumber = Guid.NewGuid().ToString();
-            //sensor.SensorUnits = Units.CubicMetersPerHr;
-            //sensor.SensorType = SensorType.Tank;
-            //sensor.SensorUnitType = UnitType.VolumeFlow;
-            //sensor.IsEnabled = true;
-            //sensor = await App.SensorCollection.BeginAdd(sensor);
+            // Sensor 09
+            sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
+            sensor.SerialNumber = Guid.NewGuid().ToString();
+            sensor.SensorUnits = Units.CubicMetersPerHr;
+            sensor.SensorType = SensorType.Tank;
+            sensor.SensorUnitType = UnitType.VolumeFlow;
+            sensor.IsEnabled = true;
+            sensor.IsHighAlarmEnabled = true;
+            sensor.IsHighWarningEnabled = true;
+            sensor.IsLowAlarmEnabled = true;
+            sensor.IsLowWarningEnabled = true;
+            sensor.IsDemoMode = true;
+            sensor = await App.SensorCollection.BeginAdd(sensor);
 
             //// Sensor 10
             //sensor = new SensorItem(App.DeviceCollection[0].DeviceId);

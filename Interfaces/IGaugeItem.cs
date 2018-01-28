@@ -28,6 +28,7 @@ namespace InfinityGroup.VesselMonitoring.Interfaces
         VerticalBarGauge   = 9,
         HorizontalBarGauge = 10,
         PieChartGauge      = 11,
+        CompassRoseGauge   = 12,
     }
 
     public interface IGaugeItem

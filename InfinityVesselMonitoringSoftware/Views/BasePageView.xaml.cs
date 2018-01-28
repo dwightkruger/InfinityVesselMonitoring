@@ -57,6 +57,10 @@ namespace InfinityVesselMonitoringSoftware.Views
                             gauge = new CircularGauge();
                             break;
 
+                        case GaugeTypeEnum.CompassRoseGauge:
+                            gauge = new CompassRoseGauge();
+                            break;
+
                         case GaugeTypeEnum.DonutGauge:
                             gauge = new DonutGauge();
                             break;
