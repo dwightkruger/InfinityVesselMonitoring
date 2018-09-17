@@ -33,12 +33,12 @@ namespace InfinityVesselMonitoringSoftware.VideoCamera
         async public Task Start()
         {
             _deviceLocator = new SsdpDeviceLocator();
-            //_deviceLocator.NotificationFilter = "upnp:rootdevice";
-            //_deviceLocator.NotificationFilter = "urn:schemas-upnp-org:device:Basic:1";
+            _deviceLocator.NotificationFilter = "upnp:rootdevice";
+            _deviceLocator.NotificationFilter = "urn:schemas-upnp-org:device:Basic:1";
             _deviceLocator.NotificationFilter = "ssdp:all";
             _deviceLocator.DeviceAvailable += DeviceLocator_DeviceAvailable;
             _deviceLocator.StartListeningForNotifications();
-            //IEnumerable<Discovered​Ssdp​Device> devices = await _deviceLocator.SearchAsync(TimeSpan.FromSeconds(30));
+            IEnumerable<Discovered​Ssdp​Device> devices = await _deviceLocator.SearchAsync(TimeSpan.FromSeconds(30));
         }
 
         public void Stop()

@@ -78,8 +78,6 @@ namespace InfinityGroup.VesselMonitoring.Controls
             }
         }
 
-        public ObservableCollection<Point> Points { get; set; }
-
         #region Rotation
         public static readonly DependencyProperty RotationProperty = DependencyProperty.Register(
             "Rotation",

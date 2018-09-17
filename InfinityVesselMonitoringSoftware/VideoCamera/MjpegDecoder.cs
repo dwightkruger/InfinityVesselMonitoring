@@ -6,7 +6,6 @@
 
 using InfinityGroup.VesselMonitoring.Globals;
 using InfinityGroup.VesselMonitoring.Interfaces;
-using Lumia.Imaging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,7 +20,7 @@ namespace InfinityVesselMonitoringSoftware.VideoCamera
 {
     public class MjpegDecoder
     {
-        public Bitmap Bitmap { get; set; }
+        //public Bitmap Bitmap { get; set; }
 
         // magic 2 byte header for JPEG images
         private byte[] JpegHeader = new byte[] { 0xff, 0xd8 };

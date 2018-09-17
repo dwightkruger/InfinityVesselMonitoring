@@ -16,12 +16,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using Lumia.Imaging;
-using Windows.Storage;
 using Windows.Storage.Streams;
-using Lumia.Imaging.Adjustments;
-using System.Threading.Tasks;
-using System.IO;
 using Windows.Foundation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -187,8 +182,6 @@ namespace InfinityVesselMonitoringSoftware.AppSettings.Views
             }
         }
 
-        private static ColorAdjustEffect c_redEffect = new ColorAdjustEffect(1.0, -1.0, -1.0);
-
         //async private Task RecolorImage(ColorAdjustEffect colorAdjustEffect, string imagePath, SwapChainPanel swapChainPanel)
         //{
         //}
@@ -216,39 +209,39 @@ namespace InfinityVesselMonitoringSoftware.AppSettings.Views
 
     public static class BufferExtensions
     {
-        internal class AsyncOperationBufferProvider : IBufferProvider
-        {
-            private readonly Task<IBuffer> m_bufferTask;
+        //internal class AsyncOperationBufferProvider : IBufferProvider
+        //{
+        //    private readonly Task<IBuffer> m_bufferTask;
 
-            public AsyncOperationBufferProvider(Task<IBuffer> bufferTask)
-            {
-                m_bufferTask = bufferTask;
-            }
+        //    public AsyncOperationBufferProvider(Task<IBuffer> bufferTask)
+        //    {
+        //        m_bufferTask = bufferTask;
+        //    }
 
-            public IAsyncOperation<IBuffer> GetAsync()
-            {
-                return m_bufferTask.AsAsyncOperation();
-            }
-        }
+        //    public IAsyncOperation<IBuffer> GetAsync()
+        //    {
+        //        return m_bufferTask.AsAsyncOperation();
+        //    }
+        //}
 
-        /// <summary>
-        /// Adapts the Task&lt;IBuffer&gt; to work as an IBufferProvider suitable for BufferProviderImageSource.
-        /// </summary>
-        /// <param name="bufferTask">An asynchronous task that will result in an IBuffer containing an image.</param>
-        /// <returns>An IBufferProvider.</returns>
-        public static IBufferProvider AsBufferProvider(this Task<IBuffer> bufferTask)
-        {
-            return new AsyncOperationBufferProvider(bufferTask);
-        }
+        ///// <summary>
+        ///// Adapts the Task&lt;IBuffer&gt; to work as an IBufferProvider suitable for BufferProviderImageSource.
+        ///// </summary>
+        ///// <param name="bufferTask">An asynchronous task that will result in an IBuffer containing an image.</param>
+        ///// <returns>An IBufferProvider.</returns>
+        //public static IBufferProvider AsBufferProvider(this Task<IBuffer> bufferTask)
+        //{
+        //    return new AsyncOperationBufferProvider(bufferTask);
+        //}
 
         /// <summary>
         /// Adapts the IAsyncOperation&lt;IBuffer&gt; to work as an IBufferProvider suitable for BufferProviderImageSource.
         /// </summary>
         /// <param name="bufferAsyncOperation">An asynchronous operation that will result in an IBuffer containing an image.</param>
         /// <returns>An IBufferProvider.</returns>
-        public static IBufferProvider AsBufferProvider(this IAsyncOperation<IBuffer> bufferAsyncOperation)
-        {
-            return new AsyncOperationBufferProvider(bufferAsyncOperation.AsTask());
-        }
+        //public static IBufferProvider AsBufferProvider(this IAsyncOperation<IBuffer> bufferAsyncOperation)
+        //{
+        //    return new AsyncOperationBufferProvider(bufferAsyncOperation.AsTask());
+        //}
     }
 }
