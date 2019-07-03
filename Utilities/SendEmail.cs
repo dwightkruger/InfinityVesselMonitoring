@@ -1,10 +1,10 @@
 ﻿//////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                                  //
-// Copyright (c) 2017 Dwight Kruger and Infinity Group LLC, All rights reserved.                    //
+// Copyright (c) 2017-2019 Dwight Kruger and Infinity Group LLC, All rights reserved.                    //
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////     
 
-using EASendMailRT;
+using EASendMail;
 using InfinityGroup.VesselMonitoring.Globals;
 using System;
 using System.Collections.ObjectModel;

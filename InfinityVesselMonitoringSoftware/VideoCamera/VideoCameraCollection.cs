@@ -56,55 +56,62 @@ namespace InfinityVesselMonitoringSoftware.VideoCamera
             //Device data returned only contains basic device details and location of full device description.
             Debug.WriteLine("UPnP Found: " + e.DiscoveredDevice.Usn + " at " + e.DiscoveredDevice.DescriptionLocation.ToString());
 
-            //Can retrieve the full device description easily though.
-            SsdpDevice fullDevice = await e.DiscoveredDevice.GetDeviceInfo();
-            Debug.WriteLine("\t" + fullDevice.FriendlyName);
-            Debug.WriteLine("");
+            try
+            {
+                //Can retrieve the full device description easily though.
+                SsdpDevice fullDevice = await e.DiscoveredDevice.GetDeviceInfo();
+                Debug.WriteLine("\t Name=" + fullDevice.FriendlyName);
+                Debug.WriteLine("");
 
-            // If we don't have a serial number for this device, we need to construct one.
-            string serialNumber = 
-                fullDevice.Uuid + "|" + 
-                fullDevice.ModelDescription + "|" + 
-                fullDevice.ModelName + "|" + 
-                fullDevice.ModelNumber + "|" + 
-                fullDevice.ModelUrl + "|" + 
-                fullDevice.PresentationUrl;
-            if (null != fullDevice.SerialNumber)
-            {
-                serialNumber = fullDevice.SerialNumber;
-            }
+                // If we don't have a serial number for this device, we need to construct one.
+                string serialNumber =
+                    fullDevice.Uuid + "|" +
+                    fullDevice.ModelDescription + "|" +
+                    fullDevice.ModelName + "|" +
+                    fullDevice.ModelNumber + "|" +
+                    fullDevice.ModelUrl + "|" +
+                    fullDevice.PresentationUrl;
+                if (null != fullDevice.SerialNumber)
+                {
+                    serialNumber = fullDevice.SerialNumber;
+                }
 
-            ISensorItem videoCameraSensorItem = null;
-            IDeviceItem videoCameraDeviceItem = await App.DeviceCollection.BeginFindBySerialNumber(serialNumber);
+                ISensorItem videoCameraSensorItem = null;
+                IDeviceItem videoCameraDeviceItem = await App.DeviceCollection.BeginFindBySerialNumber(serialNumber);
 
-            if (null == videoCameraDeviceItem)
-            {
-                // No device was found to contain this camera. Build the device and the sensor. 
-                videoCameraDeviceItem = await this.CreateVideoDevice(fullDevice, serialNumber);
-                Debug.Assert(null != videoCameraDeviceItem);
-                videoCameraSensorItem = await this.CreateVideoSensor(fullDevice, serialNumber, videoCameraDeviceItem);
-                Debug.Assert(null != videoCameraSensorItem);
-            }
-            else if ((null != fullDevice.PresentationUrl) && 
-                     (videoCameraDeviceItem.IPAddress != fullDevice.PresentationUrl.ToString()))
-            {
-                // The IP address of the camera changed. We need to refresh the device.
-                await App.DeviceCollection.BeginDelete(videoCameraDeviceItem);
+                if (null == videoCameraDeviceItem)
+                {
+                    // No device was found to contain this camera. Build the device and the sensor. 
+                    videoCameraDeviceItem = await this.CreateVideoDevice(fullDevice, serialNumber);
+                    Debug.Assert(null != videoCameraDeviceItem);
+                    videoCameraSensorItem = await this.CreateVideoSensor(fullDevice, serialNumber, videoCameraDeviceItem);
+                    Debug.Assert(null != videoCameraSensorItem);
+                }
+                else if ((null != fullDevice.PresentationUrl) &&
+                         (videoCameraDeviceItem.IPAddress != fullDevice.PresentationUrl.ToString()))
+                {
+                    // The IP address of the camera changed. We need to refresh the device.
+                    await App.DeviceCollection.BeginDelete(videoCameraDeviceItem);
 
-                videoCameraDeviceItem = await this.CreateVideoDevice(fullDevice, serialNumber);
-                Debug.Assert(null != videoCameraDeviceItem);
-                videoCameraSensorItem = await this.CreateVideoSensor(fullDevice, serialNumber, videoCameraDeviceItem);
-                Debug.Assert(null != videoCameraSensorItem);
+                    videoCameraDeviceItem = await this.CreateVideoDevice(fullDevice, serialNumber);
+                    Debug.Assert(null != videoCameraDeviceItem);
+                    videoCameraSensorItem = await this.CreateVideoSensor(fullDevice, serialNumber, videoCameraDeviceItem);
+                    Debug.Assert(null != videoCameraSensorItem);
+                }
+                else if (videoCameraDeviceItem.Sensors.Count == 0)
+                {
+                    // We have a device to hold the camera, but no camera sensor. We need to build the sensor.
+                    videoCameraSensorItem = await this.CreateVideoSensor(fullDevice, serialNumber, videoCameraDeviceItem);
+                    Debug.Assert(null != videoCameraSensorItem);
+                }
+                else
+                {
+                    videoCameraDeviceItem.IsOnline = true;
+                }
             }
-            else if (videoCameraDeviceItem.Sensors.Count == 0)
+            catch (Exception ex)
             {
-                // We have a device to hold the camera, but no camera sensor. We need to build the sensor.
-                videoCameraSensorItem = await this.CreateVideoSensor(fullDevice, serialNumber, videoCameraDeviceItem);
-                Debug.Assert(null != videoCameraSensorItem);
-            }
-            else
-            {
-                videoCameraDeviceItem.IsOnline = true;
+                Debug.WriteLine("\t Unable to get device info. " + ex.Message);
             }
         }
 
