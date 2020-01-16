@@ -379,6 +379,7 @@ namespace VesselMonitoring
 
             // Sensor 00
             ISensorItem sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
+            sensor.Name = "Sensor 00";
             sensor.SerialNumber = Guid.NewGuid().ToString();
             sensor.SensorType = SensorType.Tank;
             sensor.SensorUnitType = UnitType.Power;
@@ -393,6 +394,7 @@ namespace VesselMonitoring
 
             // Sensor 01
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
+            sensor.Name = "Sensor 01";
             sensor.SerialNumber = Guid.NewGuid().ToString();
             sensor.SensorType = SensorType.Tank;
             sensor.SensorUnits = Units.Amps;
@@ -407,6 +409,7 @@ namespace VesselMonitoring
 
             // Sensor 02
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
+            sensor.Name = "Sensor 02";
             sensor.SerialNumber = Guid.NewGuid().ToString();
             sensor.SensorType = SensorType.Tank;
             sensor.SensorUnits = Units.Bar;
@@ -421,6 +424,7 @@ namespace VesselMonitoring
 
             // Sensor 03
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
+            sensor.Name = "Sensor 03";
             sensor.SerialNumber = Guid.NewGuid().ToString();
             sensor.SensorType = SensorType.Tank;
             sensor.SensorUnits = Units.Fahrenheit;
@@ -435,6 +439,7 @@ namespace VesselMonitoring
 
             // Sensor 04
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
+            sensor.Name = "Sensor 04";
             sensor.SerialNumber = Guid.NewGuid().ToString();
             sensor.SensorType = SensorType.Tank;
             sensor.SensorUnits = Units.CubicMeters;
@@ -449,6 +454,7 @@ namespace VesselMonitoring
 
             // Sensor 05
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
+            sensor.Name = "Sensor 05";
             sensor.SerialNumber = Guid.NewGuid().ToString();
             sensor.SensorType = SensorType.Tank;
             sensor.SensorUnits = Units.CubicMetersPerHr;
@@ -463,6 +469,7 @@ namespace VesselMonitoring
 
             // Sensor 06
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
+            sensor.Name = "Sensor 06";
             sensor.SerialNumber = Guid.NewGuid().ToString();
             sensor.SensorType = SensorType.Tank;
             sensor.SensorUnits = Units.CubicMetersPerHr;
@@ -477,6 +484,7 @@ namespace VesselMonitoring
 
             // Sensor 07
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
+            sensor.Name = "Sensor 07";
             sensor.SerialNumber = Guid.NewGuid().ToString();
             sensor.SensorType = SensorType.Tank;
             sensor.SensorUnits = Units.CubicMetersPerHr;
@@ -491,6 +499,7 @@ namespace VesselMonitoring
 
             // Sensor 08
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
+            sensor.Name = "Sensor 08";
             sensor.SerialNumber = Guid.NewGuid().ToString();
             sensor.SensorType = SensorType.Tank;
             sensor.SensorUnits = Units.CubicMetersPerHr;
@@ -505,6 +514,7 @@ namespace VesselMonitoring
 
             // Sensor 09
             sensor = new SensorItem(App.DeviceCollection[0].DeviceId);
+            sensor.Name = "Sensor 09";
             sensor.SerialNumber = Guid.NewGuid().ToString();
             sensor.SensorUnits = Units.CubicMetersPerHr;
             sensor.SensorType = SensorType.Tank;

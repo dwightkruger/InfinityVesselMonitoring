@@ -120,7 +120,8 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 {
                     HorizontalAlignment = CanvasHorizontalAlignment.Center,
                     VerticalAlignment = CanvasVerticalAlignment.Center,
-                    FontSize = (float)this.LabelsFontSize * 1.5F,
+                    //FontSize = (float)this.LabelsFontSize * 1.5F,
+                    FontSize = (float)this.LabelsFontSize
                 })
                 {
                     int label = Convert.ToInt32(i+90) % 360;
