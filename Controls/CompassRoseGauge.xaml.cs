@@ -44,7 +44,8 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 FontSize = (float)this.TextFontSize,
             })
             {
-                Vector2 at = new Vector2(0, 0);
+                //Vector2 at = new Vector2(0, 0);
+                Vector2 at = new Vector2(0, -10);
                 ds.DrawText(this.Text, at, this.GaugeColor, textFormat);
             }
 
@@ -56,7 +57,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
             })
             {
                 string format = "{0:F" + string.Format("{0:F0}", this.Resolution) + "}";
-                Vector2 at = new Vector2((float)sender.ActualWidth, 0F);
+                Vector2 at = new Vector2((float)sender.ActualWidth, -10F);
                 ds.DrawText(string.Format(format + "{1}", this.Value, UnitItem.ToString(VesselMonitoring.Utilities.Units.Degrees)), at, this.GaugeColor, textFormat);
             }
         }
@@ -140,7 +141,7 @@ namespace InfinityGroup.VesselMonitoring.Controls
                 FontSize = (float)this.TextFontSize,
             })
             {
-                Vector2 at = new Vector2((float)sender.ActualWidth, (float)sender.ActualHeight*0.9F);
+                Vector2 at = new Vector2((float)sender.ActualWidth, (float)sender.ActualHeight);
                 ds.DrawText("Mag", at, this.GaugeColor, textFormat);
             }
 

@@ -19,10 +19,10 @@
             VerticalAlignment="Top">
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1.0*"/>
                 <RowDefinition Height="1.4*"/>
                 <RowDefinition Height="4*"/>
-                <RowDefinition Height="3.6*"/>
+                <RowDefinition Height="3.1*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
 
