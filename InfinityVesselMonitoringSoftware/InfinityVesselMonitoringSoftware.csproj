@@ -287,22 +287,22 @@
       <Version>6.2.10</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp">
-      <Version>6.0.0</Version>
+      <Version>6.1.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.DeveloperTools">
-      <Version>6.0.0</Version>
+      <Version>6.1.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
-      <Version>6.0.0</Version>
+      <Version>6.1.1</Version>
     </PackageReference>
     <PackageReference Include="MvvmDialogs">
-      <Version>7.0.0</Version>
+      <Version>7.1.1</Version>
     </PackageReference>
     <PackageReference Include="MvvmLight">
       <Version>5.4.1.1</Version>
     </PackageReference>
     <PackageReference Include="Rssdp">
-      <Version>4.0.2</Version>
+      <Version>4.0.3</Version>
     </PackageReference>
     <PackageReference Include="SQLitePCL">
       <Version>3.8.7.2</Version>
